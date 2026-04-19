@@ -7,218 +7,243 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Global Navigation Bar -->
-  <nav class="global-nav">
-    <div class="nav-left">
-      <div class="nav-logo">
-        <svg class="disney-logo" viewBox="0 0 145 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="20" fill="white" font-size="16" font-weight="bold" font-family="serif" letter-spacing="1">
-            <tspan font-style="italic" font-size="20">Disney</tspan>
-            <tspan dx="4" font-size="14" font-weight="400">Advertising</tspan>
-          </text>
-        </svg>
-      </div>
-      <div class="nav-items">
-        <a href="#" class="nav-item">Sales</a>
-        <a href="#" class="nav-item has-dropdown">
-          Planning
-          <svg class="chevron-down" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="#E6E6FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#" class="nav-item has-dropdown">
-          Ad Ops
-          <svg class="chevron-down" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="#E6E6FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#" class="nav-item has-dropdown">
-          Billing
-          <svg class="chevron-down" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="#E6E6FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#" class="nav-item active has-dropdown">
-          Admin
-          <svg class="chevron-down" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-    <div class="nav-right">
-      <button class="nav-icon-btn" aria-label="Notifications">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#E6E6FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#E6E6FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <button class="nav-avatar-btn" aria-label="User menu">
-        <div class="avatar-circle"></div>
-      </button>
-    </div>
-  </nav>
 
-  <!-- Page Content -->
-  <main class="page-content">
-    <!-- Page Header -->
-    <div class="page-header">
-      <h1 class="page-title">User Management</h1>
-      <p class="page-subtitle">Assign roles and manage access across Atlas</p>
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-l">
+    <div class="nav-mod">
+      <div class="nav-logo-group">
+        <img src="nav/logo.svg" alt="Disney Advertising" class="nav-logo-img">
+        <span class="nav-divider"></span>
+      </div>
+      <a href="#" class="nav-a">Plan</a>
+      <a href="#" class="nav-a">Configure</a>
+      <a href="https://unified-financial-system-2a834f.pages.gitlab.disney.com/" class="nav-a" target="_blank" rel="noopener noreferrer">Finance</a>
+      <a href="#" class="nav-a on">Admin</a>
+      <a href="#" class="nav-a">Agent</a>
+    </div>
+  </div>
+  <div class="nav-r">
+    <button class="nav-r-btn" aria-label="Notifications"><img src="nav/bell.svg" alt="" width="24" height="24"></button>
+    <button class="nav-r-btn" aria-label="User menu"><img src="nav/avatar.png" alt="" class="nav-avatar-img"></button>
+  </div>
+</nav>
+
+<!-- ═══ PAGE ═══ -->
+<main class="page">
+  <div class="hdr">
+    <h1>User Management</h1>
+    <p>Assign roles and manage access across Altas</p>
+  </div>
+
+  <div class="card">
+    <!-- Tabs -->
+    <div class="tabs-row">
+      <nav>
+        <button class="tab-btn on">Users (610 total)</button>
+        <button class="tab-btn">Roles and Permissions</button>
+      </nav>
     </div>
 
-    <!-- Card Container -->
-    <div class="card">
-      <!-- Tabs -->
-      <div class="tabs-bar">
-        <div class="tabs">
-          <button class="tab active">Users (610 total)</button>
-          <button class="tab">Roles and Permissions</button>
-        </div>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <div class="toolbar-buttons">
-            <button class="btn-outline">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3611C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-              </svg>
-              Filter
-            </button>
-            <button class="btn-outline">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3611C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="18" rx="1"/>
-                <rect x="14" y="3" width="7" height="18" rx="1"/>
-              </svg>
-              Columns
-            </button>
-          </div>
-          <div class="search-field">
-            <input type="text" placeholder="Search by name, email, or role" />
-            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
+    <div id="usersPanel">
+    <!-- Toolbar -->
+    <div class="tbar">
+      <div class="tbar-l">
+        <button class="btn-std">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filter
+        </button>
+        <div class="search" id="searchWrap">
+          <input type="text" id="searchInput" placeholder="Search by name, email, or role" autocomplete="off">
+          <svg class="search-ico" id="searchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <button type="button" class="search-clear hidden" id="searchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <div class="search-dropdown" id="searchDropdown">
+            <div id="searchDDContent"></div>
           </div>
         </div>
-        <button class="btn-add-users">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3611C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+      </div>
+      <button class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Users
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th class="c-nm" data-sort="name"><div class="th-inner"><span>Name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-em" data-sort="email"><div class="th-inner"><span>Email</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-rl" data-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-st" data-sort="status"><div class="th-inner"><span>Status</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-tm" data-sort="team"><div class="th-inner"><span>Team</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-ct" data-sort="title"><div class="th-inner"><span>Company Title/ Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-rg" data-sort="region"><div class="th-inner"><span>Region</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pgn">
+      <div class="pgn-show">
+        <span class="pgn-lbl">Show</span>
+        <div class="pgn-sel-wrap">
+          <select class="pgn-sel"><option>10</option><option>25</option><option>50</option></select>
+          <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="pgn-lbl">of 610 items</span>
+      </div>
+      <div class="pgn-pages">
+        <button class="pg-nav off" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="pg-nav off" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="pg-nums">
+          <button class="pg-n on">1</button>
+          <button class="pg-n">2</button>
+          <button class="pg-n">3</button>
+          <span class="pg-dots">…</span>
+          <button class="pg-n">10</button>
+        </div>
+        <button class="pg-nav" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="pg-nav" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="pgn-jump">
+        <span class="pgn-lbl">Go to page</span>
+        <div class="pgn-sel-wrap">
+          <select class="pgn-sel"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+          <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div id="rolesPanel" style="display:none">
+      <div class="tbar">
+        <div class="tbar-l">
+          <button class="btn-std" id="rpFilterBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filter
+          </button>
+          <div class="search" id="rpSearchWrap">
+            <input type="text" id="rpSearchInput" placeholder="Search by role name or description" autocomplete="off">
+            <svg class="search-ico" id="rpSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <button type="button" class="search-clear hidden" id="rpSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <button class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Users
         </button>
       </div>
 
-      <!-- Data Table -->
-      <div class="data-table-wrapper">
-        <table class="data-table">
+      <div class="tbl-wrap">
+        <table class="tbl rp-tbl">
           <thead>
             <tr>
-              <th class="col-checkbox">
-                <label class="checkbox-wrapper">
-                  <input type="checkbox" id="selectAll" />
-                  <span class="checkbox-custom"></span>
-                </label>
-              </th>
-              <th class="col-name">
-                <span class="header-text">Name</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
-              <th class="col-email">
-                <span class="header-text">Email</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
-              <th class="col-role">
-                <span class="header-text">Role</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
-              <th class="col-status">
-                <span class="header-text">Status</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
-              <th class="col-team">
-                <span class="header-text">Team</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
-              <th class="col-company">
-                <span class="header-text">Company Title/ Role</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
-              <th class="col-region">
-                <span class="header-text">Region</span>
-                <svg class="sort-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>
-              </th>
+              <th class="rp-cb"><input type="checkbox" class="rp-check-input" id="rpSelectAll"></th>
+              <th class="rp-role" data-rp-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-desc" data-rp-sort="description"><div class="th-inner"><span>Description</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-func" data-rp-sort="functions"><div class="th-inner"><span>Functions</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-stat" data-rp-sort="status"><div class="th-inner"><span>Status</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-by" data-rp-sort="createdBy"><div class="th-inner"><span>Creative By</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-date" data-rp-sort="createDate"><div class="th-inner"><span>Create Date</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-act"><div class="th-inner"><span>Action</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
             </tr>
           </thead>
-          <tbody id="usersTableBody">
-          </tbody>
+          <tbody id="rpTbody"></tbody>
         </table>
       </div>
 
-      <!-- Pagination -->
-      <div class="pagination-bar">
-        <div class="pagination-show">
-          <span class="pagination-label">Show</span>
-          <div class="pagination-select-wrapper">
-            <select class="pagination-select" id="rowsPerPage">
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-            </select>
-            <svg class="select-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M4 6L8 10L12 6" stroke="#9AABBB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+      <div class="pgn" id="rpPgn">
+        <div class="pgn-show">
+          <span class="pgn-lbl">Show</span>
+          <div class="pgn-sel-wrap">
+            <select class="pgn-sel" id="rpPageSizeSel"><option>10</option><option>25</option><option>50</option></select>
+            <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <span class="pagination-label">of 610 items</span>
+          <span class="pgn-lbl" id="rpItemCount">of 15 items</span>
         </div>
-        <div class="pagination-pages">
-          <button class="page-nav disabled" aria-label="First page">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
-          </button>
-          <button class="page-nav disabled" aria-label="Previous page">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <div class="page-numbers">
-            <button class="page-number active">1</button>
-            <button class="page-number">2</button>
-            <button class="page-number">3</button>
-            <span class="page-ellipsis">...</span>
-            <button class="page-number">10</button>
-          </div>
-          <button class="page-nav" aria-label="Next page">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-          <button class="page-nav" aria-label="Last page">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
-          </button>
+        <div class="pgn-pages" id="rpPgnPages">
+          <button class="pg-nav off" data-rp-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+          <button class="pg-nav off" data-rp-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="pg-nums" id="rpPgNums"></div>
+          <button class="pg-nav" data-rp-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="pg-nav" data-rp-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
         </div>
-        <div class="pagination-jumper">
-          <span class="pagination-label">Go to page</span>
-          <div class="pagination-select-wrapper">
-            <select class="pagination-select" id="pageJumper">
-              <option value="1">1</option>
-              <option value="2" selected>2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-            </select>
-            <svg class="select-chevron" width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M4 6L8 10L12 6" stroke="#9AABBB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+        <div class="pgn-jump">
+          <span class="pgn-lbl">Go to page</span>
+          <div class="pgn-sel-wrap">
+            <select class="pgn-sel" id="rpJumpSel"><option>1</option></select>
+            <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+</main>
 
-  <script src="app.js"></script>
+<!-- ═══ FILTER DRAWER ═══ -->
+<div class="flt-overlay" id="fltOverlay"></div>
+<aside class="flt-drawer" id="fltDrawer">
+  <div class="flt-header">
+    <h2 class="flt-title">Filters</h2>
+    <button class="flt-close" id="fltClose" aria-label="Close filters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flt-body">
+    <div class="flt-field">
+      <label class="flt-label">Name</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltName" placeholder="Search name">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear name" data-for="fltName"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Email</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltEmail" placeholder="Search email">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear email" data-for="fltEmail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Role</label>
+      <div class="edl-combo" id="roleCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Status</label>
+      <div class="edl-combo" id="statusCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Team</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltTeam" placeholder="Search team">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear team" data-for="fltTeam"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Company Title / Role</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltTitle" placeholder="Search company title or role">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear title" data-for="fltTitle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Region</label>
+      <div class="edl-combo" id="regionCombo"></div>
+    </div>
+  </div>
+  <div class="flt-footer">
+    <button class="flt-btn-reset" id="fltReset">Reset Filters</button>
+    <div class="flt-footer-r">
+      <button class="flt-btn-cancel" id="fltCancel">Cancel</button>
+      <button class="flt-btn-apply" id="fltApply">Apply</button>
+    </div>
+  </div>
+</aside>
+
+<script src="app.js"></script>
 </body>
 </html>
