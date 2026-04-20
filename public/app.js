@@ -88,21 +88,138 @@ var activeTab = "users";
 var ROLES_PERMISSIONS_DATA = [
   { id: "r001", role: "Core Planning Admin", description: "Full access to Core Planning workflows including order and media plan management.", functions: [{ name: "Core Planning", count: 8 }, { name: "TOM", count: 2 }, { name: "Admin", count: 3 }], status: "Sensitive", createdBy: "Homer Simpson", createDate: "01/15/2026" },
   { id: "r002", role: "Strategy & Planning Manager", description: "Manage strategic planning initiatives and oversee cross-team planning coordination.", functions: [{ name: "Core Planning", count: 7 }, { name: "TOM", count: 2 }, { name: "Admin", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "01/15/2026" },
-  { id: "r003", role: "Sales Planner", description: "Create and manage sales plans and proposals within the planning workflow.", functions: [{ name: "Core Planning", count: 5 }, { name: "Sales", count: 4 }], status: "Regional", createdBy: "Kent Brockman", createDate: "01/20/2026" },
-  { id: "r004", role: "Media Strategy Director", description: "Define and oversee media investment strategy across linear and digital platforms.", functions: [{ name: "Core Planning", count: 6 }, { name: "Sales", count: 3 }, { name: "TOM", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "01/20/2026" },
-  { id: "r005", role: "Account Executive", description: "Manage client accounts and execute sales orders and deal negotiations.", functions: [{ name: "Sales", count: 6 }, { name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Kent Brockman", createDate: "02/03/2026" },
-  { id: "r006", role: "Account Manager", description: "Oversee client account relationships and manage account-level configurations.", functions: [{ name: "Sales", count: 5 }, { name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Kent Brockman", createDate: "02/03/2026" },
-  { id: "r007", role: "Client Partnerships Manager", description: "Manage strategic client partnerships and coordinate cross-functional planning.", functions: [{ name: "Sales", count: 5 }, { name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/10/2026" },
-  { id: "r008", role: "Campaign Manager", description: "Plan, launch, and monitor advertising campaigns across platforms.", functions: [{ name: "Core Planning", count: 6 }, { name: "Ad Ops", count: 4 }, { name: "TOM", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "02/10/2026" },
-  { id: "r009", role: "Ad Ops Specialist", description: "Execute ad trafficking, campaign setup, and creative asset management.", functions: [{ name: "Ad Ops", count: 7 }, { name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/18/2026" },
-  { id: "r010", role: "Programmatic Specialist", description: "Manage programmatic deal setup, automated transactions, and bid optimization.", functions: [{ name: "Ad Ops", count: 6 }, { name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Artie Ziff", createDate: "02/18/2026" },
-  { id: "r011", role: "Inventory Analyst", description: "Monitor and analyze ad inventory availability, utilization, and capacity.", functions: [{ name: "Ad Ops", count: 5 }, { name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/25/2026" },
-  { id: "r012", role: "Yield Manager", description: "Optimize ad inventory pricing, yield, and sell-through rates.", functions: [{ name: "Ad Ops", count: 6 }, { name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Artie Ziff", createDate: "02/25/2026" },
-  { id: "r013", role: "Billing Operations Specialist", description: "Process invoices, manage billing workflows, and reconcile payment records.", functions: [{ name: "Billing", count: 8 }, { name: "Core Planning", count: 2 }], status: "Sensitive", createdBy: "Homer Simpson", createDate: "03/05/2026" },
-  { id: "r014", role: "Finance Analyst", description: "Analyze financial performance, revenue forecasting, and reporting for ad sales.", functions: [{ name: "Billing", count: 6 }, { name: "Core Planning", count: 2 }], status: "Sensitive", createdBy: "Kent Brockman", createDate: "03/05/2026" },
-  { id: "r015", role: "Revenue Operations Analyst", description: "Track revenue performance, pipeline reporting, and operational metrics.", functions: [{ name: "Billing", count: 5 }, { name: "Core Planning", count: 3 }], status: "Sensitive", createdBy: "Artie Ziff", createDate: "03/12/2026" }
+  { id: "r003", role: "Sales Planner", description: "Create and manage sales plans and proposals within the planning workflow.", functions: [{ name: "Core Planning", count: 5 }], status: "Regional", createdBy: "Kent Brockman", createDate: "01/20/2026" },
+  { id: "r004", role: "Media Strategy Director", description: "Define and oversee media investment strategy across linear and digital platforms.", functions: [{ name: "Core Planning", count: 6 }, { name: "TOM", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "01/20/2026" },
+  { id: "r005", role: "Account Executive", description: "Manage client accounts and execute sales orders and deal negotiations.", functions: [{ name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Kent Brockman", createDate: "02/03/2026" },
+  { id: "r006", role: "Account Manager", description: "Oversee client account relationships and manage account-level configurations.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Kent Brockman", createDate: "02/03/2026" },
+  { id: "r007", role: "Client Partnerships Manager", description: "Manage strategic client partnerships and coordinate cross-functional planning.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/10/2026" },
+  { id: "r008", role: "Campaign Manager", description: "Plan, launch, and monitor advertising campaigns across platforms.", functions: [{ name: "Core Planning", count: 6 }, { name: "TOM", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "02/10/2026" },
+  { id: "r009", role: "Ad Ops Specialist", description: "Execute ad trafficking, campaign setup, and creative asset management.", functions: [{ name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/18/2026" },
+  { id: "r010", role: "Programmatic Specialist", description: "Manage programmatic deal setup, automated transactions, and bid optimization.", functions: [{ name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Artie Ziff", createDate: "02/18/2026" },
+  { id: "r011", role: "Inventory Analyst", description: "Monitor and analyze ad inventory availability, utilization, and capacity.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/25/2026" },
+  { id: "r012", role: "Yield Manager", description: "Optimize ad inventory pricing, yield, and sell-through rates.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Artie Ziff", createDate: "02/25/2026" },
+  { id: "r013", role: "Billing Operations Specialist", description: "Process invoices, manage billing workflows, and reconcile payment records.", functions: [{ name: "Core Planning", count: 2 }], status: "Sensitive", createdBy: "Homer Simpson", createDate: "03/05/2026" },
+  { id: "r014", role: "Finance Analyst", description: "Analyze financial performance, revenue forecasting, and reporting for ad sales.", functions: [{ name: "Core Planning", count: 2 }], status: "Sensitive", createdBy: "Kent Brockman", createDate: "03/05/2026" },
+  { id: "r015", role: "Revenue Operations Analyst", description: "Track revenue performance, pipeline reporting, and operational metrics.", functions: [{ name: "Core Planning", count: 3 }], status: "Sensitive", createdBy: "Artie Ziff", createDate: "03/12/2026" }
 ];
 var RP_ORIGINAL_ORDER = ROLES_PERMISSIONS_DATA.slice();
+
+/* ═══ FUNCTIONS POPOVER DATA ═══
+   FUNCTION_REGISTRY  : authoritative per-app function catalogue (system keys).
+   ROLE_FUNCTION_MAP  : per-role explicit assignment; count must match role.functions entry.
+   FUNCTION_LABEL_MAP : system key → human-readable label rendered in the popover. */
+var FUNCTION_REGISTRY = {
+  "IAM": [
+    "iam_role_get","iam_role_list","iam_role_create","iam_role_update","iam_role_delete",
+    "iam_function_assign","iam_data_assign",
+    "iam_user_get","iam_user_list","iam_user_create","iam_user_update","iam_user_deactivate","iam_user_impersonate",
+    "iam_analytics_get"
+  ],
+  "Core Planning": [
+    "planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_delete",
+    "planning_order_assign","planning_order_comment","planning_order_approve","planning_order_reject",
+    "planning_plan_list","planning_plan_get","planning_plan_create","planning_plan_update","planning_plan_delete",
+    "planning_lineitem_list","planning_lineitem_get","planning_lineitem_create","planning_lineitem_update","planning_lineitem_delete"
+  ],
+  "ICM": [
+    "icm_offering_list","icm_offering_get","icm_offering_create","icm_offering_update","icm_offering_delete",
+    "icm_salespackage_list","icm_salespackage_get","icm_salespackage_create","icm_salespackage_update","icm_salespackage_delete"
+  ],
+  "TOM": [
+    "tom_option_list","tom_option_get","tom_option_update","tom_option_assign",
+    "tom_group_list","tom_group_get","tom_group_create","tom_group_update","tom_group_assign","tom_group_archive",
+    "tom_template_list","tom_template_get","tom_template_create","tom_template_update","tom_template_assign","tom_template_archive"
+  ],
+  "Disney Ads Agent": ["media_plan_queries","forecasting_queries","planning_activity_summaries","approval_io_comparisons"],
+  "Admin": ["admin_role_manage","admin_user_manage","admin_system_config","admin_audit_view","admin_settings_update"]
+};
+
+var ROLE_FUNCTION_MAP = {
+  "r001": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_delete","planning_plan_list","planning_plan_create","planning_plan_update"],
+    "TOM": ["tom_option_list","tom_group_list"],
+    "Admin": ["admin_role_manage","admin_user_manage","admin_system_config"]
+  },
+  "r002": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_plan_list","planning_plan_get","planning_plan_update"],
+    "TOM": ["tom_option_list","tom_group_list"],
+    "Admin": ["admin_user_manage","admin_audit_view"]
+  },
+  "r003": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list","planning_plan_get","planning_lineitem_list"]
+  },
+  "r004": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_plan_list","planning_plan_get","planning_plan_update"],
+    "TOM": ["tom_option_list","tom_group_list"]
+  },
+  "r005": {
+    "Core Planning": ["planning_order_list","planning_plan_list"]
+  },
+  "r006": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  },
+  "r007": {
+    "Core Planning": ["planning_order_list","planning_plan_list","planning_plan_get"]
+  },
+  "r008": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_plan_list","planning_plan_get"],
+    "TOM": ["tom_option_list","tom_group_list"]
+  },
+  "r009": {
+    "Core Planning": ["planning_order_list","planning_plan_list"]
+  },
+  "r010": {
+    "Core Planning": ["planning_order_list","planning_plan_list"]
+  },
+  "r011": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  },
+  "r012": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  },
+  "r013": {
+    "Core Planning": ["planning_order_list","planning_plan_list"]
+  },
+  "r014": {
+    "Core Planning": ["planning_order_list","planning_plan_list"]
+  },
+  "r015": {
+    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  }
+};
+
+var FUNCTION_LABEL_MAP = {
+  "planning_order_list":"View orders","planning_order_get":"View order details","planning_order_create":"Create orders","planning_order_update":"Edit orders","planning_order_delete":"Delete orders","planning_order_assign":"Assign orders","planning_order_comment":"Comment on orders","planning_order_approve":"Approve orders","planning_order_reject":"Reject orders",
+  "planning_plan_list":"View media plans","planning_plan_get":"View media plan details","planning_plan_create":"Create media plans","planning_plan_update":"Edit media plans","planning_plan_delete":"Delete media plans",
+  "planning_lineitem_list":"View line items","planning_lineitem_get":"View line item details","planning_lineitem_create":"Create line items","planning_lineitem_update":"Edit line items","planning_lineitem_delete":"Delete line items",
+  "iam_role_list":"View roles","iam_role_get":"View role details","iam_role_create":"Create roles","iam_role_update":"Edit roles","iam_role_delete":"Delete roles","iam_function_assign":"Assign functions","iam_data_assign":"Assign data access",
+  "iam_user_list":"View users","iam_user_get":"View user details","iam_user_create":"Create users","iam_user_update":"Edit users","iam_user_deactivate":"Deactivate users","iam_user_impersonate":"Impersonate users","iam_analytics_get":"View analytics",
+  "tom_option_list":"View options","tom_option_get":"View option details","tom_option_update":"Edit options","tom_option_assign":"Assign options",
+  "tom_group_list":"View groups","tom_group_get":"View group details","tom_group_create":"Create groups","tom_group_update":"Edit groups","tom_group_assign":"Assign groups","tom_group_archive":"Archive groups",
+  "tom_template_list":"View templates","tom_template_get":"View template details","tom_template_create":"Create templates","tom_template_update":"Edit templates","tom_template_assign":"Assign templates","tom_template_archive":"Archive templates",
+  "admin_role_manage":"Manage roles","admin_user_manage":"Manage users","admin_system_config":"System configuration","admin_audit_view":"View audit logs","admin_settings_update":"Update settings",
+  "media_plan_queries":"Media plan queries","forecasting_queries":"Forecasting queries","planning_activity_summaries":"Planning activity summaries","approval_io_comparisons":"Approval I/O comparisons",
+  "icm_offering_list":"View offerings","icm_offering_get":"View offering details","icm_offering_create":"Create offerings","icm_offering_update":"Edit offerings","icm_offering_delete":"Delete offerings",
+  "icm_salespackage_list":"View sales packages","icm_salespackage_get":"View sales package details","icm_salespackage_create":"Create sales packages","icm_salespackage_update":"Edit sales packages","icm_salespackage_delete":"Delete sales packages"
+};
+
+function labelForFunction(key) { return FUNCTION_LABEL_MAP[key] || null; }
+
+/* Resolve a role+app → array of human-readable function labels.
+   Prefer ROLE_FUNCTION_MAP; fall back to FUNCTION_REGISTRY sliced by count. */
+function resolveFunctionLabels(roleId, appName, count) {
+  var keys = (ROLE_FUNCTION_MAP[roleId] && ROLE_FUNCTION_MAP[roleId][appName]) ||
+             (FUNCTION_REGISTRY[appName] ? FUNCTION_REGISTRY[appName].slice(0, count) : []);
+  var seen = {}, labels = [];
+  for (var i = 0; i < keys.length; i++) {
+    var lbl = labelForFunction(keys[i]);
+    if (!lbl || seen[lbl]) continue;
+    seen[lbl] = 1;
+    labels.push(lbl);
+  }
+  return labels;
+}
+
 var rpCurrentPage = 1;
 var rpPageSize = 10;
 var rpSortKey = null;
@@ -120,6 +237,63 @@ function esc(s) {
   return d.innerHTML;
 }
 
+/* ═══ EDL TOAST ═══
+   Minimal runtime matching the EDL Toast component (Figma 15094:75972).
+   Renders a titled notification with icon + body into #edlToastContainer,
+   auto-dismisses after a readable delay, and supports manual dismiss via
+   the X button. Four types ship: informative, success, warning, error.
+   Icons match EDL (info-circle, check-circle, alert-triangle, alert-circle). */
+var EDL_TOAST_ICONS = {
+  informative:
+    '<svg class="edl-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+  success:
+    '<svg class="edl-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  warning:
+    '<svg class="edl-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  error:
+    '<svg class="edl-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+};
+var EDL_TOAST_CLOSE =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+function showEdlToast(opts) {
+  var container = document.getElementById("edlToastContainer");
+  if (!container) return;
+  var type = (opts && opts.type) || "informative";
+  if (!EDL_TOAST_ICONS[type]) type = "informative";
+  var title = (opts && opts.title) || "";
+  var bodyHtml = (opts && opts.bodyHtml) || esc((opts && opts.body) || "");
+  var duration = (opts && typeof opts.duration === "number") ? opts.duration : 6000;
+  var liveRole = (type === "error" || type === "warning") ? "alert" : "status";
+
+  var toast = document.createElement("div");
+  toast.className = "edl-toast edl-toast--" + type;
+  toast.setAttribute("role", liveRole);
+  toast.setAttribute("aria-live", liveRole === "alert" ? "assertive" : "polite");
+  toast.innerHTML =
+    '<div class="edl-toast-header">' +
+      EDL_TOAST_ICONS[type] +
+      '<span class="edl-toast-title">' + esc(title) + '</span>' +
+      '<button type="button" class="edl-toast-close" aria-label="Dismiss notification">' + EDL_TOAST_CLOSE + '</button>' +
+    '</div>' +
+    '<div class="edl-toast-body">' + bodyHtml + '</div>';
+
+  var timer = null;
+  function dismiss() {
+    if (toast.classList.contains("is-leaving")) return;
+    toast.classList.add("is-leaving");
+    if (timer) { clearTimeout(timer); timer = null; }
+    setTimeout(function () {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 180);
+  }
+  toast.querySelector(".edl-toast-close").addEventListener("click", dismiss);
+  if (duration > 0) timer = setTimeout(dismiss, duration);
+
+  container.appendChild(toast);
+  return { dismiss: dismiss };
+}
+
 function getInitials(name) {
   var parts = name.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.)\s*/i, "").trim().split(/\s+/);
   var first = parts[0] ? parts[0][0] : "";
@@ -133,7 +307,14 @@ function getInitialsColor(name) {
   return INITIALS_COLORS[Math.abs(hash) % INITIALS_COLORS.length];
 }
 
-function renderAvatarHtml(user) {
+function renderAvatarHtml(user, forceInitials) {
+  if (forceInitials) {
+    return '<div class="name-avatar">' +
+      '<div class="avatar-initials" aria-label="' + esc(user.name) + '">' +
+        esc(getInitials(user.name)) +
+      '</div>' +
+      '</div>';
+  }
   return '<div class="name-avatar">' +
     '<img src="' + esc(user.avatar) + '" alt="' + esc(user.name) + '">' +
     '</div>';
@@ -216,7 +397,7 @@ function renderTable() {
       extraHtml = ' <a href="#" class="role-extra" data-tooltip="' + esc(tooltipLines) + '">+' + extra + ' role' + (extra > 1 ? 's' : '') + '</a>';
     }
     html += '<tr data-id="' + esc(u.id) + '">' +
-      '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u) +
+      '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, currentPage === 2) +
         '<span class="name-link" title="' + esc(u.name) + '">' + esc(u.name) + '</span></div></td>' +
       '<td class="c-em" title="' + esc(u.email) + '">' + esc(u.email) + '</td>' +
       '<td class="c-rl"><span class="role-txt">' + esc(u.roles[0]) + extraHtml + '</span></td>' +
@@ -341,6 +522,105 @@ document.addEventListener("DOMContentLoaded", function () {
   renderTable();
   renderPagination();
 
+  /* ─── User menu (profile dropdown + theme switcher) ───
+     Wires the avatar trigger, theme submenu, sub-item selection,
+     outside-click/Escape close, and persists the chosen theme. */
+  (function setupUserMenu() {
+    var menu = document.getElementById("userMenu");
+    var trigger = document.getElementById("userMenuTrigger");
+    var pop = document.getElementById("userMenuPop");
+    var themeRow = document.getElementById("userMenuTheme");
+    var logoutRow = document.getElementById("userMenuLogout");
+    if (!menu || !trigger || !pop || !themeRow) return;
+
+    var subItems = pop.querySelectorAll(".user-menu-sub-item");
+    var THEME_KEY = "atlas:theme";
+
+    function currentTheme() {
+      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    }
+
+    function syncSelection() {
+      var cur = currentTheme();
+      for (var i = 0; i < subItems.length; i++) {
+        var it = subItems[i];
+        var on = it.getAttribute("data-theme") === cur;
+        it.classList.toggle("is-selected", on);
+        it.setAttribute("aria-checked", on ? "true" : "false");
+      }
+    }
+
+    function applyTheme(val) {
+      if (val === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+      try { localStorage.setItem(THEME_KEY, val); } catch (e) {}
+      syncSelection();
+    }
+
+    function openMenu() {
+      menu.classList.add("open");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+    function closeMenu() {
+      menu.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+      themeRow.setAttribute("aria-expanded", "false");
+    }
+    function toggleMenu() {
+      if (menu.classList.contains("open")) closeMenu(); else openMenu();
+    }
+
+    syncSelection();
+
+    trigger.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    themeRow.addEventListener("click", function (e) {
+      if (e.target.closest(".user-menu-sub-item")) return;
+      e.stopPropagation();
+      var expanded = themeRow.getAttribute("aria-expanded") === "true";
+      themeRow.setAttribute("aria-expanded", expanded ? "false" : "true");
+    });
+
+    for (var i = 0; i < subItems.length; i++) {
+      subItems[i].addEventListener("click", function (e) {
+        e.stopPropagation();
+        var val = this.getAttribute("data-theme");
+        if (val) applyTheme(val);
+        closeMenu();
+      });
+    }
+
+    if (logoutRow) {
+      logoutRow.addEventListener("click", function (e) {
+        e.stopPropagation();
+        closeMenu();
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      if (!menu.classList.contains("open")) return;
+      if (menu.contains(e.target)) return;
+      closeMenu();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.classList.contains("open")) {
+        closeMenu();
+        trigger.focus();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "T" || e.key === "t")) {
+        e.preventDefault();
+        applyTheme(currentTheme() === "dark" ? "light" : "dark");
+      }
+    });
+  })();
+
   /* ─── EDL Tooltip for role hover ─── */
   var tooltip = document.createElement("div");
   tooltip.className = "edl-tooltip";
@@ -370,6 +650,101 @@ document.addEventListener("DOMContentLoaded", function () {
     var link = e.target.closest(".role-extra");
     if (link) { tooltip.classList.remove("visible"); tooltip.classList.remove("below"); }
   });
+
+  /* ─── R&P Functions Popover (click-activated, dark EDL style) ───
+     Trigger: the blue (N) count button inside .rp-func in the Roles table.
+     Content: app title + the actual per-role function label list.
+     Dismiss: click outside / Escape / another trigger. */
+  var funcPop = document.createElement("div");
+  funcPop.className = "func-popover";
+  funcPop.setAttribute("role", "dialog");
+  funcPop.id = "rpFuncPopover";
+  document.body.appendChild(funcPop);
+
+  var funcPopTrigger = null;
+
+  function hideFuncPop() {
+    if (!funcPop.classList.contains("visible")) return;
+    funcPop.classList.remove("visible");
+    funcPop.classList.remove("above");
+    if (funcPopTrigger) funcPopTrigger.setAttribute("aria-expanded", "false");
+    funcPopTrigger = null;
+  }
+
+  function showFuncPop(btn) {
+    var app = btn.getAttribute("data-app") || "";
+    var funcsAttr = btn.getAttribute("data-funcs") || "";
+    var labels = funcsAttr ? funcsAttr.split("|").filter(Boolean) : [];
+    var count = labels.length;
+
+    var html = '<div class="func-pop-title">' +
+                 esc(app) + ' <span class="func-pop-count">' + count + '</span>' +
+               '</div>';
+    if (count) {
+      html += '<ul class="func-pop-list">';
+      for (var i = 0; i < count; i++) {
+        html += '<li>' + esc(labels[i]) + '</li>';
+      }
+      html += '</ul>';
+    }
+    funcPop.innerHTML = html;
+    funcPop.classList.add("visible");
+
+    var rect = btn.getBoundingClientRect();
+    var pw = funcPop.offsetWidth;
+    var ph = funcPop.offsetHeight;
+
+    var left = rect.left + rect.width / 2 - pw / 2;
+    if (left < 8) left = 8;
+    if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+
+    var top = rect.bottom + 8;
+    var above = false;
+    if (top + ph > window.innerHeight - 8) {
+      top = rect.top - ph - 8;
+      above = true;
+    }
+    funcPop.classList.toggle("above", above);
+
+    var caretLeft = rect.left + rect.width / 2 - left;
+    if (caretLeft < 10) caretLeft = 10;
+    if (caretLeft > pw - 10) caretLeft = pw - 10;
+    funcPop.style.setProperty("--caret-left", caretLeft + "px");
+
+    funcPop.style.left = left + "px";
+    funcPop.style.top = top + "px";
+
+    btn.setAttribute("aria-expanded", "true");
+    funcPopTrigger = btn;
+  }
+
+  var rolesTblWrap = document.querySelector("#rolesPanel .tbl-wrap");
+  if (rolesTblWrap) {
+    rolesTblWrap.addEventListener("click", function (e) {
+      var btn = e.target.closest(".rp-func-count");
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (funcPopTrigger === btn) { hideFuncPop(); return; }
+      hideFuncPop();
+      showFuncPop(btn);
+    });
+  }
+  document.addEventListener("click", function (e) {
+    if (!funcPop.classList.contains("visible")) return;
+    if (e.target.closest("#rpFuncPopover")) return;
+    if (e.target.closest(".rp-func-count")) return;
+    hideFuncPop();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && funcPop.classList.contains("visible")) {
+      var t = funcPopTrigger;
+      hideFuncPop();
+      if (t) t.focus();
+    }
+  });
+  window.addEventListener("scroll", hideFuncPop, true);
+  window.addEventListener("resize", hideFuncPop);
 
   /* ─── EDL Search Component ─── */
   var MAX_RECENT = 5;
@@ -921,10 +1296,21 @@ document.addEventListener("DOMContentLoaded", function () {
   var EDIT_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
   var DELETE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
 
-  function formatFunctions(fns) {
+  function formatFunctions(fns, roleId) {
     var parts = [];
     for (var i = 0; i < fns.length; i++) {
-      parts.push(esc(fns[i].name) + ' <span class="rp-func-count">(' + fns[i].count + ')</span>');
+      var app = fns[i].name;
+      var cnt = fns[i].count;
+      var labels = resolveFunctionLabels(roleId, app, cnt);
+      parts.push(
+        '<span class="rp-func-group">' + esc(app) + ' ' +
+          '<button type="button" class="rp-func-count" ' +
+            'data-app="' + esc(app) + '" ' +
+            'data-count="' + cnt + '" ' +
+            'data-funcs="' + esc(labels.join("|")) + '" ' +
+            'aria-haspopup="dialog" aria-expanded="false">(' + cnt + ')</button>' +
+        '</span>'
+      );
     }
     return parts.join(", ");
   }
@@ -958,25 +1344,22 @@ document.addEventListener("DOMContentLoaded", function () {
     var rows = getRPPageData();
     var tb = document.getElementById("rpTbody");
     if (rows.length === 0) {
-      tb.innerHTML = '<tr><td colspan="8" class="empty-state">No results found</td></tr>';
+      tb.innerHTML = '<tr><td colspan="7" class="empty-state">No results found</td></tr>';
       return;
     }
     var html = "";
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
       var chipClass = r.status === "Sensitive" ? "rp-chip-sensitive" : "rp-chip-regional";
+      var roleCell = '<a class="rp-role-link" href="#" data-role-edit="' + esc(r.id) + '">' + esc(r.role) + '</a>';
       html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="rp-cb"><input type="checkbox" class="rp-check-input" data-rid="' + esc(r.id) + '"></td>' +
-        '<td class="rp-role" title="' + esc(r.role) + '">' + esc(r.role) + '</td>' +
+        '<td class="rp-role" title="' + esc(r.role) + '">' + roleCell + '</td>' +
         '<td class="rp-desc" title="' + esc(r.description) + '">' + esc(r.description) + '</td>' +
-        '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions) + '</span></td>' +
+        '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + '</span></td>' +
         '<td class="rp-stat"><span class="rp-chip ' + chipClass + '">' + esc(r.status) + '</span></td>' +
         '<td class="rp-by">' + esc(r.createdBy) + '</td>' +
         '<td class="rp-date">' + esc(r.createDate) + '</td>' +
-        '<td class="rp-act"><div class="rp-action-wrap">' +
-          '<button class="rp-action-btn rp-action-btn-edit" title="Edit" aria-label="Edit ' + esc(r.role) + '">' + EDIT_SVG + '</button>' +
-          '<button class="rp-action-btn rp-action-btn-delete" title="Delete" aria-label="Delete ' + esc(r.role) + '">' + DELETE_SVG + '</button>' +
-        '</div></td>' +
         '</tr>';
     }
     tb.innerHTML = html;
@@ -1152,4 +1535,845 @@ document.addEventListener("DOMContentLoaded", function () {
     var cbs = document.querySelectorAll('#rpTbody .rp-check-input');
     for (var i = 0; i < cbs.length; i++) cbs[i].checked = checked;
   });
+
+  /* ═══ CREATE ROLE PAGE ═══
+     Navigation from the Roles & Permissions tab to the existing
+     Create Role form (markup in #createRolePage). Includes multi-app
+     builder (Add application), permissions rendering, summary +
+     collapsible cards, and validation for the Save button. */
+  var APP_PERMISSIONS = {
+    core_planning: {
+      label: "Core Planning",
+      groups: [
+        { title: "Order permissions", columns: [
+          ["View orders","View order details","Create orders","Edit orders","Delete orders"],
+          ["Assign orders","Comment on orders","Approve orders","Reject orders"]
+        ]},
+        { title: "Line item permissions", columns: [
+          ["View line items","View line item details","Create line items","Edit line items","Delete line items"]
+        ]}
+      ],
+      rightGroups: [
+        { title: "Media plan permissions", columns: [
+          ["View media plans","View media plan details","Create media plans","Edit media plans","Delete media plans"]
+        ]}
+      ]
+    },
+    identity_access_management: {
+      label: "Identity Access Management",
+      groups: [
+        { title: "Role permissions", columns: [
+          ["View roles","View role details","Create roles","Edit roles","Delete roles"],
+          ["Assign functions","Assign data access"]
+        ]},
+        { title: "User permissions", columns: [
+          ["View users","View user details","Create users","Edit users","Deactivate users"],
+          ["Impersonate users","View analytics"]
+        ]}
+      ],
+      rightGroups: []
+    },
+    disney_ads_agent: {
+      label: "Disney Ads Agent",
+      groups: [
+        { title: "Agent permissions", columns: [
+          ["Media plan queries","Forecasting queries","Planning activity summaries","Approval and IO comparisons"]
+        ]}
+      ],
+      rightGroups: []
+    },
+    inventory_catalog_manager: {
+      label: "Inventory Catalog Manager",
+      groups: [
+        { title: "Offering permissions", columns: [
+          ["View offerings","View offering details","Create offerings","Edit offerings","Delete offerings"]
+        ]},
+        { title: "Sales package permissions", columns: [
+          ["View sales packages","View sales package details","Create sales packages","Edit sales packages","Delete sales packages"]
+        ]}
+      ],
+      rightGroups: []
+    },
+    target_options_manager: {
+      label: "Target Options Manager",
+      groups: [
+        { title: "Option permissions", columns: [
+          ["View options","View option details","Edit options","Assign options"]
+        ]},
+        { title: "Group permissions", columns: [
+          ["View groups","View group details","Create groups","Edit groups"],
+          ["Assign groups","Archive groups"]
+        ]},
+        { title: "Template permissions", columns: [
+          ["View templates","View template details","Create templates","Edit templates"],
+          ["Assign templates","Archive templates"]
+        ]}
+      ],
+      rightGroups: []
+    }
+  };
+
+  var crPage = document.getElementById("createRolePage");
+  if (crPage) {
+    var crRoleName = document.getElementById("crRoleName");
+    var crAppDD = document.getElementById("crAppDD");
+    var crAppTrigger = document.getElementById("crAppTrigger");
+    var crAppValue = document.getElementById("crAppValue");
+    var crAddBtn = document.getElementById("crAddBtn");
+    var crPermsContent = document.getElementById("crPermsContent");
+    var crFunctionsTitle = document.getElementById("crFunctionsTitle");
+    var crSaveBtn = document.getElementById("crSave");
+    var crBasicSummary = document.getElementById("crBasicSummary");
+    var crFuncsSummary = document.getElementById("crFuncsSummary");
+    var crTitleEl = crPage.querySelector(".cr-title");
+    var mainPage = document.querySelector(".page");
+
+    /* Atlas IAM role configuration — PRD-aligned application set only.
+       Sales, Ad Ops, and Billing are NOT defined by Tatiana's PRD as
+       valid role-function targets, so they are excluded from the picker
+       data source (not just visually hidden). APP_PERMISSIONS mirrors
+       this set — any key not present below has no permissions definition
+       and cannot be selected, preselected, or searched. */
+    var CR_APP_OPTIONS = [
+      { value: "identity_access_management", label: "Identity Access Management" },
+      { value: "core_planning",              label: "Core Planning" },
+      { value: "disney_ads_agent",           label: "Disney Ads Agent" },
+      { value: "inventory_catalog_manager",  label: "Inventory Catalog Manager" },
+      { value: "target_options_manager",     label: "Target Options Manager" }
+    ];
+    var crAppCurrent = "";
+    var crAddedApps = [];
+
+    /* Tracks the record currently being edited so the Remove Role confirmation
+       can reference it. null whenever the page is in Create Role mode. */
+    var crEditingRecord = null;
+    var crRemoveBtn = document.getElementById("crRemove");
+
+    function setRemoveRoleVisible(visible) {
+      if (!crRemoveBtn) return;
+      if (visible) crRemoveBtn.removeAttribute("hidden");
+      else crRemoveBtn.setAttribute("hidden", "");
+    }
+
+    function showCreateRole() {
+      if (mainPage) mainPage.style.display = "none";
+      crPage.style.display = "";
+      window.scrollTo(0, 0);
+      resetCreateRole();
+      if (crTitleEl) crTitleEl.textContent = "Create Role";
+      crEditingRecord = null;
+      setRemoveRoleVisible(false);
+    }
+
+    function hideCreateRole() {
+      crPage.style.display = "none";
+      if (mainPage) mainPage.style.display = "";
+      if (crTitleEl) crTitleEl.textContent = "Create Role";
+      crEditingRecord = null;
+      setRemoveRoleVisible(false);
+    }
+
+    /* ─── Edit Role: reuses the Create Role layout with prefilled values.
+       Maps table function groups (e.g. "Core Planning", "TOM", "Admin")
+       to the existing APP_PERMISSIONS keys and pre-checks the first N
+       permissions of each section to match the displayed counts. */
+    var FUNCTION_TO_APP_KEY = {
+      "Core Planning": "core_planning",
+      "TOM": "target_options_manager",
+      "Admin": "identity_access_management"
+    };
+    /* Per-role pre-checked permissions. Each app array has exactly the
+       same count as the corresponding table entry, so the Functions (N)
+       summary and the checked permissions always match. Only PRD-valid
+       app keys appear here — sales/ad_ops/billing were removed along
+       with their dropdown options to avoid orphan mappings. */
+    var ROLE_PRESELECT_OVERRIDES = {
+      r001: {
+        core_planning: [
+          "View orders","View order details","Create orders","Edit orders",
+          "View media plans","View media plan details","Create media plans","Edit media plans"
+        ],
+        target_options_manager: ["View options","View option details"],
+        identity_access_management: ["View roles","View role details","Create roles"]
+      },
+      r002: {
+        core_planning: [
+          "View orders","View order details","Create orders","Edit orders",
+          "Approve orders","View media plans","Create media plans"
+        ],
+        target_options_manager: ["View options","View groups"],
+        identity_access_management: ["View users","View user details"]
+      },
+      r003: {
+        core_planning: [
+          "View orders","View order details","Create orders",
+          "View media plans","Create media plans"
+        ]
+      },
+      r004: {
+        core_planning: [
+          "View orders","View order details","Approve orders",
+          "View media plans","Create media plans","Edit media plans"
+        ],
+        target_options_manager: ["View options","View groups"]
+      },
+      r005: {
+        core_planning: ["View orders","View media plans"]
+      },
+      r006: {
+        core_planning: ["View orders","View order details","View media plans"]
+      },
+      r007: {
+        core_planning: ["View orders","View media plans","View media plan details"]
+      },
+      r008: {
+        core_planning: [
+          "View orders","View order details","Create orders","Edit orders",
+          "View media plans","Edit media plans"
+        ],
+        target_options_manager: ["View options","View groups"]
+      },
+      r009: {
+        core_planning: ["View orders","View media plans"]
+      },
+      r010: {
+        core_planning: ["View orders","View media plans"]
+      },
+      r011: {
+        core_planning: ["View orders","View order details","View media plans"]
+      },
+      r012: {
+        core_planning: ["View orders","View order details","View media plans"]
+      },
+      r013: {
+        core_planning: ["View orders","View media plans"]
+      },
+      r014: {
+        core_planning: ["View orders","View media plans"]
+      },
+      r015: {
+        core_planning: ["View orders","View media plans","View media plan details"]
+      }
+    };
+
+    function prefillAppChecks(appKey, count, preferredValues) {
+      var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
+      if (!section) return;
+      var toCheck = {};
+      if (preferredValues && preferredValues.length) {
+        for (var p = 0; p < preferredValues.length; p++) toCheck[preferredValues[p]] = true;
+      }
+      var boxes = section.querySelectorAll(".cr-perm-check");
+      var checked = 0;
+      for (var i = 0; i < boxes.length && checked < count; i++) {
+        if (preferredValues && preferredValues.length) {
+          if (toCheck[boxes[i].value]) { boxes[i].checked = true; checked++; }
+        }
+      }
+      for (var j = 0; j < boxes.length && checked < count; j++) {
+        if (!boxes[j].checked) { boxes[j].checked = true; checked++; }
+      }
+    }
+
+    function showEditRole(record) {
+      if (!record) return;
+      showCreateRole();
+      if (crTitleEl) crTitleEl.textContent = "Edit Role";
+      crEditingRecord = record;
+      setRemoveRoleVisible(true);
+      crRoleName.value = record.role || "";
+      var desc = document.getElementById("crDescription");
+      if (desc) desc.value = (record.description || "").replace(/\.$/, "");
+      var sens = crPage.querySelector('input[name="dataAccess"][value="sensitive"]');
+      var reg  = crPage.querySelector('input[name="dataAccess"][value="regional"]');
+      if (sens) sens.checked = record.status === "Sensitive";
+      if (reg)  reg.checked  = record.status === "Regional";
+
+      var overrides = ROLE_PRESELECT_OVERRIDES[record.id] || {};
+      var fns = record.functions || [];
+      for (var i = 0; i < fns.length; i++) {
+        var appKey = FUNCTION_TO_APP_KEY[fns[i].name];
+        if (!appKey || !APP_PERMISSIONS[appKey]) continue;
+        crAddApplication(appKey);
+        prefillAppChecks(appKey, fns[i].count, overrides[appKey]);
+      }
+      updateFunctionsCount();
+      updateCrSummaries();
+      captureCrInitialState();
+    }
+
+    function resetCreateRole() {
+      crRoleName.value = "";
+      var desc = document.getElementById("crDescription");
+      if (desc) desc.value = "";
+      var checks = crPage.querySelectorAll('input[name="dataAccess"]');
+      for (var i = 0; i < checks.length; i++) checks[i].checked = false;
+      crAddedApps = [];
+      crPermsContent.innerHTML = "";
+      crPermsContent.style.display = "none";
+      crSetAppValue("");
+      crRefreshAppMenu();
+      updateFunctionsCount();
+      updateCrSummaries();
+      var cards = crPage.querySelectorAll(".cr-card");
+      for (var cc = 0; cc < cards.length; cc++) {
+        cards[cc].classList.remove("collapsed");
+        var hdr = cards[cc].querySelector(".cr-section-header[data-cr-toggle]");
+        if (hdr) hdr.setAttribute("aria-expanded", "true");
+      }
+      captureCrInitialState();
+    }
+
+    function updateFunctionsCount() {
+      var checked = crPermsContent.querySelectorAll(".cr-perm-check:checked");
+      crFunctionsTitle.textContent = "Functions (" + checked.length + " Selected)";
+      updateCrSummaries();
+    }
+
+    /* Dirty-state Save Role: the button mirrors whether the form differs from
+       the captured baseline. The baseline is empty for Create Role and reflects
+       the prefilled values for Edit Role. Any change — text, checkbox, added
+       app, or permission — flips Save to enabled; reverting every field back
+       to the baseline disables it again. */
+    var crInitialState = "";
+
+    function snapshotCrState() {
+      var descEl = document.getElementById("crDescription");
+      var sensCb = crPage.querySelector('input[name="dataAccess"][value="sensitive"]');
+      var regCb  = crPage.querySelector('input[name="dataAccess"][value="regional"]');
+      var perms = [];
+      var sections = crPermsContent.querySelectorAll(".cr-app-section");
+      for (var s = 0; s < sections.length; s++) {
+        var key = sections[s].getAttribute("data-app-key") || "";
+        var boxes = sections[s].querySelectorAll(".cr-perm-check:checked");
+        var values = [];
+        for (var b = 0; b < boxes.length; b++) values.push(boxes[b].value);
+        values.sort();
+        perms.push(key + ":" + values.join(","));
+      }
+      perms.sort();
+      return JSON.stringify({
+        name: crRoleName.value,
+        desc: descEl ? descEl.value : "",
+        sens: !!(sensCb && sensCb.checked),
+        reg:  !!(regCb  && regCb.checked),
+        apps: crAddedApps.slice().sort().join("|"),
+        perms: perms.join("|")
+      });
+    }
+
+    function captureCrInitialState() {
+      crInitialState = snapshotCrState();
+      validateCreateRole();
+    }
+
+    /* Save Role enablement: the form must be both valid (name filled,
+       ≥1 permission selected) AND dirty (different from the captured
+       baseline). Create Role starts at an empty baseline so the first
+       meaningful edit flips Save on; Edit Role starts at the prefilled
+       baseline so reverting re-disables it. */
+    function isCreateRoleValid() {
+      var nameOk = !!(crRoleName.value && crRoleName.value.trim());
+      var selected = crPermsContent.querySelectorAll(".cr-perm-check:checked").length;
+      return nameOk && selected > 0;
+    }
+    function validateCreateRole() {
+      var dirty = (snapshotCrState() !== crInitialState);
+      crSaveBtn.disabled = !(dirty && isCreateRoleValid());
+    }
+
+    function crBuildBasicSummary() {
+      var name = crRoleName.value.trim();
+      var access = [];
+      var checks = crPage.querySelectorAll('input[name="dataAccess"]:checked');
+      for (var i = 0; i < checks.length; i++) {
+        var lbl = checks[i].parentNode.querySelector(".cr-check-label");
+        if (lbl) access.push(lbl.textContent.trim());
+      }
+      var parts = [];
+      if (name) parts.push(name);
+      if (access.length) parts.push(access.join(", "));
+      return parts.join(" • ");
+    }
+    function crBuildFuncsSummary() {
+      if (!crAddedApps.length) return "";
+      var labels = [];
+      for (var i = 0; i < crAddedApps.length; i++) {
+        var key = crAddedApps[i];
+        if (APP_PERMISSIONS[key]) labels.push(APP_PERMISSIONS[key].label);
+      }
+      return labels.join(", ");
+    }
+    function updateCrSummaries() {
+      if (crBasicSummary) crBasicSummary.textContent = crBuildBasicSummary();
+      if (crFuncsSummary) crFuncsSummary.textContent = crBuildFuncsSummary();
+    }
+
+    /* ─── App dropdown ─── */
+    function crBuildAppMenu() {
+      var menu = document.createElement("div");
+      menu.className = "cr-dd-menu";
+      menu.setAttribute("role", "listbox");
+      for (var i = 0; i < CR_APP_OPTIONS.length; i++) {
+        var opt = CR_APP_OPTIONS[i];
+        var row = document.createElement("div");
+        row.className = "cr-dd-option";
+        row.setAttribute("role", "option");
+        row.setAttribute("data-value", opt.value);
+        row.textContent = opt.label;
+        menu.appendChild(row);
+      }
+      crAppDD.appendChild(menu);
+      return menu;
+    }
+    var crAppMenu = crBuildAppMenu();
+
+    function crCloseAppDD() {
+      crAppDD.classList.remove("open");
+      crAppTrigger.setAttribute("aria-expanded", "false");
+    }
+    function crOpenAppDD() {
+      crAppDD.classList.add("open");
+      crAppTrigger.setAttribute("aria-expanded", "true");
+    }
+    function crSetAppValue(value) {
+      crAppCurrent = value;
+      var opts = crAppMenu.querySelectorAll(".cr-dd-option");
+      var label = "Select Application";
+      for (var i = 0; i < opts.length; i++) {
+        if (opts[i].getAttribute("data-value") === value) {
+          opts[i].classList.add("is-selected");
+          label = opts[i].textContent;
+        } else {
+          opts[i].classList.remove("is-selected");
+        }
+      }
+      if (value) {
+        crAppValue.textContent = label;
+        crAppValue.classList.remove("is-placeholder");
+      } else {
+        crAppValue.textContent = "Select Application";
+        crAppValue.classList.add("is-placeholder");
+      }
+      crUpdateAddBtnState();
+    }
+    function crUpdateAddBtnState() {
+      var canAdd = !!crAppCurrent && crAddedApps.indexOf(crAppCurrent) === -1;
+      crAddBtn.disabled = !canAdd;
+    }
+    function crRefreshAppMenu() {
+      var opts = crAppMenu.querySelectorAll(".cr-dd-option");
+      for (var i = 0; i < opts.length; i++) {
+        var v = opts[i].getAttribute("data-value");
+        if (crAddedApps.indexOf(v) >= 0) opts[i].classList.add("is-disabled");
+        else opts[i].classList.remove("is-disabled");
+      }
+    }
+    crSetAppValue("");
+
+    crAppTrigger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (crAppDD.classList.contains("open")) crCloseAppDD(); else crOpenAppDD();
+    });
+    crAppMenu.addEventListener("click", function (e) {
+      var target = e.target.closest(".cr-dd-option");
+      if (!target || target.classList.contains("is-disabled")) return;
+      crSetAppValue(target.getAttribute("data-value"));
+      crCloseAppDD();
+    });
+    document.addEventListener("click", function (e) {
+      if (!crAppDD.contains(e.target)) crCloseAppDD();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && crAppDD.classList.contains("open")) crCloseAppDD();
+    });
+
+    /* ─── Permissions rendering ─── */
+    function renderPermissionGroup(group, appKey) {
+      var html = '<div class="cr-perm-group">';
+      html += '<div class="cr-perm-group-title">' + esc(group.title) + '</div>';
+      html += '<div class="cr-perm-grid">';
+      for (var c = 0; c < group.columns.length; c++) {
+        html += '<div class="cr-perm-col">';
+        for (var p = 0; p < group.columns[c].length; p++) {
+          var name = group.columns[c][p];
+          var id = "perm_" + appKey + "_" + name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+          html += '<label class="cr-perm-item">' +
+            '<input type="checkbox" class="cr-perm-check" id="' + id + '" value="' + esc(name) + '">' +
+            '<span class="cr-perm-label">' + esc(name) + '</span>' +
+            '</label>';
+        }
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function buildAppSectionHtml(appKey) {
+      var app = APP_PERMISSIONS[appKey];
+      if (!app) return "";
+      var html = '<div class="cr-app-section" data-app-key="' + esc(appKey) + '">';
+      html += '<div class="cr-app-section-head" role="button" tabindex="0" aria-expanded="true" aria-controls="cr-app-body-' + esc(appKey) + '" data-app-toggle="' + esc(appKey) + '">';
+      html += '<div class="cr-app-head-left">';
+      html += '<svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+      html += '<span class="cr-app-title">' + esc(app.label) + '</span>';
+      html += '</div>';
+      html += '<button type="button" class="cr-app-remove" data-remove-app="' + esc(appKey) + '" aria-label="Remove ' + esc(app.label) + '">';
+      html += '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
+      html += 'Remove';
+      html += '</button>';
+      html += '</div>';
+      html += '<div class="cr-app-body" id="cr-app-body-' + esc(appKey) + '">';
+
+      var hasRight = app.rightGroups && app.rightGroups.length > 0;
+      if (hasRight) {
+        html += '<div class="cr-perm-columns"><div class="cr-perm-left">';
+        for (var i = 0; i < app.groups.length; i++) {
+          if (i > 0) html += '<div style="margin-top:24px"></div>';
+          html += renderPermissionGroup(app.groups[i], appKey);
+        }
+        html += '</div><div class="cr-perm-right"><div class="cr-perm-divider"></div><div class="cr-perm-right-content">';
+        for (var j = 0; j < app.rightGroups.length; j++) {
+          html += renderPermissionGroup(app.rightGroups[j], appKey);
+        }
+        html += '</div></div></div>';
+      } else {
+        for (var k = 0; k < app.groups.length; k++) {
+          if (k > 0) html += '<div style="margin-top:24px"></div>';
+          html += renderPermissionGroup(app.groups[k], appKey);
+        }
+      }
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    function toggleAppSection(section) {
+      if (!section) return;
+      var collapsed = section.classList.toggle("collapsed");
+      var head = section.querySelector(".cr-app-section-head");
+      if (head) head.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    }
+
+    function crAddApplication(appKey) {
+      if (!appKey || crAddedApps.indexOf(appKey) >= 0 || !APP_PERMISSIONS[appKey]) return;
+      crAddedApps.push(appKey);
+      var wrapper = document.createElement("div");
+      wrapper.innerHTML = buildAppSectionHtml(appKey);
+      crPermsContent.appendChild(wrapper.firstChild);
+      crPermsContent.style.display = "";
+      crSetAppValue("");
+      crRefreshAppMenu();
+      updateFunctionsCount();
+      validateCreateRole();
+    }
+    function crRemoveApplication(appKey) {
+      var idx = crAddedApps.indexOf(appKey);
+      if (idx === -1) return;
+      crAddedApps.splice(idx, 1);
+      var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
+      if (section && section.parentNode) section.parentNode.removeChild(section);
+      if (crAddedApps.length === 0) crPermsContent.style.display = "none";
+      crRefreshAppMenu();
+      crUpdateAddBtnState();
+      updateFunctionsCount();
+      validateCreateRole();
+    }
+
+    crPermsContent.addEventListener("click", function (e) {
+      var removeBtn = e.target.closest("[data-remove-app]");
+      if (removeBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        crRemoveApplication(removeBtn.getAttribute("data-remove-app"));
+        return;
+      }
+      var head = e.target.closest("[data-app-toggle]");
+      if (!head) return;
+      if (e.target.closest("input, label, a")) return;
+      var section = head.closest(".cr-app-section");
+      toggleAppSection(section);
+    });
+    crPermsContent.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      var head = e.target.closest("[data-app-toggle]");
+      if (!head || head !== e.target) return;
+      e.preventDefault();
+      toggleAppSection(head.closest(".cr-app-section"));
+    });
+    crPermsContent.addEventListener("change", function () {
+      updateFunctionsCount();
+      validateCreateRole();
+    });
+
+    crAddBtn.addEventListener("click", function () {
+      if (crAddBtn.disabled) return;
+      crAddApplication(crAppCurrent);
+    });
+
+    crRoleName.addEventListener("input", function () {
+      validateCreateRole();
+      updateCrSummaries();
+    });
+
+    var crDescriptionEl = document.getElementById("crDescription");
+    if (crDescriptionEl) {
+      crDescriptionEl.addEventListener("input", function () {
+        validateCreateRole();
+        updateCrSummaries();
+      });
+    }
+
+    /* ─── Collapsible sections (Basic Information, Functions) ─── */
+    function crToggleSection(header) {
+      var card = header.closest(".cr-card");
+      if (!card) return;
+      var willCollapse = !card.classList.contains("collapsed");
+      card.classList.toggle("collapsed", willCollapse);
+      header.setAttribute("aria-expanded", willCollapse ? "false" : "true");
+      if (willCollapse) updateCrSummaries();
+    }
+    var crToggleHeaders = crPage.querySelectorAll(".cr-section-header[data-cr-toggle]");
+    for (var ch = 0; ch < crToggleHeaders.length; ch++) {
+      (function (header) {
+        header.addEventListener("click", function () { crToggleSection(header); });
+        header.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+            e.preventDefault();
+            crToggleSection(header);
+          }
+        });
+      })(crToggleHeaders[ch]);
+    }
+    crPage.addEventListener("change", function (e) {
+      if (e.target && e.target.name === "dataAccess") {
+        updateCrSummaries();
+        validateCreateRole();
+      }
+    });
+
+    /* ─── Back / Cancel ─── */
+    var crBackBtn = document.getElementById("crBack");
+    var crCancelBtn = document.getElementById("crCancel");
+    if (crBackBtn) crBackBtn.addEventListener("click", hideCreateRole);
+    if (crCancelBtn) crCancelBtn.addEventListener("click", hideCreateRole);
+
+    /* ─── Save Role — demo-only local CRUD ───
+       Maps the live form state into a Roles & Permissions table row,
+       prepends it to the in-memory dataset, returns to the list, and
+       fires an EDL success toast. On Edit Role the same handler updates
+       the existing record in place. No network. */
+    var APP_KEY_TO_TABLE_LABEL = {
+      core_planning:              "Core Planning",
+      identity_access_management: "Admin",
+      target_options_manager:     "TOM",
+      disney_ads_agent:           "Disney Ads Agent",
+      inventory_catalog_manager:  "ICM"
+    };
+    var CR_CURRENT_USER = "Marge Simpson";
+
+    function crTodayString() {
+      var d = new Date();
+      function pad(n) { return (n < 10 ? "0" : "") + n; }
+      return pad(d.getMonth() + 1) + "/" + pad(d.getDate()) + "/" + d.getFullYear();
+    }
+
+    function crCollectFunctions() {
+      var out = [];
+      var sections = crPermsContent.querySelectorAll(".cr-app-section");
+      for (var i = 0; i < sections.length; i++) {
+        var key = sections[i].getAttribute("data-app-key") || "";
+        var count = sections[i].querySelectorAll(".cr-perm-check:checked").length;
+        if (!count) continue;
+        var label = APP_KEY_TO_TABLE_LABEL[key] ||
+                    (APP_PERMISSIONS[key] && APP_PERMISSIONS[key].label) || key;
+        out.push({ name: label, count: count });
+      }
+      return out;
+    }
+
+    function crCollectStatus() {
+      var sens = crPage.querySelector('input[name="dataAccess"][value="sensitive"]');
+      var reg  = crPage.querySelector('input[name="dataAccess"][value="regional"]');
+      if (sens && sens.checked) return "Sensitive";
+      if (reg  && reg.checked)  return "Regional";
+      return "Regional";
+    }
+
+    function crNewRoleId() {
+      return "r_local_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    }
+
+    function handleCrSave() {
+      if (crSaveBtn.disabled) return;
+      if (!isCreateRoleValid()) return;
+
+      var descEl = document.getElementById("crDescription");
+      var name = crRoleName.value.trim();
+      var description = descEl ? descEl.value.trim() : "";
+      if (description && description.slice(-1) !== ".") description += ".";
+      var functions = crCollectFunctions();
+      var status = crCollectStatus();
+
+      if (crEditingRecord) {
+        crEditingRecord.role = name;
+        crEditingRecord.description = description;
+        crEditingRecord.functions = functions;
+        crEditingRecord.status = status;
+        hideCreateRole();
+        renderRPTable();
+        renderRPPagination();
+        showEdlToast({
+          type: "success",
+          title: "Role updated",
+          bodyHtml: '&ldquo;<strong>' + esc(name) + '</strong>&rdquo; has been updated.'
+        });
+        return;
+      }
+
+      var record = {
+        id: crNewRoleId(),
+        role: name,
+        description: description,
+        functions: functions,
+        status: status,
+        createdBy: CR_CURRENT_USER,
+        createDate: crTodayString()
+      };
+      ROLES_PERMISSIONS_DATA.unshift(record);
+      RP_ORIGINAL_ORDER.unshift(record);
+
+      rpSortKey = null;
+      rpSortDir = null;
+      rpCurrentPage = 1;
+
+      hideCreateRole();
+      renderRPTable();
+      renderRPPagination();
+
+      showEdlToast({
+        type: "success",
+        title: "Role created",
+        bodyHtml: '&ldquo;<strong>' + esc(name) + '</strong>&rdquo; has been created.'
+      });
+    }
+
+    if (crSaveBtn) crSaveBtn.addEventListener("click", handleCrSave);
+
+    /* ─── Remove Role (Edit Role only) ─── */
+    var crConfirmBackdrop = document.getElementById("crConfirmBackdrop");
+    var crConfirmRoleName = document.getElementById("crConfirmRoleName");
+    var crConfirmCancel   = document.getElementById("crConfirmCancel");
+    var crConfirmRemove   = document.getElementById("crConfirmRemove");
+    var crConfirmLastFocus = null;
+
+    function openRemoveConfirm() {
+      if (!crEditingRecord || !crConfirmBackdrop) return;
+      crConfirmLastFocus = document.activeElement;
+      crConfirmRoleName.textContent = crEditingRecord.role || "this role";
+      crConfirmBackdrop.removeAttribute("hidden");
+      setTimeout(function () { if (crConfirmCancel) crConfirmCancel.focus(); }, 0);
+    }
+
+    function closeRemoveConfirm() {
+      if (!crConfirmBackdrop) return;
+      crConfirmBackdrop.setAttribute("hidden", "");
+      if (crConfirmLastFocus && typeof crConfirmLastFocus.focus === "function") {
+        crConfirmLastFocus.focus();
+      }
+      crConfirmLastFocus = null;
+    }
+
+    /* PRD rule: a role cannot be removed while it is assigned to any
+       active user. Returns true if at least one user with status
+       "Active" carries this role name. */
+    function roleHasActiveAssignees(roleName) {
+      if (!roleName || typeof DATA === "undefined" || !DATA) return false;
+      for (var i = 0; i < DATA.length; i++) {
+        var u = DATA[i];
+        if (!u || u.status !== "Active") continue;
+        var roles = u.roles || [];
+        for (var r = 0; r < roles.length; r++) {
+          if (roles[r] === roleName) return true;
+        }
+      }
+      return false;
+    }
+
+    function performRemoveRole() {
+      if (!crEditingRecord) { closeRemoveConfirm(); return; }
+      var record = crEditingRecord;
+      var name = record.role || "";
+      closeRemoveConfirm();
+
+      if (roleHasActiveAssignees(name)) {
+        showEdlToast({
+          type: "error",
+          title: "Unable to remove role",
+          bodyHtml: '&ldquo;<strong>' + esc(name) + '</strong>&rdquo; is assigned to active users and cannot be removed.'
+        });
+        return;
+      }
+
+      var id = record.id;
+      for (var i = ROLES_PERMISSIONS_DATA.length - 1; i >= 0; i--) {
+        if (ROLES_PERMISSIONS_DATA[i].id === id) ROLES_PERMISSIONS_DATA.splice(i, 1);
+      }
+      for (var j = RP_ORIGINAL_ORDER.length - 1; j >= 0; j--) {
+        if (RP_ORIGINAL_ORDER[j].id === id) RP_ORIGINAL_ORDER.splice(j, 1);
+      }
+      var tp = Math.max(1, Math.ceil(getRPFilteredData().length / rpPageSize));
+      if (rpCurrentPage > tp) rpCurrentPage = tp;
+      hideCreateRole();
+      renderRPTable();
+      renderRPPagination();
+
+      showEdlToast({
+        type: "success",
+        title: "Role removed",
+        bodyHtml: '&ldquo;<strong>' + esc(name) + '</strong>&rdquo; has been removed.'
+      });
+    }
+
+    if (crRemoveBtn)     crRemoveBtn.addEventListener("click", openRemoveConfirm);
+    if (crConfirmCancel) crConfirmCancel.addEventListener("click", closeRemoveConfirm);
+    if (crConfirmRemove) crConfirmRemove.addEventListener("click", performRemoveRole);
+    if (crConfirmBackdrop) {
+      crConfirmBackdrop.addEventListener("click", function (e) {
+        if (e.target === crConfirmBackdrop) closeRemoveConfirm();
+      });
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && crConfirmBackdrop && !crConfirmBackdrop.hasAttribute("hidden")) {
+        closeRemoveConfirm();
+      }
+    });
+
+    /* ─── "+ Create Role" trigger in Roles & Permissions panel ─── */
+    var createRoleBtns = document.querySelectorAll("#rolesPanel .btn-ghost");
+    for (var cri = 0; cri < createRoleBtns.length; cri++) {
+      if (createRoleBtns[cri].textContent.trim().indexOf("Create Role") !== -1) {
+        createRoleBtns[cri].addEventListener("click", function (e) {
+          e.preventDefault();
+          showCreateRole();
+        });
+      }
+    }
+
+    /* ─── Role-name click (opt-in per row via .rp-role-link) opens Edit Role ─── */
+    var rpTbody = document.getElementById("rpTbody");
+    if (rpTbody) {
+      rpTbody.addEventListener("click", function (e) {
+        var link = e.target.closest(".rp-role-link[data-role-edit]");
+        if (!link) return;
+        e.preventDefault();
+        var id = link.getAttribute("data-role-edit");
+        var record = null;
+        for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
+          if (ROLES_PERMISSIONS_DATA[i].id === id) { record = ROLES_PERMISSIONS_DATA[i]; break; }
+        }
+        if (record) showEditRole(record);
+      });
+    }
+  }
 });
