@@ -650,10 +650,39 @@ document.addEventListener("DOMContentLoaded", function () {
      Sorting, search, filter, pagination, and sticky layout are not
      touched — only header cell widths change. */
   (function setupColumnResize() {
+    /* Per-column minimum drag widths, chosen by content type so every
+       column can still shrink to a *readable* state without ever
+       collapsing to something unusable or letting content overlap
+       neighbours. Content is always clipped by the cell's own
+       overflow:hidden (see `.tbl th, .tbl td` in styles.css), so
+       overlap is prevented by CSS; these floors simply keep the
+       visible content meaningful when a user drags narrow.
+
+       Short-content columns (single word / single badge):
+         st  (Status, 100)  — header "Status" + sort icon ≈ 66px;
+                              pill max ≈ 85px. 100 leaves pill air.
+         rg  (Region, 80)   — 2–4 char codes ("NA", "EMEA").
+         date(Create Date,120)— header "Create Date" ≈ 85px; body
+                              "MM/DD/YYYY" ≈ 75px.
+       Medium-content columns (short phrases / names):
+         nm  (Name, 200)    — 48px avatar + gap + name text.
+         tm  (Team, 140)    — team names can truncate gracefully
+                              (e.g. "Ad Solutions & Innovation").
+         by  (Created By,130)— user names ("Homer Simpson" ≈ 100px).
+       Long-content columns (multi-item / long prose):
+         em  (Email, 220)   — "first.last@disney.com" fits cleanly.
+         rl  (Role, 220)    — one role + "+N role" chip fit at 220;
+                              fitUsersRoleCells picks up from there.
+         desc(Description,220)
+         func(Functions,240)— keeps at least one app-group tag
+                              visible alongside its (N) count button.
+
+       Content that actually overflows a column at these floors falls
+       back to the cell's CSS ellipsis + the truncation-gated tooltip
+       (see getCellTruncationInfo), so nothing is ever lost — only
+       visibly truncated when the column is too narrow to show it. */
     var MIN_WIDTHS = {
-      /* Users table (data-u-col) — short fields narrow, long fields wide. */
-      "nm": 200, "em": 200, "rl": 220, "st": 90, "tm": 140, "rg": 80,
-      /* R&P table (data-rp-col). */
+      "nm": 200, "em": 220, "rl": 220, "st": 100, "tm": 140, "rg": 80,
       "role": 160, "desc": 220, "func": 240, "by": 130, "date": 120
     };
     var SKIP_KEYS = { "ct": 1 };
@@ -745,6 +774,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     attach(document.getElementById("usersTable"));
     attach(document.getElementById("rpTable"));
+
+    /* ResizeObserver on the Users Role column header — guarantees
+       fitUsersRoleCells() re-runs whenever the column's rendered
+       width changes for *any* reason:
+         • manual drag (already handled by onMove, but this is a
+           safety net for edge cases like keyboard-driven width
+           adjustments or browser zoom)
+         • viewport resize (already handled by the resize listener
+           in setupRightmostAlignment, also redundantly covered)
+         • tab-switch visibility transition (display:none → "")
+         • programmatic <col> width updates (setupRightmostAlignment
+           writes pixel widths whenever it realigns to the CTA)
+       Without this observer, a stale "+N role" chip could persist
+       after one of those non-drag triggers changed the column's
+       real width while the cell's innerHTML still reflected an
+       older (narrower) state — which is the bug reported.
+
+       rAF-throttled so a burst of resize ticks produces at most one
+       fit per frame. `ResizeObserver` is supported in every modern
+       browser; the guard falls back silently on older engines where
+       the existing drag/render/window-resize hooks still cover the
+       common paths. */
+    if (typeof ResizeObserver !== "undefined") {
+      var roleHead = document.querySelector("#usersTable th.c-rl");
+      if (roleHead) {
+        var roScheduled = false;
+        var ro = new ResizeObserver(function () {
+          if (roScheduled) return;
+          roScheduled = true;
+          requestAnimationFrame(function () {
+            roScheduled = false;
+            fitUsersRoleCells();
+          });
+        });
+        ro.observe(roleHead);
+      }
+    }
   })();
 
   /* ─── Pixel-perfect rightmost-column → CTA alignment ───
@@ -848,10 +914,18 @@ document.addEventListener("DOMContentLoaded", function () {
     alignUsers();
 
     /* Tab-switch: align the now-visible table on the next frame so
-       the display:"" has actually taken effect in layout. */
+       the display:"" has actually taken effect in layout. The Users
+       tab also re-runs fitUsersRoleCells() so the Role column
+       overflow chip is re-evaluated against whatever width the Role
+       column has now — prevents a stale "+N role" chip from lingering
+       when the viewport was resized or columns were realigned while
+       the Users table was hidden. */
     var tabBtns = document.querySelectorAll(".tab-btn");
     if (tabBtns[0]) tabBtns[0].addEventListener("click", function () {
-      requestAnimationFrame(alignUsers);
+      requestAnimationFrame(function () {
+        alignUsers();
+        fitUsersRoleCells();
+      });
     });
     if (tabBtns[1]) tabBtns[1].addEventListener("click", function () {
       requestAnimationFrame(alignRP);
