@@ -1364,7 +1364,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
      • <th class="c-ct"> header with sort handler
      • <td class="c-ct"> cell rendering in app.js
      • user.title data on every record
-     • Company Title / Role input in the filter drawer
+   Note: the "Company Title / Role" input has been removed from the
+   filter drawer. The underlying `filters.title` field still exists
+   but is no longer user-settable through the UI.
    To restore the column later, simply DELETE this block. Nothing else needs
    to change. The freed 17.28% width is reallocated to the Role column
    (22.08% → 39.36%) so multi-role rows show more inline content without

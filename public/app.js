@@ -1499,8 +1499,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var fltInputs = [
     { id: "fltName",  key: "name" },
     { id: "fltEmail", key: "email" },
-    { id: "fltTeam",  key: "team" },
-    { id: "fltTitle", key: "title" }
+    { id: "fltTeam",  key: "team" }
   ];
 
   function updateClearBtn(input) {
@@ -1770,7 +1769,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("fltName").value = filters.name;
     document.getElementById("fltEmail").value = filters.email;
     document.getElementById("fltTeam").value = filters.team;
-    document.getElementById("fltTitle").value = filters.title;
     setRole(filters.role);
     setStatus(filters.status);
     setRegion(filters.region);
