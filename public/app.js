@@ -428,33 +428,21 @@ function renderTable() {
   var html = "";
   for (var i = 0; i < rows.length; i++) {
     var u = rows[i];
-    // Show as many full role names as comfortably fit inline; collapse
-    // the rest into a "+N role(s)" link. The character budget is tuned
-    // to the new Role column width (~32%) so two roles always fit, and
-    // a short third one is included when the total stays tidy. Always
-    // show at least one role so the cell is never empty.
-    var MAX_ROLE_CHARS = 54;
-    var shownRoles = [];
-    var roleCharCount = 0;
-    for (var ri = 0; ri < u.roles.length; ri++) {
-      var piece = u.roles[ri];
-      var addedChars = piece.length + (shownRoles.length > 0 ? 2 : 0);
-      if (shownRoles.length >= 1 && roleCharCount + addedChars > MAX_ROLE_CHARS) break;
-      shownRoles.push(piece);
-      roleCharCount += addedChars;
-    }
-    var extra = u.roles.length - shownRoles.length;
-    var inlineHtml = esc(shownRoles.join(', '));
-    var extraHtml = '';
-    if (extra > 0) {
-      var tooltipLines = u.roles.join('\n');
-      extraHtml = ' <a href="#" class="role-extra" data-tooltip="' + esc(tooltipLines) + '">+' + extra + ' role' + (extra > 1 ? 's' : '') + '</a>';
-    }
+    /* Render the FULL role list inline, with no overflow chip. The
+       "+N role(s)" chip is added post-render by fitUsersRoleCells()
+       only when the cell's rendered content actually overflows its
+       column — so on wide layouts all roles stay visible, and on
+       narrow / resized-narrower layouts only the hidden remainder
+       collapses into the chip. Roles are stashed pipe-delimited on
+       the td (simpler than JSON to round-trip through an HTML attr)
+       so the fitter can reconstruct them after pagination/filter/
+       tab-switch/resize without re-querying the data array. */
+    var rolesAttr = u.roles.join("|");
     html += '<tr data-id="' + esc(u.id) + '">' +
       '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, currentPage === 2) +
         '<span class="name-link" title="' + esc(u.name) + '">' + esc(u.name) + '</span></div></td>' +
       '<td class="c-em" title="' + esc(u.email) + '">' + esc(u.email) + '</td>' +
-      '<td class="c-rl" title="' + esc(u.roles.join(', ')) + '"><span class="role-txt">' + inlineHtml + extraHtml + '</span></td>' +
+      '<td class="c-rl" title="' + esc(u.roles.join(', ')) + '" data-roles="' + esc(rolesAttr) + '"><span class="role-txt">' + esc(u.roles.join(', ')) + '</span></td>' +
       '<td class="c-st">' + renderStatusHtml(u.status) + '</td>' +
       '<td class="c-tm" title="' + esc(u.team) + '">' + esc(u.team) + '</td>' +
       '<td class="c-ct" title="' + esc(u.title) + '">' + esc(u.title) + '</td>' +
@@ -462,6 +450,66 @@ function renderTable() {
       '</tr>';
   }
   tb.innerHTML = html;
+  fitUsersRoleCells();
+}
+
+/* Width-responsive Role column overflow on the Users tab.
+   ─────────────────────────────────────────────────────────
+   Walks every visible Role cell and decides whether to show the full
+   role list or collapse the tail into a "+N role(s)" link. Reads the
+   row's roles from its td's `data-roles` attribute (pipe-delimited,
+   set in renderTable) so this works after any re-render and also for
+   size-only events that don't rebuild the table (window resize,
+   manual column resize).
+
+   Algorithm, per cell:
+     1. Render the full role list, no chip. Because `.tbl td` is
+        `overflow: hidden; text-overflow: ellipsis`, content that
+        fits produces `scrollWidth <= clientWidth` and we leave it
+        alone — no "+N" chip on wide/roomy layouts.
+     2. If the full list overflows, iteratively drop trailing roles
+        and append a "+N role(s)" chip until the cell fits. Stops at
+        1 visible role; if even that plus the chip overflows, the
+        cell's natural ellipsis truncates inside the last role — the
+        title tooltip + universal cell-truncation tooltip still
+        reveal the full list on hover, so nothing is lost.
+     3. A +1px tolerance on the fit check absorbs sub-pixel rounding
+        from the browser so cells right at the boundary don't flap
+        between states during resize.
+
+   Called from:
+     • renderTable() — after every table render.
+     • setupRightmostAlignment's debounced window-resize handler.
+     • setupColumnResize's onMove/onUp (Users table only) so dragging
+       the Role handle wider restores hidden roles in real time and
+       dragging it narrower brings the chip back only when needed.
+
+   No styling, row height, typography, tooltip/search/filter/pagination
+   or alignment behavior is touched — this only swaps the innerHTML of
+   the existing `.role-txt` span inside the existing td. */
+function fitUsersRoleCells() {
+  var tbody = document.getElementById("tbody");
+  if (!tbody) return;
+  var cells = tbody.querySelectorAll("td.c-rl[data-roles]");
+  for (var i = 0; i < cells.length; i++) {
+    var cell = cells[i];
+    var span = cell.querySelector(".role-txt");
+    if (!span) continue;
+    var rolesAttr = cell.getAttribute("data-roles") || "";
+    var roles = rolesAttr ? rolesAttr.split("|") : [];
+    if (!roles.length) continue;
+    span.innerHTML = esc(roles.join(", "));
+    if (cell.scrollWidth <= cell.clientWidth + 1) continue;
+    var tooltip = roles.join("\n");
+    for (var count = roles.length - 1; count >= 1; count--) {
+      var shown = roles.slice(0, count);
+      var extra = roles.length - count;
+      span.innerHTML = esc(shown.join(", ")) +
+        ' <a href="#" class="role-extra" data-tooltip="' + esc(tooltip) +
+        '">+' + extra + " role" + (extra > 1 ? "s" : "") + "</a>";
+      if (cell.scrollWidth <= cell.clientWidth + 1) break;
+    }
+  }
 }
 
 function totalPages() {
@@ -655,6 +703,24 @@ document.addEventListener("DOMContentLoaded", function () {
       handle.classList.add("active");
       document.body.classList.add("col-resizing");
 
+      /* When the Users table is being resized, re-fit the Role column
+         live so "+N role" disappears as the drag widens and reappears
+         as it narrows. rAF-throttled to avoid thrashing during fast
+         drags; the trailing onUp call guarantees a final correct state
+         even if the last mousemove was coalesced out. Only runs for
+         the Users table since R&P's Role column uses a different
+         layout. */
+      var isUsersTable = table.id === "usersTable";
+      var fitScheduled = false;
+      function scheduleFit() {
+        if (!isUsersTable || fitScheduled) return;
+        fitScheduled = true;
+        requestAnimationFrame(function () {
+          fitScheduled = false;
+          fitUsersRoleCells();
+        });
+      }
+
       function onMove(e) {
         var dx = e.clientX - startX;
         var newW = Math.max(minW, startW + dx);
@@ -664,12 +730,14 @@ document.addEventListener("DOMContentLoaded", function () {
           total += parseFloat(cols[k].style.width) || 0;
         }
         table.style.width = total + "px";
+        scheduleFit();
       }
       function onUp() {
         document.removeEventListener("mousemove", onMove);
         document.removeEventListener("mouseup", onUp);
         handle.classList.remove("active");
         document.body.classList.remove("col-resizing");
+        if (isUsersTable) fitUsersRoleCells();
       }
       document.addEventListener("mousemove", onMove);
       document.addEventListener("mouseup", onUp);
@@ -799,6 +867,10 @@ document.addEventListener("DOMContentLoaded", function () {
       resizeTimer = setTimeout(function () {
         alignUsers();
         alignRP();
+        /* Role column overflow re-adapts to the new column width so
+           the "+N role" chip disappears on wider viewports and comes
+           back only when the content actually overflows. */
+        fitUsersRoleCells();
       }, 80);
     });
 

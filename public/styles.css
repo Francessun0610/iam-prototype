@@ -361,13 +361,16 @@ table { border-spacing: 0; border-collapse: collapse; }
 /* ─── TABLE ─── header h-48, data rows h-64 (avatar), full-width borders ─── */
 /* The table itself spans the full card width so the row-divider borders
    (.tbl tbody tr { border-bottom }) draw cleanly from edge to edge with
-   no gap on the right. The 56px right-gutter rail that aligns the CTA,
-   the rightmost column's visible content, and the pagination controls
-   is implemented on those elements individually (see .tbar below,
-   .pgn, and the per-column padding-right on the rightmost cell in each
-   table — .c-rg for Users, .rp-date for R&P). Doing the rail via cell
-   padding instead of wrap padding keeps the tr's border-bottom running
-   all the way across the table. */
+   no gap on the right. The 56px right-gutter rail that aligns the CTA
+   with the rightmost column's visible content is implemented on those
+   elements individually (see .tbar below and the per-column padding on
+   the rightmost cell in each table — .c-rg for Users, .rp-date for
+   R&P). The pagination row intentionally uses a symmetric 16px
+   horizontal padding (see .pgn below) so the left and right ends of
+   the row feel visually balanced against each other; it does not
+   share the CTA rail. Doing the rail via cell padding instead of
+   wrap padding keeps the tr's border-bottom running all the way
+   across the table. */
 .tbl-wrap { overflow-x: auto; }
 .tbl { width: 100%; table-layout: fixed; }
 .tbl th, .tbl td { text-align: left; vertical-align: middle; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -414,6 +417,29 @@ table { border-spacing: 0; border-collapse: collapse; }
 #rpColgroup col[data-rp-col="by"]   { width:  9.57%; }
 #rpColgroup col[data-rp-col="date"] { width: 13.00%; }
 
+/* Large-desktop (1920×1080) rebalance — Description ↔ Functions only.
+   At ≥1920px viewports the card is ~1840px wide, which at the base
+   ratios above leaves Description around 529 px while Functions
+   swells to ~717 px after the JS date-lock and pro-rata redistribute.
+   That makes Description truncate too aggressively while Functions
+   carries a lot of empty right-side space on typical rows.
+
+   Shifting a flat 5% from `func` → `desc` (27.20 → 32.20 and
+   36.89 → 31.89) rebalances the pair to roughly 626 px / 620 px at
+   1920 — Description slightly wider, Functions still comfortably
+   legible. The total still sums to 100% so the JS redistribution
+   math is unchanged, and because only `desc` and `func` are touched
+   the right-side alignment (Created By / Create Date / + Create
+   Role CTA) is untouched. Column resize is unaffected — it commits
+   per-column pixel widths from the current render on drag-start
+   (see setupColumnResize in app.js), so handles keep working
+   identically at every breakpoint. Smaller breakpoints intentionally
+   keep the base ratios. */
+@media (min-width: 1920px) {
+  #rpColgroup col[data-rp-col="desc"] { width: 32.20%; }
+  #rpColgroup col[data-rp-col="func"] { width: 31.89%; }
+}
+
 .tbl thead tr { background: var(--bg-surface); border-bottom: 1px solid var(--border-default); }
 .tbl th { font-size: 12px; font-weight: 400; line-height: 18px; color: var(--text-secondary); position: relative; }
 th.c-nm { overflow: visible; text-overflow: clip; padding-left: 32px; }
@@ -442,7 +468,16 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .role-extra:hover { text-decoration: underline; }
 
 /* ─── PAGINATION ─── h-48 px-16 py-8 bg white ─── */
-.pgn { display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 56px 0 16px; background: var(--bg-surface); }
+/* Symmetric 16px horizontal padding (EDL spec). The right side
+   previously used 56px so the "Go to page" select's right edge would
+   share a rail with the "+ Add Users" / "+ Create Role" CTA above,
+   but that made the right end feel ~40px wider than the left end
+   and unbalanced the row. Using the left value on both ends ties
+   the two ends to the same visual rhythm; the centered page-number
+   group shifts by ~20px (half of the reclaimed 40px) because the
+   row uses justify-content: space-between, which is the subtle
+   center nudge called out as acceptable in the brief. */
+.pgn { display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 16px; background: var(--bg-surface); }
 .pgn-show, .pgn-jump { display: flex; align-items: center; gap: 4px; }
 .pgn-lbl { font-size: 12px; line-height: 18px; color: var(--text-primary); }
 
