@@ -334,7 +334,7 @@ table { border-spacing: 0; border-collapse: collapse; }
 
 /* ─── TABLE ─── header h-48, data rows h-64 (avatar), full-width borders ─── */
 .tbl-wrap { overflow-x: auto; }
-.tbl { width: 100%; table-layout: fixed; min-width: 1310px; }
+.tbl { width: 100%; table-layout: fixed; }
 .tbl th, .tbl td { text-align: left; vertical-align: middle; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tbl th { height: 48px; }
 .tbl td { height: 64px; }
@@ -348,14 +348,13 @@ table { border-spacing: 0; border-collapse: collapse; }
 #usersColgroup col[data-u-col="ct"] { width: 17.28%; }
 #usersColgroup col[data-u-col="rg"] { width: 7.20%; }
 
-#rpColgroup col[data-rp-col="cb"]   { width: 3.86%; }
+/* Checkbox column removed — its 3.86% returns to Description. The original
+   28px left gutter (which previously came from the checkbox cell's padding)
+   is re-applied to the new first column (rp-role) below so the table's left
+   edge alignment is preserved and no empty gap is introduced. */
 #rpColgroup col[data-rp-col="role"] { width: 13.34%; }
-#rpColgroup col[data-rp-col="desc"] { width: 35.34%; }
-#rpColgroup col[data-rp-col="func"] { width: 22.54%; }
-/* Status and Created By nudged left by 0.5% each; the 1% is pooled into
-   Create Date so its header text shifts left to align vertically with
-   the "+ Create Role" action in the toolbar above. */
-#rpColgroup col[data-rp-col="stat"] { width: 7.20%; }
+#rpColgroup col[data-rp-col="desc"] { width: 26.20%; }
+#rpColgroup col[data-rp-col="func"] { width: 42.74%; }
 #rpColgroup col[data-rp-col="by"]   { width: 9.00%; }
 #rpColgroup col[data-rp-col="date"] { width: 8.72%; }
 
@@ -415,16 +414,19 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .flt-drawer { position: fixed; top: 0; left: 0; width: 400px; height: 100vh; background: var(--bg-surface); z-index: 201; display: flex; flex-direction: column; box-shadow: var(--shadow-drawer); transform: translateX(-100%); transition: transform 0.25s ease; }
 .flt-drawer.open { transform: translateX(0); }
 
-.flt-header { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 28px; border-bottom: 1px solid var(--border-default); flex-shrink: 0; }
+/* EDL dense drawer: header, body and footer tightened onto the 4px spacing
+   grid. Heights, paddings and gaps use EDL tokens (20 / 16 / 6 / 36 / 56 / 64)
+   — no new visual style, just a compact rhythm. */
+.flt-header { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 20px; border-bottom: 1px solid var(--border-default); flex-shrink: 0; }
 .flt-title { font-size: 20px; font-weight: 700; line-height: 26px; color: var(--text-primary); }
-.flt-close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; color: var(--text-muted); }
+.flt-close { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; color: var(--text-muted); }
 .flt-close:hover { background: var(--bg-hover); color: var(--text-secondary); }
 
-.flt-body { flex: 1; overflow-y: auto; padding: 28px; display: flex; flex-direction: column; gap: 24px; }
+.flt-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
 
-.flt-field { display: flex; flex-direction: column; gap: 8px; }
+.flt-field { display: flex; flex-direction: column; gap: 6px; }
 .flt-label { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); }
-.flt-input { width: 100%; height: 40px; padding: 0 16px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 14px; line-height: 21px; color: var(--text-primary); background: var(--bg-surface); outline: none; transition: border-color 0.15s ease; }
+.flt-input { width: 100%; height: 36px; padding: 0 12px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 14px; line-height: 20px; color: var(--text-primary); background: var(--bg-surface); outline: none; transition: border-color 0.15s ease; }
 .flt-input::placeholder { color: var(--text-placeholder); font-weight: 400; }
 .flt-input:hover { border-color: var(--text-muted); }
 .flt-input:focus { border-color: var(--brand-text); }
@@ -436,14 +438,21 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .flt-select:not(:invalid) { color: var(--text-primary); }
 .flt-sel-chev { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
 
-.flt-footer { display: flex; align-items: center; justify-content: space-between; height: 72px; padding: 0 28px; border-top: 1px solid var(--border-default); flex-shrink: 0; }
+.flt-footer { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 20px; border-top: 1px solid var(--border-default); flex-shrink: 0; }
 .flt-footer-r { display: flex; align-items: center; gap: 12px; }
 .flt-btn-reset { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: none; padding: 0; }
 .flt-btn-reset:hover { color: var(--brand-text-hover); }
-.flt-btn-cancel { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 20px; border: 1px solid var(--brand-text); border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: var(--bg-surface); transition: background-color 0.15s ease; }
+.flt-btn-cancel { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: 1px solid var(--brand-text); border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: var(--bg-surface); transition: background-color 0.15s ease; }
 .flt-btn-cancel:hover { background: var(--brand-bg-soft); }
-.flt-btn-apply { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-on-brand); background: var(--brand); transition: background-color 0.15s ease; }
+.flt-btn-apply { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-on-brand); background: var(--brand); transition: background-color 0.15s ease; }
 .flt-btn-apply:hover { background: var(--brand-hover); }
+
+/* Dense variant of the EDL combo input when it lives inside the filter drawer
+   — keeps the standard EDL combo component intact elsewhere (menu is portaled
+   to <body> and untouched). Drawer controls share a single 36px baseline. */
+.flt-drawer .edl-combo-input { height: 36px; padding-right: 52px; padding-left: 12px; }
+.flt-drawer .edl-combo-clear { right: 28px; width: 18px; height: 18px; }
+.flt-drawer .edl-combo-toggle { right: 8px; }
 
 /* ─── EDL COMBO BOX ─── searchable dropdown, matches EDL select + list pattern ─── */
 .edl-combo { position: relative; }
@@ -596,19 +605,22 @@ button.rp-func-count[aria-expanded="true"] { color: var(--brand-text-hover); }
 
 /* ─── Filter input with clear button ─── */
 .flt-input-wrap { position: relative; }
-.flt-input-wrap .flt-input { padding-right: 40px; }
-.flt-input-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; }
+.flt-input-wrap .flt-input { padding-right: 32px; }
+.flt-input-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; }
 .flt-input-clear:hover { color: var(--text-secondary); background: var(--bg-hover); }
 .flt-input-clear.hidden { display: none; }
 
-.empty-state { text-align: center; padding: 48px 24px; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-muted); }
+.tbl td.empty-state { text-align: center; padding: 48px 24px; height: auto; white-space: normal; overflow: visible; text-overflow: clip; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-muted); }
 
 .tbl th[data-rp-sort] { cursor: pointer; user-select: none; }
 .tbl th[data-rp-sort]:hover { color: var(--text-primary); }
 
 /* ─── ROLES & PERMISSIONS TABLE ─── */
 .rp-tbl { min-width: 1244px; table-layout: fixed; }
-.rp-cb   { text-align: left !important; padding-left: 28px !important; padding-right: 8px !important; }
+/* Left-edge gutter for the first column (Role) — carries over the 28px
+   content-start position previously provided by the removed checkbox cell. */
+.rp-tbl th.rp-role,
+.rp-tbl td.rp-role { padding-left: 28px !important; }
 .rp-act  { text-align: right !important; padding-right: 32px !important; }
 .rp-act .th-inner { justify-content: flex-end; }
 
@@ -1241,3 +1253,33 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 /* Native select popup menus in dark user agent */
 [data-theme="dark"] select option { background: var(--bg-surface); color: var(--text-primary); }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TEMPORARY: Hide "Company Title / Role" column in the Users table.
+   This is a visibility-only override. All underlying structure is preserved:
+     • <col data-u-col="ct"> in #usersColgroup
+     • <th class="c-ct"> header with sort handler
+     • <td class="c-ct"> cell rendering in app.js
+     • user.title data on every record
+     • Company Title / Role input in the filter drawer
+   To restore the column later, simply DELETE this block. Nothing else needs
+   to change. The freed 17.28% width is reallocated to the Role column
+   (22.08% → 39.36%) so multi-role rows show more inline content without
+   truncation. Region column is intentionally NOT hidden and retains its
+   original 7.20% width.
+
+   IMPORTANT — do NOT use `display: none` on th.c-ct / td.c-ct. In a
+   table-layout: fixed layout, removing a cell from the layout flow causes
+   the <col>→cell width mapping for subsequent columns to shift, which
+   zero-widths the Region column (last column) on some browsers.
+   Instead we collapse the cells to zero width + hide their content via
+   visibility, which keeps all cells in the layout flow so every <col>
+   width is honored and Region renders at its declared 7.20%.
+   ───────────────────────────────────────────────────────────────────────── */
+#usersTable th.c-ct,
+#usersTable td.c-ct { padding: 0 !important; border: 0 !important; width: 0 !important; max-width: 0 !important; overflow: hidden !important; }
+#usersTable th.c-ct > *,
+#usersTable td.c-ct { visibility: hidden; }
+#usersColgroup col[data-u-col="ct"] { width: 0; }
+#usersColgroup col[data-u-col="rl"] { width: 39.36%; }
+#usersTable { min-width: 0; }
