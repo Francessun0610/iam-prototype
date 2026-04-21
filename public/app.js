@@ -82,6 +82,11 @@ var searchTerm = "";
 var filters = { name: "", email: "", role: "", status: "", team: "", title: "", region: "" };
 var filterSnapshot = null;
 var SEARCH_FIELDS = ["name", "email", "status", "team", "title", "region"];
+/* R&P search fields — mirrors SEARCH_FIELDS above so the two tabs share
+   the same case-insensitive substring-match model. `functions` is an
+   array of {name, count} and is handled separately in getRPFilteredData
+   (parallel to how `roles` is handled for the Users tab). */
+var RP_SEARCH_FIELDS = ["role", "description", "status", "createdBy", "createDate"];
 var activeTab = "users";
 
 /* ═══ ROLES & PERMISSIONS DATA ═══ */
@@ -423,8 +428,21 @@ function renderTable() {
   var html = "";
   for (var i = 0; i < rows.length; i++) {
     var u = rows[i];
-    var INLINE_ROLES = 2;
-    var shownRoles = u.roles.slice(0, INLINE_ROLES);
+    // Show as many full role names as comfortably fit inline; collapse
+    // the rest into a "+N role(s)" link. The character budget is tuned
+    // to the new Role column width (~32%) so two roles always fit, and
+    // a short third one is included when the total stays tidy. Always
+    // show at least one role so the cell is never empty.
+    var MAX_ROLE_CHARS = 54;
+    var shownRoles = [];
+    var roleCharCount = 0;
+    for (var ri = 0; ri < u.roles.length; ri++) {
+      var piece = u.roles[ri];
+      var addedChars = piece.length + (shownRoles.length > 0 ? 2 : 0);
+      if (shownRoles.length >= 1 && roleCharCount + addedChars > MAX_ROLE_CHARS) break;
+      shownRoles.push(piece);
+      roleCharCount += addedChars;
+    }
     var extra = u.roles.length - shownRoles.length;
     var inlineHtml = esc(shownRoles.join(', '));
     var extraHtml = '';
@@ -558,6 +576,246 @@ document.addEventListener("DOMContentLoaded", function () {
   renderTable();
   renderPagination();
 
+  /* ─── Column resize ─── Restores drag-to-resize on every visible
+     column in both the Users and Roles & Permissions tables. Uses the
+     existing `.col-resize-handle` styling already in styles.css.
+
+     Behavior:
+       • One shared implementation attached to both tables.
+       • On mousedown of a handle, every column is "committed" to its
+         current rendered pixel width and the table itself is pinned
+         to its current pixel width. That way subsequent drags only
+         resize the target column — adjacent columns do NOT reflow
+         due to table-layout:fixed percentage redistribution.
+       • The target column's width is then updated live on mousemove,
+         clamped to a per-column MIN_WIDTHS value (chosen by content
+         type so short cells like Status/Region can be narrow while
+         long-content cells like Role/Description get sensible floors).
+       • The table itself grows/shrinks to the sum of column widths,
+         so `.tbl-wrap { overflow-x: auto }` naturally handles the
+         horizontal scroll when a user widens a column beyond the
+         container.
+       • Clicking the handle never triggers the sort handler on the
+         parent <th> (stopPropagation on mousedown + click).
+       • The hidden Company Title column (data-u-col="ct") is skipped
+         so no handle ever appears over a 0-width column.
+     Sorting, search, filter, pagination, and sticky layout are not
+     touched — only header cell widths change. */
+  (function setupColumnResize() {
+    var MIN_WIDTHS = {
+      /* Users table (data-u-col) — short fields narrow, long fields wide. */
+      "nm": 200, "em": 200, "rl": 220, "st": 90, "tm": 140, "rg": 80,
+      /* R&P table (data-rp-col). */
+      "role": 160, "desc": 220, "func": 240, "by": 130, "date": 120
+    };
+    var SKIP_KEYS = { "ct": 1 };
+
+    function attach(table) {
+      if (!table) return;
+      var colgroup = table.querySelector("colgroup");
+      if (!colgroup) return;
+      var cols = colgroup.children;
+      var ths = table.querySelectorAll("thead th");
+      for (var i = 0; i < ths.length; i++) {
+        (function (idx) {
+          var th = ths[idx];
+          var col = cols[idx];
+          if (!th || !col) return;
+          if (th.querySelector(".col-resize-handle")) return;
+          var key = col.getAttribute("data-u-col") || col.getAttribute("data-rp-col") || "";
+          if (SKIP_KEYS[key]) return;
+          var handle = document.createElement("span");
+          handle.className = "col-resize-handle";
+          handle.setAttribute("aria-hidden", "true");
+          handle.addEventListener("mousedown", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            startResize(ev, handle, table, cols, ths, idx, key);
+          });
+          handle.addEventListener("click", function (ev) { ev.stopPropagation(); });
+          th.appendChild(handle);
+        })(i);
+      }
+    }
+
+    function startResize(ev, handle, table, cols, ths, idx, key) {
+      for (var j = 0; j < cols.length; j++) {
+        var thWidth = ths[j] ? ths[j].offsetWidth : 0;
+        cols[j].style.width = thWidth + "px";
+      }
+      table.style.width = table.offsetWidth + "px";
+      /* Drop any CSS-level min-width floor (e.g. .rp-tbl has 1244px)
+         so explicit pixel widths are honored without being stretched. */
+      table.style.minWidth = "0";
+
+      var targetCol = cols[idx];
+      var startX = ev.clientX;
+      var startW = ths[idx].offsetWidth;
+      var minW = MIN_WIDTHS[key] || 80;
+      handle.classList.add("active");
+      document.body.classList.add("col-resizing");
+
+      function onMove(e) {
+        var dx = e.clientX - startX;
+        var newW = Math.max(minW, startW + dx);
+        targetCol.style.width = newW + "px";
+        var total = 0;
+        for (var k = 0; k < cols.length; k++) {
+          total += parseFloat(cols[k].style.width) || 0;
+        }
+        table.style.width = total + "px";
+      }
+      function onUp() {
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onUp);
+        handle.classList.remove("active");
+        document.body.classList.remove("col-resizing");
+      }
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    }
+
+    attach(document.getElementById("usersTable"));
+    attach(document.getElementById("rpTable"));
+  })();
+
+  /* ─── Pixel-perfect rightmost-column → CTA alignment ───
+     Locks the *left* edge of the rightmost data column (Region for
+     Users, Create Date for R&P) to the *left* edge of the "+ Add
+     Users" / "+ Create Role" CTA above it — i.e. to the CTA's "+"
+     icon anchor.
+
+     Why JS and not just CSS:
+       The CTA is right-anchored by `.tbar { padding-right: 56px }`,
+       and its total width is `16px icon + 6px gap + text`, where the
+       text width depends on font rendering and therefore varies
+       across browsers/OSes. The column, in contrast, is declared as
+       a percentage of the card. There is no viewport-independent %
+       that makes these two values match. Measuring at runtime is
+       the only way to get a truly pixel-exact anchor.
+
+     Algorithm:
+       1. Measure `tableRight - ctaLeft` — the CTA's left-edge offset
+          from the table's right edge, in CSS pixels.
+       2. Set the rightmost `<col>` to exactly that width. Combined
+          with `padding-left: 0` on that column's cells (see
+          styles.css), header and body content start precisely at the
+          CTA's "+" x.
+       3. Pro-rata shrink the other `<col>` widths so their new
+          widths sum to `tableWidth − targetWidth`. This keeps the
+          table flush with the card edge (no horizontal scrollbar,
+          no collapsed columns).
+
+     The existing column-resize feature (setupColumnResize above) is
+     respected: once the user drags any column, a per-table flag is
+     set so we stop auto-aligning for that tab — their manual sizes
+     win. Tab switches and window resizes still trigger the initial
+     alignment on untouched tables.
+
+     None of the other columns' *content* or *order* changes; only
+     their width is adjusted proportionally. CTAs are never moved. */
+  (function setupRightmostAlignment() {
+    var usersTable = document.getElementById("usersTable");
+    var rpTable = document.getElementById("rpTable");
+    var addUsersBtn = document.querySelector("#usersPanel .tbar > .btn-ghost");
+    var createRoleBtn = document.querySelector("#rolesPanel .tbar > .btn-ghost");
+    var dragged = { users: false, rp: false };
+
+    function align(table, cta, rightColKey, keyAttr) {
+      if (!table || !cta) return;
+      if (table.offsetWidth <= 0) return; /* hidden (e.g. other tab) */
+      var colgroup = table.querySelector("colgroup");
+      if (!colgroup) return;
+      var cols = colgroup.children;
+      var rightCol = colgroup.querySelector("col[" + keyAttr + '="' + rightColKey + '"]');
+      if (!rightCol) return;
+      var rightIdx = -1;
+      for (var i = 0; i < cols.length; i++) {
+        if (cols[i] === rightCol) { rightIdx = i; break; }
+      }
+      if (rightIdx < 0) return;
+      var ths = table.querySelectorAll("thead th");
+      if (!ths.length) return;
+
+      var tableRect = table.getBoundingClientRect();
+      var ctaRect = cta.getBoundingClientRect();
+      var tableWidth = tableRect.width;
+      var targetRightPx = Math.round(tableRect.right - ctaRect.left);
+      if (targetRightPx < 40 || targetRightPx >= tableWidth) return;
+
+      /* Capture current rendered THs once, BEFORE any inline widths
+         are written. We redistribute proportionally from this
+         snapshot so repeated calls converge rather than drift. */
+      var oldWidths = [];
+      var oldTotalOthers = 0;
+      for (var j = 0; j < ths.length; j++) {
+        var w = ths[j] ? ths[j].offsetWidth : 0;
+        oldWidths.push(w);
+        if (j !== rightIdx) oldTotalOthers += w;
+      }
+      var newTotalOthers = tableWidth - targetRightPx;
+      if (oldTotalOthers <= 0 || newTotalOthers <= 0) return;
+      var scale = newTotalOthers / oldTotalOthers;
+
+      for (var k = 0; k < cols.length; k++) {
+        if (k === rightIdx) {
+          cols[k].style.width = targetRightPx + "px";
+        } else {
+          cols[k].style.width = Math.max(1, Math.round(oldWidths[k] * scale)) + "px";
+        }
+      }
+    }
+
+    function alignUsers() {
+      if (dragged.users) return;
+      align(usersTable, addUsersBtn, "rg", "data-u-col");
+    }
+    function alignRP() {
+      if (dragged.rp) return;
+      align(rpTable, createRoleBtn, "date", "data-rp-col");
+    }
+
+    /* Initial alignment. Users is visible on load; R&P is hidden
+       until the user switches, so only Users runs here. */
+    alignUsers();
+
+    /* Tab-switch: align the now-visible table on the next frame so
+       the display:"" has actually taken effect in layout. */
+    var tabBtns = document.querySelectorAll(".tab-btn");
+    if (tabBtns[0]) tabBtns[0].addEventListener("click", function () {
+      requestAnimationFrame(alignUsers);
+    });
+    if (tabBtns[1]) tabBtns[1].addEventListener("click", function () {
+      requestAnimationFrame(alignRP);
+    });
+
+    /* Window resize: re-align both tables (whichever is visible).
+       The CTA's offset-from-table-right is viewport-invariant in
+       theory, but the proportional redistribution of other columns
+       needs to be re-computed against the new table width. */
+    var resizeTimer = null;
+    window.addEventListener("resize", function () {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        alignUsers();
+        alignRP();
+      }, 80);
+    });
+
+    /* If the user drags any column on a given table, stop
+       auto-aligning that table so our re-runs don't fight their
+       manual sizing. Captured at the document level so it works for
+       handles created after this block runs too. */
+    document.addEventListener("mousedown", function (e) {
+      var t = e.target;
+      if (!t || !t.classList || !t.classList.contains("col-resize-handle")) return;
+      var tbl = t.closest && t.closest("table");
+      if (!tbl) return;
+      if (tbl.id === "usersTable") dragged.users = true;
+      else if (tbl.id === "rpTable") dragged.rp = true;
+    }, true);
+  })();
+
   /* ─── User menu (profile dropdown + theme switcher) ───
      Wires the avatar trigger, theme submenu, sub-item selection,
      outside-click/Escape close, and persists the chosen theme. */
@@ -657,21 +915,41 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   })();
 
-  /* ─── EDL Tooltip for role hover ─── */
+  /* ─── EDL Tooltip (universal cell-truncation + role-extra hover) ───
+     One shared EDL tooltip element serves two jobs across BOTH tables:
+
+       1. `.role-extra` (the "+N role" chip on Users): multi-line
+          tooltip listing every role for that user (existing behavior
+          preserved verbatim; `data-tooltip` carries \n-separated roles).
+
+       2. Any table cell whose content is actually clipped by the
+          column width: single-line tooltip with the full cell value.
+          Truncation is detected at hover time via
+          `scrollWidth > clientWidth`, so the tooltip appears only when
+          content is genuinely cut off — if the user resizes a column
+          wide enough to reveal the full value, no tooltip shows. This
+          plays naturally with the column-resize feature.
+
+     The handler is bound to every `.tbl-wrap` so both the Users and
+     R&P tables behave identically. `focusin`/`focusout` on focusable
+     truncatable elements (`.role-extra`, `.rp-role-link`) provides
+     keyboard parity with mouse hover. */
   var tooltip = document.createElement("div");
   tooltip.className = "edl-tooltip";
   tooltip.setAttribute("role", "tooltip");
   document.body.appendChild(tooltip);
 
-  var tblWrap = document.querySelector(".tbl-wrap");
-  tblWrap.addEventListener("mouseover", function (e) {
-    var link = e.target.closest(".role-extra");
-    if (!link) return;
-    var lines = link.getAttribute("data-tooltip");
-    if (!lines) return;
-    tooltip.innerHTML = lines.split("\n").map(function (r) { return '<div class="edl-tooltip-line">' + esc(r) + '</div>'; }).join("");
+  function showTooltipFor(anchorEl, text, multiline) {
+    if (!text) return;
+    if (multiline) {
+      tooltip.innerHTML = text.split("\n").map(function (r) {
+        return '<div class="edl-tooltip-line">' + esc(r) + '</div>';
+      }).join("");
+    } else {
+      tooltip.innerHTML = '<div class="edl-tooltip-line">' + esc(text) + '</div>';
+    }
     tooltip.classList.add("visible");
-    var rect = link.getBoundingClientRect();
+    var rect = anchorEl.getBoundingClientRect();
     var tw = tooltip.offsetWidth;
     var th = tooltip.offsetHeight;
     var left = rect.left + rect.width / 2 - tw / 2;
@@ -681,10 +959,74 @@ document.addEventListener("DOMContentLoaded", function () {
     if (top < 4) { top = rect.bottom + 8; tooltip.classList.add("below"); } else { tooltip.classList.remove("below"); }
     tooltip.style.left = left + "px";
     tooltip.style.top = top + "px";
+  }
+
+  function hideTooltip() {
+    tooltip.classList.remove("visible");
+    tooltip.classList.remove("below");
+  }
+
+  /* Finds the element inside a cell that is actually being truncated
+     (if any). Some cells delegate their truncation to an inner wrapper
+     (e.g. Users `.c-nm` keeps the td open and truncates `.name-link`
+     inside; R&P `.rp-func` uses a wrapping `.rp-func-text` span). */
+  function getCellTruncationInfo(td) {
+    if (!td) return null;
+    if (td.classList.contains("empty-state")) return null;
+    if (td.classList.contains("c-ct")) return null; // hidden Company Title column
+    var INNER_SELECTORS = ".name-link, .rp-func-text";
+    var innerMatches = td.querySelectorAll(INNER_SELECTORS);
+    for (var i = 0; i < innerMatches.length; i++) {
+      var inner = innerMatches[i];
+      if (inner.scrollWidth > inner.clientWidth + 1) {
+        var innerText = inner.getAttribute("title") || td.getAttribute("title") || inner.textContent.trim();
+        return { el: inner, text: innerText };
+      }
+    }
+    if (td.scrollWidth > td.clientWidth + 1) {
+      var cellText = td.getAttribute("title") || td.textContent.trim();
+      return { el: td, text: cellText };
+    }
+    return null;
+  }
+
+  function handleCellHover(e) {
+    var extra = e.target.closest(".role-extra");
+    if (extra) {
+      var lines = extra.getAttribute("data-tooltip");
+      if (lines) showTooltipFor(extra, lines, true);
+      return;
+    }
+    var td = e.target.closest("td");
+    if (!td) { hideTooltip(); return; }
+    var info = getCellTruncationInfo(td);
+    if (info) showTooltipFor(info.el, info.text, false);
+    else hideTooltip();
+  }
+
+  var tblWraps = document.querySelectorAll(".tbl-wrap");
+  for (var twi = 0; twi < tblWraps.length; twi++) {
+    tblWraps[twi].addEventListener("mouseover", handleCellHover);
+    tblWraps[twi].addEventListener("mouseleave", hideTooltip);
+  }
+
+  /* Keyboard focus parity for actually-focusable truncatable elements. */
+  document.addEventListener("focusin", function (e) {
+    var extra = e.target.closest(".role-extra");
+    if (extra) {
+      var lines = extra.getAttribute("data-tooltip");
+      if (lines) showTooltipFor(extra, lines, true);
+      return;
+    }
+    var link = e.target.closest(".rp-role-link");
+    if (link) {
+      var td = link.closest("td");
+      var info = getCellTruncationInfo(td);
+      if (info) showTooltipFor(link, info.text, false);
+    }
   });
-  tblWrap.addEventListener("mouseout", function (e) {
-    var link = e.target.closest(".role-extra");
-    if (link) { tooltip.classList.remove("visible"); tooltip.classList.remove("below"); }
+  document.addEventListener("focusout", function (e) {
+    if (e.target.closest(".role-extra, .rp-role-link")) hideTooltip();
   });
 
   /* ─── R&P Functions Popover (click-activated, dark EDL style) ───
@@ -1530,11 +1872,24 @@ document.addEventListener("DOMContentLoaded", function () {
   function getRPFilteredData() {
     var result = ROLES_PERMISSIONS_DATA;
     if (rpSearchTerm) {
+      /* Mirrors the Users tab search (see getFilteredData): iterate a
+         flat field list for simple string columns, then scan the
+         functions array separately. Case-insensitive substring match;
+         single query string (no token splitting), identical to Users.
+         Matches against every visible R&P column (Role, Description,
+         Functions, Created By, Create Date) plus the underlying Status
+         value so the filter covers all meaningful row content. */
       var q = rpSearchTerm.toLowerCase();
-      result = result.filter(function (r) {
-        return r.role.toLowerCase().indexOf(q) !== -1 ||
-          r.description.toLowerCase().indexOf(q) !== -1 ||
-          getFunctionsText(r.functions).toLowerCase().indexOf(q) !== -1;
+      result = result.filter(function (row) {
+        for (var i = 0; i < RP_SEARCH_FIELDS.length; i++) {
+          if ((row[RP_SEARCH_FIELDS[i]] || "").toLowerCase().indexOf(q) !== -1) return true;
+        }
+        for (var f = 0; f < row.functions.length; f++) {
+          var fn = row.functions[f];
+          if ((fn.name || "").toLowerCase().indexOf(q) !== -1) return true;
+          if (("" + fn.count).indexOf(q) !== -1) return true;
+        }
+        return false;
       });
     }
     /* Drawer filters — AND-combined with each other and with the search.
