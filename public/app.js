@@ -78,6 +78,71 @@ var currentPage = 1;
 var pageSize = 10;
 var sortKey = null;
 var sortDir = null; // null | "asc" | "desc"
+
+/* EDL `.cr-dd` menus: fixed under trigger (out of flow) so opening never shifts layout;
+   visually attached like `.search-dropdown` (seam, width match). */
+function getCrDdMenuForHost(dd) {
+  if (!dd) return null;
+  var trg = dd.querySelector(".cr-dd-trigger");
+  if (!trg) return null;
+  var cid = trg.getAttribute("aria-controls");
+  if (cid) return document.getElementById(cid);
+  return dd.querySelector(".cr-dd-menu");
+}
+
+function positionCrDdLayeredMenu(dd) {
+  if (!dd || !dd.classList.contains("open")) return;
+  var trg = dd.querySelector(".cr-dd-trigger");
+  var menu = getCrDdMenuForHost(dd);
+  if (!trg || !menu || !menu.classList.contains("is-layered")) return;
+  var r = trg.getBoundingClientRect();
+  var w = Math.round(r.width);
+  menu.style.left = Math.round(r.left) + "px";
+  menu.style.top = Math.round(r.bottom - 1) + "px";
+  menu.style.width = w + "px";
+  menu.style.minWidth = w + "px";
+  menu.style.zIndex = "10000";
+}
+
+function attachCrDdLayeredMenu(dd) {
+  var trg = dd && dd.querySelector(".cr-dd-trigger");
+  var menu = getCrDdMenuForHost(dd);
+  if (!dd || !trg || !menu) return;
+  menu.classList.add("is-layered");
+  if (menu.parentNode !== document.body) {
+    document.body.appendChild(menu);
+  }
+  positionCrDdLayeredMenu(dd);
+}
+
+function detachCrDdLayeredMenu(dd) {
+  if (!dd) return;
+  var menu = getCrDdMenuForHost(dd);
+  if (!menu || !menu.classList.contains("is-layered")) return;
+  menu.classList.remove("is-layered");
+  menu.style.left = "";
+  menu.style.top = "";
+  menu.style.width = "";
+  menu.style.minWidth = "";
+  menu.style.zIndex = "";
+  if (menu.parentNode === document.body) {
+    dd.appendChild(menu);
+  }
+}
+
+function repositionOpenCrDdMenus() {
+  var open = document.querySelectorAll(".cr-dd.open");
+  for (var i = 0; i < open.length; i++) {
+    positionCrDdLayeredMenu(open[i]);
+  }
+}
+
+(function wireCrDdMenuLayerListeners() {
+  if (window._crDdLayerListeners) return;
+  window._crDdLayerListeners = true;
+  window.addEventListener("scroll", repositionOpenCrDdMenus, true);
+  window.addEventListener("resize", repositionOpenCrDdMenus);
+})();
 var searchTerm = "";
 var filters = { name: "", email: "", role: "", status: "", team: "", title: "", region: "" };
 var filterSnapshot = null;
@@ -562,6 +627,33 @@ function totalPages() {
   return Math.max(1, Math.ceil(getFilteredData().length / pageSize));
 }
 
+function renderUsersJumpDdMenu() {
+  var jumpMenu = document.getElementById("usersJumpMenu");
+  var jumpValue = document.getElementById("usersJumpValue");
+  if (!jumpMenu || !jumpValue) return;
+  var tp = totalPages();
+  var html = "";
+  for (var p = 1; p <= tp; p++) {
+    html += '<div class="cr-dd-option' + (p === currentPage ? " is-selected" : "") + '" role="option" data-users-jump="' + p + '">' + p + "</div>";
+  }
+  jumpMenu.innerHTML = html;
+  jumpValue.textContent = String(currentPage);
+}
+
+function renderUsersPageSizeDdMenu() {
+  var menu = document.getElementById("usersPageSizeMenu");
+  var valEl = document.getElementById("usersPageSizeValue");
+  if (!menu || !valEl) return;
+  var sizes = [10, 25, 50];
+  var html = "";
+  for (var i = 0; i < sizes.length; i++) {
+    var n = sizes[i];
+    html += '<div class="cr-dd-option' + (n === pageSize ? " is-selected" : "") + '" role="option" data-users-psize="' + n + '">' + n + "</div>";
+  }
+  menu.innerHTML = html;
+  valEl.textContent = String(pageSize);
+}
+
 function renderPagination() {
   var tp = totalPages();
   var pgNums = document.querySelector(".pg-nums");
@@ -605,15 +697,8 @@ function renderPagination() {
   var displayCount = hasActiveFilters() ? filteredCount : TOTAL_ITEMS;
   document.querySelector(".pgn-show .pgn-lbl:last-child").textContent = "of " + displayCount + " items";
 
-  var jumpSel = document.querySelector(".pgn-jump .pgn-sel");
-  jumpSel.innerHTML = "";
-  for (var p = 1; p <= tp; p++) {
-    var opt = document.createElement("option");
-    opt.value = p;
-    opt.textContent = p;
-    if (p === currentPage) opt.selected = true;
-    jumpSel.appendChild(opt);
-  }
+  renderUsersJumpDdMenu();
+  renderUsersPageSizeDdMenu();
 }
 
 function applySort(key) {
@@ -1658,16 +1743,85 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector('.pg-nav[aria-label="Next"]').addEventListener("click", function () { goToPage(currentPage + 1); });
   document.querySelector('.pg-nav[aria-label="Last"]').addEventListener("click", function () { goToPage(totalPages()); });
 
-  document.querySelector(".pgn-jump .pgn-sel").addEventListener("change", function () {
-    goToPage(parseInt(this.value, 10));
+  function closeAllPgnDd() {
+    var dds = document.querySelectorAll(".pgn-dd");
+    for (var pi = 0; pi < dds.length; pi++) {
+      detachCrDdLayeredMenu(dds[pi]);
+      dds[pi].classList.remove("open");
+      var ptr = dds[pi].querySelector(".cr-dd-trigger");
+      if (ptr) ptr.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  function togglePgnDd(dd, trigger) {
+    if (!dd || !trigger) return;
+    var willOpen = !dd.classList.contains("open");
+    closeAllPgnDd();
+    if (willOpen) {
+      dd.classList.add("open");
+      trigger.setAttribute("aria-expanded", "true");
+      attachCrDdLayeredMenu(dd);
+    }
+  }
+
+  document.addEventListener("mousedown", function (e) {
+    if (e.target.closest(".pgn-dd") || e.target.closest(".cr-dd-menu.is-layered")) return;
+    closeAllPgnDd();
   });
 
-  document.querySelector(".pgn-show .pgn-sel").addEventListener("change", function () {
-    pageSize = parseInt(this.value, 10);
-    currentPage = 1;
-    renderTable();
-    renderPagination();
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    closeAllPgnDd();
+    var aup = document.getElementById("addUsersPage");
+    if (!aup || aup.style.display === "none") return;
+    var openDd = aup.querySelectorAll(".cr-dd.open");
+    for (var oi = 0; oi < openDd.length; oi++) {
+      detachCrDdLayeredMenu(openDd[oi]);
+      openDd[oi].classList.remove("open");
+      var trg = openDd[oi].querySelector(".cr-dd-trigger");
+      if (trg) trg.setAttribute("aria-expanded", "false");
+    }
   });
+
+  (function wireUsersPaginationDd() {
+    var usersJumpMenu = document.getElementById("usersJumpMenu");
+    var usersPageSizeMenu = document.getElementById("usersPageSizeMenu");
+    var usersJumpDD = document.getElementById("usersJumpDD");
+    var usersJumpTrigger = document.getElementById("usersJumpTrigger");
+    var usersPageSizeDD = document.getElementById("usersPageSizeDD");
+    var usersPageSizeTrigger = document.getElementById("usersPageSizeTrigger");
+    if (usersJumpMenu) {
+      usersJumpMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-users-jump]");
+        if (!row) return;
+        goToPage(parseInt(row.getAttribute("data-users-jump"), 10));
+        closeAllPgnDd();
+      });
+    }
+    if (usersPageSizeMenu) {
+      usersPageSizeMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-users-psize]");
+        if (!row) return;
+        pageSize = parseInt(row.getAttribute("data-users-psize"), 10);
+        currentPage = 1;
+        closeAllPgnDd();
+        renderTable();
+        renderPagination();
+      });
+    }
+    if (usersJumpDD && usersJumpTrigger) {
+      usersJumpTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        togglePgnDd(usersJumpDD, usersJumpTrigger);
+      });
+    }
+    if (usersPageSizeDD && usersPageSizeTrigger) {
+      usersPageSizeTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        togglePgnDd(usersPageSizeDD, usersPageSizeTrigger);
+      });
+    }
+  })();
 
   var overlay = document.getElementById("fltOverlay");
   var drawer  = document.getElementById("fltDrawer");
@@ -2227,8 +2381,24 @@ document.addEventListener("DOMContentLoaded", function () {
     var auRegion = document.getElementById("auRegion");
     var auTimezone = document.getElementById("auTimezone");
     var auTeam = document.getElementById("auTeam");
+    var auRegionDD = document.getElementById("auRegionDD");
+    var auRegionTrigger = document.getElementById("auRegionTrigger");
+    var auRegionValue = document.getElementById("auRegionValue");
+    var auRegionMenu = document.getElementById("auRegionMenu");
+    var auTimezoneDD = document.getElementById("auTimezoneDD");
+    var auTimezoneTrigger = document.getElementById("auTimezoneTrigger");
+    var auTimezoneValue = document.getElementById("auTimezoneValue");
+    var auTimezoneMenu = document.getElementById("auTimezoneMenu");
+    var auTeamDD = document.getElementById("auTeamDD");
+    var auTeamTrigger = document.getElementById("auTeamTrigger");
+    var auTeamValue = document.getElementById("auTeamValue");
+    var auTeamMenu = document.getElementById("auTeamMenu");
     var auStatusValue = document.getElementById("auStatusValue");
     var auStatusSeg = document.getElementById("auStatusSeg");
+    var auBasicCard = document.getElementById("auBasicCard");
+    var auRolesCard = document.getElementById("auRolesCard");
+    var auBasicSummary = document.getElementById("auBasicSummary");
+    var auRolesSummary = document.getElementById("auRolesSummary");
 
     var auState = {
       selectedRoleId: "",
@@ -2273,8 +2443,25 @@ document.addEventListener("DOMContentLoaded", function () {
       ]
     };
 
-    var EYE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-    var EYE_OFF_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.8 21.8 0 0 1 5.06-7.94"/><path d="M9.9 4.24A10.93 10.93 0 0 1 12 4c7 0 11 8 11 8a22 22 0 0 1-3.17 4.87"/><path d="M1 1l22 22"/><path d="M10.58 10.58a2 2 0 1 0 2.83 2.83"/></svg>';
+    var AU_REGION_LABELS = {
+      NA: "NA (United States and Canada)",
+      LATAM: "LATAM",
+      EMEA: "EMEA",
+      ANZ: "ANZ"
+    };
+
+    var AU_TEAM_NAMES = [
+      "National Ad Sales",
+      "Digital Media Planning",
+      "Client Partnerships",
+      "Streaming Revenue",
+      "Ad Solutions & Innovation",
+      "Yield & Inventory",
+      "Programmatic Sales",
+      "Revenue Operations",
+      "Ad Sales Finance"
+    ];
+
     var TRASH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
 
     function getAURegionKey() {
@@ -2287,18 +2474,93 @@ document.addEventListener("DOMContentLoaded", function () {
       return "NA";
     }
 
+    function closeAuDd(dd) {
+      if (!dd) return;
+      detachCrDdLayeredMenu(dd);
+      dd.classList.remove("open");
+      var tr = dd.querySelector(".cr-dd-trigger");
+      if (tr) tr.setAttribute("aria-expanded", "false");
+    }
+
+    function closeAllAddUserDd() {
+      var list = [auRegionDD, auTimezoneDD, auTeamDD, auRoleDD];
+      for (var ci = 0; ci < list.length; ci++) {
+        if (list[ci]) closeAuDd(list[ci]);
+      }
+    }
+
+    function toggleAuDd(dd) {
+      if (!dd) return;
+      var tr = dd.querySelector(".cr-dd-trigger");
+      if (dd.classList.contains("open")) {
+        closeAuDd(dd);
+        return;
+      }
+      closeAllAddUserDd();
+      dd.classList.add("open");
+      if (tr) tr.setAttribute("aria-expanded", "true");
+      attachCrDdLayeredMenu(dd);
+    }
+
+    function ensureAuRegionMenu() {
+      if (!auRegionMenu || auRegionMenu.getAttribute("data-built") === "1") return;
+      auRegionMenu.setAttribute("data-built", "1");
+      var order = ["NA", "LATAM", "EMEA", "ANZ"];
+      var h = "";
+      for (var ri = 0; ri < order.length; ri++) {
+        var rk = order[ri];
+        h += '<div class="cr-dd-option" role="option" data-au-region="' + esc(rk) + '">' + esc(AU_REGION_LABELS[rk]) + "</div>";
+      }
+      auRegionMenu.innerHTML = h;
+    }
+
+    function syncAuRegionUi() {
+      if (!auRegionValue) return;
+      var v = (auRegion && auRegion.value) || "NA";
+      auRegionValue.textContent = AU_REGION_LABELS[v] || v;
+      if (!auRegionMenu) return;
+      var ro = auRegionMenu.querySelectorAll("[data-au-region]");
+      for (var i = 0; i < ro.length; i++) {
+        ro[i].classList.toggle("is-selected", ro[i].getAttribute("data-au-region") === v);
+      }
+    }
+
+    function ensureAuTeamMenu() {
+      if (!auTeamMenu || auTeamMenu.getAttribute("data-built") === "1") return;
+      auTeamMenu.setAttribute("data-built", "1");
+      var h = "";
+      for (var ti = 0; ti < AU_TEAM_NAMES.length; ti++) {
+        var nm = AU_TEAM_NAMES[ti];
+        h += '<div class="cr-dd-option" role="option" data-au-team="' + esc(nm) + '">' + esc(nm) + "</div>";
+      }
+      auTeamMenu.innerHTML = h;
+    }
+
+    function syncAuTeamUi() {
+      var v = auTeam ? (auTeam.value || "").trim() : "";
+      if (auTeamValue) {
+        auTeamValue.textContent = v ? v : "Select team";
+        auTeamValue.classList.toggle("is-placeholder", !v);
+      }
+      if (!auTeamMenu) return;
+      var to = auTeamMenu.querySelectorAll("[data-au-team]");
+      for (var j = 0; j < to.length; j++) {
+        to[j].classList.toggle("is-selected", to[j].getAttribute("data-au-team") === v);
+      }
+    }
+
     function renderAUTimezones(regionKey, preferredTimezone) {
       var opts = AU_REGION_TIMEZONES[regionKey] || AU_REGION_TIMEZONES.NA;
-      var current = preferredTimezone || auTimezone.value;
-      auTimezone.innerHTML = "";
+      var current = preferredTimezone || (auTimezone && auTimezone.value) || "";
+      var chosen = (current && opts.indexOf(current) !== -1) ? current : opts[0];
+      if (auTimezone) auTimezone.value = chosen;
+      var html = "";
       for (var i = 0; i < opts.length; i++) {
-        var opt = document.createElement("option");
-        opt.value = opts[i];
-        opt.textContent = opts[i];
-        auTimezone.appendChild(opt);
+        var tz = opts[i];
+        html += '<div class="cr-dd-option' + (tz === chosen ? " is-selected" : "") + '" role="option" data-au-tz="' + esc(tz) + '">' + esc(tz) + "</div>";
       }
-      if (current && opts.indexOf(current) !== -1) auTimezone.value = current;
-      else auTimezone.value = opts[0];
+      if (auTimezoneMenu) auTimezoneMenu.innerHTML = html;
+      if (auTimezoneValue) auTimezoneValue.textContent = chosen;
     }
 
     function setAUStatus(value) {
@@ -2311,6 +2573,20 @@ document.addEventListener("DOMContentLoaded", function () {
         btns[i].classList.toggle("is-selected", on);
         btns[i].setAttribute("aria-pressed", on ? "true" : "false");
       }
+      updateAuSummaries();
+    }
+
+    function auExpandSections() {
+      if (auBasicCard) {
+        auBasicCard.classList.remove("collapsed");
+        var hb = auBasicCard.querySelector(".cr-section-header[data-au-toggle]");
+        if (hb) hb.setAttribute("aria-expanded", "true");
+      }
+      if (auRolesCard) {
+        auRolesCard.classList.remove("collapsed");
+        var hr = auRolesCard.querySelector(".cr-section-header[data-au-toggle]");
+        if (hr) hr.setAttribute("aria-expanded", "true");
+      }
     }
 
     function resetAddUsersState() {
@@ -2321,12 +2597,18 @@ document.addEventListener("DOMContentLoaded", function () {
       auLastName.value = "";
       auPreferredName.value = "";
       auEmail.value = "";
-      auRegion.value = "NA";
+      if (auRegion) auRegion.value = "NA";
+      ensureAuRegionMenu();
+      syncAuRegionUi();
       renderAUTimezones("NA", "America/New_York");
-      auTeam.selectedIndex = 0;
+      if (auTeam) auTeam.value = "";
+      ensureAuTeamMenu();
+      syncAuTeamUi();
       setAUStatus("Active");
       renderAURolePicker();
       renderAURoleCards();
+      auExpandSections();
+      updateAuSummaries();
     }
 
     function openAddUsers() {
@@ -2341,8 +2623,7 @@ document.addEventListener("DOMContentLoaded", function () {
       addUsersPage.style.display = "none";
       if (mainPage) mainPage.style.display = "";
       switchTab("users");
-      auRoleDD.classList.remove("open");
-      auRoleTrigger.setAttribute("aria-expanded", "false");
+      closeAllAddUserDd();
     }
 
     function getAURoleOptions() {
@@ -2361,56 +2642,56 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
 
-    function inferPermissionGroup(appName, label) {
-      var app = (RP_FUNC_DISPLAY_NAME[appName] || appName || "").toLowerCase();
-      var txt = (label || "").toLowerCase();
-      if (app.indexOf("core planning") !== -1) {
-        if (txt.indexOf("order") !== -1) return "Order permissions";
-        if (txt.indexOf("media plan") !== -1) return "Media plan permissions";
-        if (txt.indexOf("line item") !== -1) return "Line item permissions";
-        return "Core planning permissions";
+    function auBuildBasicSummary() {
+      var parts = [];
+      var fn = auFirstName ? auFirstName.value.trim() : "";
+      var ln = auLastName ? auLastName.value.trim() : "";
+      var nm = (fn + " " + ln).trim();
+      var em = auEmail ? auEmail.value.trim() : "";
+      if (nm) parts.push(nm);
+      else if (em) parts.push(em);
+      var reg = auRegionValue ? auRegionValue.textContent.trim() : "";
+      if (reg) {
+        var shortReg = reg.indexOf("(") !== -1 ? reg.split("(")[0].trim() : reg;
+        if (shortReg.length > 28) shortReg = shortReg.slice(0, 25) + "\u2026";
+        parts.push(shortReg);
       }
-      if (app.indexOf("target options manager") !== -1 || app === "tom") {
-        if (txt.indexOf("option") !== -1) return "Option permissions";
-        if (txt.indexOf("group") !== -1) return "Group permissions";
-        if (txt.indexOf("template") !== -1) return "Template permissions";
-        return "Targeting permissions";
-      }
-      if (app.indexOf("identity access management") !== -1 || app === "admin" || app === "iam") {
-        if (txt.indexOf("role") !== -1) return "Role permissions";
-        if (txt.indexOf("user") !== -1 || txt.indexOf("impersonate") !== -1) return "User permissions";
-        return "Admin permissions";
-      }
-      if (app.indexOf("inventory catalog manager") !== -1 || app === "icm") {
-        if (txt.indexOf("offering") !== -1) return "Offering permissions";
-        if (txt.indexOf("sales package") !== -1) return "Sales package permissions";
-        return "Catalog permissions";
-      }
-      if (app.indexOf("disney ads agent") !== -1) return "Agent permissions";
-      return "Permissions";
+      var tz = auTimezoneValue ? auTimezoneValue.textContent.trim() : "";
+      if (tz && parts.length < 6) parts.push(tz);
+      var team = auTeam && auTeam.value ? auTeam.value.trim() : "";
+      if (team && parts.length < 6) parts.push(team);
+      var st = auStatusValue ? auStatusValue.value : "";
+      if (st && parts.length < 6) parts.push(st);
+      return parts.join(" \u00b7 ");
     }
 
-    function rolePermissionGroups(roleRecord) {
-      var groups = {};
-      var groupOrder = [];
-      var fns = roleRecord && roleRecord.functions ? roleRecord.functions : [];
-      for (var i = 0; i < fns.length; i++) {
-        var app = fns[i].name;
-        var labels = resolveFunctionLabels(roleRecord.id, app, fns[i].count);
-        for (var j = 0; j < labels.length; j++) {
-          var group = inferPermissionGroup(app, labels[j]);
-          if (!groups[group]) {
-            groups[group] = [];
-            groupOrder.push(group);
-          }
-          if (groups[group].indexOf(labels[j]) === -1) groups[group].push(labels[j]);
-        }
+    function auBuildRolesSummary() {
+      var n = auState.selectedRoleIds.length;
+      if (!n) return "";
+      var names = [];
+      for (var ri = 0; ri < n; ri++) {
+        var role = findRoleById(auState.selectedRoleIds[ri]);
+        if (role) names.push(role.role);
       }
-      var out = [];
-      for (var g = 0; g < groupOrder.length; g++) {
-        out.push({ title: groupOrder[g], items: groups[groupOrder[g]] });
-      }
-      return out;
+      if (!names.length) return "";
+      if (names.length === 1) return names[0];
+      if (names.length === 2) return names[0] + ", " + names[1];
+      return names[0] + ", " + names[1] + " (+" + (names.length - 2) + ")";
+    }
+
+    function updateAuSummaries() {
+      if (auBasicSummary) auBasicSummary.textContent = auBuildBasicSummary();
+      if (auRolesSummary) auRolesSummary.textContent = auBuildRolesSummary();
+    }
+
+    function auToggleSection(header) {
+      var card = header.closest(".cr-card");
+      if (!card || !addUsersPage.contains(card)) return;
+      var willCollapse = !card.classList.contains("collapsed");
+      card.classList.toggle("collapsed", willCollapse);
+      header.setAttribute("aria-expanded", willCollapse ? "false" : "true");
+      if (willCollapse) closeAllAddUserDd();
+      updateAuSummaries();
     }
 
     function rolePermissionCount(roleRecord) {
@@ -2426,6 +2707,70 @@ document.addEventListener("DOMContentLoaded", function () {
       return text;
     }
 
+    function auDisplayAccessLevel(level) {
+      if (!level) return "";
+      if (level === "Custom Access") return "Custom";
+      return level;
+    }
+
+    function roleAccessLevelSummary(roleRecord) {
+      var fns = roleRecord && roleRecord.functions ? roleRecord.functions : [];
+      var total = rolePermissionCount(roleRecord);
+      if (!fns.length) return "—";
+      var uniq = [];
+      var seen = {};
+      for (var u = 0; u < fns.length; u++) {
+        var raw = fns[u].access || roleAccessLevel(roleRecord.id, fns[u].name);
+        var a = auDisplayAccessLevel(raw);
+        if (!seen[a]) {
+          seen[a] = true;
+          uniq.push(a);
+        }
+      }
+      if (uniq.length === 1) return uniq[0] + " (" + total + " permissions)";
+      return uniq.join(", ") + " (" + total + " permissions)";
+    }
+
+    function buildAURolePermissionDetailHtml(roleRecord) {
+      var fns = roleRecord && roleRecord.functions ? roleRecord.functions : [];
+      if (!fns.length) {
+        return '<p class="au-role-section-text">No applications assigned.</p>';
+      }
+      var html = "";
+      for (var fi = 0; fi < fns.length; fi++) {
+        var appName = fns[fi].name;
+        var access = fns[fi].access || roleAccessLevel(roleRecord.id, appName);
+        var detail = getRoleAppAccessDetails(roleRecord.id, appName, access);
+        var model = APP_ACCESS_MODEL[appName];
+        var display = RP_FUNC_DISPLAY_NAME[appName] || appName;
+        if (!model) {
+          var labs = resolveFunctionLabels(roleRecord.id, appName, fns[fi].count);
+          html += '<div class="au-role-app-section">' +
+            '<div class="cr-label">' + esc(display) + " permissions</div>" +
+            '<ul class="au-role-list-fallback">';
+          for (var li = 0; li < labs.length; li++) {
+            html += "<li>" + esc(labs[li]) + "</li>";
+          }
+          html += "</ul></div>";
+          continue;
+        }
+        html += '<div class="au-role-app-section">' +
+          '<div class="cr-label">' + esc(display) + " permissions</div>" +
+          '<div class="au-role-perm-summary-list">';
+        for (var gi = 0; gi < model.groups.length; gi++) {
+          var grp = model.groups[gi];
+          var actions = detail.groups[grp] || [];
+          if (!actions.length) continue;
+          html += '<div class="au-role-perm-line">' +
+            '<span class="au-role-perm-cat">' + esc(grp) + "</span>" +
+            '<span class="au-role-perm-actions">' + esc(actions.join(", ")) + "</span>" +
+            "</div>";
+        }
+        html += "</div></div>";
+      }
+      return html;
+    }
+
     function renderAURoleCards() {
       if (!auState.selectedRoleIds.length) {
         auRoleCards.innerHTML = "";
@@ -2438,38 +2783,45 @@ document.addEventListener("DOMContentLoaded", function () {
         var role = findRoleById(auState.selectedRoleIds[i]);
         if (!role) continue;
         var isExpanded = auState.expandedRoleId === role.id;
-        var groups = rolePermissionGroups(role);
         html += '<article class="au-role-card' + (isExpanded ? ' expanded' : '') + '" data-au-role-id="' + esc(role.id) + '">' +
           '<div class="au-role-card-top">' +
-            '<div class="au-role-card-head">' +
-              '<h3 class="au-role-card-title">' + esc(role.role) + '</h3>' +
-              '<button type="button" class="au-role-trash" data-au-remove="' + esc(role.id) + '" aria-label="Remove role">' + TRASH_SVG + '</button>' +
-            '</div>' +
-            '<p class="au-role-desc">' + esc(roleDescription(role)) + '</p>' +
-            '<div class="au-role-meta">' +
-              '<div class="au-role-meta-row">' +
-                '<span class="au-role-meta-label">Permissions</span>' +
-                '<button type="button" class="au-role-eye" data-au-toggle="' + esc(role.id) + '" aria-label="Preview permissions">' + (isExpanded ? EYE_OFF_SVG : EYE_SVG) + '</button>' +
+            '<div class="cr-app-section-head">' +
+              '<div class="cr-app-head-left">' +
+                '<h3 class="cr-app-title">' + esc(role.role) + '</h3>' +
               '</div>' +
-              '<div class="au-role-count">' + rolePermissionCount(role) + '</div>' +
-            '</div>' +
+              '<button type="button" class="cr-app-remove" data-au-remove="' + esc(role.id) + '" aria-label="Remove ' + esc(role.role) + '">' +
+                TRASH_SVG +
+                "Remove" +
+              "</button>" +
+            "</div>" +
+            '<div class="cr-app-body">' +
+              '<div class="au-role-block">' +
+                '<div class="cr-label">Description</div>' +
+                '<p class="au-role-section-text">' + esc(roleDescription(role)) + '</p>' +
+              '</div>' +
+              '<div class="au-role-block">' +
+                '<div class="cr-label">Access level</div>' +
+                '<p class="cr-access-module-perms au-role-access-value" aria-live="polite">' + esc(roleAccessLevelSummary(role)) + "</p>" +
+              '</div>' +
+              '<button type="button" class="cr-customize-link au-role-view-toggle" data-au-toggle="' + esc(role.id) + '" aria-expanded="' + (isExpanded ? "true" : "false") + '">' +
+                '<span class="au-role-toggle-label">' +
+                (isExpanded ? "Hide all permissions" : "Show all permissions") +
+                "</span>" +
+                '<span class="au-role-toggle-arr" aria-hidden="true">' +
+                (isExpanded ? "\u2191" : "\u2193") +
+                "</span>" +
+              "</button>" +
+            "</div>" +
           '</div>' +
           '<div class="au-role-expand">' +
-            '<div class="au-role-expand-inner">';
-        for (var g = 0; g < groups.length; g++) {
-          html += '<div class="au-role-group">' +
-            '<div class="au-role-group-title">' + esc(groups[g].title) + '</div>' +
-            '<ul class="au-role-list">';
-          for (var p = 0; p < groups[g].items.length; p++) {
-            html += '<li>' + esc(groups[g].items[p]) + '</li>';
-          }
-          html += '</ul></div>';
-        }
-        html +=   '</div>' +
+            '<div class="au-role-expand-inner">' +
+            buildAURolePermissionDetailHtml(role) +
+          '</div>' +
           '</div>' +
         '</article>';
       }
       auRoleCards.innerHTML = html;
+      updateAuSummaries();
     }
 
     function renderAURolePicker() {
@@ -2477,9 +2829,10 @@ document.addEventListener("DOMContentLoaded", function () {
       var html = "";
       for (var i = 0; i < options.length; i++) {
         var disabled = auState.selectedRoleIds.indexOf(options[i].id) !== -1;
-        html += '<div class="au-role-option' + (disabled ? ' is-selected' : '') + '" data-au-role-option="' + esc(options[i].id) + '"' + (disabled ? ' aria-disabled="true"' : "") + '>' + esc(options[i].name) + '</div>';
+        var picked = auState.selectedRoleId === options[i].id && !disabled;
+        html += '<div class="cr-dd-option' + (disabled ? " is-disabled" : "") + (picked ? " is-selected" : "") + '" data-au-role-option="' + esc(options[i].id) + '"' + (disabled ? ' aria-disabled="true"' : "") + ">" + esc(options[i].name) + "</div>";
       }
-      if (!html) html = '<div class="au-role-option is-empty">No roles available</div>';
+      if (!html) html = '<div class="cr-dd-option is-empty" role="presentation">No roles available</div>';
       auRoleMenu.innerHTML = html;
       if (auState.selectedRoleId) {
         var role = findRoleById(auState.selectedRoleId);
@@ -2490,6 +2843,7 @@ document.addEventListener("DOMContentLoaded", function () {
         auRoleValue.classList.add("is-placeholder");
       }
       auRoleAdd.disabled = !auState.selectedRoleId || auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1;
+      updateAuSummaries();
     }
 
     function selectedStatus() {
@@ -2533,7 +2887,7 @@ document.addEventListener("DOMContentLoaded", function () {
         email: email,
         roles: assignedRoleNames,
         status: selectedStatus(),
-        team: auTeam.value && auTeam.selectedIndex > 0 ? auTeam.value : "Unassigned",
+        team: auTeam && auTeam.value && auTeam.value.trim() ? auTeam.value.trim() : "Unassigned",
         title: auPreferredName.value.trim() ? ("Preferred: " + auPreferredName.value.trim()) : "Atlas User",
         region: selectedRegionCode()
       };
@@ -2573,21 +2927,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     auRoleTrigger.addEventListener("click", function () {
-      var willOpen = !auRoleDD.classList.contains("open");
       renderAURolePicker();
-      auRoleDD.classList.toggle("open", willOpen);
-      auRoleTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      toggleAuDd(auRoleDD);
     });
 
     auRoleMenu.addEventListener("click", function (e) {
       var option = e.target.closest("[data-au-role-option]");
       if (!option) return;
+      if (option.classList.contains("is-disabled")) return;
       var roleId = option.getAttribute("data-au-role-option");
       if (auState.selectedRoleIds.indexOf(roleId) !== -1) return;
       auState.selectedRoleId = roleId;
       renderAURolePicker();
-      auRoleDD.classList.remove("open");
-      auRoleTrigger.setAttribute("aria-expanded", "false");
+      closeAuDd(auRoleDD);
     });
 
     auRoleAdd.addEventListener("click", function () {
@@ -2600,9 +2952,62 @@ document.addEventListener("DOMContentLoaded", function () {
       renderAURoleCards();
     });
 
-    auRegion.addEventListener("change", function () {
-      renderAUTimezones(getAURegionKey(), auTimezone.value);
-    });
+    if (auRegionTrigger && auRegionDD) {
+      auRegionTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        ensureAuRegionMenu();
+        syncAuRegionUi();
+        toggleAuDd(auRegionDD);
+      });
+    }
+    if (auRegionMenu) {
+      auRegionMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-au-region]");
+        if (!row) return;
+        auRegion.value = row.getAttribute("data-au-region");
+        syncAuRegionUi();
+        renderAUTimezones(getAURegionKey(), auTimezone.value);
+        closeAuDd(auRegionDD);
+        updateAuSummaries();
+      });
+    }
+
+    if (auTimezoneTrigger && auTimezoneDD) {
+      auTimezoneTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        toggleAuDd(auTimezoneDD);
+      });
+    }
+    if (auTimezoneMenu) {
+      auTimezoneMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-au-tz]");
+        if (!row) return;
+        var tz = row.getAttribute("data-au-tz");
+        auTimezone.value = tz;
+        renderAUTimezones(getAURegionKey(), tz);
+        closeAuDd(auTimezoneDD);
+        updateAuSummaries();
+      });
+    }
+
+    if (auTeamTrigger && auTeamDD) {
+      auTeamTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        ensureAuTeamMenu();
+        syncAuTeamUi();
+        toggleAuDd(auTeamDD);
+      });
+    }
+    if (auTeamMenu) {
+      auTeamMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-au-team]");
+        if (!row) return;
+        auTeam.value = row.getAttribute("data-au-team");
+        syncAuTeamUi();
+        closeAuDd(auTeamDD);
+        updateAuSummaries();
+      });
+    }
 
     if (auStatusSeg) {
       auStatusSeg.addEventListener("click", function (e) {
@@ -2613,11 +3018,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.addEventListener("mousedown", function (e) {
-      if (auRoleDD.classList.contains("open") && !auRoleDD.contains(e.target)) {
-        auRoleDD.classList.remove("open");
-        auRoleTrigger.setAttribute("aria-expanded", "false");
+      if (addUsersPage.style.display === "none") return;
+      var list = [auRoleDD, auRegionDD, auTimezoneDD, auTeamDD];
+      for (var mi = 0; mi < list.length; mi++) {
+        var dd = list[mi];
+        if (!dd || !dd.classList.contains("open")) continue;
+        if (dd.contains(e.target)) continue;
+        var mnu = getCrDdMenuForHost(dd);
+        if (mnu && mnu.contains(e.target)) continue;
+        closeAuDd(dd);
       }
     });
+
+    var auToggleHeaders = addUsersPage.querySelectorAll(".cr-section-header[data-au-toggle]");
+    for (var ahi = 0; ahi < auToggleHeaders.length; ahi++) {
+      (function (hdr) {
+        hdr.addEventListener("click", function () {
+          auToggleSection(hdr);
+        });
+        hdr.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+            e.preventDefault();
+            auToggleSection(hdr);
+          }
+        });
+      })(auToggleHeaders[ahi]);
+    }
+
+    var auSummaryInputs = [auFirstName, auLastName, auPreferredName, auEmail];
+    for (var sii = 0; sii < auSummaryInputs.length; sii++) {
+      if (auSummaryInputs[sii]) auSummaryInputs[sii].addEventListener("input", updateAuSummaries);
+    }
 
     if (addUsersBtn) {
       addUsersBtn.addEventListener("click", function (e) {
@@ -2795,14 +3226,27 @@ document.addEventListener("DOMContentLoaded", function () {
     var filteredCount = getRPFilteredData().length;
     document.getElementById("rpItemCount").textContent = "of " + filteredCount + " items";
 
-    var jumpSel = document.getElementById("rpJumpSel");
-    jumpSel.innerHTML = "";
-    for (var p = 1; p <= tp; p++) {
-      var opt = document.createElement("option");
-      opt.value = p;
-      opt.textContent = p;
-      if (p === rpCurrentPage) opt.selected = true;
-      jumpSel.appendChild(opt);
+    var rpJumpMenu = document.getElementById("rpJumpMenu");
+    var rpJumpValue = document.getElementById("rpJumpValue");
+    if (rpJumpMenu && rpJumpValue) {
+      var jhtml = "";
+      for (var pj = 1; pj <= tp; pj++) {
+        jhtml += '<div class="cr-dd-option' + (pj === rpCurrentPage ? " is-selected" : "") + '" role="option" data-rp-jump="' + pj + '">' + pj + "</div>";
+      }
+      rpJumpMenu.innerHTML = jhtml;
+      rpJumpValue.textContent = String(rpCurrentPage);
+    }
+    var rpPageSizeMenu = document.getElementById("rpPageSizeMenu");
+    var rpPageSizeValue = document.getElementById("rpPageSizeValue");
+    if (rpPageSizeMenu && rpPageSizeValue) {
+      var sizes = [10, 25, 50];
+      var pshtml = "";
+      for (var si = 0; si < sizes.length; si++) {
+        var ns = sizes[si];
+        pshtml += '<div class="cr-dd-option' + (ns === rpPageSize ? " is-selected" : "") + '" role="option" data-rp-psize="' + ns + '">' + ns + "</div>";
+      }
+      rpPageSizeMenu.innerHTML = pshtml;
+      rpPageSizeValue.textContent = String(rpPageSize);
     }
   }
 
@@ -2878,16 +3322,45 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector('#rpPgnPages [data-rp-nav="next"]').addEventListener("click", function () { rpGoToPage(rpCurrentPage + 1); });
   document.querySelector('#rpPgnPages [data-rp-nav="last"]').addEventListener("click", function () { rpGoToPage(rpTotalPages()); });
 
-  document.getElementById("rpJumpSel").addEventListener("change", function () {
-    rpGoToPage(parseInt(this.value, 10));
-  });
-
-  document.getElementById("rpPageSizeSel").addEventListener("change", function () {
-    rpPageSize = parseInt(this.value, 10);
-    rpCurrentPage = 1;
-    renderRPTable();
-    renderRPPagination();
-  });
+  (function wireRpPaginationDd() {
+    var rpJumpMenu = document.getElementById("rpJumpMenu");
+    var rpPageSizeMenu = document.getElementById("rpPageSizeMenu");
+    var rpJumpDD = document.getElementById("rpJumpDD");
+    var rpJumpTrigger = document.getElementById("rpJumpTrigger");
+    var rpPageSizeDD = document.getElementById("rpPageSizeDD");
+    var rpPageSizeTrigger = document.getElementById("rpPageSizeTrigger");
+    if (rpJumpMenu) {
+      rpJumpMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-rp-jump]");
+        if (!row) return;
+        rpGoToPage(parseInt(row.getAttribute("data-rp-jump"), 10));
+        closeAllPgnDd();
+      });
+    }
+    if (rpPageSizeMenu) {
+      rpPageSizeMenu.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-rp-psize]");
+        if (!row) return;
+        rpPageSize = parseInt(row.getAttribute("data-rp-psize"), 10);
+        rpCurrentPage = 1;
+        closeAllPgnDd();
+        renderRPTable();
+        renderRPPagination();
+      });
+    }
+    if (rpJumpDD && rpJumpTrigger) {
+      rpJumpTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        togglePgnDd(rpJumpDD, rpJumpTrigger);
+      });
+    }
+    if (rpPageSizeDD && rpPageSizeTrigger) {
+      rpPageSizeTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        togglePgnDd(rpPageSizeDD, rpPageSizeTrigger);
+      });
+    }
+  })();
 
   /* ─── R&P Search ─── */
   var rpSearchInput = document.getElementById("rpSearchInput");
@@ -3255,7 +3728,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateFunctionsCount() {
       var checked = crPermsContent.querySelectorAll(".cr-perm-check:checked");
-      crFunctionsTitle.textContent = "Functions (" + checked.length + " Selected)";
+      crFunctionsTitle.textContent = "Permissions (" + checked.length + " Selected)";
       updateCrSummaries();
     }
 
@@ -3349,6 +3822,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ─── App dropdown ─── */
     function crBuildAppMenu() {
       var menu = document.createElement("div");
+      menu.id = "crAppMenu";
       menu.className = "cr-dd-menu";
       menu.setAttribute("role", "listbox");
       for (var i = 0; i < CR_APP_OPTIONS.length; i++) {
@@ -3366,12 +3840,14 @@ document.addEventListener("DOMContentLoaded", function () {
     var crAppMenu = crBuildAppMenu();
 
     function crCloseAppDD() {
+      detachCrDdLayeredMenu(crAppDD);
       crAppDD.classList.remove("open");
       crAppTrigger.setAttribute("aria-expanded", "false");
     }
     function crOpenAppDD() {
       crAppDD.classList.add("open");
       crAppTrigger.setAttribute("aria-expanded", "true");
+      attachCrDdLayeredMenu(crAppDD);
     }
     function crSetAppValue(value) {
       crAppCurrent = value;
@@ -3419,7 +3895,10 @@ document.addEventListener("DOMContentLoaded", function () {
       crCloseAppDD();
     });
     document.addEventListener("click", function (e) {
-      if (!crAppDD.contains(e.target)) crCloseAppDD();
+      if (crAppDD.contains(e.target)) return;
+      var appMenu = getCrDdMenuForHost(crAppDD);
+      if (appMenu && appMenu.contains(e.target)) return;
+      crCloseAppDD();
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && crAppDD.classList.contains("open")) crCloseAppDD();

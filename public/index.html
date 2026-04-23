@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260423rp23">
+  <link rel="stylesheet" href="styles.css?v=20260423aurh1">
 </head>
 <body>
 
@@ -153,11 +153,16 @@
 
     <!-- Pagination -->
     <div class="pgn">
-      <div class="pgn-show">
+        <div class="pgn-show">
         <span class="pgn-lbl">Show</span>
         <div class="pgn-sel-wrap">
-          <select class="pgn-sel"><option>10</option><option>25</option><option>50</option></select>
-          <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="cr-dd pgn-dd" id="usersPageSizeDD">
+            <button type="button" class="cr-dd-trigger" id="usersPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="usersPageSizeMenu">
+              <span class="cr-dd-value" id="usersPageSizeValue">10</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="usersPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+          </div>
         </div>
         <span class="pgn-lbl">of 610 items</span>
       </div>
@@ -177,8 +182,13 @@
       <div class="pgn-jump">
         <span class="pgn-lbl">Go to page</span>
         <div class="pgn-sel-wrap">
-          <select class="pgn-sel"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
-          <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="cr-dd pgn-dd" id="usersJumpDD">
+            <button type="button" class="cr-dd-trigger" id="usersJumpTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="usersJumpMenu">
+              <span class="cr-dd-value" id="usersJumpValue">1</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="usersJumpMenu" role="listbox" aria-label="Page"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -229,8 +239,13 @@
         <div class="pgn-show">
           <span class="pgn-lbl">Show</span>
           <div class="pgn-sel-wrap">
-            <select class="pgn-sel" id="rpPageSizeSel"><option>10</option><option>25</option><option>50</option></select>
-            <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="cr-dd pgn-dd" id="rpPageSizeDD">
+              <button type="button" class="cr-dd-trigger" id="rpPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="rpPageSizeMenu">
+                <span class="cr-dd-value" id="rpPageSizeValue">10</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="rpPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+            </div>
           </div>
           <span class="pgn-lbl" id="rpItemCount">of 15 items</span>
         </div>
@@ -244,8 +259,13 @@
         <div class="pgn-jump">
           <span class="pgn-lbl">Go to page</span>
           <div class="pgn-sel-wrap">
-            <select class="pgn-sel" id="rpJumpSel"><option>1</option></select>
-            <svg class="sel-chev" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="#9EB0BD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="cr-dd pgn-dd" id="rpJumpDD">
+              <button type="button" class="cr-dd-trigger" id="rpJumpTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="rpJumpMenu">
+                <span class="cr-dd-value" id="rpJumpValue">1</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="rpJumpMenu" role="listbox" aria-label="Page"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -272,12 +292,14 @@
       </div>
     </div>
 
-    <section class="au-card" aria-labelledby="auBasicTitle">
-      <div class="au-section-header">
-        <svg class="au-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-        <h2 class="au-section-title" id="auBasicTitle">Basic Information</h2>
+    <section class="au-card cr-card" id="auBasicCard" aria-labelledby="auBasicTitle">
+      <div class="cr-section-header" data-au-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auBasicTitle">Basic Information</span>
+        <span class="cr-section-summary" id="auBasicSummary" aria-hidden="true"></span>
       </div>
 
+      <div class="au-section-body">
       <div class="au-grid">
         <div class="au-field">
           <label class="au-label" for="auFirstName">First name<span class="au-req">*</span></label>
@@ -301,91 +323,83 @@
           <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
         </div>
         <div class="au-field">
-          <label class="au-label" for="auRegion">Region<span class="au-req">*</span>
+          <label class="au-label" for="auRegionTrigger">Region<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
-          <div class="au-select-wrap">
-            <select class="au-select" id="auRegion">
-              <option value="NA" selected>NA (United States and Canada)</option>
-              <option value="LATAM">LATAM</option>
-              <option value="EMEA">EMEA</option>
-              <option value="ANZ">ANZ</option>
-            </select>
-            <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input type="hidden" id="auRegion" value="NA">
+          <div class="cr-dd au-field-dd" id="auRegionDD">
+            <button type="button" class="cr-dd-trigger" id="auRegionTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRegionMenu">
+              <span class="cr-dd-value" id="auRegionValue">NA (United States and Canada)</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="auRegionMenu" role="listbox" aria-label="Region"></div>
           </div>
         </div>
         <div class="au-field">
-          <label class="au-label" for="auTimezone">Timezone<span class="au-req">*</span>
+          <label class="au-label" for="auTimezoneTrigger">Timezone<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
-          <div class="au-select-wrap">
-            <select class="au-select" id="auTimezone" required>
-              <option selected>America/New_York</option>
-              <option>America/Chicago</option>
-              <option>America/Denver</option>
-              <option>America/Los_Angeles</option>
-              <option>America/Toronto</option>
-              <option>America/Vancouver</option>
-            </select>
-            <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input type="hidden" id="auTimezone" value="America/New_York">
+          <div class="cr-dd au-field-dd" id="auTimezoneDD">
+            <button type="button" class="cr-dd-trigger" id="auTimezoneTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auTimezoneMenu" aria-required="true">
+              <span class="cr-dd-value" id="auTimezoneValue">America/New_York</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="auTimezoneMenu" role="listbox" aria-label="Timezone"></div>
           </div>
         </div>
 
         <div class="au-field">
-          <label class="au-label" for="auTeam">Team</label>
-          <div class="au-select-wrap">
-            <select class="au-select" id="auTeam">
-              <option selected disabled>Select team</option>
-              <option>National Ad Sales</option>
-              <option>Digital Media Planning</option>
-              <option>Client Partnerships</option>
-              <option>Streaming Revenue</option>
-              <option>Ad Solutions &amp; Innovation</option>
-              <option>Yield &amp; Inventory</option>
-              <option>Programmatic Sales</option>
-              <option>Revenue Operations</option>
-              <option>Ad Sales Finance</option>
-            </select>
-            <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <label class="au-label" for="auTeamTrigger">Team</label>
+          <input type="hidden" id="auTeam" value="">
+          <div class="cr-dd au-field-dd" id="auTeamDD">
+            <button type="button" class="cr-dd-trigger" id="auTeamTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auTeamMenu">
+              <span class="cr-dd-value is-placeholder" id="auTeamValue">Select team</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="auTeamMenu" role="listbox" aria-label="Team"></div>
           </div>
         </div>
-        <div class="au-field">
-          <label class="au-label" for="auStatusValue">Status<span class="au-req">*</span></label>
-          <input type="hidden" id="auStatusValue" value="Active" required>
-          <div class="au-status-seg" id="auStatusSeg" role="radiogroup" aria-label="Status">
+        <div class="au-field au-field-status">
+          <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
+          <div class="au-status-seg" id="auStatusSeg" role="radiogroup" aria-labelledby="auStatusLabel">
             <button type="button" class="au-status-opt is-selected" data-au-status="Active" aria-pressed="true">Active</button>
             <button type="button" class="au-status-opt" data-au-status="Inactive" aria-pressed="false">Inactive</button>
           </div>
+          <input type="hidden" id="auStatusValue" value="Active" required>
         </div>
         <div class="au-field au-profile-field">
           <label class="au-label">Profile picture</label>
           <p class="au-profile-sync-note">Synced from Disney Rostr when available.</p>
         </div>
       </div>
+      </div>
     </section>
 
-    <section class="au-card au-access-card" aria-labelledby="auAccessTitle">
-      <div class="au-section-header">
-        <svg class="au-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-        <h2 class="au-section-title" id="auAccessTitle">Access Management</h2>
+    <section class="au-card cr-card au-access-card" id="auRolesCard" aria-labelledby="auRolesPermissionsTitle">
+      <div class="cr-section-header" data-au-toggle="roles" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auRolesPermissionsTitle">Roles &amp; Permissions</span>
+        <span class="cr-section-summary" id="auRolesSummary" aria-hidden="true"></span>
       </div>
 
+      <div class="au-section-body">
       <div class="au-field au-role-field">
-        <label class="au-role-label" for="auRoleSearch">Assign Roles<span class="au-req">*</span></label>
-        <p class="au-role-help">Users can be assigned more than one role. Permissions are combined from all assigned roles.</p>
+        <label class="au-role-label" for="auRoleTrigger">Assign Roles<span class="au-req">*</span></label>
         <div class="au-role-row">
-          <div class="au-role-dd" id="auRoleDD">
-            <button type="button" class="au-role-trigger" id="auRoleTrigger" aria-haspopup="listbox" aria-expanded="false">
-              <span class="au-role-value is-placeholder" id="auRoleValue">Search or select a role</span>
-              <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="cr-dd au-role-dd" id="auRoleDD">
+            <button type="button" class="cr-dd-trigger" id="auRoleTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRoleMenu">
+              <span class="cr-dd-value is-placeholder" id="auRoleValue">Search or select a role</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <div class="au-role-menu" id="auRoleMenu" role="listbox" aria-label="Roles"></div>
+            <div class="cr-dd-menu" id="auRoleMenu" role="listbox" aria-label="Roles"></div>
           </div>
           <button class="au-btn-add" id="auRoleAdd" type="button">Add</button>
         </div>
       </div>
 
       <div class="au-role-cards" id="auRoleCards"></div>
+      </div>
     </section>
   </div>
 </div>
@@ -445,11 +459,11 @@
       </div>
     </div>
 
-    <!-- Functions Card -->
+    <!-- Permissions Card -->
     <div class="cr-card" id="crFuncsCard">
       <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true">
         <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <span class="cr-section-title" id="crFunctionsTitle">Functions (0 Selected)</span>
+        <span class="cr-section-title" id="crFunctionsTitle">Permissions (0 Selected)</span>
         <span class="cr-section-summary" id="crFuncsSummary" aria-hidden="true"></span>
       </div>
 
@@ -457,7 +471,7 @@
         <div class="cr-app-row-field">
           <label class="cr-label">Add application <span class="cr-req">*</span></label>
           <div class="cr-dd" id="crAppDD">
-            <button type="button" class="cr-dd-trigger" id="crAppTrigger" aria-haspopup="listbox" aria-expanded="false">
+            <button type="button" class="cr-dd-trigger" id="crAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="crAppMenu">
               <span class="cr-dd-value" id="crAppValue">Select Application</span>
               <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -609,6 +623,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260423rp23"></script>
+<script src="app.js?v=20260423ddly1"></script>
 </body>
 </html>
