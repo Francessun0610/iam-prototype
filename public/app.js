@@ -6,7 +6,7 @@ var DATA = [
   { id: "u004", avatar: "avatars/photos/m03.png", name: "Ned Flanders", email: "Ned.Flanders@disney.com", roles: ["Account Manager", "Client Partnerships Manager", "Sales Planner"], status: "Active", team: "Streaming Revenue", title: "Manager, Client Partnerships", region: "EMEA" },
   { id: "u005", avatar: "avatars/photos/f02.png", name: "Lisa Simpson", email: "Lisa.Simpson@disney.com", roles: ["Ad Ops Specialist", "Campaign Manager", "Inventory Analyst", "Programmatic Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Sr. Analyst, Audience Insights", region: "NA" },
   { id: "u006", avatar: "avatars/photos/m04.png", name: "Montgomery Burns", email: "Montgomery.Burns@disney.com", roles: ["Campaign Manager", "Strategy & Planning Manager"], status: "Inactive", team: "Yield & Inventory", title: "SVP, Revenue Strategy", region: "NA" },
-  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten", email: "Milhouse.VanHouten@disney.com", roles: ["Yield Manager"], status: "Active", team: "Programmatic Sales", title: "Analyst, Campaign Planning", region: "APAC" },
+  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten", email: "Milhouse.VanHouten@disney.com", roles: ["Yield Manager"], status: "Active", team: "Programmatic Sales", title: "Analyst, Campaign Planning", region: "ANZ" },
   { id: "u008", avatar: "avatars/photos/f03.png", name: "Maggie Simpson", email: "Maggie.Simpson@disney.com", roles: ["Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Revenue Operations", title: "Associate, Revenue Ops", region: "NA" },
   { id: "u009", avatar: "avatars/photos/m06.png", name: "Waylon Smithers", email: "Waylon.Smithers@disney.com", roles: ["Billing Operations Specialist", "Finance Analyst", "Revenue Operations Analyst"], status: "Inactive", team: "Ad Sales Finance", title: "Lead, Billing Operations", region: "NA" },
   { id: "u010", avatar: "avatars/photos/m07.png", name: "Nelson Muntz", email: "Nelson.Muntz@disney.com", roles: ["Finance Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Finance & Planning", region: "LATAM" },
@@ -20,7 +20,7 @@ var DATA = [
   { id: "u016", avatar: "avatars/photos/m11.png", name: "Lenny Leonard", email: "Lenny.Leonard@disney.com", roles: ["Sales Planner", "Media Strategy Director", "Strategy & Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Media Investment", region: "NA" },
   { id: "u017", avatar: "avatars/photos/m12.png", name: "Carl Carlson", email: "Carl.Carlson@disney.com", roles: ["Yield Manager", "Inventory Analyst"], status: "Active", team: "Yield & Inventory", title: "Manager, Yield Optimization", region: "NA" },
   { id: "u018", avatar: "avatars/photos/m13.png", name: "Moe Szyslak", email: "Moe.Szyslak@disney.com", roles: ["Account Executive", "Account Manager"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, Client Services", region: "LATAM" },
-  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon", email: "Apu.Nahasapeemapetilon@disney.com", roles: ["Strategy & Planning Manager", "Client Partnerships Manager", "Media Strategy Director", "Sales Planner"], status: "Active", team: "Global Partnerships", title: "Sr. Manager, International Strategy", region: "APAC" },
+  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon", email: "Apu.Nahasapeemapetilon@disney.com", roles: ["Strategy & Planning Manager", "Client Partnerships Manager", "Media Strategy Director", "Sales Planner"], status: "Active", team: "Global Partnerships", title: "Sr. Manager, International Strategy", region: "ANZ" },
   { id: "u020", avatar: "avatars/photos/m15.png", name: "Comic Book Guy", email: "Comic.BookGuy@disney.com", roles: ["Finance Analyst", "Billing Operations Specialist"], status: "Active", team: "Ad Sales Finance", title: "Analyst, Financial Planning", region: "NA" },
 
   /* ── Page 3 ── */
@@ -44,7 +44,7 @@ var DATA = [
   { id: "u036", avatar: "avatars/photos/m30.png", name: "Disco Stu", email: "Disco.Stu@disney.com", roles: ["Ad Ops Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Analyst, Creative Ad Solutions", region: "LATAM" },
   { id: "u037", avatar: "avatars/photos/m31.png", name: "Dr. Nick Riviera", email: "Nick.Riviera@disney.com", roles: ["Revenue Operations Analyst", "Billing Operations Specialist", "Finance Analyst", "Inventory Analyst"], status: "Active", team: "Revenue Operations", title: "Analyst, Revenue Reconciliation", region: "NA" },
   { id: "u038", avatar: "avatars/photos/m32.png", name: "Kirk Van Houten", email: "Kirk.VanHouten@disney.com", roles: ["Yield Manager", "Inventory Analyst"], status: "Inactive", team: "Yield & Inventory", title: "Associate, Inventory Management", region: "NA" },
-  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten", email: "Luann.VanHouten@disney.com", roles: ["Account Manager", "Client Partnerships Manager"], status: "Active", team: "Agency Sales", title: "Manager, Client Relations", region: "APAC" },
+  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten", email: "Luann.VanHouten@disney.com", roles: ["Account Manager", "Client Partnerships Manager"], status: "Active", team: "Agency Sales", title: "Manager, Client Relations", region: "ANZ" },
   { id: "u040", avatar: "avatars/photos/f08.png", name: "Agnes Skinner", email: "Agnes.Skinner@disney.com", roles: ["Finance Analyst", "Revenue Operations Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Sr. Analyst, Financial Controls", region: "NA" },
 
   /* ── Page 5 ── */
@@ -54,9 +54,9 @@ var DATA = [
   { id: "u044", avatar: "avatars/photos/f09.png", name: "Sherri Mackleberry", email: "Sherri.Mackleberry@disney.com", roles: ["Sales Planner"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Audience Strategy", region: "NA" },
   { id: "u045", avatar: "avatars/photos/f10.png", name: "Terri Mackleberry", email: "Terri.Mackleberry@disney.com", roles: ["Sales Planner", "Media Strategy Director", "Strategy & Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Integrated Media", region: "NA" },
   { id: "u046", avatar: "avatars/photos/m33.png", name: "Martin Prince", email: "Martin.Prince@disney.com", roles: ["Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Data Governance", region: "NA" },
-  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy", email: "Timothy.Lovejoy@disney.com", roles: ["Strategy & Planning Manager", "Client Partnerships Manager", "Media Strategy Director", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts", region: "APAC" },
+  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy", email: "Timothy.Lovejoy@disney.com", roles: ["Strategy & Planning Manager", "Client Partnerships Manager", "Media Strategy Director", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts", region: "ANZ" },
   { id: "u048", avatar: "avatars/photos/m35.png", name: "Cletus Spuckler", email: "Cletus.Spuckler@disney.com", roles: ["Billing Operations Specialist", "Finance Analyst"], status: "Active", team: "Ad Sales Finance", title: "Coordinator, Invoice Processing", region: "NA" },
-  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan", email: "Cookie.Kwan@disney.com", roles: ["Account Manager"], status: "Active", team: "National Ad Sales", title: "Sr. Manager, Regional Sales", region: "APAC" },
+  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan", email: "Cookie.Kwan@disney.com", roles: ["Account Manager"], status: "Active", team: "National Ad Sales", title: "Sr. Manager, Regional Sales", region: "ANZ" },
   { id: "u050", avatar: "avatars/photos/f12.png", name: "Lindsey Naegle", email: "Lindsey.Naegle@disney.com", roles: ["Yield Manager", "Inventory Analyst", "Programmatic Specialist"], status: "Active", team: "Yield & Inventory", title: "Director, Yield Strategy", region: "NA" },
 
   /* ── Page 6 ── */
@@ -67,9 +67,9 @@ var DATA = [
   { id: "u055", avatar: "avatars/photos/m38.png", name: "Herman Hermann", email: "Herman.Hermann@disney.com", roles: ["Finance Analyst", "Billing Operations Specialist", "Revenue Operations Analyst", "Inventory Analyst"], status: "Inactive", team: "Ad Sales Finance", title: "Analyst, Cost Allocation", region: "LATAM" },
   { id: "u056", avatar: "avatars/photos/m39.png", name: "Wendell Borton", email: "Wendell.Borton@disney.com", roles: ["Ad Ops Specialist", "Programmatic Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Associate, Creative Operations", region: "NA" },
   { id: "u057", avatar: "avatars/photos/m40.png", name: "Lyle Lanley", email: "Lyle.Lanley@disney.com", roles: ["Campaign Manager", "Strategy & Planning Manager", "Sales Planner"], status: "Active", team: "Programmatic Sales", title: "Sr. Manager, Programmatic Sales", region: "NA" },
-  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark", email: "Lewis.Clark@disney.com", roles: ["Yield Manager"], status: "Inactive", team: "Yield & Inventory", title: "Analyst, Inventory Forecasting", region: "APAC" },
+  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark", email: "Lewis.Clark@disney.com", roles: ["Yield Manager"], status: "Inactive", team: "Yield & Inventory", title: "Analyst, Inventory Forecasting", region: "ANZ" },
   { id: "u059", avatar: "avatars/photos/m42.png", name: "Kearney Zzyzwicz", email: "Kearney.Zzyzwicz@disney.com", roles: ["Account Manager", "Client Partnerships Manager", "Account Executive"], status: "Active", team: "Global Partnerships", title: "Coordinator, Partner Relations", region: "EMEA" },
-  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon", email: "Manjula.Nahasapeemapetilon@disney.com", roles: ["Billing Operations Specialist", "Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Lead, Operations Support", region: "APAC" }
+  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon", email: "Manjula.Nahasapeemapetilon@disney.com", roles: ["Billing Operations Specialist", "Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Lead, Operations Support", region: "ANZ" }
 ];
 
 var ORIGINAL_ORDER = DATA.slice();
@@ -89,30 +89,10 @@ var SEARCH_FIELDS = ["name", "email", "status", "team", "title", "region"];
 var RP_SEARCH_FIELDS = ["role", "description", "status", "createdBy", "createDate"];
 var activeTab = "users";
 
-/* ═══ ROLES & PERMISSIONS DATA ═══ */
-var ROLES_PERMISSIONS_DATA = [
-  { id: "r001", role: "Core Planning Admin", description: "Full access to Core Planning workflows including order and media plan management.", functions: [{ name: "Core Planning", count: 8 }, { name: "TOM", count: 2 }, { name: "Admin", count: 3 }], status: "Sensitive", createdBy: "Homer Simpson", createDate: "01/15/2026" },
-  { id: "r002", role: "Strategy & Planning Manager", description: "Manage strategic planning initiatives and oversee cross-team planning coordination.", functions: [{ name: "Core Planning", count: 7 }, { name: "TOM", count: 2 }, { name: "Admin", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "01/15/2026" },
-  { id: "r003", role: "Sales Planner", description: "Create and manage sales plans and proposals within the planning workflow.", functions: [{ name: "Core Planning", count: 5 }], status: "Regional", createdBy: "Kent Brockman", createDate: "01/20/2026" },
-  { id: "r004", role: "Media Strategy Director", description: "Define and oversee media investment strategy across linear and digital platforms.", functions: [{ name: "Core Planning", count: 6 }, { name: "TOM", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "01/20/2026" },
-  { id: "r005", role: "Account Executive", description: "Manage client accounts and execute sales orders and deal negotiations.", functions: [{ name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Kent Brockman", createDate: "02/03/2026" },
-  { id: "r006", role: "Account Manager", description: "Oversee client account relationships and manage account-level configurations.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Kent Brockman", createDate: "02/03/2026" },
-  { id: "r007", role: "Client Partnerships Manager", description: "Manage strategic client partnerships and coordinate cross-functional planning.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/10/2026" },
-  { id: "r008", role: "Campaign Manager", description: "Plan, launch, and monitor advertising campaigns across platforms.", functions: [{ name: "Core Planning", count: 6 }, { name: "TOM", count: 2 }], status: "Regional", createdBy: "Homer Simpson", createDate: "02/10/2026" },
-  { id: "r009", role: "Ad Ops Specialist", description: "Execute ad trafficking, campaign setup, and creative asset management.", functions: [{ name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/18/2026" },
-  { id: "r010", role: "Programmatic Specialist", description: "Manage programmatic deal setup, automated transactions, and bid optimization.", functions: [{ name: "Core Planning", count: 2 }], status: "Regional", createdBy: "Artie Ziff", createDate: "02/18/2026" },
-  { id: "r011", role: "Inventory Analyst", description: "Monitor and analyze ad inventory availability, utilization, and capacity.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/25/2026" },
-  { id: "r012", role: "Yield Manager", description: "Optimize ad inventory pricing, yield, and sell-through rates.", functions: [{ name: "Core Planning", count: 3 }], status: "Regional", createdBy: "Artie Ziff", createDate: "02/25/2026" },
-  { id: "r013", role: "Billing Operations Specialist", description: "Process invoices, manage billing workflows, and reconcile payment records.", functions: [{ name: "Core Planning", count: 2 }], status: "Sensitive", createdBy: "Homer Simpson", createDate: "03/05/2026" },
-  { id: "r014", role: "Finance Analyst", description: "Analyze financial performance, revenue forecasting, and reporting for ad sales.", functions: [{ name: "Core Planning", count: 2 }], status: "Sensitive", createdBy: "Kent Brockman", createDate: "03/05/2026" },
-  { id: "r015", role: "Revenue Operations Analyst", description: "Track revenue performance, pipeline reporting, and operational metrics.", functions: [{ name: "Core Planning", count: 3 }], status: "Sensitive", createdBy: "Artie Ziff", createDate: "03/12/2026" }
-];
-var RP_ORIGINAL_ORDER = ROLES_PERMISSIONS_DATA.slice();
+/* ═══ ROLES & PERMISSIONS DATA ═══
+   Enterprise IAM seed set for Atlas (permission bundles, not job titles). */
 
-/* ═══ FUNCTIONS POPOVER DATA ═══
-   FUNCTION_REGISTRY  : authoritative per-app function catalogue (system keys).
-   ROLE_FUNCTION_MAP  : per-role explicit assignment; count must match role.functions entry.
-   FUNCTION_LABEL_MAP : system key → human-readable label rendered in the popover. */
+/* ═══ FUNCTIONS POPOVER DATA ═══ */
 var FUNCTION_REGISTRY = {
   "IAM": [
     "iam_role_get","iam_role_list","iam_role_create","iam_role_update","iam_role_delete",
@@ -134,78 +114,104 @@ var FUNCTION_REGISTRY = {
     "tom_option_list","tom_option_get","tom_option_update","tom_option_assign",
     "tom_group_list","tom_group_get","tom_group_create","tom_group_update","tom_group_assign","tom_group_archive",
     "tom_template_list","tom_template_get","tom_template_create","tom_template_update","tom_template_assign","tom_template_archive"
-  ],
-  "Disney Ads Agent": ["media_plan_queries","forecasting_queries","planning_activity_summaries","approval_io_comparisons"],
-  "Admin": ["admin_role_manage","admin_user_manage","admin_system_config","admin_audit_view","admin_settings_update"]
+  ]
 };
 
 var ROLE_FUNCTION_MAP = {
-  "r001": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_delete","planning_plan_list","planning_plan_create","planning_plan_update"],
-    "TOM": ["tom_option_list","tom_group_list"],
-    "Admin": ["admin_role_manage","admin_user_manage","admin_system_config"]
+  r001: { /* Atlas Admin */
+    "IAM": FUNCTION_REGISTRY["IAM"].slice(),
+    "Core Planning": FUNCTION_REGISTRY["Core Planning"].slice(),
+    "ICM": FUNCTION_REGISTRY["ICM"].slice(),
+    "TOM": FUNCTION_REGISTRY["TOM"].slice(),
+    "Disney Ads Agent": ["media_plan_queries","forecasting_queries","planning_activity_summaries","approval_io_comparisons"]
   },
-  "r002": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_plan_list","planning_plan_get","planning_plan_update"],
-    "TOM": ["tom_option_list","tom_group_list"],
-    "Admin": ["admin_user_manage","admin_audit_view"]
+  r002: { /* Core Planning Admin */
+    "Core Planning": FUNCTION_REGISTRY["Core Planning"].slice()
   },
-  "r003": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list","planning_plan_get","planning_lineitem_list"]
+  r003: { /* Operations Admin */
+    "Core Planning": [
+      "planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_assign","planning_order_comment",
+      "planning_plan_list","planning_plan_get","planning_plan_create","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_get","planning_lineitem_create","planning_lineitem_update"
+    ]
   },
-  "r004": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_plan_list","planning_plan_get","planning_plan_update"],
-    "TOM": ["tom_option_list","tom_group_list"]
+  r004: { /* Planner */
+    "Core Planning": [
+      "planning_order_list","planning_order_create","planning_order_update",
+      "planning_plan_list","planning_plan_create","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_create","planning_lineitem_update"
+    ]
   },
-  "r005": {
-    "Core Planning": ["planning_order_list","planning_plan_list"]
+  r005: { /* Planning Specialist */
+    "Core Planning": [
+      "planning_order_list","planning_order_create","planning_order_update",
+      "planning_plan_list","planning_plan_create","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_create","planning_lineitem_update"
+    ]
   },
-  "r006": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  r006: { /* Planning Manager */
+    "Core Planning": [
+      "planning_order_list","planning_order_approve","planning_order_reject",
+      "planning_plan_list","planning_lineitem_list"
+    ]
   },
-  "r007": {
-    "Core Planning": ["planning_order_list","planning_plan_list","planning_plan_get"]
+  r007: { /* Regional Planning Specialist */
+    "Core Planning": [
+      "planning_order_list","planning_order_create","planning_order_update",
+      "planning_plan_list","planning_plan_create","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_create","planning_lineitem_update"
+    ]
   },
-  "r008": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_plan_list","planning_plan_get"],
-    "TOM": ["tom_option_list","tom_group_list"]
+  r008: { /* Read-Only Viewer */
+    "Core Planning": ["planning_order_list","planning_plan_list","planning_lineitem_list"]
   },
-  "r009": {
-    "Core Planning": ["planning_order_list","planning_plan_list"]
+  r009: { /* ICM Admin */
+    "ICM": FUNCTION_REGISTRY["ICM"].slice()
   },
-  "r010": {
-    "Core Planning": ["planning_order_list","planning_plan_list"]
+  r010: { /* TOM Admin */
+    "TOM": FUNCTION_REGISTRY["TOM"].slice()
   },
-  "r011": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  r011: { /* Programmatic Specialist */
+    "Core Planning": [
+      "planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_assign",
+      "planning_plan_list","planning_plan_get","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_get","planning_lineitem_update"
+    ]
   },
-  "r012": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
-  },
-  "r013": {
-    "Core Planning": ["planning_order_list","planning_plan_list"]
-  },
-  "r014": {
-    "Core Planning": ["planning_order_list","planning_plan_list"]
-  },
-  "r015": {
-    "Core Planning": ["planning_order_list","planning_order_get","planning_plan_list"]
+  r012: { /* Support Admin */
+    "Core Planning": ["planning_order_list","planning_order_get","planning_order_comment","planning_plan_list","planning_lineitem_list"],
+    "IAM": ["iam_user_list","iam_user_get","iam_analytics_get"]
   }
 };
 
+var ROLE_ACCESS_LEVELS = {
+  r001: { "IAM": "Full Access", "Core Planning": "Full Access", "ICM": "Full Access", "TOM": "Full Access", "Disney Ads Agent": "Full Access" },
+  r002: { "Core Planning": "Full Access" },
+  r003: { "Core Planning": "Custom" },
+  r004: { "Core Planning": "Edit" },
+  r005: { "Core Planning": "Edit" },
+  r006: { "Core Planning": "Approve" },
+  r007: { "Core Planning": "Edit" },
+  r008: { "Core Planning": "View Only" },
+  r009: { "ICM": "Full Access" },
+  r010:{ "TOM": "Full Access" },
+  r011:{ "Core Planning": "Custom" },
+  r012:{ "Core Planning": "Custom", "IAM": "Custom" }
+};
+
 var FUNCTION_LABEL_MAP = {
-  "planning_order_list":"View orders","planning_order_get":"View order details","planning_order_create":"Create orders","planning_order_update":"Edit orders","planning_order_delete":"Delete orders","planning_order_assign":"Assign orders","planning_order_comment":"Comment on orders","planning_order_approve":"Approve orders","planning_order_reject":"Reject orders",
-  "planning_plan_list":"View media plans","planning_plan_get":"View media plan details","planning_plan_create":"Create media plans","planning_plan_update":"Edit media plans","planning_plan_delete":"Delete media plans",
-  "planning_lineitem_list":"View line items","planning_lineitem_get":"View line item details","planning_lineitem_create":"Create line items","planning_lineitem_update":"Edit line items","planning_lineitem_delete":"Delete line items",
-  "iam_role_list":"View roles","iam_role_get":"View role details","iam_role_create":"Create roles","iam_role_update":"Edit roles","iam_role_delete":"Delete roles","iam_function_assign":"Assign functions","iam_data_assign":"Assign data access",
-  "iam_user_list":"View users","iam_user_get":"View user details","iam_user_create":"Create users","iam_user_update":"Edit users","iam_user_deactivate":"Deactivate users","iam_user_impersonate":"Impersonate users","iam_analytics_get":"View analytics",
-  "tom_option_list":"View options","tom_option_get":"View option details","tom_option_update":"Edit options","tom_option_assign":"Assign options",
-  "tom_group_list":"View groups","tom_group_get":"View group details","tom_group_create":"Create groups","tom_group_update":"Edit groups","tom_group_assign":"Assign groups","tom_group_archive":"Archive groups",
-  "tom_template_list":"View templates","tom_template_get":"View template details","tom_template_create":"Create templates","tom_template_update":"Edit templates","tom_template_assign":"Assign templates","tom_template_archive":"Archive templates",
-  "admin_role_manage":"Manage roles","admin_user_manage":"Manage users","admin_system_config":"System configuration","admin_audit_view":"View audit logs","admin_settings_update":"Update settings",
-  "media_plan_queries":"Media plan queries","forecasting_queries":"Forecasting queries","planning_activity_summaries":"Planning activity summaries","approval_io_comparisons":"Approval I/O comparisons",
-  "icm_offering_list":"View offerings","icm_offering_get":"View offering details","icm_offering_create":"Create offerings","icm_offering_update":"Edit offerings","icm_offering_delete":"Delete offerings",
-  "icm_salespackage_list":"View sales packages","icm_salespackage_get":"View sales package details","icm_salespackage_create":"Create sales packages","icm_salespackage_update":"Edit sales packages","icm_salespackage_delete":"Delete sales packages"
+  "planning_order_list":"View","planning_order_get":"View","planning_order_create":"Create","planning_order_update":"Edit","planning_order_delete":"Delete","planning_order_assign":"Assign","planning_order_comment":"Comment","planning_order_approve":"Approve","planning_order_reject":"Reject",
+  "planning_plan_list":"View","planning_plan_get":"View","planning_plan_create":"Create","planning_plan_update":"Edit","planning_plan_delete":"Delete",
+  "planning_lineitem_list":"View","planning_lineitem_get":"View","planning_lineitem_create":"Create","planning_lineitem_update":"Edit","planning_lineitem_delete":"Delete",
+  "iam_role_list":"View","iam_role_get":"View","iam_role_create":"Create","iam_role_update":"Edit","iam_role_delete":"Delete","iam_function_assign":"Assign permissions","iam_data_assign":"Manage data access",
+  "iam_user_list":"View","iam_user_get":"View","iam_user_create":"Create","iam_user_update":"Edit","iam_user_deactivate":"Delete","iam_user_impersonate":"Impersonate users","iam_analytics_get":"View",
+  "tom_option_list":"View","tom_option_get":"View","tom_option_update":"Edit","tom_option_assign":"Assign",
+  "tom_group_list":"View","tom_group_get":"View","tom_group_create":"Create","tom_group_update":"Edit","tom_group_assign":"Assign","tom_group_archive":"Delete",
+  "tom_template_list":"View","tom_template_get":"View","tom_template_create":"Create","tom_template_update":"Edit","tom_template_assign":"Assign permissions","tom_template_archive":"Delete",
+  "admin_role_manage":"Assign permissions","admin_user_manage":"Manage configuration","admin_system_config":"Manage configuration","admin_audit_view":"View","admin_settings_update":"Manage settings",
+  "media_plan_queries":"View","forecasting_queries":"View","planning_activity_summaries":"View","approval_io_comparisons":"View",
+  "icm_offering_list":"View","icm_offering_get":"View","icm_offering_create":"Create","icm_offering_update":"Edit","icm_offering_delete":"Delete",
+  "icm_salespackage_list":"View","icm_salespackage_get":"View","icm_salespackage_create":"Create","icm_salespackage_update":"Edit","icm_salespackage_delete":"Delete"
 };
 
 function labelForFunction(key) { return FUNCTION_LABEL_MAP[key] || null; }
@@ -224,6 +230,46 @@ function resolveFunctionLabels(roleId, appName, count) {
   }
   return labels;
 }
+
+function roleFunctionCount(roleId, appName) {
+  var keys = (ROLE_FUNCTION_MAP[roleId] && ROLE_FUNCTION_MAP[roleId][appName]) || [];
+  return keys.length;
+}
+
+function roleAccessLevel(roleId, appName) {
+  return (ROLE_ACCESS_LEVELS[roleId] && ROLE_ACCESS_LEVELS[roleId][appName]) || "Custom";
+}
+
+function buildRoleFunctions(roleId) {
+  var out = [];
+  var map = ROLE_FUNCTION_MAP[roleId] || {};
+  for (var appName in map) {
+    if (!Object.prototype.hasOwnProperty.call(map, appName)) continue;
+    out.push({
+      name: appName,
+      count: roleFunctionCount(roleId, appName),
+      access: roleAccessLevel(roleId, appName)
+    });
+  }
+  out.sort(function (a, b) { return a.name.localeCompare(b.name); });
+  return out;
+}
+
+var ROLES_PERMISSIONS_DATA = [
+  { id: "r001", role: "Atlas Admin", description: "Owns full IAM administration and end-to-end Core Planning governance.", status: "Standard", createdBy: "Homer Simpson", createDate: "01/15/2026", functions: buildRoleFunctions("r001") },
+  { id: "r002", role: "Core Planning Admin", description: "Controls all Core Planning configuration, lifecycle, and approvals.", status: "Standard", createdBy: "Homer Simpson", createDate: "01/18/2026", functions: buildRoleFunctions("r002") },
+  { id: "r003", role: "Operations Admin", description: "Manages execution workflows with edit, assign, and comment authority.", status: "Standard", createdBy: "Marge Simpson", createDate: "01/22/2026", functions: buildRoleFunctions("r003") },
+  { id: "r004", role: "Planner", description: "Builds and updates planning objects without approval or deletion rights.", status: "Standard", createdBy: "Kent Brockman", createDate: "01/25/2026", functions: buildRoleFunctions("r004") },
+  { id: "r005", role: "Planning Specialist", description: "Performs detailed planning updates including line-item level edits.", status: "Standard", createdBy: "Kent Brockman", createDate: "01/28/2026", functions: buildRoleFunctions("r005") },
+  { id: "r006", role: "Planning Manager", description: "Reviews plans and executes approval workflows for planning governance.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/02/2026", functions: buildRoleFunctions("r006") },
+  { id: "r007", role: "Regional Planning Specialist", description: "Executes planning edits constrained to regional data accessibility.", status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/06/2026", functions: buildRoleFunctions("r007") },
+  { id: "r008", role: "Read-Only Viewer", description: "Provides read-only visibility across planning entities and details.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/10/2026", functions: buildRoleFunctions("r008") },
+  { id: "r009", role: "ICM Admin", description: "Maintains Inventory Catalog Manager offerings and sales package access.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/14/2026", functions: buildRoleFunctions("r009") },
+  { id: "r010", role: "TOM Admin", description: "Administers Target Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") },
+  { id: "r011", role: "Programmatic Specialist", description: "Supports programmatic deal setup with controlled planning edits.", status: "Standard", createdBy: "Artie Ziff", createDate: "02/24/2026", functions: buildRoleFunctions("r011") },
+  { id: "r012", role: "Support Admin", description: "Troubleshoots user access issues with limited IAM and planning scope.", status: "Standard", createdBy: "Waylon Smithers", createDate: "03/01/2026", functions: buildRoleFunctions("r012") }
+];
+var RP_ORIGINAL_ORDER = ROLES_PERMISSIONS_DATA.slice();
 
 var rpCurrentPage = 1;
 var rpPageSize = 10;
@@ -889,6 +935,46 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       var newTotalOthers = tableWidth - targetRightPx;
       if (oldTotalOthers <= 0 || newTotalOthers <= 0) return;
+
+      /* R&P only: keep Role and Created By at their measured widths; give
+         all horizontal slack to Description and Functions (Data Access column
+         removed — no third middle column to preserve). */
+      if (table.id === "rpTable" && oldWidths.length >= 5 && rightIdx === 4) {
+        var MIN_DESC = 200;
+        var MIN_FUNC = 220;
+        var rolePx = oldWidths[0];
+        var desc0 = oldWidths[1];
+        var func0 = oldWidths[2];
+        var byPx = oldWidths[3];
+        var rem = newTotalOthers - rolePx - byPx;
+        if (rem >= MIN_DESC + MIN_FUNC) {
+          var sumPair = desc0 + func0;
+          var ratio = sumPair > 0 ? desc0 / sumPair : 0.5;
+          var descPx = Math.max(MIN_DESC, Math.round(rem * ratio));
+          var funcPx = rem - descPx;
+          if (funcPx < MIN_FUNC) {
+            funcPx = MIN_FUNC;
+            descPx = rem - funcPx;
+          }
+          /* Shift ~3.5% of the desc+func pool from Description → Functions
+             (same intent as the CSS col % tweak) so long function strings
+             get more room before ellipsis while desc stays readable. */
+          var nudge = Math.round(rem * 0.035);
+          if (nudge > 0 && descPx - nudge >= MIN_DESC && funcPx + nudge >= MIN_FUNC) {
+            descPx -= nudge;
+            funcPx += nudge;
+          }
+          if (descPx >= MIN_DESC && funcPx >= MIN_FUNC) {
+            cols[0].style.width = Math.max(1, Math.round(rolePx)) + "px";
+            cols[1].style.width = descPx + "px";
+            cols[2].style.width = funcPx + "px";
+            cols[3].style.width = Math.max(1, Math.round(byPx)) + "px";
+            cols[4].style.width = targetRightPx + "px";
+            return;
+          }
+        }
+      }
+
       var scale = newTotalOthers / oldTotalOthers;
 
       for (var k = 0; k < cols.length; k++) {
@@ -976,8 +1062,16 @@ document.addEventListener("DOMContentLoaded", function () {
     var subItems = pop.querySelectorAll(".user-menu-sub-item");
     var THEME_KEY = "atlas:theme";
 
+    /* Theme controller — generic over any number of themes.
+       "light" is the EDL Light default and is represented by the *absence*
+       of the data-theme attribute (this preserves the pre-existing EDL Light
+       behavior exactly). Any other string is applied verbatim as the
+       data-theme attribute value, which lets isolated theme layers like
+       [data-theme="dark"] (EDL Dark) and [data-theme="ads-preview"]
+       (ADS Preview) activate via CSS without any new JS branching. */
     function currentTheme() {
-      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      var v = document.documentElement.getAttribute("data-theme");
+      return v ? v : "light";
     }
 
     function syncSelection() {
@@ -991,12 +1085,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function applyTheme(val) {
-      if (val === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
-      } else {
+      if (!val || val === "light") {
         document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", val);
       }
-      try { localStorage.setItem(THEME_KEY, val); } catch (e) {}
+      try { localStorage.setItem(THEME_KEY, val || "light"); } catch (e) {}
       syncSelection();
     }
 
@@ -1143,6 +1237,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (lines) showTooltipFor(extra, lines, true);
       return;
     }
+    var funcWrap = e.target.closest(".rp-func-text");
+    if (funcWrap) {
+      var fs = funcWrap.getAttribute("data-rp-funcs-full");
+      if (fs) showTooltipFor(funcWrap, fs, false);
+      return;
+    }
     var td = e.target.closest("td");
     if (!td) { hideTooltip(); return; }
     var info = getCellTruncationInfo(td);
@@ -1164,6 +1264,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (lines) showTooltipFor(extra, lines, true);
       return;
     }
+    var funcWrap = e.target.closest(".rp-func-text");
+    if (funcWrap) {
+      var fs = funcWrap.getAttribute("data-rp-funcs-full");
+      if (fs) showTooltipFor(funcWrap, fs, false);
+      return;
+    }
     var link = e.target.closest(".rp-role-link");
     if (link) {
       var td = link.closest("td");
@@ -1172,12 +1278,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   document.addEventListener("focusout", function (e) {
-    if (e.target.closest(".role-extra, .rp-role-link")) hideTooltip();
+    if (e.target.closest(".role-extra, .rp-role-link, .rp-func-text")) hideTooltip();
   });
 
-  /* ─── R&P Functions Popover (click-activated, dark EDL style) ───
-     Trigger: the blue (N) count button inside .rp-func in the Roles table.
-     Content: app title + the actual per-role function label list.
+  /* ─── R&P Functions Popover (click-activated) ───
+     Trigger: semantic access link inside .rp-func.
+     Content: application + access level + grouped permissions.
      Dismiss: click outside / Escape / another trigger. */
   var funcPop = document.createElement("div");
   funcPop.className = "func-popover";
@@ -1186,6 +1292,108 @@ document.addEventListener("DOMContentLoaded", function () {
   document.body.appendChild(funcPop);
 
   var funcPopTrigger = null;
+  var APP_ACCESS_MODEL = {
+    "Core Planning": {
+      groups: ["Orders", "Media Plans", "Line Items"],
+      presets: {
+        "View Only": { Orders: ["View"], "Media Plans": ["View"], "Line Items": ["View"] },
+        "Edit": { Orders: ["View", "Create", "Edit", "Comment"], "Media Plans": ["View", "Create", "Edit"], "Line Items": ["View", "Create", "Edit"] },
+        "Approve": { Orders: ["View", "Approve", "Reject"], "Media Plans": ["View"], "Line Items": ["View"] },
+        "Full Access": { Orders: ["View", "Create", "Delete", "Assign", "Comment", "Approve", "Reject"], "Media Plans": ["View", "Create", "Edit", "Delete"], "Line Items": ["View", "Create", "Edit", "Delete"] }
+      }
+    },
+    "IAM": {
+      groups: ["Roles", "Users", "Analytics", "Admin Actions"],
+      presets: {
+        "View Only": { Roles: ["View"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
+        "User": { Roles: ["View"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": [] },
+        "Role": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
+        "Full Access": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": ["Manage configuration", "Manage settings"] }
+      }
+    },
+    "ICM": {
+      groups: ["Inventory Items", "Offerings", "Sales Packages"],
+      presets: {
+        "View Only": { "Inventory Items": ["View"], Offerings: ["View"], "Sales Packages": ["View"] },
+        "Edit": { "Inventory Items": ["View", "Create", "Edit"], Offerings: ["View", "Create", "Edit"], "Sales Packages": ["View", "Create", "Edit"] },
+        "Approve": { "Inventory Items": ["View", "Approve", "Reject"], Offerings: ["View"], "Sales Packages": ["View"] },
+        "Full Access": { "Inventory Items": ["View", "Create", "Edit", "Delete"], Offerings: ["View", "Create", "Edit", "Delete"], "Sales Packages": ["View", "Create", "Edit", "Delete"] }
+      }
+    },
+    "TOM": {
+      groups: ["Targeting Categories", "Dimensions", "Values", "Groups", "Templates"],
+      presets: {
+        "View Only": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View"], Templates: ["View"] },
+        "Edit": { "Targeting Categories": ["View", "Edit"], Dimensions: ["View", "Edit"], Values: ["View", "Edit"], Groups: ["View", "Create", "Edit"], Templates: ["View", "Create", "Edit"] },
+        "Approve": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View", "Approve", "Reject"], Templates: ["View", "Approve", "Reject"] },
+        "Full Access": { "Targeting Categories": ["View", "Create", "Edit", "Delete"], Dimensions: ["View", "Create", "Edit", "Delete"], Values: ["View", "Create", "Edit", "Delete"], Groups: ["View", "Create", "Edit", "Delete", "Assign"], Templates: ["View", "Create", "Edit", "Delete", "Assign permissions"] }
+      }
+    },
+    "Disney Ads Agent": {
+      groups: ["Agent Workflows", "Forecasting", "Insights"],
+      presets: {
+        "View Only": { "Agent Workflows": ["View"], Forecasting: ["View"], Insights: ["View"] },
+        "Edit": { "Agent Workflows": ["View", "Create", "Edit"], Forecasting: ["View", "Edit"], Insights: ["View"] },
+        "Full Access": { "Agent Workflows": ["View", "Create", "Edit", "Delete"], Forecasting: ["View", "Create", "Edit", "Delete"], Insights: ["View"] }
+      }
+    }
+  };
+  var ROLE_ACCESS_DETAILS = {
+    r003: {
+      "Core Planning": {
+        Orders: ["View", "Edit", "Assign", "Comment"],
+        "Media Plans": ["View", "Edit"],
+        "Line Items": ["View", "Edit"]
+      }
+    },
+    r011: {
+      "Core Planning": {
+        Orders: ["View", "Create", "Edit", "Assign"],
+        "Media Plans": ["View", "Edit"],
+        "Line Items": ["View", "Edit"]
+      }
+    },
+    r012: {
+      "Core Planning": {
+        Orders: ["View", "Edit"],
+        "Media Plans": ["View", "Edit"],
+        "Line Items": ["View"]
+      },
+      "IAM": {
+        Roles: ["View"],
+        Users: ["View", "Edit", "Impersonate users"],
+        Analytics: ["View"],
+        "Admin Actions": []
+      }
+    }
+  };
+
+  function accessActionsFor(appName, level) {
+    var model = APP_ACCESS_MODEL[appName];
+    if (!model) return {};
+    var bundle = model.presets[level];
+    if (!bundle && appName === "IAM") {
+      if (level === "Edit") bundle = model.presets["User"];
+      else if (level === "Approve") bundle = model.presets["Role"];
+    }
+    if (!bundle) bundle = model.presets["View Only"] || {};
+    var groups = {};
+    for (var i = 0; i < model.groups.length; i++) {
+      var group = model.groups[i];
+      groups[group] = (bundle[group] || []).slice();
+    }
+    return groups;
+  }
+
+  function getRoleAppAccessDetails(roleId, appName, accessLevel) {
+    if (accessLevel === "Custom Access") accessLevel = "Custom";
+    var custom = ROLE_ACCESS_DETAILS[roleId] && ROLE_ACCESS_DETAILS[roleId][appName];
+    var groups = custom || accessActionsFor(appName, accessLevel);
+    return {
+      level: accessLevel || "Custom",
+      groups: groups
+    };
+  }
 
   function hideFuncPop() {
     if (!funcPop.classList.contains("visible")) return;
@@ -1197,18 +1405,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showFuncPop(btn) {
     var app = btn.getAttribute("data-app") || "";
-    var appDisplay = (typeof RP_FUNC_DISPLAY_NAME !== "undefined" && RP_FUNC_DISPLAY_NAME[app]) || app;
-    var funcsAttr = btn.getAttribute("data-funcs") || "";
-    var labels = funcsAttr ? funcsAttr.split("|").filter(Boolean) : [];
-    var count = labels.length;
-
-    var html = '<div class="func-pop-title">' +
-                 esc(appDisplay) + ' <span class="func-pop-count">' + count + '</span>' +
-               '</div>';
-    if (count) {
-      html += '<ul class="func-pop-list">';
-      for (var i = 0; i < count; i++) {
-        html += '<li>' + esc(labels[i]) + '</li>';
+    var appDisplay = app;
+    var roleId = btn.getAttribute("data-role-id") || "";
+    var accessLevel = btn.getAttribute("data-access") || "Custom";
+    if (accessLevel === "Custom Access") accessLevel = "Custom";
+    var detail = getRoleAppAccessDetails(roleId, app, accessLevel);
+    var html = '<div class="func-pop-title">' + esc(appDisplay) + '</div>' +
+      '<div class="func-pop-access">Access level: ' + esc(detail.level) + '</div>';
+    var model = APP_ACCESS_MODEL[app] || { groups: [] };
+    for (var g = 0; g < model.groups.length; g++) {
+      var group = model.groups[g];
+      var actions = detail.groups[group] || [];
+      if (!actions.length) continue;
+      html += '<div class="func-pop-group-title">' + esc(group) + '</div><ul class="func-pop-list">';
+      for (var i = 0; i < actions.length; i++) {
+        html += '<li>' + esc(actions[i]) + '</li>';
       }
       html += '</ul>';
     }
@@ -1246,19 +1457,26 @@ document.addEventListener("DOMContentLoaded", function () {
   var rolesTblWrap = document.querySelector("#rolesPanel .tbl-wrap");
   if (rolesTblWrap) {
     rolesTblWrap.addEventListener("click", function (e) {
-      var btn = e.target.closest(".rp-func-count");
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (funcPopTrigger === btn) { hideFuncPop(); return; }
-      hideFuncPop();
-      showFuncPop(btn);
+      var btn = e.target.closest(".rp-func-link");
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (funcPopTrigger === btn) { hideFuncPop(); return; }
+        hideFuncPop();
+        showFuncPop(btn);
+        return;
+      }
+      var ft = e.target.closest(".rp-func-text");
+      if (ft) {
+        var fs = ft.getAttribute("data-rp-funcs-full");
+        if (fs) showTooltipFor(ft, fs, false);
+      }
     });
   }
   document.addEventListener("click", function (e) {
     if (!funcPop.classList.contains("visible")) return;
     if (e.target.closest("#rpFuncPopover")) return;
-    if (e.target.closest(".rp-func-count")) return;
+    if (e.target.closest(".rp-func-link")) return;
     hideFuncPop();
   });
   document.addEventListener("keydown", function (e) {
@@ -1757,7 +1975,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var regionOptions = [
     { value: "NA", label: "NA" },
     { value: "EMEA", label: "EMEA" },
-    { value: "APAC", label: "APAC" },
+    { value: "ANZ", label: "ANZ" },
     { value: "LATAM", label: "LATAM" }
   ];
 
@@ -1798,8 +2016,20 @@ document.addEventListener("DOMContentLoaded", function () {
   var RP_FUNC_DISPLAY_NAME = {
     "Core Planning": "Core Planning",
     "TOM": "Target Options Manager",
-    "Admin": "Identity Access Management"
+    "IAM": "Identity Access Management",
+    "ICM": "Inventory Catalog Manager",
+    "Disney Ads Agent": "Disney Ads Agent"
   };
+
+  /* Map Functions filter combo value (full label or legacy short label) → data key. */
+  function rpFunctionsFilterKeyFromLabel(label) {
+    if (!label) return label;
+    if (RP_FUNC_DISPLAY_NAME[label]) return label;
+    for (var k in RP_FUNC_DISPLAY_NAME) {
+      if (RP_FUNC_DISPLAY_NAME[k] === label) return k;
+    }
+    return label;
+  }
 
   /* ═══ ROLES & PERMISSIONS FILTER DRAWER ═══
      Structural mirror of the Users drawer above — same .flt-* classes and
@@ -1814,15 +2044,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var rpFilters = { role: "", description: "", functions: "", createdBy: "", createDate: "" };
   /* Draft state — mutated live by drawer inputs / combos. */
   var rpDrawerDraft = { role: "", description: "", functions: "", createdBy: "", createDate: "" };
-
-  /* Combo displays the expanded label (EDL consistency with the Functions
-     column in the table); we translate back to the internal data key for
-     filtering so the source data remains untouched. */
-  var RP_FN_LABEL_TO_KEY = {
-    "Core Planning": "Core Planning",
-    "Target Options Manager": "TOM",
-    "Identity Access Management": "Admin"
-  };
 
   /* Functions options — pulled from the live dataset + RP_FUNC_DISPLAY_NAME
      so added/renamed apps flow through without hand-maintained lists. */
@@ -1978,30 +2199,482 @@ document.addEventListener("DOMContentLoaded", function () {
   tabBtns[0].addEventListener("click", function () { switchTab("users"); });
   tabBtns[1].addEventListener("click", function () { switchTab("roles"); });
 
+  /* ═══ ADD USERS PAGE ═══
+     One page with 3 UI states:
+       A. Empty (no selected roles)
+       B. Selected role cards
+       C. Expanded role preview inline in a card.
+     Uses ROLES_PERMISSIONS_DATA as source of truth, so custom roles created
+     in Roles & Permissions are immediately assignable here. */
+  (function setupAddUsersPage() {
+    var addUsersPage = document.getElementById("addUsersPage");
+    if (!addUsersPage) return;
+
+    var mainPage = document.querySelector(".page");
+    var createRolePage = document.getElementById("createRolePage");
+    var addUsersBtn = null;
+    var usersBtns = document.querySelectorAll("#usersPanel .btn-ghost");
+    for (var ub = 0; ub < usersBtns.length; ub++) {
+      if (usersBtns[ub].textContent.indexOf("Add Users") !== -1) {
+        addUsersBtn = usersBtns[ub];
+        break;
+      }
+    }
+
+    var auBack = document.getElementById("auBack");
+    var auCancel = document.getElementById("auCancel");
+    var auSave = document.getElementById("auSave");
+    var auRoleDD = document.getElementById("auRoleDD");
+    var auRoleTrigger = document.getElementById("auRoleTrigger");
+    var auRoleValue = document.getElementById("auRoleValue");
+    var auRoleMenu = document.getElementById("auRoleMenu");
+    var auRoleAdd = document.getElementById("auRoleAdd");
+    var auRoleCards = document.getElementById("auRoleCards");
+
+    var auFirstName = document.getElementById("auFirstName");
+    var auLastName = document.getElementById("auLastName");
+    var auPreferredName = document.getElementById("auPreferredName");
+    var auEmail = document.getElementById("auEmail");
+    var auRegion = document.getElementById("auRegion");
+    var auTimezone = document.getElementById("auTimezone");
+    var auTeam = document.getElementById("auTeam");
+    var auStatusValue = document.getElementById("auStatusValue");
+    var auStatusSeg = document.getElementById("auStatusSeg");
+
+    var auState = {
+      selectedRoleId: "",
+      selectedRoleIds: [],
+      expandedRoleId: null
+    };
+
+    var AU_REGION_TIMEZONES = {
+      NA: [
+        "America/New_York",
+        "America/Chicago",
+        "America/Denver",
+        "America/Los_Angeles",
+        "America/Toronto",
+        "America/Vancouver"
+      ],
+      LATAM: [
+        "America/Mexico_City",
+        "America/Bogota",
+        "America/Lima",
+        "America/Sao_Paulo",
+        "America/Buenos_Aires",
+        "America/Santiago"
+      ],
+      EMEA: [
+        "Europe/London",
+        "Europe/Paris",
+        "Europe/Berlin",
+        "Europe/Madrid",
+        "Europe/Rome",
+        "Europe/Warsaw",
+        "Africa/Johannesburg",
+        "Asia/Dubai"
+      ],
+      ANZ: [
+        "Australia/Sydney",
+        "Australia/Melbourne",
+        "Australia/Brisbane",
+        "Australia/Perth",
+        "Australia/Adelaide",
+        "Pacific/Auckland"
+      ]
+    };
+
+    var EYE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+    var EYE_OFF_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.8 21.8 0 0 1 5.06-7.94"/><path d="M9.9 4.24A10.93 10.93 0 0 1 12 4c7 0 11 8 11 8a22 22 0 0 1-3.17 4.87"/><path d="M1 1l22 22"/><path d="M10.58 10.58a2 2 0 1 0 2.83 2.83"/></svg>';
+    var TRASH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+
+    function getAURegionKey() {
+      var key = (auRegion.value || "").trim();
+      if (AU_REGION_TIMEZONES[key]) return key;
+      if (key.indexOf("NA") === 0) return "NA";
+      if (key.indexOf("LATAM") === 0) return "LATAM";
+      if (key.indexOf("EMEA") === 0) return "EMEA";
+      if (key.indexOf("ANZ") === 0) return "ANZ";
+      return "NA";
+    }
+
+    function renderAUTimezones(regionKey, preferredTimezone) {
+      var opts = AU_REGION_TIMEZONES[regionKey] || AU_REGION_TIMEZONES.NA;
+      var current = preferredTimezone || auTimezone.value;
+      auTimezone.innerHTML = "";
+      for (var i = 0; i < opts.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = opts[i];
+        opt.textContent = opts[i];
+        auTimezone.appendChild(opt);
+      }
+      if (current && opts.indexOf(current) !== -1) auTimezone.value = current;
+      else auTimezone.value = opts[0];
+    }
+
+    function setAUStatus(value) {
+      var next = value === "Inactive" ? "Inactive" : "Active";
+      if (auStatusValue) auStatusValue.value = next;
+      if (!auStatusSeg) return;
+      var btns = auStatusSeg.querySelectorAll("[data-au-status]");
+      for (var i = 0; i < btns.length; i++) {
+        var on = btns[i].getAttribute("data-au-status") === next;
+        btns[i].classList.toggle("is-selected", on);
+        btns[i].setAttribute("aria-pressed", on ? "true" : "false");
+      }
+    }
+
+    function resetAddUsersState() {
+      auState.selectedRoleId = "";
+      auState.selectedRoleIds = [];
+      auState.expandedRoleId = null;
+      auFirstName.value = "";
+      auLastName.value = "";
+      auPreferredName.value = "";
+      auEmail.value = "";
+      auRegion.value = "NA";
+      renderAUTimezones("NA", "America/New_York");
+      auTeam.selectedIndex = 0;
+      setAUStatus("Active");
+      renderAURolePicker();
+      renderAURoleCards();
+    }
+
+    function openAddUsers() {
+      if (mainPage) mainPage.style.display = "none";
+      if (createRolePage) createRolePage.style.display = "none";
+      addUsersPage.style.display = "";
+      window.scrollTo(0, 0);
+      resetAddUsersState();
+    }
+
+    function closeAddUsers() {
+      addUsersPage.style.display = "none";
+      if (mainPage) mainPage.style.display = "";
+      switchTab("users");
+      auRoleDD.classList.remove("open");
+      auRoleTrigger.setAttribute("aria-expanded", "false");
+    }
+
+    function getAURoleOptions() {
+      var items = [];
+      for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
+        items.push({ id: ROLES_PERMISSIONS_DATA[i].id, name: ROLES_PERMISSIONS_DATA[i].role });
+      }
+      items.sort(function (a, b) { return a.name.localeCompare(b.name); });
+      return items;
+    }
+
+    function findRoleById(roleId) {
+      for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
+        if (ROLES_PERMISSIONS_DATA[i].id === roleId) return ROLES_PERMISSIONS_DATA[i];
+      }
+      return null;
+    }
+
+    function inferPermissionGroup(appName, label) {
+      var app = (RP_FUNC_DISPLAY_NAME[appName] || appName || "").toLowerCase();
+      var txt = (label || "").toLowerCase();
+      if (app.indexOf("core planning") !== -1) {
+        if (txt.indexOf("order") !== -1) return "Order permissions";
+        if (txt.indexOf("media plan") !== -1) return "Media plan permissions";
+        if (txt.indexOf("line item") !== -1) return "Line item permissions";
+        return "Core planning permissions";
+      }
+      if (app.indexOf("target options manager") !== -1 || app === "tom") {
+        if (txt.indexOf("option") !== -1) return "Option permissions";
+        if (txt.indexOf("group") !== -1) return "Group permissions";
+        if (txt.indexOf("template") !== -1) return "Template permissions";
+        return "Targeting permissions";
+      }
+      if (app.indexOf("identity access management") !== -1 || app === "admin" || app === "iam") {
+        if (txt.indexOf("role") !== -1) return "Role permissions";
+        if (txt.indexOf("user") !== -1 || txt.indexOf("impersonate") !== -1) return "User permissions";
+        return "Admin permissions";
+      }
+      if (app.indexOf("inventory catalog manager") !== -1 || app === "icm") {
+        if (txt.indexOf("offering") !== -1) return "Offering permissions";
+        if (txt.indexOf("sales package") !== -1) return "Sales package permissions";
+        return "Catalog permissions";
+      }
+      if (app.indexOf("disney ads agent") !== -1) return "Agent permissions";
+      return "Permissions";
+    }
+
+    function rolePermissionGroups(roleRecord) {
+      var groups = {};
+      var groupOrder = [];
+      var fns = roleRecord && roleRecord.functions ? roleRecord.functions : [];
+      for (var i = 0; i < fns.length; i++) {
+        var app = fns[i].name;
+        var labels = resolveFunctionLabels(roleRecord.id, app, fns[i].count);
+        for (var j = 0; j < labels.length; j++) {
+          var group = inferPermissionGroup(app, labels[j]);
+          if (!groups[group]) {
+            groups[group] = [];
+            groupOrder.push(group);
+          }
+          if (groups[group].indexOf(labels[j]) === -1) groups[group].push(labels[j]);
+        }
+      }
+      var out = [];
+      for (var g = 0; g < groupOrder.length; g++) {
+        out.push({ title: groupOrder[g], items: groups[groupOrder[g]] });
+      }
+      return out;
+    }
+
+    function rolePermissionCount(roleRecord) {
+      var count = 0;
+      var fns = roleRecord && roleRecord.functions ? roleRecord.functions : [];
+      for (var i = 0; i < fns.length; i++) count += (fns[i].count || 0);
+      return count;
+    }
+
+    function roleDescription(roleRecord) {
+      var text = ((roleRecord && roleRecord.description) || "").trim();
+      if (!text) return "Custom role with configured access permissions.";
+      return text;
+    }
+
+    function renderAURoleCards() {
+      if (!auState.selectedRoleIds.length) {
+        auRoleCards.innerHTML = "";
+        auRoleCards.classList.remove("has-roles");
+        return;
+      }
+      auRoleCards.classList.add("has-roles");
+      var html = "";
+      for (var i = 0; i < auState.selectedRoleIds.length; i++) {
+        var role = findRoleById(auState.selectedRoleIds[i]);
+        if (!role) continue;
+        var isExpanded = auState.expandedRoleId === role.id;
+        var groups = rolePermissionGroups(role);
+        html += '<article class="au-role-card' + (isExpanded ? ' expanded' : '') + '" data-au-role-id="' + esc(role.id) + '">' +
+          '<div class="au-role-card-top">' +
+            '<div class="au-role-card-head">' +
+              '<h3 class="au-role-card-title">' + esc(role.role) + '</h3>' +
+              '<button type="button" class="au-role-trash" data-au-remove="' + esc(role.id) + '" aria-label="Remove role">' + TRASH_SVG + '</button>' +
+            '</div>' +
+            '<p class="au-role-desc">' + esc(roleDescription(role)) + '</p>' +
+            '<div class="au-role-meta">' +
+              '<div class="au-role-meta-row">' +
+                '<span class="au-role-meta-label">Permissions</span>' +
+                '<button type="button" class="au-role-eye" data-au-toggle="' + esc(role.id) + '" aria-label="Preview permissions">' + (isExpanded ? EYE_OFF_SVG : EYE_SVG) + '</button>' +
+              '</div>' +
+              '<div class="au-role-count">' + rolePermissionCount(role) + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="au-role-expand">' +
+            '<div class="au-role-expand-inner">';
+        for (var g = 0; g < groups.length; g++) {
+          html += '<div class="au-role-group">' +
+            '<div class="au-role-group-title">' + esc(groups[g].title) + '</div>' +
+            '<ul class="au-role-list">';
+          for (var p = 0; p < groups[g].items.length; p++) {
+            html += '<li>' + esc(groups[g].items[p]) + '</li>';
+          }
+          html += '</ul></div>';
+        }
+        html +=   '</div>' +
+          '</div>' +
+        '</article>';
+      }
+      auRoleCards.innerHTML = html;
+    }
+
+    function renderAURolePicker() {
+      var options = getAURoleOptions();
+      var html = "";
+      for (var i = 0; i < options.length; i++) {
+        var disabled = auState.selectedRoleIds.indexOf(options[i].id) !== -1;
+        html += '<div class="au-role-option' + (disabled ? ' is-selected' : '') + '" data-au-role-option="' + esc(options[i].id) + '"' + (disabled ? ' aria-disabled="true"' : "") + '>' + esc(options[i].name) + '</div>';
+      }
+      if (!html) html = '<div class="au-role-option is-empty">No roles available</div>';
+      auRoleMenu.innerHTML = html;
+      if (auState.selectedRoleId) {
+        var role = findRoleById(auState.selectedRoleId);
+        auRoleValue.textContent = role ? role.role : "Search or select a role";
+        auRoleValue.classList.toggle("is-placeholder", !role);
+      } else {
+        auRoleValue.textContent = "Search or select a role";
+        auRoleValue.classList.add("is-placeholder");
+      }
+      auRoleAdd.disabled = !auState.selectedRoleId || auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1;
+    }
+
+    function selectedStatus() {
+      return auStatusValue && auStatusValue.value === "Inactive" ? "Inactive" : "Active";
+    }
+
+    function selectedRegionCode() {
+      return getAURegionKey();
+    }
+
+    function handleSaveUser() {
+      var first = auFirstName.value.trim();
+      var last = auLastName.value.trim();
+      var email = auEmail.value.trim();
+      if (!first || !last || !email) {
+        showEdlToast({
+          type: "warning",
+          title: "Required fields missing",
+          body: "First name, last name, and email are required."
+        });
+        return;
+      }
+      if (auState.selectedRoleIds.length === 0) {
+        showEdlToast({
+          type: "warning",
+          title: "Role required",
+          body: "Assign at least one role before adding a user."
+        });
+        return;
+      }
+      var assignedRoleNames = [];
+      for (var i = 0; i < auState.selectedRoleIds.length; i++) {
+        var role = findRoleById(auState.selectedRoleIds[i]);
+        if (role) assignedRoleNames.push(role.role);
+      }
+
+      var newUser = {
+        id: "u_local_" + Date.now(),
+        avatar: "avatars/photos/m01.png",
+        name: first + " " + last,
+        email: email,
+        roles: assignedRoleNames,
+        status: selectedStatus(),
+        team: auTeam.value && auTeam.selectedIndex > 0 ? auTeam.value : "Unassigned",
+        title: auPreferredName.value.trim() ? ("Preferred: " + auPreferredName.value.trim()) : "Atlas User",
+        region: selectedRegionCode()
+      };
+      DATA.unshift(newUser);
+      ORIGINAL_ORDER.unshift(newUser);
+      TOTAL_ITEMS += 1;
+      currentPage = 1;
+      renderTable();
+      renderPagination();
+      closeAddUsers();
+      showEdlToast({
+        type: "success",
+        title: "User added",
+        bodyHtml: '&ldquo;<strong>' + esc(newUser.name) + '</strong>&rdquo; has been added.'
+      });
+    }
+
+    auRoleCards.addEventListener("click", function (e) {
+      var removeBtn = e.target.closest("[data-au-remove]");
+      if (removeBtn) {
+        var removeId = removeBtn.getAttribute("data-au-remove");
+        var next = [];
+        for (var i = 0; i < auState.selectedRoleIds.length; i++) {
+          if (auState.selectedRoleIds[i] !== removeId) next.push(auState.selectedRoleIds[i]);
+        }
+        auState.selectedRoleIds = next;
+        if (auState.expandedRoleId === removeId) auState.expandedRoleId = null;
+        renderAURolePicker();
+        renderAURoleCards();
+        return;
+      }
+      var toggleBtn = e.target.closest("[data-au-toggle]");
+      if (!toggleBtn) return;
+      var toggleId = toggleBtn.getAttribute("data-au-toggle");
+      auState.expandedRoleId = auState.expandedRoleId === toggleId ? null : toggleId;
+      renderAURoleCards();
+    });
+
+    auRoleTrigger.addEventListener("click", function () {
+      var willOpen = !auRoleDD.classList.contains("open");
+      renderAURolePicker();
+      auRoleDD.classList.toggle("open", willOpen);
+      auRoleTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+
+    auRoleMenu.addEventListener("click", function (e) {
+      var option = e.target.closest("[data-au-role-option]");
+      if (!option) return;
+      var roleId = option.getAttribute("data-au-role-option");
+      if (auState.selectedRoleIds.indexOf(roleId) !== -1) return;
+      auState.selectedRoleId = roleId;
+      renderAURolePicker();
+      auRoleDD.classList.remove("open");
+      auRoleTrigger.setAttribute("aria-expanded", "false");
+    });
+
+    auRoleAdd.addEventListener("click", function () {
+      var roleId = auState.selectedRoleId;
+      if (!roleId) return;
+      if (auState.selectedRoleIds.indexOf(roleId) !== -1) return;
+      auState.selectedRoleIds.push(roleId);
+      auState.selectedRoleId = "";
+      renderAURolePicker();
+      renderAURoleCards();
+    });
+
+    auRegion.addEventListener("change", function () {
+      renderAUTimezones(getAURegionKey(), auTimezone.value);
+    });
+
+    if (auStatusSeg) {
+      auStatusSeg.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-au-status]");
+        if (!btn) return;
+        setAUStatus(btn.getAttribute("data-au-status"));
+      });
+    }
+
+    document.addEventListener("mousedown", function (e) {
+      if (auRoleDD.classList.contains("open") && !auRoleDD.contains(e.target)) {
+        auRoleDD.classList.remove("open");
+        auRoleTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    if (addUsersBtn) {
+      addUsersBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        openAddUsers();
+      });
+    }
+    if (auBack) auBack.addEventListener("click", closeAddUsers);
+    if (auCancel) auCancel.addEventListener("click", closeAddUsers);
+    if (auSave) auSave.addEventListener("click", handleSaveUser);
+  })();
+
   /* ═══ ROLES & PERMISSIONS TABLE RENDERING ═══ */
   var EDIT_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
   var DELETE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
 
-  /* RP_FUNC_DISPLAY_NAME is declared above (near the R&P filter drawer)
-     so the combo and the table renderer share the same mapping. Internal
-     data keys ("TOM", "Admin") stay intact for the popover; only the
-     visible label is expanded. "Core Planning" stays as-is. */
+  /* R&P Functions column renders semantic access labels per app. */
+
+  function getFunctionsSummaryForTooltip(fns, roleId) {
+    var parts = [];
+    for (var i = 0; i < fns.length; i++) {
+      var app = fns[i].name;
+      var display = RP_FUNC_DISPLAY_NAME[app] || app;
+      var access = fns[i].access || roleAccessLevel(roleId, app);
+      parts.push(display + " (" + access + ")");
+    }
+    return parts.join(", ");
+  }
 
   function formatFunctions(fns, roleId) {
     var parts = [];
     for (var i = 0; i < fns.length; i++) {
       var app = fns[i].name;
-      var cnt = fns[i].count;
       var display = RP_FUNC_DISPLAY_NAME[app] || app;
-      var labels = resolveFunctionLabels(roleId, app, cnt);
+      var access = fns[i].access || roleAccessLevel(roleId, app);
       parts.push(
-        '<span class="rp-func-group">' + esc(display) + ' ' +
-          '<button type="button" class="rp-func-count" ' +
+        '<span class="rp-func-group">' +
+          '<span class="rp-func-app">' + esc(display) + "</span> " +
+          '<button type="button" class="rp-func-link" ' +
+            'data-role-id="' + esc(roleId) + '" ' +
             'data-app="' + esc(app) + '" ' +
-            'data-count="' + cnt + '" ' +
-            'data-funcs="' + esc(labels.join("|")) + '" ' +
-            'aria-haspopup="dialog" aria-expanded="false">(' + cnt + ')</button>' +
-        '</span>'
+            'data-access="' + esc(access) + '" ' +
+            'aria-haspopup="dialog" aria-expanded="false">' +
+              '<span class="rp-func-access">(' + esc(access) + ")</span>" +
+            "</button>" +
+        "</span>"
       );
     }
     return parts.join(", ");
@@ -2009,7 +2682,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function getFunctionsText(fns) {
     var parts = [];
-    for (var i = 0; i < fns.length; i++) parts.push(fns[i].name + " (" + fns[i].count + ")");
+    for (var i = 0; i < fns.length; i++) {
+      var app = fns[i].name;
+      var display = RP_FUNC_DISPLAY_NAME[app] || app;
+      parts.push(display + " " + (fns[i].access || ""));
+    }
     return parts.join(", ");
   }
 
@@ -2031,7 +2708,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (var f = 0; f < row.functions.length; f++) {
           var fn = row.functions[f];
           if ((fn.name || "").toLowerCase().indexOf(q) !== -1) return true;
-          if (("" + fn.count).indexOf(q) !== -1) return true;
+          if ((fn.access || "").toLowerCase().indexOf(q) !== -1) return true;
         }
         return false;
       });
@@ -2049,7 +2726,7 @@ document.addEventListener("DOMContentLoaded", function () {
         result = result.filter(function (r) { return r.description.toLowerCase().indexOf(qDesc) !== -1; });
       }
       if (rpFilters.functions) {
-        var key = RP_FN_LABEL_TO_KEY[rpFilters.functions] || rpFilters.functions;
+        var key = rpFunctionsFilterKeyFromLabel(rpFilters.functions);
         result = result.filter(function (r) {
           for (var i = 0; i < r.functions.length; i++) if (r.functions[i].name === key) return true;
           return false;
@@ -2086,10 +2763,11 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
       var roleCell = '<a class="rp-role-link" href="#" data-role-edit="' + esc(r.id) + '">' + esc(r.role) + '</a>';
+      var funcSummary = getFunctionsSummaryForTooltip(r.functions, r.id);
       html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="rp-role" title="' + esc(r.role) + '">' + roleCell + '</td>' +
         '<td class="rp-desc" title="' + esc(r.description) + '">' + esc(r.description) + '</td>' +
-        '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + '</span></td>' +
+        '<td class="rp-func"><span class="rp-func-text" tabindex="0" data-rp-funcs-full="' + esc(funcSummary) + '">' + formatFunctions(r.functions, r.id) + "</span></td>" +
         '<td class="rp-by">' + esc(r.createdBy) + '</td>' +
         '<td class="rp-date">' + esc(r.createDate) + '</td>' +
         '</tr>';
@@ -2268,77 +2946,89 @@ document.addEventListener("DOMContentLoaded", function () {
   var APP_PERMISSIONS = {
     core_planning: {
       label: "Core Planning",
-      groups: [
-        { title: "Order permissions", columns: [
-          ["View orders","View order details","Create orders","Edit orders","Delete orders"],
-          ["Assign orders","Comment on orders","Approve orders","Reject orders"]
-        ]},
-        { title: "Line item permissions", columns: [
-          ["View line items","View line item details","Create line items","Edit line items","Delete line items"]
-        ]}
+      resources: [
+        { title: "Orders", actions: ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"] },
+        { title: "Media Plans", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Line Items", actions: ["View", "Create", "Edit", "Delete"] }
       ],
-      rightGroups: [
-        { title: "Media plan permissions", columns: [
-          ["View media plans","View media plan details","Create media plans","Edit media plans","Delete media plans"]
-        ]}
-      ]
+      levels: ["View Only", "Edit", "Approve", "Full Access", "Custom"],
+      bundles: {
+        "View Only": { Orders: ["View"], "Media Plans": ["View"], "Line Items": ["View"] },
+        "Edit": { Orders: ["View", "Create", "Edit", "Comment"], "Media Plans": ["View", "Create", "Edit"], "Line Items": ["View", "Create", "Edit"] },
+        "Approve": { Orders: ["View", "Approve", "Reject"], "Media Plans": ["View"], "Line Items": ["View"] },
+        "Full Access": { Orders: ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"], "Media Plans": ["View", "Create", "Edit", "Delete"], "Line Items": ["View", "Create", "Edit", "Delete"] }
+      }
     },
     identity_access_management: {
       label: "Identity Access Management",
-      groups: [
-        { title: "Role permissions", columns: [
-          ["View roles","View role details","Create roles","Edit roles","Delete roles"],
-          ["Assign functions","Assign data access"]
-        ]},
-        { title: "User permissions", columns: [
-          ["View users","View user details","Create users","Edit users","Deactivate users"],
-          ["Impersonate users","View analytics"]
-        ]}
+      resources: [
+        { title: "Roles", actions: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"] },
+        { title: "Users", actions: ["View", "Create", "Edit", "Delete", "Impersonate users"] },
+        { title: "Analytics", actions: ["View"] },
+        { title: "Admin Actions", actions: ["Manage configuration", "Manage settings"] }
       ],
-      rightGroups: []
+      levels: ["View Only", "User", "Role", "Full Access", "Custom"],
+      bundles: {
+        "View Only": { Roles: ["View"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
+        "User": { Roles: ["View"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": [] },
+        "Role": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
+        "Full Access": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": ["Manage configuration", "Manage settings"] }
+      }
     },
     disney_ads_agent: {
       label: "Disney Ads Agent",
-      groups: [
-        { title: "Agent permissions", columns: [
-          ["Media plan queries","Forecasting queries","Planning activity summaries","Approval and IO comparisons"]
-        ]}
+      resources: [
+        { title: "Agent Workflows", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Forecasting", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Insights", actions: ["View"] }
       ],
-      rightGroups: []
+      levels: ["View Only", "Edit", "Full Access", "Custom"],
+      bundles: {
+        "View Only": { "Agent Workflows": ["View"], Forecasting: ["View"], Insights: ["View"] },
+        "Edit": { "Agent Workflows": ["View", "Create", "Edit"], Forecasting: ["View", "Edit"], Insights: ["View"] },
+        "Full Access": { "Agent Workflows": ["View", "Create", "Edit", "Delete"], Forecasting: ["View", "Create", "Edit", "Delete"], Insights: ["View"] }
+      }
     },
     inventory_catalog_manager: {
       label: "Inventory Catalog Manager",
-      groups: [
-        { title: "Offering permissions", columns: [
-          ["View offerings","View offering details","Create offerings","Edit offerings","Delete offerings"]
-        ]},
-        { title: "Sales package permissions", columns: [
-          ["View sales packages","View sales package details","Create sales packages","Edit sales packages","Delete sales packages"]
-        ]}
+      resources: [
+        { title: "Inventory Items", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Offerings", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Sales Packages", actions: ["View", "Create", "Edit", "Delete"] }
       ],
-      rightGroups: []
+      levels: ["View Only", "Edit", "Approve", "Full Access", "Custom"],
+      bundles: {
+        "View Only": { "Inventory Items": ["View"], Offerings: ["View"], "Sales Packages": ["View"] },
+        "Edit": { "Inventory Items": ["View", "Create", "Edit"], Offerings: ["View", "Create", "Edit"], "Sales Packages": ["View", "Create", "Edit"] },
+        "Approve": { "Inventory Items": ["View", "Approve", "Reject"], Offerings: ["View"], "Sales Packages": ["View"] },
+        "Full Access": { "Inventory Items": ["View", "Create", "Edit", "Delete"], Offerings: ["View", "Create", "Edit", "Delete"], "Sales Packages": ["View", "Create", "Edit", "Delete"] }
+      }
     },
     target_options_manager: {
       label: "Target Options Manager",
-      groups: [
-        { title: "Option permissions", columns: [
-          ["View options","View option details","Edit options","Assign options"]
-        ]},
-        { title: "Group permissions", columns: [
-          ["View groups","View group details","Create groups","Edit groups"],
-          ["Assign groups","Archive groups"]
-        ]},
-        { title: "Template permissions", columns: [
-          ["View templates","View template details","Create templates","Edit templates"],
-          ["Assign templates","Archive templates"]
-        ]}
+      resources: [
+        { title: "Targeting Categories", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Dimensions", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Values", actions: ["View", "Create", "Edit", "Delete"] },
+        { title: "Groups", actions: ["View", "Create", "Edit", "Delete", "Assign"] },
+        { title: "Templates", actions: ["View", "Create", "Edit", "Delete", "Assign permissions"] }
       ],
-      rightGroups: []
+      levels: ["View Only", "Edit", "Approve", "Full Access", "Custom"],
+      bundles: {
+        "View Only": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View"], Templates: ["View"] },
+        "Edit": { "Targeting Categories": ["View", "Edit"], Dimensions: ["View", "Edit"], Values: ["View", "Edit"], Groups: ["View", "Create", "Edit"], Templates: ["View", "Create", "Edit"] },
+        "Approve": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View", "Approve", "Reject"], Templates: ["View", "Approve", "Reject"] },
+        "Full Access": { "Targeting Categories": ["View", "Create", "Edit", "Delete"], Dimensions: ["View", "Create", "Edit", "Delete"], Values: ["View", "Create", "Edit", "Delete"], Groups: ["View", "Create", "Edit", "Delete", "Assign"], Templates: ["View", "Create", "Edit", "Delete", "Assign permissions"] }
+      }
     }
   };
 
-  var crPage = document.getElementById("createRolePage");
-  if (crPage) {
+    var crPage = document.getElementById("createRolePage");
+    /* Segmented control + data-access-level value (legacy persisted strings may still read "Custom Access"). */
+    function isCustomAccessLevel(level) {
+      return level === "Custom" || level === "Custom Access";
+    }
+    if (crPage) {
     var crRoleName = document.getElementById("crRoleName");
     var crAppDD = document.getElementById("crAppDD");
     var crAppTrigger = document.getElementById("crAppTrigger");
@@ -2373,6 +3063,46 @@ document.addEventListener("DOMContentLoaded", function () {
     var crEditingRecord = null;
     var crRemoveBtn = document.getElementById("crRemove");
 
+    /* EDL trash icon (same paths as Add Users `TRASH_SVG` — EDL component library). */
+    var CR_EDL_TRASH_SVG =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    /* Accordion chevron matches `.cr-section-chev` (down = expanded, rotate -90° = collapsed / right). */
+    var CR_MODULE_CHEV_SVG =
+      '<svg class="cr-module-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+
+    function collapseAllModules(section) {
+      if (!section) return;
+      var mods = section.querySelectorAll(".cr-module");
+      for (var m = 0; m < mods.length; m++) {
+        var mHead = mods[m].querySelector("[data-module-toggle]");
+        var mBody = mods[m].querySelector(".cr-module-body");
+        if (mHead) mHead.setAttribute("aria-expanded", "false");
+        if (mBody) mBody.style.display = "none";
+      }
+    }
+
+    function updateCrModuleSummaries(section) {
+      if (!section) return;
+      var mods = section.querySelectorAll(".cr-module");
+      for (var mi = 0; mi < mods.length; mi++) {
+        var mod = mods[mi];
+        var checked = mod.querySelectorAll(".cr-perm-check:checked").length;
+        var meta = mod.querySelector(".cr-module-summary");
+        if (meta) {
+          meta.textContent =
+            checked + " permission" + (checked === 1 ? "" : "s") + " selected";
+        }
+      }
+    }
+
+    function setSectionExpanded(section, expanded) {
+      if (!section) return;
+      section.setAttribute("data-expanded", expanded ? "true" : "false");
+      if (expanded && !isCustomAccessLevel(section.getAttribute("data-access-level"))) {
+        collapseAllModules(section);
+      }
+    }
+
     function setRemoveRoleVisible(visible) {
       if (!crRemoveBtn) return;
       if (visible) crRemoveBtn.removeAttribute("hidden");
@@ -2397,88 +3127,77 @@ document.addEventListener("DOMContentLoaded", function () {
       setRemoveRoleVisible(false);
     }
 
-    /* ─── Edit Role: reuses the Create Role layout with prefilled values.
-       Maps table function groups (e.g. "Core Planning", "TOM", "Admin")
-       to the existing APP_PERMISSIONS keys and pre-checks the first N
-       permissions of each section to match the displayed counts. */
+    /* ─── Edit Role: reuses Create Role layout with prefilled values. */
     var FUNCTION_TO_APP_KEY = {
       "Core Planning": "core_planning",
       "TOM": "target_options_manager",
-      "Admin": "identity_access_management"
+      "IAM": "identity_access_management",
+      "ICM": "inventory_catalog_manager"
     };
-    /* Per-role pre-checked permissions. Each app array has exactly the
-       same count as the corresponding table entry, so the Functions (N)
-       summary and the checked permissions always match. Only PRD-valid
-       app keys appear here — sales/ad_ops/billing were removed along
-       with their dropdown options to avoid orphan mappings. */
-    var ROLE_PRESELECT_OVERRIDES = {
-      r001: {
-        core_planning: [
-          "View orders","View order details","Create orders","Edit orders",
-          "View media plans","View media plan details","Create media plans","Edit media plans"
-        ],
-        target_options_manager: ["View options","View option details"],
-        identity_access_management: ["View roles","View role details","Create roles"]
-      },
-      r002: {
-        core_planning: [
-          "View orders","View order details","Create orders","Edit orders",
-          "Approve orders","View media plans","Create media plans"
-        ],
-        target_options_manager: ["View options","View groups"],
-        identity_access_management: ["View users","View user details"]
-      },
-      r003: {
-        core_planning: [
-          "View orders","View order details","Create orders",
-          "View media plans","Create media plans"
-        ]
-      },
-      r004: {
-        core_planning: [
-          "View orders","View order details","Approve orders",
-          "View media plans","Create media plans","Edit media plans"
-        ],
-        target_options_manager: ["View options","View groups"]
-      },
-      r005: {
-        core_planning: ["View orders","View media plans"]
-      },
-      r006: {
-        core_planning: ["View orders","View order details","View media plans"]
-      },
-      r007: {
-        core_planning: ["View orders","View media plans","View media plan details"]
-      },
-      r008: {
-        core_planning: [
-          "View orders","View order details","Create orders","Edit orders",
-          "View media plans","Edit media plans"
-        ],
-        target_options_manager: ["View options","View groups"]
-      },
-      r009: {
-        core_planning: ["View orders","View media plans"]
-      },
-      r010: {
-        core_planning: ["View orders","View media plans"]
-      },
-      r011: {
-        core_planning: ["View orders","View order details","View media plans"]
-      },
-      r012: {
-        core_planning: ["View orders","View order details","View media plans"]
-      },
-      r013: {
-        core_planning: ["View orders","View media plans"]
-      },
-      r014: {
-        core_planning: ["View orders","View media plans"]
-      },
-      r015: {
-        core_planning: ["View orders","View media plans","View media plan details"]
+
+    function preferredValuesForRoleApp(roleId, appName) {
+      var detail = (ROLE_ACCESS_DETAILS[roleId] && ROLE_ACCESS_DETAILS[roleId][appName]) || null;
+      var values = [];
+      if (detail) {
+        for (var resource in detail) {
+          if (!Object.prototype.hasOwnProperty.call(detail, resource)) continue;
+          for (var i = 0; i < detail[resource].length; i++) {
+            values.push(resource + "::" + detail[resource][i]);
+          }
+        }
+        return values;
       }
-    };
+      var keys = (ROLE_FUNCTION_MAP[roleId] && ROLE_FUNCTION_MAP[roleId][appName]) || [];
+      var seen = {};
+      for (var k = 0; k < keys.length; k++) {
+        var lbl = labelForFunction(keys[k]);
+        if (!lbl || seen[lbl]) continue;
+        seen[lbl] = true;
+        values.push(lbl);
+      }
+      return values;
+    }
+
+    function resolveAccessLevelForSection(appKey, level) {
+      var app = APP_PERMISSIONS[appKey];
+      if (!app) return "";
+      if (!level) return app.levels[0];
+      if (level === "Custom Access") level = "Custom";
+      if (app.levels.indexOf(level) !== -1) return level;
+      if (appKey === "identity_access_management") {
+        if (level === "Edit") return "User";
+        if (level === "Approve") return "Role";
+      }
+      return app.levels[0];
+    }
+
+    function setSectionAccessLevel(section, level) {
+      var appKey = section.getAttribute("data-app-key");
+      var app = APP_PERMISSIONS[appKey];
+      if (!app) return;
+      var normalized = resolveAccessLevelForSection(appKey, level);
+      var bundle = app.bundles[normalized] || {};
+      section.setAttribute("data-access-level", normalized);
+      var opts = section.querySelectorAll(".cr-access-level-btn");
+      for (var i = 0; i < opts.length; i++) {
+        opts[i].classList.toggle("is-selected", opts[i].getAttribute("data-access-level") === normalized);
+      }
+      if (!isCustomAccessLevel(normalized)) {
+        var boxes = section.querySelectorAll(".cr-perm-check");
+        for (var b = 0; b < boxes.length; b++) {
+          var resource = boxes[b].getAttribute("data-resource");
+          var action = boxes[b].getAttribute("data-action");
+          boxes[b].checked = !!(bundle[resource] && bundle[resource].indexOf(action) !== -1);
+        }
+      }
+      if (isCustomAccessLevel(normalized)) {
+        collapseAllModules(section);
+      } else {
+        setSectionExpanded(section, false);
+      }
+      renderAccessSummary(section);
+      updateCrModuleSummaries(section);
+    }
 
     function prefillAppChecks(appKey, count, preferredValues) {
       var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
@@ -2489,6 +3208,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       var boxes = section.querySelectorAll(".cr-perm-check");
       var checked = 0;
+      for (var x = 0; x < boxes.length; x++) boxes[x].checked = false;
       for (var i = 0; i < boxes.length && checked < count; i++) {
         if (preferredValues && preferredValues.length) {
           if (toCheck[boxes[i].value]) { boxes[i].checked = true; checked++; }
@@ -2497,6 +3217,9 @@ document.addEventListener("DOMContentLoaded", function () {
       for (var j = 0; j < boxes.length && checked < count; j++) {
         if (!boxes[j].checked) { boxes[j].checked = true; checked++; }
       }
+      renderAccessSummary(section);
+      updateCrModuleSummaries(section);
+      collapseAllModules(section);
     }
 
     function showEditRole(record) {
@@ -2510,16 +3233,21 @@ document.addEventListener("DOMContentLoaded", function () {
       if (desc) desc.value = (record.description || "").replace(/\.$/, "");
       var sens = crPage.querySelector('input[name="dataAccess"][value="sensitive"]');
       var reg  = crPage.querySelector('input[name="dataAccess"][value="regional"]');
-      if (sens) sens.checked = record.status === "Sensitive";
-      if (reg)  reg.checked  = record.status === "Regional";
+      if (sens) sens.checked = (record.status === "Sensitive" || record.status === "Standard");
+      if (reg)  reg.checked  = (record.status === "Regional" || record.status === "Standard");
 
-      var overrides = ROLE_PRESELECT_OVERRIDES[record.id] || {};
       var fns = record.functions || [];
       for (var i = 0; i < fns.length; i++) {
         var appKey = FUNCTION_TO_APP_KEY[fns[i].name];
         if (!appKey || !APP_PERMISSIONS[appKey]) continue;
         crAddApplication(appKey);
-        prefillAppChecks(appKey, fns[i].count, overrides[appKey]);
+        var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
+        if (section) {
+          var access = fns[i].access || roleAccessLevel(record.id, fns[i].name);
+          section.setAttribute("data-role-id", record.id);
+          setSectionAccessLevel(section, access);
+          if (isCustomAccessLevel(access)) prefillAppChecks(appKey, fns[i].count, preferredValuesForRoleApp(record.id, fns[i].name));
+        }
       }
       updateFunctionsCount();
       updateCrSummaries();
@@ -2531,7 +3259,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var desc = document.getElementById("crDescription");
       if (desc) desc.value = "";
       var checks = crPage.querySelectorAll('input[name="dataAccess"]');
-      for (var i = 0; i < checks.length; i++) checks[i].checked = false;
+      for (var i = 0; i < checks.length; i++) checks[i].checked = true;
       crAddedApps = [];
       crPermsContent.innerHTML = "";
       crPermsContent.style.display = "none";
@@ -2566,9 +3294,11 @@ document.addEventListener("DOMContentLoaded", function () {
       var sensCb = crPage.querySelector('input[name="dataAccess"][value="sensitive"]');
       var regCb  = crPage.querySelector('input[name="dataAccess"][value="regional"]');
       var perms = [];
+      var levels = [];
       var sections = crPermsContent.querySelectorAll(".cr-app-section");
       for (var s = 0; s < sections.length; s++) {
         var key = sections[s].getAttribute("data-app-key") || "";
+        levels.push(key + ":" + (sections[s].getAttribute("data-access-level") || ""));
         var boxes = sections[s].querySelectorAll(".cr-perm-check:checked");
         var values = [];
         for (var b = 0; b < boxes.length; b++) values.push(boxes[b].value);
@@ -2576,12 +3306,14 @@ document.addEventListener("DOMContentLoaded", function () {
         perms.push(key + ":" + values.join(","));
       }
       perms.sort();
+      levels.sort();
       return JSON.stringify({
         name: crRoleName.value,
         desc: descEl ? descEl.value : "",
         sens: !!(sensCb && sensCb.checked),
         reg:  !!(regCb  && regCb.checked),
         apps: crAddedApps.slice().sort().join("|"),
+        levels: levels.join("|"),
         perms: perms.join("|")
       });
     }
@@ -2624,7 +3356,11 @@ document.addEventListener("DOMContentLoaded", function () {
       var labels = [];
       for (var i = 0; i < crAddedApps.length; i++) {
         var key = crAddedApps[i];
-        if (APP_PERMISSIONS[key]) labels.push(APP_PERMISSIONS[key].label);
+        if (APP_PERMISSIONS[key]) {
+          var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + key + '"]');
+          var level = section ? (section.getAttribute("data-access-level") || APP_PERMISSIONS[key].levels[0]) : APP_PERMISSIONS[key].levels[0];
+          labels.push(APP_PERMISSIONS[key].label + " (" + level + ")");
+        }
       }
       return labels.join(", ");
     }
@@ -2717,66 +3453,105 @@ document.addEventListener("DOMContentLoaded", function () {
       var html = '<div class="cr-perm-group">';
       html += '<div class="cr-perm-group-title">' + esc(group.title) + '</div>';
       html += '<div class="cr-perm-grid">';
-      for (var c = 0; c < group.columns.length; c++) {
-        html += '<div class="cr-perm-col">';
-        for (var p = 0; p < group.columns[c].length; p++) {
-          var name = group.columns[c][p];
-          var id = "perm_" + appKey + "_" + name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
-          html += '<label class="cr-perm-item">' +
-            '<input type="checkbox" class="cr-perm-check" id="' + id + '" value="' + esc(name) + '">' +
-            '<span class="cr-perm-label">' + esc(name) + '</span>' +
-            '</label>';
-        }
-        html += '</div>';
+      html += '<div class="cr-perm-col">';
+      for (var p = 0; p < group.actions.length; p++) {
+        var name = group.actions[p];
+        var id = "perm_" + appKey + "_" + group.title.toLowerCase().replace(/[^a-z0-9]+/g, "_") + "_" + name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+        html += '<label class="cr-perm-item">' +
+          '<input type="checkbox" class="cr-perm-check" id="' + id + '" value="' + esc(group.title + "::" + name) + '" data-resource="' + esc(group.title) + '" data-action="' + esc(name) + '">' +
+          '<span class="cr-perm-label">' + esc(name) + '</span>' +
+          '</label>';
       }
+      html += '</div>';
       html += '</div></div>';
       return html;
+    }
+
+    function accessTitle(level) {
+      if (!level) return "";
+      if (level === "View Only") return "View only";
+      if (level === "Full Access") return "Full access";
+      if (isCustomAccessLevel(level)) return "Custom";
+      return level.charAt(0).toUpperCase() + level.slice(1).toLowerCase();
+    }
+
+    function renderAccessSummary(section) {
+      var appKey = section.getAttribute("data-app-key");
+      var app = APP_PERMISSIONS[appKey];
+      if (!app) return;
+      var summaryNode = section.querySelector(".cr-access-summary");
+      if (!summaryNode) return;
+      var level = section.getAttribute("data-access-level") || app.levels[0];
+      if (isCustomAccessLevel(level)) {
+        summaryNode.innerHTML = "";
+        return;
+      }
+      var bundle = app.bundles[level] || {};
+      var lines = [];
+      var count = 0;
+      for (var r = 0; r < app.resources.length; r++) {
+        var resource = app.resources[r].title;
+        var actions = bundle[resource] || [];
+        if (!actions.length) continue;
+        count += actions.length;
+        lines.push(
+          '<div class="cr-access-summary-line">' +
+            '<span class="cr-access-module-label">' + esc(resource) + "</span>" +
+            '<span class="cr-access-module-perms">' + esc(actions.join(", ")) + "</span>" +
+            "</div>"
+        );
+      }
+      summaryNode.innerHTML =
+        '<div class="cr-access-summary-top">' +
+          '<div class="cr-access-level-title">' + esc(accessTitle(level)) + '</div>' +
+          '<div class="cr-access-level-subtitle">' + count + ' permissions included</div>' +
+        '</div>' +
+        (lines.length ? ('<div class="cr-access-summary-list">' + lines.join("") + '</div>') : '<div class="cr-access-summary-empty">No permissions selected.</div>');
     }
 
     function buildAppSectionHtml(appKey) {
       var app = APP_PERMISSIONS[appKey];
       if (!app) return "";
-      var html = '<div class="cr-app-section" data-app-key="' + esc(appKey) + '">';
-      html += '<div class="cr-app-section-head" role="button" tabindex="0" aria-expanded="true" aria-controls="cr-app-body-' + esc(appKey) + '" data-app-toggle="' + esc(appKey) + '">';
+      var html = '<div class="cr-app-section" data-app-key="' + esc(appKey) + '" data-expanded="false">';
+      html += '<div class="cr-app-section-head">';
       html += '<div class="cr-app-head-left">';
-      html += '<svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
       html += '<span class="cr-app-title">' + esc(app.label) + '</span>';
       html += '</div>';
       html += '<button type="button" class="cr-app-remove" data-remove-app="' + esc(appKey) + '" aria-label="Remove ' + esc(app.label) + '">';
-      html += '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>';
+      html += CR_EDL_TRASH_SVG;
       html += 'Remove';
       html += '</button>';
       html += '</div>';
       html += '<div class="cr-app-body" id="cr-app-body-' + esc(appKey) + '">';
-
-      var hasRight = app.rightGroups && app.rightGroups.length > 0;
-      if (hasRight) {
-        html += '<div class="cr-perm-columns"><div class="cr-perm-left">';
-        for (var i = 0; i < app.groups.length; i++) {
-          if (i > 0) html += '<div style="margin-top:24px"></div>';
-          html += renderPermissionGroup(app.groups[i], appKey);
-        }
-        html += '</div><div class="cr-perm-right"><div class="cr-perm-divider"></div><div class="cr-perm-right-content">';
-        for (var j = 0; j < app.rightGroups.length; j++) {
-          html += renderPermissionGroup(app.rightGroups[j], appKey);
-        }
-        html += '</div></div></div>';
-      } else {
-        for (var k = 0; k < app.groups.length; k++) {
-          if (k > 0) html += '<div style="margin-top:24px"></div>';
-          html += renderPermissionGroup(app.groups[k], appKey);
-        }
+      html += '<div class="cr-access-level-row"><div class="cr-label">Access level</div><div class="cr-access-level-wrap"><div class="cr-access-level-options">';
+      for (var i = 0; i < app.levels.length; i++) {
+        html += '<button type="button" class="cr-access-level-btn' + (i === 0 ? ' is-selected' : '') + '" data-access-level="' + esc(app.levels[i]) + '">' + esc(app.levels[i]) + '</button>';
       }
+      html += "</div></div></div>";
+      html += '<div class="cr-summary-stack">';
+      html += '<div class="cr-access-summary-card">';
+      html += '<div class="cr-access-summary"></div>';
+      html += '<button type="button" class="cr-customize-link cr-summary-cta" data-show-all="true">Show all permissions \u2193</button>';
+      html += '</div></div>';
+      html += '<div class="cr-custom-area">';
+      for (var k = 0; k < app.resources.length; k++) {
+        var resource = app.resources[k];
+        html += '<div class="cr-module" data-module="' + esc(resource.title) + '">' +
+          '<button type="button" class="cr-module-head" data-module-toggle="' + esc(resource.title) + '" aria-expanded="false">' +
+            '<span class="cr-module-head-main">' +
+              CR_MODULE_CHEV_SVG +
+              '<span class="cr-module-title">' + esc(resource.title) + '</span>' +
+            '</span>' +
+            '<span class="cr-module-summary" aria-live="polite">0 permissions selected</span>' +
+          '</button>' +
+          '<div class="cr-module-body" style="display:none">' + renderPermissionGroup(resource, appKey) + '</div>' +
+        '</div>';
+      }
+      html += '<button type="button" class="cr-customize-link cr-collapse-all-link" data-collapse-all="true">Collapse all permissions \u2191</button>';
+      html += '</div>';
       html += '</div>';
       html += '</div>';
       return html;
-    }
-
-    function toggleAppSection(section) {
-      if (!section) return;
-      var collapsed = section.classList.toggle("collapsed");
-      var head = section.querySelector(".cr-app-section-head");
-      if (head) head.setAttribute("aria-expanded", collapsed ? "false" : "true");
     }
 
     function crAddApplication(appKey) {
@@ -2784,7 +3559,9 @@ document.addEventListener("DOMContentLoaded", function () {
       crAddedApps.push(appKey);
       var wrapper = document.createElement("div");
       wrapper.innerHTML = buildAppSectionHtml(appKey);
-      crPermsContent.appendChild(wrapper.firstChild);
+      var section = wrapper.firstChild;
+      crPermsContent.appendChild(section);
+      setSectionAccessLevel(section, APP_PERMISSIONS[appKey].levels[0]);
       crPermsContent.style.display = "";
       crSetAppValue("");
       crRefreshAppMenu();
@@ -2804,30 +3581,131 @@ document.addEventListener("DOMContentLoaded", function () {
       validateCreateRole();
     }
 
+    /* ─── Remove application (Edit Role only) — EDL confirm modal + toast ─── */
+    var crAppRemoveBackdrop = document.getElementById("crAppRemoveBackdrop");
+    var crAppRemoveCancel = document.getElementById("crAppRemoveCancel");
+    var crAppRemoveConfirm = document.getElementById("crAppRemoveConfirm");
+    var crAppRemovePendingKey = null;
+    var crAppRemoveLastFocus = null;
+
+    function openRemoveAppConfirm(appKey) {
+      if (!appKey || !crAppRemoveBackdrop) return;
+      crAppRemovePendingKey = appKey;
+      crAppRemoveLastFocus = document.activeElement;
+      crAppRemoveBackdrop.removeAttribute("hidden");
+      setTimeout(function () {
+        if (crAppRemoveCancel) crAppRemoveCancel.focus();
+      }, 0);
+    }
+
+    function closeRemoveAppConfirm() {
+      if (!crAppRemoveBackdrop) return;
+      crAppRemoveBackdrop.setAttribute("hidden", "");
+      crAppRemovePendingKey = null;
+      if (crAppRemoveLastFocus && typeof crAppRemoveLastFocus.focus === "function") {
+        crAppRemoveLastFocus.focus();
+      }
+      crAppRemoveLastFocus = null;
+    }
+
+    function performRemoveAppAfterConfirm() {
+      if (!crAppRemovePendingKey) {
+        closeRemoveAppConfirm();
+        return;
+      }
+      var appKey = crAppRemovePendingKey;
+      var app = APP_PERMISSIONS[appKey];
+      var appLabel = app ? app.label : appKey;
+      closeRemoveAppConfirm();
+      crRemoveApplication(appKey);
+      showEdlToast({
+        type: "success",
+        title: "Application removed",
+        bodyHtml: "Permissions for <strong>" + esc(appLabel) + "</strong> have been removed from the role."
+      });
+    }
+
+    if (crAppRemoveCancel) crAppRemoveCancel.addEventListener("click", closeRemoveAppConfirm);
+    if (crAppRemoveConfirm) crAppRemoveConfirm.addEventListener("click", performRemoveAppAfterConfirm);
+    if (crAppRemoveBackdrop) {
+      crAppRemoveBackdrop.addEventListener("click", function (e) {
+        if (e.target === crAppRemoveBackdrop) closeRemoveAppConfirm();
+      });
+    }
+
     crPermsContent.addEventListener("click", function (e) {
       var removeBtn = e.target.closest("[data-remove-app]");
       if (removeBtn) {
         e.preventDefault();
         e.stopPropagation();
-        crRemoveApplication(removeBtn.getAttribute("data-remove-app"));
+        var appKey = removeBtn.getAttribute("data-remove-app");
+        if (crEditingRecord) {
+          openRemoveAppConfirm(appKey);
+        } else {
+          crRemoveApplication(appKey);
+        }
         return;
       }
-      var head = e.target.closest("[data-app-toggle]");
-      if (!head) return;
-      if (e.target.closest("input, label, a")) return;
-      var section = head.closest(".cr-app-section");
-      toggleAppSection(section);
+      var levelBtn = e.target.closest(".cr-access-level-btn");
+      if (levelBtn) {
+        var sec = levelBtn.closest(".cr-app-section");
+        if (!sec) return;
+        var level = levelBtn.getAttribute("data-access-level");
+        setSectionAccessLevel(sec, level);
+        updateFunctionsCount();
+        validateCreateRole();
+        return;
+      }
+      var showBtn = e.target.closest("[data-show-all]");
+      if (showBtn) {
+        var sec2 = showBtn.closest(".cr-app-section");
+        if (!sec2) return;
+        var allSections = crPermsContent.querySelectorAll(".cr-app-section");
+        for (var s = 0; s < allSections.length; s++) {
+          if (allSections[s] !== sec2) setSectionExpanded(allSections[s], false);
+        }
+        setSectionExpanded(sec2, true);
+        updateCrModuleSummaries(sec2);
+        return;
+      }
+      var moduleBtn = e.target.closest("[data-module-toggle]");
+      if (moduleBtn) {
+        var mod = moduleBtn.closest(".cr-module");
+        if (!mod) return;
+        var body = mod.querySelector(".cr-module-body");
+        var expanded = moduleBtn.getAttribute("aria-expanded") !== "false";
+        moduleBtn.setAttribute("aria-expanded", expanded ? "false" : "true");
+        if (body) body.style.display = expanded ? "none" : "";
+        return;
+      }
+      var collapseBtn = e.target.closest("[data-collapse-all]");
+      if (collapseBtn) {
+        var sec3 = collapseBtn.closest(".cr-app-section");
+        if (!sec3) return;
+        collapseAllModules(sec3);
+        if (!isCustomAccessLevel(sec3.getAttribute("data-access-level"))) {
+          setSectionExpanded(sec3, false);
+        }
+      }
     });
     crPermsContent.addEventListener("keydown", function (e) {
       if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
-      var head = e.target.closest("[data-app-toggle]");
+      var head = e.target.closest("[data-module-toggle]");
       if (!head || head !== e.target) return;
       e.preventDefault();
-      toggleAppSection(head.closest(".cr-app-section"));
+      head.click();
     });
-    crPermsContent.addEventListener("change", function () {
-      updateFunctionsCount();
-      validateCreateRole();
+    crPermsContent.addEventListener("change", function (e) {
+      var sec = e.target.closest(".cr-app-section");
+      if (sec) {
+        if (!isCustomAccessLevel(sec.getAttribute("data-access-level"))) {
+          setSectionAccessLevel(sec, "Custom");
+        } else {
+          updateCrModuleSummaries(sec);
+        }
+        updateFunctionsCount();
+        validateCreateRole();
+      }
     });
 
     crAddBtn.addEventListener("click", function () {
@@ -2889,7 +3767,7 @@ document.addEventListener("DOMContentLoaded", function () {
        the existing record in place. No network. */
     var APP_KEY_TO_TABLE_LABEL = {
       core_planning:              "Core Planning",
-      identity_access_management: "Admin",
+      identity_access_management: "IAM",
       target_options_manager:     "TOM",
       disney_ads_agent:           "Disney Ads Agent",
       inventory_catalog_manager:  "ICM"
@@ -2907,11 +3785,12 @@ document.addEventListener("DOMContentLoaded", function () {
       var sections = crPermsContent.querySelectorAll(".cr-app-section");
       for (var i = 0; i < sections.length; i++) {
         var key = sections[i].getAttribute("data-app-key") || "";
+        var access = sections[i].getAttribute("data-access-level") || "View Only";
         var count = sections[i].querySelectorAll(".cr-perm-check:checked").length;
         if (!count) continue;
         var label = APP_KEY_TO_TABLE_LABEL[key] ||
                     (APP_PERMISSIONS[key] && APP_PERMISSIONS[key].label) || key;
-        out.push({ name: label, count: count });
+        out.push({ name: label, count: count, access: access });
       }
       return out;
     }
@@ -2919,9 +3798,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function crCollectStatus() {
       var sens = crPage.querySelector('input[name="dataAccess"][value="sensitive"]');
       var reg  = crPage.querySelector('input[name="dataAccess"][value="regional"]');
+      if (sens && sens.checked && reg && reg.checked) return "Standard";
       if (sens && sens.checked) return "Sensitive";
       if (reg  && reg.checked)  return "Regional";
-      return "Regional";
+      return "Standard";
     }
 
     function crNewRoleId() {
@@ -3068,7 +3948,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && crConfirmBackdrop && !crConfirmBackdrop.hasAttribute("hidden")) {
+      if (e.key !== "Escape") return;
+      if (crAppRemoveBackdrop && !crAppRemoveBackdrop.hasAttribute("hidden")) {
+        closeRemoveAppConfirm();
+        return;
+      }
+      if (crConfirmBackdrop && !crConfirmBackdrop.hasAttribute("hidden")) {
         closeRemoveConfirm();
       }
     });

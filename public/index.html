@@ -8,11 +8,25 @@
     (function () {
       try {
         var t = localStorage.getItem("atlas:theme");
-        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        /* Any non-"light" value becomes the data-theme attribute (e.g. "dark",
+           "ads-preview"). "light" or missing leaves the attribute off so
+           :root (EDL Light) defaults apply. This is an additive broadening of
+           the previous dark-only bootstrap; EDL Light and EDL Dark behavior
+           are unchanged. */
+        if (t && t !== "light") document.documentElement.setAttribute("data-theme", t);
       } catch (e) {}
     })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260420ad">
+  <!-- Open Sans — ADS Preview typography only. EDL Light/Dark continue
+       to use InspireTWDC / MultiplaneTWDC Display via the :root --ff token.
+       The font only becomes active when [data-theme="ads-preview"] remaps
+       --ff to the Open Sans stack; under EDL themes this is inert weight in
+       the cache and never renders. preconnect hints shave off the TLS round
+       trip when a user first switches to ADS Preview. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20260423rp20">
 </head>
 <body>
 
@@ -32,6 +46,14 @@
     </div>
   </div>
   <div class="nav-r">
+    <!-- ADS-Preview-only search pill. Hidden via CSS under EDL Light/Dark
+         (`display:none`) so it never affects those themes. Non-functional
+         decoration (readonly + tabindex="-1") — this is a visual preview
+         of the ADS search field, not wired to any search behavior. -->
+    <div class="ads-nav-search" aria-hidden="true">
+      <svg class="ads-nav-search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="ads-nav-search-inp" placeholder="Search" readonly tabindex="-1" aria-label="Search (preview only)">
+    </div>
     <button class="nav-r-btn" aria-label="Notifications"><img src="nav/bell.svg" alt="" width="24" height="24"></button>
     <div class="user-menu" id="userMenu">
       <button class="nav-r-btn" id="userMenuTrigger" aria-label="User menu" aria-haspopup="menu" aria-expanded="false"><img src="nav/avatar.png" alt="" class="nav-avatar-img"></button>
@@ -51,6 +73,7 @@
           <div class="user-menu-sub" role="menu" aria-label="Theme">
             <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-theme="light" tabindex="-1">EDL Light</div>
             <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="dark" tabindex="-1">EDL Dark</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="ads-preview" tabindex="-1">ADS Preview</div>
           </div>
         </div>
         <div class="user-menu-sep"></div>
@@ -73,7 +96,7 @@
     <!-- Tabs -->
     <div class="tabs-row">
       <nav>
-        <button class="tab-btn on">Users (610 total)</button>
+        <button class="tab-btn on">Users&nbsp;<span class="tab-count">(610 total)</span></button>
         <button class="tab-btn">Roles and Permissions</button>
       </nav>
     </div>
@@ -230,6 +253,143 @@
   </div>
 </main>
 
+<!-- ═══ ADD USERS PAGE ═══ -->
+<div id="addUsersPage" class="au-page" style="display:none">
+  <div class="au-shell">
+    <button class="au-back" id="auBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to users
+    </button>
+
+    <div class="au-header">
+      <div class="au-header-left">
+        <h1 class="au-title">Add users</h1>
+        <p class="au-subtitle">Capture user details and assign access for Atlas</p>
+      </div>
+      <div class="au-header-actions">
+        <button class="btn-std" id="auCancel">Cancel</button>
+        <button class="au-btn-save" id="auSave">Add User</button>
+      </div>
+    </div>
+
+    <section class="au-card" aria-labelledby="auBasicTitle">
+      <div class="au-section-header">
+        <svg class="au-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <h2 class="au-section-title" id="auBasicTitle">Basic Information</h2>
+      </div>
+
+      <div class="au-grid">
+        <div class="au-field">
+          <label class="au-label" for="auFirstName">First name<span class="au-req">*</span></label>
+          <input class="au-input" id="auFirstName" type="text" placeholder="Enter first name" autocomplete="off">
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auLastName">Last name<span class="au-req">*</span></label>
+          <input class="au-input" id="auLastName" type="text" placeholder="Enter last name" autocomplete="off">
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auPreferredName">Preferred name
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input class="au-input" id="auPreferredName" type="text" placeholder="Enter preferred name" autocomplete="off">
+        </div>
+
+        <div class="au-field">
+          <label class="au-label" for="auEmail">Email<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auRegion">Region<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <div class="au-select-wrap">
+            <select class="au-select" id="auRegion">
+              <option value="NA" selected>NA (United States and Canada)</option>
+              <option value="LATAM">LATAM</option>
+              <option value="EMEA">EMEA</option>
+              <option value="ANZ">ANZ</option>
+            </select>
+            <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auTimezone">Timezone<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <div class="au-select-wrap">
+            <select class="au-select" id="auTimezone" required>
+              <option selected>America/New_York</option>
+              <option>America/Chicago</option>
+              <option>America/Denver</option>
+              <option>America/Los_Angeles</option>
+              <option>America/Toronto</option>
+              <option>America/Vancouver</option>
+            </select>
+            <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+        <div class="au-field">
+          <label class="au-label" for="auTeam">Team</label>
+          <div class="au-select-wrap">
+            <select class="au-select" id="auTeam">
+              <option selected disabled>Select team</option>
+              <option>National Ad Sales</option>
+              <option>Digital Media Planning</option>
+              <option>Client Partnerships</option>
+              <option>Streaming Revenue</option>
+              <option>Ad Solutions &amp; Innovation</option>
+              <option>Yield &amp; Inventory</option>
+              <option>Programmatic Sales</option>
+              <option>Revenue Operations</option>
+              <option>Ad Sales Finance</option>
+            </select>
+            <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auStatusValue">Status<span class="au-req">*</span></label>
+          <input type="hidden" id="auStatusValue" value="Active" required>
+          <div class="au-status-seg" id="auStatusSeg" role="radiogroup" aria-label="Status">
+            <button type="button" class="au-status-opt is-selected" data-au-status="Active" aria-pressed="true">Active</button>
+            <button type="button" class="au-status-opt" data-au-status="Inactive" aria-pressed="false">Inactive</button>
+          </div>
+        </div>
+        <div class="au-field au-profile-field">
+          <label class="au-label">Profile picture</label>
+          <p class="au-profile-sync-note">Synced from Disney Rostr when available.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="au-card au-access-card" aria-labelledby="auAccessTitle">
+      <div class="au-section-header">
+        <svg class="au-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <h2 class="au-section-title" id="auAccessTitle">Access Management</h2>
+      </div>
+
+      <div class="au-field au-role-field">
+        <label class="au-role-label" for="auRoleSearch">Assign Roles<span class="au-req">*</span></label>
+        <p class="au-role-help">Users can be assigned more than one role. Permissions are combined from all assigned roles.</p>
+        <div class="au-role-row">
+          <div class="au-role-dd" id="auRoleDD">
+            <button type="button" class="au-role-trigger" id="auRoleTrigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="au-role-value is-placeholder" id="auRoleValue">Search or select a role</span>
+              <svg class="au-select-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="au-role-menu" id="auRoleMenu" role="listbox" aria-label="Roles"></div>
+          </div>
+          <button class="au-btn-add" id="auRoleAdd" type="button">Add</button>
+        </div>
+      </div>
+
+      <div class="au-role-cards" id="auRoleCards"></div>
+    </section>
+  </div>
+</div>
+
 <!-- ═══ CREATE ROLE PAGE ═══ -->
 <div id="createRolePage" class="cr-page" style="display:none">
   <div class="cr-shell">
@@ -274,11 +434,11 @@
         <label class="cr-label">Data Accessibility <span class="cr-req">*</span></label>
         <div class="cr-checkbox-row">
           <label class="cr-checkbox-item">
-            <input type="checkbox" class="cr-check" name="dataAccess" value="sensitive">
+            <input type="checkbox" class="cr-check" name="dataAccess" value="sensitive" checked>
             <span class="cr-check-label">Sensitive Data Access</span>
           </label>
           <label class="cr-checkbox-item">
-            <input type="checkbox" class="cr-check" name="dataAccess" value="regional">
+            <input type="checkbox" class="cr-check" name="dataAccess" value="regional" checked>
             <span class="cr-check-label">Regional Data Access</span>
           </label>
         </div>
@@ -437,6 +597,18 @@
   </div>
 </div>
 
-<script src="app.js?v=20260420p"></script>
+<!-- Remove application from role (Edit Role only — same EDL modal shell as Remove Role) -->
+<div class="cr-confirm-backdrop" id="crAppRemoveBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crAppRemoveTitle" aria-describedby="crAppRemoveBody">
+    <h2 class="cr-confirm-title" id="crAppRemoveTitle">Remove application from role?</h2>
+    <p class="cr-confirm-body" id="crAppRemoveBody">Removing this application will remove its permissions from this role. Users assigned to this role may lose access.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="crAppRemoveCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="crAppRemoveConfirm" type="button">Remove</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=20260423rp20"></script>
 </body>
 </html>
