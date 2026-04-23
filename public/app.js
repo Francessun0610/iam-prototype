@@ -1170,6 +1170,9 @@ document.addEventListener("DOMContentLoaded", function () {
           wide enough to reveal the full value, no tooltip shows. This
           plays naturally with the column-resize feature.
 
+     R&P Functions column (`.rp-func`) is excluded: no truncation tooltip
+     there (see `getCellTruncationInfo`).
+
      The handler is bound to every `.tbl-wrap` so both the Users and
      R&P tables behave identically. `focusin`/`focusout` on focusable
      truncatable elements (`.role-extra`, `.rp-role-link`) provides
@@ -1209,12 +1212,13 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Finds the element inside a cell that is actually being truncated
      (if any). Some cells delegate their truncation to an inner wrapper
      (e.g. Users `.c-nm` keeps the td open and truncates `.name-link`
-     inside; R&P `.rp-func` uses a wrapping `.rp-func-text` span). */
+     inside). R&P Functions (`.rp-func`) has no truncation tooltip. */
   function getCellTruncationInfo(td) {
     if (!td) return null;
     if (td.classList.contains("empty-state")) return null;
     if (td.classList.contains("c-ct")) return null; // hidden Company Title column
-    var INNER_SELECTORS = ".name-link, .rp-func-text";
+    if (td.classList.contains("rp-func")) return null;
+    var INNER_SELECTORS = ".name-link";
     var innerMatches = td.querySelectorAll(INNER_SELECTORS);
     for (var i = 0; i < innerMatches.length; i++) {
       var inner = innerMatches[i];
@@ -1235,12 +1239,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (extra) {
       var lines = extra.getAttribute("data-tooltip");
       if (lines) showTooltipFor(extra, lines, true);
-      return;
-    }
-    var funcWrap = e.target.closest(".rp-func-text");
-    if (funcWrap) {
-      var fs = funcWrap.getAttribute("data-rp-funcs-full");
-      if (fs) showTooltipFor(funcWrap, fs, false);
       return;
     }
     var td = e.target.closest("td");
@@ -1264,12 +1262,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (lines) showTooltipFor(extra, lines, true);
       return;
     }
-    var funcWrap = e.target.closest(".rp-func-text");
-    if (funcWrap) {
-      var fs = funcWrap.getAttribute("data-rp-funcs-full");
-      if (fs) showTooltipFor(funcWrap, fs, false);
-      return;
-    }
     var link = e.target.closest(".rp-role-link");
     if (link) {
       var td = link.closest("td");
@@ -1278,7 +1270,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   document.addEventListener("focusout", function (e) {
-    if (e.target.closest(".role-extra, .rp-role-link, .rp-func-text")) hideTooltip();
+    if (e.target.closest(".role-extra, .rp-role-link")) hideTooltip();
   });
 
   /* ─── R&P Functions Popover (click-activated) ───
@@ -1465,11 +1457,6 @@ document.addEventListener("DOMContentLoaded", function () {
         hideFuncPop();
         showFuncPop(btn);
         return;
-      }
-      var ft = e.target.closest(".rp-func-text");
-      if (ft) {
-        var fs = ft.getAttribute("data-rp-funcs-full");
-        if (fs) showTooltipFor(ft, fs, false);
       }
     });
   }
@@ -2647,17 +2634,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* R&P Functions column renders semantic access labels per app. */
 
-  function getFunctionsSummaryForTooltip(fns, roleId) {
-    var parts = [];
-    for (var i = 0; i < fns.length; i++) {
-      var app = fns[i].name;
-      var display = RP_FUNC_DISPLAY_NAME[app] || app;
-      var access = fns[i].access || roleAccessLevel(roleId, app);
-      parts.push(display + " (" + access + ")");
-    }
-    return parts.join(", ");
-  }
-
   function formatFunctions(fns, roleId) {
     var parts = [];
     for (var i = 0; i < fns.length; i++) {
@@ -2763,11 +2739,10 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
       var roleCell = '<a class="rp-role-link" href="#" data-role-edit="' + esc(r.id) + '">' + esc(r.role) + '</a>';
-      var funcSummary = getFunctionsSummaryForTooltip(r.functions, r.id);
       html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="rp-role" title="' + esc(r.role) + '">' + roleCell + '</td>' +
         '<td class="rp-desc" title="' + esc(r.description) + '">' + esc(r.description) + '</td>' +
-        '<td class="rp-func"><span class="rp-func-text" tabindex="0" data-rp-funcs-full="' + esc(funcSummary) + '">' + formatFunctions(r.functions, r.id) + "</span></td>" +
+        '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + "</span></td>" +
         '<td class="rp-by">' + esc(r.createdBy) + '</td>' +
         '<td class="rp-date">' + esc(r.createDate) + '</td>' +
         '</tr>';

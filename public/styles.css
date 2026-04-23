@@ -596,10 +596,8 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 
 /* Function count trigger (clickable count inside Roles table) */
 /* Functions cell follows the default .tbl td truncation (overflow:hidden +
-   text-overflow:ellipsis). The count popover is position:fixed and lives
-   on document.body, so it doesn't need the cell to have visible overflow.
-   Universal cell-truncation tooltip (see app.js) reveals the full
-   "Name (n), Name (n), ..." string on hover when it's actually clipped. */
+   text-overflow:ellipsis). The permission popover is position:fixed and lives
+   on document.body, so it doesn't need the cell to have visible overflow. */
 .rp-func-group { display: inline; color: var(--text-primary); }
 .rp-func-app {
   color: var(--text-primary);
