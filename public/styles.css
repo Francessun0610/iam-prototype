@@ -594,7 +594,6 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 }
 .edl-tooltip-line + .edl-tooltip-line { margin-top: 2px; }
 
-/* Function count trigger (clickable count inside Roles table) */
 /* Functions cell follows the default .tbl td truncation (overflow:hidden +
    text-overflow:ellipsis). The permission popover is position:fixed and lives
    on document.body, so it doesn't need the cell to have visible overflow. */

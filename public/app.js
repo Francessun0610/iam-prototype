@@ -1273,6 +1273,37 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target.closest(".role-extra, .rp-role-link")) hideTooltip();
   });
 
+  /* Per-role custom permission grids for Create Role / Edit Role prefill. */
+  var ROLE_ACCESS_DETAILS = {
+    r003: {
+      "Core Planning": {
+        Orders: ["View", "Edit", "Assign", "Comment"],
+        "Media Plans": ["View", "Edit"],
+        "Line Items": ["View", "Edit"]
+      }
+    },
+    r011: {
+      "Core Planning": {
+        Orders: ["View", "Create", "Edit", "Assign"],
+        "Media Plans": ["View", "Edit"],
+        "Line Items": ["View", "Edit"]
+      }
+    },
+    r012: {
+      "Core Planning": {
+        Orders: ["View", "Edit"],
+        "Media Plans": ["View", "Edit"],
+        "Line Items": ["View"]
+      },
+      "IAM": {
+        Roles: ["View"],
+        Users: ["View", "Edit", "Impersonate users"],
+        Analytics: ["View"],
+        "Admin Actions": []
+      }
+    }
+  };
+
   /* ─── R&P Functions Popover (click-activated) ───
      Trigger: semantic access link inside .rp-func.
      Content: application + access level + grouped permissions.
@@ -1291,7 +1322,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "View Only": { Orders: ["View"], "Media Plans": ["View"], "Line Items": ["View"] },
         "Edit": { Orders: ["View", "Create", "Edit", "Comment"], "Media Plans": ["View", "Create", "Edit"], "Line Items": ["View", "Create", "Edit"] },
         "Approve": { Orders: ["View", "Approve", "Reject"], "Media Plans": ["View"], "Line Items": ["View"] },
-        "Full Access": { Orders: ["View", "Create", "Delete", "Assign", "Comment", "Approve", "Reject"], "Media Plans": ["View", "Create", "Edit", "Delete"], "Line Items": ["View", "Create", "Edit", "Delete"] }
+        "Full Access": { Orders: ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"], "Media Plans": ["View", "Create", "Edit", "Delete"], "Line Items": ["View", "Create", "Edit", "Delete"] }
       }
     },
     "IAM": {
@@ -1327,35 +1358,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "View Only": { "Agent Workflows": ["View"], Forecasting: ["View"], Insights: ["View"] },
         "Edit": { "Agent Workflows": ["View", "Create", "Edit"], Forecasting: ["View", "Edit"], Insights: ["View"] },
         "Full Access": { "Agent Workflows": ["View", "Create", "Edit", "Delete"], Forecasting: ["View", "Create", "Edit", "Delete"], Insights: ["View"] }
-      }
-    }
-  };
-  var ROLE_ACCESS_DETAILS = {
-    r003: {
-      "Core Planning": {
-        Orders: ["View", "Edit", "Assign", "Comment"],
-        "Media Plans": ["View", "Edit"],
-        "Line Items": ["View", "Edit"]
-      }
-    },
-    r011: {
-      "Core Planning": {
-        Orders: ["View", "Create", "Edit", "Assign"],
-        "Media Plans": ["View", "Edit"],
-        "Line Items": ["View", "Edit"]
-      }
-    },
-    r012: {
-      "Core Planning": {
-        Orders: ["View", "Edit"],
-        "Media Plans": ["View", "Edit"],
-        "Line Items": ["View"]
-      },
-      "IAM": {
-        Roles: ["View"],
-        Users: ["View", "Edit", "Impersonate users"],
-        Analytics: ["View"],
-        "Admin Actions": []
       }
     }
   };
