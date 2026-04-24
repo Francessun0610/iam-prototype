@@ -575,7 +575,10 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.flt-drawer .edl-combo-clear { right: 28px; width: 18px; height: 18px; }
+/* Filter drawer: trailing control slot is 8px from the edge. Clear (×) and
+   chevron share the exact slot — mutual-exclusion rule above hides the
+   chevron when a value is selected. */
+.flt-drawer .edl-combo-clear { right: 8px; width: 18px; height: 18px; }
 .flt-drawer .edl-combo-toggle { right: 8px; }
 
 /* ─── EDL COMBO BOX ─── searchable dropdown, matches EDL select + list pattern ─── */
@@ -617,7 +620,7 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .edl-combo-input:focus { border-color: var(--brand-text); }
 .edl-combo.open .edl-combo-input { border-color: var(--brand-text); border-radius: 8px 8px 0 0; border-bottom-color: var(--border-default); }
 
-.edl-combo-clear { position: absolute; right: 32px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; z-index: 2; }
+.edl-combo-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; z-index: 2; }
 .edl-combo-clear:hover { color: var(--text-secondary); background: var(--bg-hover); }
 .edl-combo-clear.hidden { display: none; }
 
@@ -625,6 +628,13 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .edl-combo-toggle:hover { color: var(--text-secondary); }
 .edl-combo-toggle svg { transition: transform 0.2s ease; }
 .edl-combo.open .edl-combo-toggle svg { transform: rotate(180deg); }
+
+/* Mutual-exclusion rule: empty field shows the chevron only; selected field
+   shows the EDL clear (×) only. Never both at once. Applies to every EDL
+   combo instance globally (filter drawers, Add/Edit User, R&P filter, etc.). */
+.edl-combo-input-wrap:has(.edl-combo-clear:not(.hidden)) .edl-combo-toggle {
+  display: none;
+}
 
 .edl-combo-menu {
   display: none;
@@ -1825,7 +1835,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   padding: 5px 36px 5px 12px;
   line-height: 20px;
 }
-/* Chevron and clear: same 20×20 hit target, 12×12 glyph; vertically centered in 32px field. */
+/* Chevron and clear: same 20×20 hit target, 12×12 glyph; vertically centered in 32px field.
+   Mutual-exclusion between the two trailing icons is enforced by the global rule
+   `.edl-combo-input-wrap:has(.edl-combo-clear:not(.hidden)) .edl-combo-toggle { display:none }`. */
 #addUsersPage .au-field-dd.edl-combo .edl-combo-clear,
 #addUsersPage .au-field-dd.edl-combo .edl-combo-toggle {
   right: 8px;
@@ -1840,10 +1852,6 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   width: 12px;
   height: 12px;
   display: block;
-}
-/* When a value is set, show clear only — hide chevron (no double icons). */
-#addUsersPage .au-field-dd.edl-combo .edl-combo-input-wrap:has(.edl-combo-clear:not(.hidden)) .edl-combo-toggle {
-  display: none;
 }
 /* Assign Roles: same column shell as Region/Team (`.au-field` + `.cr-dd`) — flex sizing on wrapper, not on `.cr-dd`. */
 #addUsersPage .au-role-row > .au-role-dd-field {
