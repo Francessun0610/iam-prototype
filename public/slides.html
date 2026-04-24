@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IAM Executive Intro — Identity and Access Management Atlas</title>
+  <!--
+    Source of truth: Figma file VJFnUYbMq9dWqqp6yxv7AN
+    Slide 1 node 506:15695 · Slide 2 node 506:15531 · Slide 3 node 506:15666
+    Slide 4 node 506:15278 · Slide 5 node 506:15352 · Slide 6 node 506:15407
+    Slide 7 node 507:20586
+  -->
+  <link rel="stylesheet" href="slides.css?v=20260424iamslides10">
+</head>
+<body class="slides-body">
+  <div id="slidesLive" class="sl-visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="slides-deck" role="region" aria-roledescription="carousel" aria-label="IAM executive introduction">
+    <div class="slides-stage" id="slidesStage">
+
+      <!-- ═════════ SLIDE 1 — Cover (506:15695) ═════════ -->
+      <article class="slide sl--1 is-active" data-slide="1" aria-hidden="false">
+        <img class="sl1-dept-logo" src="slides-assets/s1-ad-platforms.png" alt="Ad Platforms Product & Technology">
+        <h1 class="sl1-title">Identity &amp; Access Management (IAM)</h1>
+        <p class="sl1-author">Frances Sun</p>
+        <span class="sl1-draft" aria-hidden="true">DRAFT</span>
+      </article>
+
+      <!-- ═════════ SLIDE 2 — User → IAM → Apps (506:15531) ═════════ -->
+      <article class="slide sl--2" data-slide="2" aria-hidden="true">
+        <h2 class="sl2-title">IAM manages access across Atlas</h2>
+        <p class="sl2-sub">Without IAM, access is defined by implementation- not by design</p>
+
+        <span class="sl2-col-user">User</span>
+        <span class="sl2-col-iam">IAM</span>
+        <span class="sl2-col-apps">Applications</span>
+
+        <img class="sl2-users" src="slides-assets/s2-users.png" alt="" aria-hidden="true">
+        <img class="sl2-castle" src="slides-assets/s2-castle.png" alt="" aria-hidden="true">
+
+        <svg class="sl2-arrow sl2-arrow--1" viewBox="0 0 218 23" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M217.061 12.1066C217.646 11.5208 217.646 10.571 217.061 9.98524L207.515 0.439297C206.929 -0.14649 205.979 -0.14649 205.393 0.439297C204.808 1.02508 204.808 1.97483 205.393 2.56062L213.879 11.0459L205.393 19.5312C204.808 20.117 204.808 21.0667 205.393 21.6525C205.979 22.2383 206.929 22.2383 207.515 21.6525L217.061 12.1066ZM0 11.0459V12.5459H216V11.0459V9.5459H0V11.0459Z" fill="currentColor"/>
+        </svg>
+        <svg class="sl2-arrow sl2-arrow--2" viewBox="0 0 218 23" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M217.061 12.1066C217.646 11.5208 217.646 10.571 217.061 9.98524L207.515 0.439297C206.929 -0.14649 205.979 -0.14649 205.393 0.439297C204.808 1.02508 204.808 1.97483 205.393 2.56062L213.879 11.0459L205.393 19.5312C204.808 20.117 204.808 21.0667 205.393 21.6525C205.979 22.2383 206.929 22.2383 207.515 21.6525L217.061 12.1066ZM0 11.0459V12.5459H216V11.0459V9.5459H0V11.0459Z" fill="currentColor"/>
+        </svg>
+
+        <div class="sl2-apps-frame" aria-hidden="true"></div>
+        <div class="sl2-app sl2-app--1">Core Planning</div>
+        <div class="sl2-app sl2-app--2">Target Options<br>Manager</div>
+        <div class="sl2-app sl2-app--3">Disney Ads Agent</div>
+        <div class="sl2-app sl2-app--4">Inventory Catalog<br>Manager</div>
+
+        <span class="sl2-acl">Access Control Layer</span>
+        <span class="sl2-atlas">Atlas</span>
+
+        <p class="sl-footer-text">Disney Ad Platforms Design — Quote-to-Cash (Q2C)</p>
+        <img class="sl-footer-dmark" src="slides-assets/footer-logo.svg" alt="" aria-hidden="true">
+      </article>
+
+      <!-- ═════════ SLIDE 3 — Define once. Scale everywhere. (506:15666) ═════════ -->
+      <article class="slide sl--3" data-slide="3" aria-hidden="true">
+        <h2 class="sl3-title">Define once. Scale everywhere.</h2>
+
+        <ul class="sl3-bullets">
+          <li>Define roles and permissions once</li>
+          <li>Apply access consistently across applications</li>
+          <li>Govern access centrally across Atlas</li>
+        </ul>
+
+        <div class="sl3-pill">
+          <span class="sl3-pill-head">IAM</span>
+          <span class="sl3-pill-sub">Single source of truth for access</span>
+        </div>
+
+        <svg class="sl3-arrow-down" viewBox="0 0 23 218" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.8934 217.061C11.4792 217.646 12.429 217.646 13.01476 217.061L22.5607 207.515C23.1465 206.929 23.1465 205.979 22.5607 205.393C21.9749 204.808 21.0252 204.808 20.4394 205.393L11.9541 213.879L3.4688 205.393C2.883 204.808 1.9333 204.808 1.3475 205.393C0.7617 205.979 0.7617 206.929 1.3475 207.515L10.8934 217.061ZM11.9541 0H10.4541V216H11.9541H13.4541V0H11.9541Z" fill="currentColor"/>
+        </svg>
+
+        <span class="sl3-atlas-label">Atlas</span>
+        <div class="sl3-atlas-box"></div>
+        <div class="sl3-apps-grid">
+          <div class="sl-app-card sl-app-card--1">Core Planning</div>
+          <div class="sl-app-card sl-app-card--2">Target Options<br>Manager</div>
+          <div class="sl-app-card sl-app-card--3">Disney Ads Agent</div>
+          <div class="sl-app-card sl-app-card--4">Inventory Catalog<br>Manager</div>
+        </div>
+
+        <p class="sl-footer-text">Disney Ad Platforms Design — Quote-to-Cash (Q2C)</p>
+        <img class="sl-footer-dmark" src="slides-assets/footer-logo.svg" alt="" aria-hidden="true">
+      </article>
+
+      <!-- ═════════ SLIDE 4 — We structure access in 3 layers (506:15278) ═════════ -->
+      <article class="slide sl--4" data-slide="4" aria-hidden="true">
+        <h2 class="sl4-title">We structure access in 3 layers</h2>
+
+        <img class="sl4-users" src="slides-assets/s4-users.png" alt="" aria-hidden="true">
+
+        <img class="sl4-role-card" src="slides-assets/s4-role-card.png" alt="" aria-hidden="true">
+        <span class="sl4-role-name">Planner</span>
+        <p class="sl4-role-perm sl4-role-perm--1">Core Planning → Edit</p>
+        <p class="sl4-role-perm sl4-role-perm--2">TOM→ View</p>
+        <p class="sl4-role-perm sl4-role-perm--3">ICM→ No Access</p>
+        <p class="sl4-role-group">Ad Operations</p>
+
+        <span class="sl4-col-user">User</span>
+        <span class="sl4-col-role">Role</span>
+        <h3 class="sl4-col-apps">Application + Permissions</h3>
+
+        <svg class="sl4-arrow sl4-arrow--1" viewBox="0 0 218 23" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M217.061 12.1066C217.646 11.5208 217.646 10.571 217.061 9.98524L207.515 0.439297C206.929 -0.14649 205.979 -0.14649 205.393 0.439297C204.808 1.02508 204.808 1.97483 205.393 2.56062L213.879 11.0459L205.393 19.5312C204.808 20.117 204.808 21.0667 205.393 21.6525C205.979 22.2383 206.929 22.2383 207.515 21.6525L217.061 12.1066ZM0 11.0459V12.5459H216V11.0459V9.5459H0V11.0459Z" fill="currentColor"/>
+        </svg>
+        <svg class="sl4-arrow sl4-arrow--2" viewBox="0 0 218 23" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M217.061 12.1066C217.646 11.5208 217.646 10.571 217.061 9.98524L207.515 0.439297C206.929 -0.14649 205.979 -0.14649 205.393 0.439297C204.808 1.02508 204.808 1.97483 205.393 2.56062L213.879 11.0459L205.393 19.5312C204.808 20.117 204.808 21.0667 205.393 21.6525C205.979 22.2383 206.929 22.2383 207.515 21.6525L217.061 12.1066ZM0 11.0459V12.5459H216V11.0459V9.5459H0V11.0459Z" fill="currentColor"/>
+        </svg>
+
+        <ul class="sl4-bullets">
+          <li>Users do not directly get permissions</li>
+          <li>Roles abstract access</li>
+        </ul>
+
+        <p class="sl-footer-text">Disney Ad Platforms Design — Quote-to-Cash (Q2C)</p>
+        <img class="sl-footer-dmark" src="slides-assets/footer-logo.svg" alt="" aria-hidden="true">
+      </article>
+
+      <!-- ═════════ SLIDE 5 — Define roles before designing access (506:15352) ═════════ -->
+      <article class="slide sl--5" data-slide="5" aria-hidden="true">
+        <h2 class="sl5-title">Define roles before designing access</h2>
+        <p class="sl5-sub">Roles define what users can access and do across Atlas applications</p>
+
+        <div class="sl5-table" role="table" aria-label="Role definitions">
+          <div class="sl5-header">
+            <div class="sl5-header-row" role="row">
+              <span role="columnheader">Role</span>
+              <span role="columnheader">What they can do</span>
+              <span role="columnheader">Primary Access</span>
+            </div>
+            <div class="sl5-header-divider" aria-hidden="true"></div>
+          </div>
+          <div class="sl5-row sl5-row--1" role="row">
+            <span>Planner</span>
+            <span>Core Planning</span>
+            <span>Create and edit plans</span>
+          </div>
+          <div class="sl5-row sl5-row--2" role="row">
+            <span>Specialist</span>
+            <span>Review, validate, approve</span>
+            <span>Core Planning + TOM</span>
+          </div>
+          <div class="sl5-row sl5-row--3" role="row">
+            <span>Ad Ops</span>
+            <span>ICM</span>
+            <span>Manage inventory setup</span>
+          </div>
+          <div class="sl5-row sl5-row--4" role="row">
+            <span>Admin</span>
+            <span>IAM / Admin</span>
+            <span>Full Access</span>
+          </div>
+        </div>
+
+        <p class="sl5-note">*Role definitions for first release are still being finalize</p>
+
+        <p class="sl-footer-text">Disney Ad Platforms Design — Quote-to-Cash (Q2C)</p>
+        <img class="sl-footer-dmark" src="slides-assets/footer-logo.svg" alt="" aria-hidden="true">
+      </article>
+
+      <!-- ═════════ SLIDE 6 — Separate mental models (506:15407) ═════════ -->
+      <article class="slide sl--6" data-slide="6" aria-hidden="true">
+        <h2 class="sl6-title">Separate mental models to reduce complexity</h2>
+
+        <img class="sl6-img sl6-img--left"  src="assets/user-management-screenshot.png"    alt="User Management screen — who has access" aria-hidden="true">
+        <img class="sl6-img sl6-img--right" src="assets/roles-permissions-screenshot.png" alt="Roles and Permissions screen — what access means" aria-hidden="true">
+
+        <p class="sl6-caption-left">User Management → who has access</p>
+        <p class="sl6-caption-right">Role &amp; Permissions → what access means</p>
+
+        <p class="sl-footer-text">Disney Ad Platforms Design — Quote-to-Cash (Q2C)</p>
+        <img class="sl-footer-dmark" src="slides-assets/footer-logo.svg" alt="" aria-hidden="true">
+      </article>
+
+      <!-- ═════════ SLIDE 7 — See Cursor Prototype (507:20586) ═════════ -->
+      <article class="slide sl--7" data-slide="7" aria-hidden="true">
+        <a href="./" class="sl7-title" id="slidesSeePrototype">See Cursor Prototype</a>
+
+        <p class="sl7-demo-label">Demo order:</p>
+
+        <ul class="sl7-bullets">
+          <li>User Management - who has access</li>
+          <li>Add/Edit User - assigning role/app access</li>
+          <li>Roles &amp; Permissions - what access means</li>
+          <li>Create/Edit Role - defining role permissions</li>
+        </ul>
+
+        <button type="button" class="sl7-back" id="slidesBackIntro">Back to the intro</button>
+
+        <p class="sl-footer-text">Disney Ad Platforms Design — Quote-to-Cash (Q2C)</p>
+        <img class="sl-footer-dmark" src="slides-assets/footer-logo.svg" alt="" aria-hidden="true">
+      </article>
+
+    </div>
+  </div>
+
+  <script src="slides.js?v=20260424iamslides10"></script>
+</body>
+</html>
