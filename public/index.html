@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260423aurh1">
+  <link rel="stylesheet" href="styles.css?v=20260424aucompact1">
 </head>
 <body>
 
@@ -283,10 +283,11 @@
 
     <div class="au-header">
       <div class="au-header-left">
-        <h1 class="au-title">Add users</h1>
-        <p class="au-subtitle">Capture user details and assign access for Atlas</p>
+        <h1 class="au-title" id="auPageTitle">Add users</h1>
+        <p class="au-subtitle" id="auPageSubtitle">Capture user details and assign access for Atlas</p>
       </div>
       <div class="au-header-actions">
+        <button type="button" class="au-remove-user-link" id="auRemoveUser" hidden>Remove User</button>
         <button class="btn-std" id="auCancel">Cancel</button>
         <button class="au-btn-save" id="auSave">Add User</button>
       </div>
@@ -323,42 +324,24 @@
           <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
         </div>
         <div class="au-field">
-          <label class="au-label" for="auRegionTrigger">Region<span class="au-req">*</span>
+          <label class="au-label" for="auRegionCombo-ctl">Region<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input type="hidden" id="auRegion" value="NA">
-          <div class="cr-dd au-field-dd" id="auRegionDD">
-            <button type="button" class="cr-dd-trigger" id="auRegionTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRegionMenu">
-              <span class="cr-dd-value" id="auRegionValue">NA (United States and Canada)</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="auRegionMenu" role="listbox" aria-label="Region"></div>
-          </div>
+          <div class="edl-combo au-field-dd" id="auRegionCombo" aria-label="Region"></div>
         </div>
         <div class="au-field">
-          <label class="au-label" for="auTimezoneTrigger">Timezone<span class="au-req">*</span>
+          <label class="au-label" for="auTimezoneCombo-ctl">Timezone<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input type="hidden" id="auTimezone" value="America/New_York">
-          <div class="cr-dd au-field-dd" id="auTimezoneDD">
-            <button type="button" class="cr-dd-trigger" id="auTimezoneTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auTimezoneMenu" aria-required="true">
-              <span class="cr-dd-value" id="auTimezoneValue">America/New_York</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="auTimezoneMenu" role="listbox" aria-label="Timezone"></div>
-          </div>
+          <div class="edl-combo au-field-dd" id="auTimezoneCombo" aria-label="Timezone"></div>
         </div>
 
         <div class="au-field">
-          <label class="au-label" for="auTeamTrigger">Team</label>
+          <label class="au-label" for="auTeamCombo-ctl">Team</label>
           <input type="hidden" id="auTeam" value="">
-          <div class="cr-dd au-field-dd" id="auTeamDD">
-            <button type="button" class="cr-dd-trigger" id="auTeamTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auTeamMenu">
-              <span class="cr-dd-value is-placeholder" id="auTeamValue">Select team</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="auTeamMenu" role="listbox" aria-label="Team"></div>
-          </div>
+          <div class="edl-combo au-field-dd" id="auTeamCombo" aria-label="Team"></div>
         </div>
         <div class="au-field au-field-status">
           <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
@@ -385,14 +368,10 @@
 
       <div class="au-section-body">
       <div class="au-field au-role-field">
-        <label class="au-role-label" for="auRoleTrigger">Assign Roles<span class="au-req">*</span></label>
+        <label class="au-label" for="auRoleCombo-ctl">Assign Roles<span class="au-req">*</span></label>
         <div class="au-role-row">
-          <div class="cr-dd au-role-dd" id="auRoleDD">
-            <button type="button" class="cr-dd-trigger" id="auRoleTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRoleMenu">
-              <span class="cr-dd-value is-placeholder" id="auRoleValue">Search or select a role</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="auRoleMenu" role="listbox" aria-label="Roles"></div>
+          <div class="au-role-dd-field">
+            <div class="edl-combo au-field-dd" id="auRoleCombo" aria-label="Roles"></div>
           </div>
           <button class="au-btn-add" id="auRoleAdd" type="button">Add</button>
         </div>
@@ -623,6 +602,30 @@
   </div>
 </div>
 
-<script src="app.js?v=20260423ddly1"></script>
+<!-- Add User: Inactive status — same EDL `.cr-confirm-*` shell as Remove Role -->
+<div class="cr-confirm-backdrop" id="auInactiveConfirmBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auInactiveConfirmTitle" aria-describedby="auInactiveConfirmBody">
+    <h2 class="cr-confirm-title" id="auInactiveConfirmTitle">Set user as inactive?</h2>
+    <p class="cr-confirm-body" id="auInactiveConfirmBody">Inactive users cannot be assigned roles, functions, or permissions in Atlas. Any selected access will be removed before this user is added.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="auInactiveConfirmCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="auInactiveConfirmPrimary" type="button">Set as Inactive</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User: remove confirmation (Homer prototype) -->
+<div class="cr-confirm-backdrop" id="auRemoveUserBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auRemoveUserTitle" aria-describedby="auRemoveUserBody">
+    <h2 class="cr-confirm-title" id="auRemoveUserTitle">Remove user?</h2>
+    <p class="cr-confirm-body" id="auRemoveUserBody">This user will be removed from Atlas and their assigned roles and permissions will no longer apply. This action cannot be undone in this prototype session.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="auRemoveUserCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="auRemoveUserConfirm" type="button">Remove User</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=20260424editallusers1"></script>
 </body>
 </html>

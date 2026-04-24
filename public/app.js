@@ -1,79 +1,81 @@
 var DATA = [
   /* ── Page 1 ── */
-  { id: "u001", avatar: "avatars/photos/m01.png", name: "Homer Simpson", email: "Homer.Simpson@disney.com", roles: ["Core Planning Admin", "Strategy & Planning Manager", "Sales Planner"], status: "Active", team: "National Ad Sales", title: "VP, Ad Sales Operations", region: "NA" },
-  { id: "u002", avatar: "avatars/photos/f01.png", name: "Marge Simpson", email: "Marge.Simpson@disney.com", roles: ["Sales Planner", "Media Strategy Director"], status: "Active", team: "Digital Media Planning", title: "Director, Media Strategy", region: "NA" },
-  { id: "u003", avatar: "avatars/photos/m02.png", name: "Bart Simpson", email: "Bart.Simpson@disney.com", roles: ["Account Executive"], status: "Active", team: "Client Partnerships", title: "Coordinator, Sales Support", region: "NA" },
-  { id: "u004", avatar: "avatars/photos/m03.png", name: "Ned Flanders", email: "Ned.Flanders@disney.com", roles: ["Account Manager", "Client Partnerships Manager", "Sales Planner"], status: "Active", team: "Streaming Revenue", title: "Manager, Client Partnerships", region: "EMEA" },
-  { id: "u005", avatar: "avatars/photos/f02.png", name: "Lisa Simpson", email: "Lisa.Simpson@disney.com", roles: ["Ad Ops Specialist", "Campaign Manager", "Inventory Analyst", "Programmatic Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Sr. Analyst, Audience Insights", region: "NA" },
-  { id: "u006", avatar: "avatars/photos/m04.png", name: "Montgomery Burns", email: "Montgomery.Burns@disney.com", roles: ["Campaign Manager", "Strategy & Planning Manager"], status: "Inactive", team: "Yield & Inventory", title: "SVP, Revenue Strategy", region: "NA" },
-  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten", email: "Milhouse.VanHouten@disney.com", roles: ["Yield Manager"], status: "Active", team: "Programmatic Sales", title: "Analyst, Campaign Planning", region: "ANZ" },
-  { id: "u008", avatar: "avatars/photos/f03.png", name: "Maggie Simpson", email: "Maggie.Simpson@disney.com", roles: ["Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Revenue Operations", title: "Associate, Revenue Ops", region: "NA" },
-  { id: "u009", avatar: "avatars/photos/m06.png", name: "Waylon Smithers", email: "Waylon.Smithers@disney.com", roles: ["Billing Operations Specialist", "Finance Analyst", "Revenue Operations Analyst"], status: "Inactive", team: "Ad Sales Finance", title: "Lead, Billing Operations", region: "NA" },
-  { id: "u010", avatar: "avatars/photos/m07.png", name: "Nelson Muntz", email: "Nelson.Muntz@disney.com", roles: ["Finance Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Finance & Planning", region: "LATAM" },
+  { id: "u001", avatar: "avatars/photos/m01.png", name: "Homer Simpson", email: "Homer.Simpson@disney.com", roles: ["Core Planning Admin", "Planning Manager", "Planner"], status: "Active", team: "National Ad Sales", title: "VP, Ad Sales Operations", region: "NA" },
+  { id: "u002", avatar: "avatars/photos/f01.png", name: "Marge Simpson", email: "Marge.Simpson@disney.com", roles: ["Planner", "Planning Specialist"], status: "Active", team: "Digital Media Planning", title: "Director, Media Strategy", region: "NA" },
+  { id: "u003", avatar: "avatars/photos/m02.png", name: "Bart Simpson", email: "Bart.Simpson@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Client Partnerships", title: "Coordinator, Sales Support", region: "NA" },
+  { id: "u004", avatar: "avatars/photos/m03.png", name: "Ned Flanders", email: "Ned.Flanders@disney.com", roles: ["Planner", "Campaign Planner", "Read-Only Viewer"], status: "Active", team: "Streaming Revenue", title: "Manager, Client Partnerships", region: "EMEA" },
+  { id: "u005", avatar: "avatars/photos/f02.png", name: "Lisa Simpson", email: "Lisa.Simpson@disney.com", roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Sr. Analyst, Audience Insights", region: "NA" },
+  { id: "u006", avatar: "avatars/photos/m04.png", name: "Montgomery Burns", email: "Montgomery.Burns@disney.com", roles: ["Campaign Planner", "Planning Manager"], status: "Inactive", team: "Yield & Inventory", title: "SVP, Revenue Strategy", region: "NA" },
+  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten", email: "Milhouse.VanHouten@disney.com", roles: ["Operations Admin"], status: "Active", team: "Programmatic Sales", title: "Analyst, Campaign Planning", region: "ANZ" },
+  { id: "u008", avatar: "avatars/photos/f03.png", name: "Maggie Simpson", email: "Maggie.Simpson@disney.com", roles: ["Read-Only Viewer", "Planner"], status: "Active", team: "Revenue Operations", title: "Associate, Revenue Ops", region: "NA" },
+  { id: "u009", avatar: "avatars/photos/m06.png", name: "Waylon Smithers", email: "Waylon.Smithers@disney.com", roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"], status: "Inactive", team: "Ad Sales Finance", title: "Lead, Billing Operations", region: "NA" },
+  { id: "u010", avatar: "avatars/photos/m07.png", name: "Nelson Muntz", email: "Nelson.Muntz@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Finance & Planning", region: "LATAM" },
 
   /* ── Page 2 ── */
-  { id: "u011", avatar: "avatars/photos/m08.png", name: "Ralph Wiggum", email: "Ralph.Wiggum@disney.com", roles: ["Ad Ops Specialist", "Campaign Manager"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Ad Operations", region: "NA" },
-  { id: "u012", avatar: "avatars/photos/m09.png", name: "Principal Skinner", email: "Principal.Skinner@disney.com", roles: ["Account Manager", "Client Partnerships Manager", "Account Executive"], status: "Active", team: "Agency Sales", title: "Sr. Manager, Agency Partnerships", region: "NA" },
-  { id: "u013", avatar: "avatars/photos/m10.png", name: "Krusty the Clown", email: "Krusty.TheClown@disney.com", roles: ["Campaign Manager"], status: "Active", team: "National Ad Sales", title: "Director, Brand Partnerships", region: "NA" },
-  { id: "u014", avatar: "avatars/photos/f04.png", name: "Selma Bouvier", email: "Selma.Bouvier@disney.com", roles: ["Billing Operations Specialist", "Revenue Operations Analyst", "Finance Analyst", "Inventory Analyst"], status: "Active", team: "Ad Sales Finance", title: "Manager, Billing Operations", region: "EMEA" },
-  { id: "u015", avatar: "avatars/photos/f05.png", name: "Patty Bouvier", email: "Patty.Bouvier@disney.com", roles: ["Revenue Operations Analyst"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Revenue Reporting", region: "EMEA" },
-  { id: "u016", avatar: "avatars/photos/m11.png", name: "Lenny Leonard", email: "Lenny.Leonard@disney.com", roles: ["Sales Planner", "Media Strategy Director", "Strategy & Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Media Investment", region: "NA" },
-  { id: "u017", avatar: "avatars/photos/m12.png", name: "Carl Carlson", email: "Carl.Carlson@disney.com", roles: ["Yield Manager", "Inventory Analyst"], status: "Active", team: "Yield & Inventory", title: "Manager, Yield Optimization", region: "NA" },
-  { id: "u018", avatar: "avatars/photos/m13.png", name: "Moe Szyslak", email: "Moe.Szyslak@disney.com", roles: ["Account Executive", "Account Manager"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, Client Services", region: "LATAM" },
-  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon", email: "Apu.Nahasapeemapetilon@disney.com", roles: ["Strategy & Planning Manager", "Client Partnerships Manager", "Media Strategy Director", "Sales Planner"], status: "Active", team: "Global Partnerships", title: "Sr. Manager, International Strategy", region: "ANZ" },
-  { id: "u020", avatar: "avatars/photos/m15.png", name: "Comic Book Guy", email: "Comic.BookGuy@disney.com", roles: ["Finance Analyst", "Billing Operations Specialist"], status: "Active", team: "Ad Sales Finance", title: "Analyst, Financial Planning", region: "NA" },
+  { id: "u011", avatar: "avatars/photos/m08.png", name: "Ralph Wiggum", email: "Ralph.Wiggum@disney.com", roles: ["Ad Operations Specialist", "Campaign Planner"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Ad Operations", region: "NA" },
+  { id: "u012", avatar: "avatars/photos/m09.png", name: "Principal Skinner", email: "Principal.Skinner@disney.com", roles: ["Planner", "Campaign Planner", "Read-Only Viewer"], status: "Active", team: "Agency Sales", title: "Sr. Manager, Agency Partnerships", region: "NA" },
+  { id: "u013", avatar: "avatars/photos/m10.png", name: "Krusty the Clown", email: "Krusty.TheClown@disney.com", roles: ["Campaign Planner"], status: "Active", team: "National Ad Sales", title: "Director, Brand Partnerships", region: "NA" },
+  { id: "u014", avatar: "avatars/photos/f04.png", name: "Selma Bouvier", email: "Selma.Bouvier@disney.com", roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"], status: "Active", team: "Ad Sales Finance", title: "Manager, Billing Operations", region: "EMEA" },
+  { id: "u015", avatar: "avatars/photos/f05.png", name: "Patty Bouvier", email: "Patty.Bouvier@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Revenue Reporting", region: "EMEA" },
+  { id: "u016", avatar: "avatars/photos/m11.png", name: "Lenny Leonard", email: "Lenny.Leonard@disney.com", roles: ["Planner", "Planning Specialist", "Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Media Investment", region: "NA" },
+  { id: "u017", avatar: "avatars/photos/m12.png", name: "Carl Carlson", email: "Carl.Carlson@disney.com", roles: ["Operations Admin", "Planning Specialist"], status: "Active", team: "Yield & Inventory", title: "Manager, Yield Optimization", region: "NA" },
+  { id: "u018", avatar: "avatars/photos/m13.png", name: "Moe Szyslak", email: "Moe.Szyslak@disney.com", roles: ["Read-Only Viewer", "Planner"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, Client Services", region: "LATAM" },
+  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon", email: "Apu.Nahasapeemapetilon@disney.com", roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Global Partnerships", title: "Sr. Manager, International Strategy", region: "ANZ" },
+  { id: "u020", avatar: "avatars/photos/m15.png", name: "Comic Book Guy", email: "Comic.BookGuy@disney.com", roles: ["Read-Only Viewer", "Operations Admin"], status: "Active", team: "Ad Sales Finance", title: "Analyst, Financial Planning", region: "NA" },
 
   /* ── Page 3 ── */
-  { id: "u021", avatar: "avatars/photos/m16.png", name: "Chief Wiggum", email: "Chief.Wiggum@disney.com", roles: ["Account Manager"], status: "Active", team: "National Ad Sales", title: "VP, Client Solutions", region: "NA" },
-  { id: "u022", avatar: "avatars/photos/f06.png", name: "Edna Krabappel", email: "Edna.Krabappel@disney.com", roles: ["Sales Planner", "Campaign Manager", "Ad Ops Specialist"], status: "Active", team: "Digital Media Planning", title: "Director, Planning & Activation", region: "NA" },
-  { id: "u023", avatar: "avatars/photos/m17.png", name: "Groundskeeper Willie", email: "Groundskeeper.Willie@disney.com", roles: ["Ad Ops Specialist", "Inventory Analyst"], status: "Active", team: "Ad Solutions & Innovation", title: "Lead, Campaign Trafficking", region: "EMEA" },
-  { id: "u024", avatar: "avatars/photos/m18.png", name: "Fat Tony", email: "Fat.Tony@disney.com", roles: ["Strategy & Planning Manager", "Media Strategy Director", "Client Partnerships Manager"], status: "Active", team: "Streaming Revenue", title: "SVP, Distribution Strategy", region: "NA" },
-  { id: "u025", avatar: "avatars/photos/m19.png", name: "Dr. Hibbert", email: "Julius.Hibbert@disney.com", roles: ["Revenue Operations Analyst", "Finance Analyst", "Billing Operations Specialist"], status: "Active", team: "Revenue Operations", title: "Manager, Revenue Analytics", region: "NA" },
-  { id: "u026", avatar: "avatars/photos/m20.png", name: "Professor Frink", email: "Professor.Frink@disney.com", roles: ["Yield Manager", "Programmatic Specialist", "Inventory Analyst", "Ad Ops Specialist"], status: "Active", team: "Programmatic Sales", title: "Sr. Analyst, Programmatic Yield", region: "NA" },
-  { id: "u027", avatar: "avatars/photos/m21.png", name: "Barney Gumble", email: "Barney.Gumble@disney.com", roles: ["Campaign Manager", "Ad Ops Specialist"], status: "Inactive", team: "Addressable Ad Ops", title: "Coordinator, Campaign Delivery", region: "NA" },
-  { id: "u028", avatar: "avatars/photos/m22.png", name: "Sideshow Bob", email: "Sideshow.Bob@disney.com", roles: ["Account Executive", "Client Partnerships Manager", "Account Manager"], status: "Active", team: "Agency Sales", title: "Director, Agency Development", region: "EMEA" },
-  { id: "u029", avatar: "avatars/photos/m23.png", name: "Kent Brockman", email: "Kent.Brockman@disney.com", roles: ["Core Planning Admin", "Strategy & Planning Manager"], status: "Active", team: "Global Partnerships", title: "VP, Global Media Sales", region: "NA" },
-  { id: "u030", avatar: "avatars/photos/m24.png", name: "Otto Mann", email: "Otto.Mann@disney.com", roles: ["Finance Analyst"], status: "Active", team: "Ad Sales Finance", title: "Associate, Accounts Receivable", region: "LATAM" },
+  { id: "u021", avatar: "avatars/photos/m16.png", name: "Chief Wiggum", email: "Chief.Wiggum@disney.com", roles: ["Planner"], status: "Active", team: "National Ad Sales", title: "VP, Client Solutions", region: "NA" },
+  { id: "u022", avatar: "avatars/photos/f06.png", name: "Edna Krabappel", email: "Edna.Krabappel@disney.com", roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"], status: "Active", team: "Digital Media Planning", title: "Director, Planning & Activation", region: "NA" },
+  { id: "u023", avatar: "avatars/photos/m17.png", name: "Groundskeeper Willie", email: "Groundskeeper.Willie@disney.com", roles: ["Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Lead, Campaign Trafficking", region: "EMEA" },
+  { id: "u024", avatar: "avatars/photos/m18.png", name: "Fat Tony", email: "Fat.Tony@disney.com", roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"], status: "Active", team: "Streaming Revenue", title: "SVP, Distribution Strategy", region: "NA" },
+  { id: "u025", avatar: "avatars/photos/m19.png", name: "Dr. Hibbert", email: "Julius.Hibbert@disney.com", roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"], status: "Active", team: "Revenue Operations", title: "Manager, Revenue Analytics", region: "NA" },
+  { id: "u026", avatar: "avatars/photos/m20.png", name: "Professor Frink", email: "Professor.Frink@disney.com", roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Programmatic Sales", title: "Sr. Analyst, Programmatic Yield", region: "NA" },
+  { id: "u027", avatar: "avatars/photos/m21.png", name: "Barney Gumble", email: "Barney.Gumble@disney.com", roles: ["Campaign Planner", "Ad Operations Specialist"], status: "Inactive", team: "Addressable Ad Ops", title: "Coordinator, Campaign Delivery", region: "NA" },
+  { id: "u028", avatar: "avatars/photos/m22.png", name: "Sideshow Bob", email: "Sideshow.Bob@disney.com", roles: ["Read-Only Viewer", "Campaign Planner", "Planner"], status: "Active", team: "Agency Sales", title: "Director, Agency Development", region: "EMEA" },
+  { id: "u029", avatar: "avatars/photos/m23.png", name: "Kent Brockman", email: "Kent.Brockman@disney.com", roles: ["Core Planning Admin", "Planning Manager"], status: "Active", team: "Global Partnerships", title: "VP, Global Media Sales", region: "NA" },
+  { id: "u030", avatar: "avatars/photos/m24.png", name: "Otto Mann", email: "Otto.Mann@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Ad Sales Finance", title: "Associate, Accounts Receivable", region: "LATAM" },
 
   /* ── Page 4 ── */
-  { id: "u031", avatar: "avatars/photos/m25.png", name: "Mayor Quimby", email: "Mayor.Quimby@disney.com", roles: ["Strategy & Planning Manager", "Media Strategy Director"], status: "Active", team: "National Ad Sales", title: "SVP, Sales & Partnerships", region: "NA" },
-  { id: "u032", avatar: "avatars/photos/m26.png", name: "Hans Moleman", email: "Hans.Moleman@disney.com", roles: ["Billing Operations Specialist"], status: "Active", team: "Ad Sales Finance", title: "Associate, Billing Support", region: "NA" },
-  { id: "u033", avatar: "avatars/photos/m27.png", name: "Gil Gunderson", email: "Gil.Gunderson@disney.com", roles: ["Account Executive", "Sales Planner", "Client Partnerships Manager"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, New Business", region: "NA" },
-  { id: "u034", avatar: "avatars/photos/m28.png", name: "Rainier Wolfcastle", email: "Rainier.Wolfcastle@disney.com", roles: ["Campaign Manager", "Ad Ops Specialist", "Programmatic Specialist"], status: "Active", team: "Streaming Revenue", title: "Director, Content Partnerships", region: "EMEA" },
-  { id: "u035", avatar: "avatars/photos/m29.png", name: "Troy McClure", email: "Troy.McClure@disney.com", roles: ["Sales Planner", "Media Strategy Director"], status: "Active", team: "Digital Media Planning", title: "Manager, Cross-Platform Planning", region: "NA" },
-  { id: "u036", avatar: "avatars/photos/m30.png", name: "Disco Stu", email: "Disco.Stu@disney.com", roles: ["Ad Ops Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Analyst, Creative Ad Solutions", region: "LATAM" },
-  { id: "u037", avatar: "avatars/photos/m31.png", name: "Dr. Nick Riviera", email: "Nick.Riviera@disney.com", roles: ["Revenue Operations Analyst", "Billing Operations Specialist", "Finance Analyst", "Inventory Analyst"], status: "Active", team: "Revenue Operations", title: "Analyst, Revenue Reconciliation", region: "NA" },
-  { id: "u038", avatar: "avatars/photos/m32.png", name: "Kirk Van Houten", email: "Kirk.VanHouten@disney.com", roles: ["Yield Manager", "Inventory Analyst"], status: "Inactive", team: "Yield & Inventory", title: "Associate, Inventory Management", region: "NA" },
-  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten", email: "Luann.VanHouten@disney.com", roles: ["Account Manager", "Client Partnerships Manager"], status: "Active", team: "Agency Sales", title: "Manager, Client Relations", region: "ANZ" },
-  { id: "u040", avatar: "avatars/photos/f08.png", name: "Agnes Skinner", email: "Agnes.Skinner@disney.com", roles: ["Finance Analyst", "Revenue Operations Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Sr. Analyst, Financial Controls", region: "NA" },
+  { id: "u031", avatar: "avatars/photos/m25.png", name: "Mayor Quimby", email: "Mayor.Quimby@disney.com", roles: ["Planning Manager", "Planning Specialist"], status: "Active", team: "National Ad Sales", title: "SVP, Sales & Partnerships", region: "NA" },
+  { id: "u032", avatar: "avatars/photos/m26.png", name: "Hans Moleman", email: "Hans.Moleman@disney.com", roles: ["Operations Admin"], status: "Active", team: "Ad Sales Finance", title: "Associate, Billing Support", region: "NA" },
+  { id: "u033", avatar: "avatars/photos/m27.png", name: "Gil Gunderson", email: "Gil.Gunderson@disney.com", roles: ["Read-Only Viewer", "Planner", "Campaign Planner"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, New Business", region: "NA" },
+  { id: "u034", avatar: "avatars/photos/m28.png", name: "Rainier Wolfcastle", email: "Rainier.Wolfcastle@disney.com", roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Streaming Revenue", title: "Director, Content Partnerships", region: "EMEA" },
+  { id: "u035", avatar: "avatars/photos/m29.png", name: "Troy McClure", email: "Troy.McClure@disney.com", roles: ["Planner", "Planning Specialist"], status: "Active", team: "Digital Media Planning", title: "Manager, Cross-Platform Planning", region: "NA" },
+  { id: "u036", avatar: "avatars/photos/m30.png", name: "Disco Stu", email: "Disco.Stu@disney.com", roles: ["Ad Operations Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Analyst, Creative Ad Solutions", region: "LATAM" },
+  { id: "u037", avatar: "avatars/photos/m31.png", name: "Dr. Nick Riviera", email: "Nick.Riviera@disney.com", roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"], status: "Active", team: "Revenue Operations", title: "Analyst, Revenue Reconciliation", region: "NA" },
+  { id: "u038", avatar: "avatars/photos/m32.png", name: "Kirk Van Houten", email: "Kirk.VanHouten@disney.com", roles: ["Operations Admin", "Planning Specialist"], status: "Inactive", team: "Yield & Inventory", title: "Associate, Inventory Management", region: "NA" },
+  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten", email: "Luann.VanHouten@disney.com", roles: ["Planner", "Campaign Planner"], status: "Active", team: "Agency Sales", title: "Manager, Client Relations", region: "ANZ" },
+  { id: "u040", avatar: "avatars/photos/f08.png", name: "Agnes Skinner", email: "Agnes.Skinner@disney.com", roles: ["Read-Only Viewer", "TOM Admin"], status: "Active", team: "Addressable Ad Ops", title: "Sr. Analyst, Financial Controls", region: "NA" },
 
   /* ── Page 5 ── */
-  { id: "u041", avatar: "avatars/photos/m43.png", name: "Snake Jailbird", email: "Snake.Jailbird@disney.com", roles: ["Account Executive", "Account Manager", "Client Partnerships Manager"], status: "Active", team: "Programmatic Sales", title: "Coordinator, Programmatic Deals", region: "NA" },
-  { id: "u042", avatar: "avatars/photos/m44.png", name: "Jimbo Jones", email: "Jimbo.Jones@disney.com", roles: ["Ad Ops Specialist", "Campaign Manager"], status: "Active", team: "Addressable Ad Ops", title: "Analyst, Ad Targeting", region: "NA" },
-  { id: "u043", avatar: "avatars/photos/m45.png", name: "Dolph Starbeam", email: "Dolph.Starbeam@disney.com", roles: ["Campaign Manager", "Programmatic Specialist", "Ad Ops Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy", region: "EMEA" },
-  { id: "u044", avatar: "avatars/photos/f09.png", name: "Sherri Mackleberry", email: "Sherri.Mackleberry@disney.com", roles: ["Sales Planner"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Audience Strategy", region: "NA" },
-  { id: "u045", avatar: "avatars/photos/f10.png", name: "Terri Mackleberry", email: "Terri.Mackleberry@disney.com", roles: ["Sales Planner", "Media Strategy Director", "Strategy & Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Integrated Media", region: "NA" },
-  { id: "u046", avatar: "avatars/photos/m33.png", name: "Martin Prince", email: "Martin.Prince@disney.com", roles: ["Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Data Governance", region: "NA" },
-  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy", email: "Timothy.Lovejoy@disney.com", roles: ["Strategy & Planning Manager", "Client Partnerships Manager", "Media Strategy Director", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts", region: "ANZ" },
-  { id: "u048", avatar: "avatars/photos/m35.png", name: "Cletus Spuckler", email: "Cletus.Spuckler@disney.com", roles: ["Billing Operations Specialist", "Finance Analyst"], status: "Active", team: "Ad Sales Finance", title: "Coordinator, Invoice Processing", region: "NA" },
-  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan", email: "Cookie.Kwan@disney.com", roles: ["Account Manager"], status: "Active", team: "National Ad Sales", title: "Sr. Manager, Regional Sales", region: "ANZ" },
-  { id: "u050", avatar: "avatars/photos/f12.png", name: "Lindsey Naegle", email: "Lindsey.Naegle@disney.com", roles: ["Yield Manager", "Inventory Analyst", "Programmatic Specialist"], status: "Active", team: "Yield & Inventory", title: "Director, Yield Strategy", region: "NA" },
+  { id: "u041", avatar: "avatars/photos/m43.png", name: "Snake Jailbird", email: "Snake.Jailbird@disney.com", roles: ["Read-Only Viewer", "Planner", "Campaign Planner"], status: "Active", team: "Programmatic Sales", title: "Coordinator, Programmatic Deals", region: "NA" },
+  { id: "u042", avatar: "avatars/photos/m44.png", name: "Jimbo Jones", email: "Jimbo.Jones@disney.com", roles: ["Ad Operations Specialist", "Campaign Planner"], status: "Active", team: "Addressable Ad Ops", title: "Analyst, Ad Targeting", region: "NA" },
+  { id: "u043", avatar: "avatars/photos/m45.png", name: "Dolph Starbeam", email: "Dolph.Starbeam@disney.com", roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy", region: "EMEA" },
+  { id: "u044", avatar: "avatars/photos/f09.png", name: "Sherri Mackleberry", email: "Sherri.Mackleberry@disney.com", roles: ["Planner"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Audience Strategy", region: "NA" },
+  { id: "u045", avatar: "avatars/photos/f10.png", name: "Terri Mackleberry", email: "Terri.Mackleberry@disney.com", roles: ["Planner", "Planning Specialist", "Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Integrated Media", region: "NA" },
+  { id: "u046", avatar: "avatars/photos/m33.png", name: "Martin Prince", email: "Martin.Prince@disney.com", roles: ["Read-Only Viewer", "Planning Manager"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Data Governance", region: "NA" },
+  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy", email: "Timothy.Lovejoy@disney.com", roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts", region: "ANZ" },
+  { id: "u048", avatar: "avatars/photos/m35.png", name: "Cletus Spuckler", email: "Cletus.Spuckler@disney.com", roles: ["Operations Admin", "Read-Only Viewer"], status: "Active", team: "Ad Sales Finance", title: "Coordinator, Invoice Processing", region: "NA" },
+  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan", email: "Cookie.Kwan@disney.com", roles: ["Planner"], status: "Active", team: "National Ad Sales", title: "Sr. Manager, Regional Sales", region: "ANZ" },
+  { id: "u050", avatar: "avatars/photos/f12.png", name: "Lindsey Naegle", email: "Lindsey.Naegle@disney.com", roles: ["Operations Admin", "Planning Specialist", "TOM Admin"], status: "Active", team: "Yield & Inventory", title: "Director, Yield Strategy", region: "NA" },
 
   /* ── Page 6 ── */
-  { id: "u051", avatar: "avatars/photos/m36.png", name: "Lionel Hutz", email: "Lionel.Hutz@disney.com", roles: ["Account Executive"], status: "Active", team: "Client Partnerships", title: "Manager, Business Development", region: "NA" },
-  { id: "u052", avatar: "avatars/photos/f13.png", name: "Helen Lovejoy", email: "Helen.Lovejoy@disney.com", roles: ["Sales Planner", "Campaign Manager", "Media Strategy Director"], status: "Active", team: "Agency Sales", title: "Sr. Planner, Agency Investment", region: "EMEA" },
-  { id: "u053", avatar: "avatars/photos/m37.png", name: "Artie Ziff", email: "Artie.Ziff@disney.com", roles: ["Strategy & Planning Manager", "Core Planning Admin"], status: "Active", team: "Streaming Revenue", title: "VP, Digital Revenue", region: "NA" },
-  { id: "u054", avatar: "avatars/photos/f14.png", name: "Ruth Powers", email: "Ruth.Powers@disney.com", roles: ["Revenue Operations Analyst", "Billing Operations Specialist"], status: "Active", team: "Revenue Operations", title: "Manager, Revenue Systems", region: "NA" },
-  { id: "u055", avatar: "avatars/photos/m38.png", name: "Herman Hermann", email: "Herman.Hermann@disney.com", roles: ["Finance Analyst", "Billing Operations Specialist", "Revenue Operations Analyst", "Inventory Analyst"], status: "Inactive", team: "Ad Sales Finance", title: "Analyst, Cost Allocation", region: "LATAM" },
-  { id: "u056", avatar: "avatars/photos/m39.png", name: "Wendell Borton", email: "Wendell.Borton@disney.com", roles: ["Ad Ops Specialist", "Programmatic Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Associate, Creative Operations", region: "NA" },
-  { id: "u057", avatar: "avatars/photos/m40.png", name: "Lyle Lanley", email: "Lyle.Lanley@disney.com", roles: ["Campaign Manager", "Strategy & Planning Manager", "Sales Planner"], status: "Active", team: "Programmatic Sales", title: "Sr. Manager, Programmatic Sales", region: "NA" },
-  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark", email: "Lewis.Clark@disney.com", roles: ["Yield Manager"], status: "Inactive", team: "Yield & Inventory", title: "Analyst, Inventory Forecasting", region: "ANZ" },
-  { id: "u059", avatar: "avatars/photos/m42.png", name: "Kearney Zzyzwicz", email: "Kearney.Zzyzwicz@disney.com", roles: ["Account Manager", "Client Partnerships Manager", "Account Executive"], status: "Active", team: "Global Partnerships", title: "Coordinator, Partner Relations", region: "EMEA" },
-  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon", email: "Manjula.Nahasapeemapetilon@disney.com", roles: ["Billing Operations Specialist", "Revenue Operations Analyst", "Finance Analyst"], status: "Active", team: "Addressable Ad Ops", title: "Lead, Operations Support", region: "ANZ" }
+  { id: "u051", avatar: "avatars/photos/m36.png", name: "Lionel Hutz", email: "Lionel.Hutz@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Client Partnerships", title: "Manager, Business Development", region: "NA" },
+  { id: "u052", avatar: "avatars/photos/f13.png", name: "Helen Lovejoy", email: "Helen.Lovejoy@disney.com", roles: ["Planner", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Agency Sales", title: "Sr. Planner, Agency Investment", region: "EMEA" },
+  { id: "u053", avatar: "avatars/photos/m37.png", name: "Artie Ziff", email: "Artie.Ziff@disney.com", roles: ["Planning Manager", "Core Planning Admin"], status: "Active", team: "Streaming Revenue", title: "VP, Digital Revenue", region: "NA" },
+  { id: "u054", avatar: "avatars/photos/f14.png", name: "Ruth Powers", email: "Ruth.Powers@disney.com", roles: ["Read-Only Viewer", "Operations Admin"], status: "Active", team: "Revenue Operations", title: "Manager, Revenue Systems", region: "NA" },
+  { id: "u055", avatar: "avatars/photos/m38.png", name: "Herman Hermann", email: "Herman.Hermann@disney.com", roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"], status: "Inactive", team: "Ad Sales Finance", title: "Analyst, Cost Allocation", region: "LATAM" },
+  { id: "u056", avatar: "avatars/photos/m39.png", name: "Wendell Borton", email: "Wendell.Borton@disney.com", roles: ["Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Associate, Creative Operations", region: "NA" },
+  { id: "u057", avatar: "avatars/photos/m40.png", name: "Lyle Lanley", email: "Lyle.Lanley@disney.com", roles: ["Campaign Planner", "Planning Manager", "Planner"], status: "Active", team: "Programmatic Sales", title: "Sr. Manager, Programmatic Sales", region: "NA" },
+  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark", email: "Lewis.Clark@disney.com", roles: ["Operations Admin"], status: "Inactive", team: "Yield & Inventory", title: "Analyst, Inventory Forecasting", region: "ANZ" },
+  { id: "u059", avatar: "avatars/photos/m42.png", name: "Kearney Zzyzwicz", email: "Kearney.Zzyzwicz@disney.com", roles: ["Planner", "Campaign Planner", "Read-Only Viewer"], status: "Active", team: "Global Partnerships", title: "Coordinator, Partner Relations", region: "EMEA" },
+  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon", email: "Manjula.Nahasapeemapetilon@disney.com", roles: ["Operations Admin", "Read-Only Viewer", "Planner"], status: "Active", team: "Addressable Ad Ops", title: "Lead, Operations Support", region: "ANZ" }
 ];
 
 var ORIGINAL_ORDER = DATA.slice();
 var TOTAL_ITEMS = 610;
+/* Session-added users (Add User flow) — same image for every new row until page refresh. */
+var DEFAULT_ADD_USER_AVATAR = "avatars/default-add-user.png";
 var currentPage = 1;
 var pageSize = 10;
 var sortKey = null;
@@ -220,12 +222,22 @@ var ROLE_FUNCTION_MAP = {
       "planning_plan_list","planning_lineitem_list"
     ]
   },
-  r007: { /* Regional Planning Specialist */
+  r013: { /* Campaign Planner */
     "Core Planning": [
       "planning_order_list","planning_order_create","planning_order_update",
       "planning_plan_list","planning_plan_create","planning_plan_update",
       "planning_lineitem_list","planning_lineitem_create","planning_lineitem_update"
-    ]
+    ],
+    "Disney Ads Agent": ["media_plan_queries","forecasting_queries","planning_activity_summaries"]
+  },
+  r014: { /* Ad Operations Specialist */
+    "Core Planning": [
+      "planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_assign",
+      "planning_plan_list","planning_plan_get","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_get","planning_lineitem_update"
+    ],
+    "Disney Ads Agent": ["media_plan_queries","forecasting_queries","planning_activity_summaries","approval_io_comparisons"],
+    "IAM": ["iam_user_list","iam_role_list","iam_analytics_get"]
   },
   r008: { /* Read-Only Viewer */
     "Core Planning": ["planning_order_list","planning_plan_list","planning_lineitem_list"]
@@ -235,17 +247,6 @@ var ROLE_FUNCTION_MAP = {
   },
   r010: { /* TOM Admin */
     "TOM": FUNCTION_REGISTRY["TOM"].slice()
-  },
-  r011: { /* Programmatic Specialist */
-    "Core Planning": [
-      "planning_order_list","planning_order_get","planning_order_create","planning_order_update","planning_order_assign",
-      "planning_plan_list","planning_plan_get","planning_plan_update",
-      "planning_lineitem_list","planning_lineitem_get","planning_lineitem_update"
-    ]
-  },
-  r012: { /* Support Admin */
-    "Core Planning": ["planning_order_list","planning_order_get","planning_order_comment","planning_plan_list","planning_lineitem_list"],
-    "IAM": ["iam_user_list","iam_user_get","iam_analytics_get"]
   }
 };
 
@@ -256,12 +257,11 @@ var ROLE_ACCESS_LEVELS = {
   r004: { "Core Planning": "Edit" },
   r005: { "Core Planning": "Edit" },
   r006: { "Core Planning": "Approve" },
-  r007: { "Core Planning": "Edit" },
+  r013: { "Core Planning": "Edit", "Disney Ads Agent": "Edit" },
+  r014: { "Core Planning": "Edit", "Disney Ads Agent": "Full Access", "IAM": "View Only" },
   r008: { "Core Planning": "View Only" },
   r009: { "ICM": "Full Access" },
-  r010:{ "TOM": "Full Access" },
-  r011:{ "Core Planning": "Custom" },
-  r012:{ "Core Planning": "Custom", "IAM": "Custom" }
+  r010:{ "TOM": "Full Access" }
 };
 
 var FUNCTION_LABEL_MAP = {
@@ -327,14 +327,32 @@ var ROLES_PERMISSIONS_DATA = [
   { id: "r004", role: "Planner", description: "Builds and updates planning objects without approval or deletion rights.", status: "Standard", createdBy: "Kent Brockman", createDate: "01/25/2026", functions: buildRoleFunctions("r004") },
   { id: "r005", role: "Planning Specialist", description: "Performs detailed planning updates including line-item level edits.", status: "Standard", createdBy: "Kent Brockman", createDate: "01/28/2026", functions: buildRoleFunctions("r005") },
   { id: "r006", role: "Planning Manager", description: "Reviews plans and executes approval workflows for planning governance.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/02/2026", functions: buildRoleFunctions("r006") },
-  { id: "r007", role: "Regional Planning Specialist", description: "Executes planning edits constrained to regional data accessibility.", status: "Regional", createdBy: "Timothy Lovejoy", createDate: "02/06/2026", functions: buildRoleFunctions("r007") },
+  { id: "r013", role: "Campaign Planner", description: "Builds and updates campaign plans, manages planning inputs, and prepares campaigns for execution without approval authority.", status: "Standard", createdBy: "Kent Brockman", createDate: "02/07/2026", functions: buildRoleFunctions("r013") },
+  { id: "r014", role: "Ad Operations Specialist", description: "Executes and manages live campaigns, handles trafficking, monitoring, and optimization tasks across active orders.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/09/2026", functions: buildRoleFunctions("r014") },
   { id: "r008", role: "Read-Only Viewer", description: "Provides read-only visibility across planning entities and details.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/10/2026", functions: buildRoleFunctions("r008") },
   { id: "r009", role: "ICM Admin", description: "Maintains Inventory Catalog Manager offerings and sales package access.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/14/2026", functions: buildRoleFunctions("r009") },
-  { id: "r010", role: "TOM Admin", description: "Administers Target Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") },
-  { id: "r011", role: "Programmatic Specialist", description: "Supports programmatic deal setup with controlled planning edits.", status: "Standard", createdBy: "Artie Ziff", createDate: "02/24/2026", functions: buildRoleFunctions("r011") },
-  { id: "r012", role: "Support Admin", description: "Troubleshoots user access issues with limited IAM and planning scope.", status: "Standard", createdBy: "Waylon Smithers", createDate: "03/01/2026", functions: buildRoleFunctions("r012") }
+  { id: "r010", role: "TOM Admin", description: "Administers Target Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") }
 ];
 var RP_ORIGINAL_ORDER = ROLES_PERMISSIONS_DATA.slice();
+
+/** Canonical IAM role names — single source with `ROLES_PERMISSIONS_DATA` (R&P table, filters, Add User). */
+function getIAMRoleNamesInTableOrder() {
+  var names = [];
+  for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
+    names.push(ROLES_PERMISSIONS_DATA[i].role);
+  }
+  return names;
+}
+
+/** Users filter → Role combo options (same order as R&P table). */
+function buildUserRoleFilterOptions() {
+  var opts = [];
+  var names = getIAMRoleNamesInTableOrder();
+  for (var j = 0; j < names.length; j++) {
+    opts.push({ value: names[j], label: names[j] });
+  }
+  return opts;
+}
 
 var rpCurrentPage = 1;
 var rpPageSize = 10;
@@ -436,6 +454,11 @@ function renderAvatarHtml(user, forceInitials) {
     '</div>';
 }
 
+/** In-memory-only users created via Add User (`u_local_*` ids) — always show photo avatar. */
+function isSessionAddedUser(user) {
+  return !!(user && typeof user.id === "string" && user.id.indexOf("u_local_") === 0);
+}
+
 function hasActiveFilters() {
   return searchTerm || filters.name || filters.email || filters.role ||
     filters.status || filters.team || filters.title || filters.region;
@@ -496,6 +519,13 @@ function getPageData() {
   return filtered.slice(start, Math.min(end, filtered.length));
 }
 
+function findUserInOriginalById(userId) {
+  for (var ui = 0; ui < ORIGINAL_ORDER.length; ui++) {
+    if (ORIGINAL_ORDER[ui].id === userId) return ORIGINAL_ORDER[ui];
+  }
+  return null;
+}
+
 /* Status cell — icon + text, no chip/pill/badge. Uses the exact 16x16
    Figma SVGs for Active (green check-circle) and Inactive (red no-entry).
    Alignment rules applied uniformly to both variants so they center
@@ -549,9 +579,10 @@ function renderTable() {
        so the fitter can reconstruct them after pagination/filter/
        tab-switch/resize without re-querying the data array. */
     var rolesAttr = u.roles.join("|");
+    var editHint = "Edit user " + u.name;
     html += '<tr data-id="' + esc(u.id) + '">' +
-      '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, currentPage === 2) +
-        '<span class="name-link" title="' + esc(u.name) + '">' + esc(u.name) + '</span></div></td>' +
+      '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, currentPage === 2 && !isSessionAddedUser(u)) +
+        '<a class="name-link" href="#" data-user-id="' + esc(u.id) + '" title="' + esc(u.name) + '" aria-label="' + esc(editHint) + '">' + esc(u.name) + "</a></div></td>" +
       '<td class="c-em" title="' + esc(u.email) + '">' + esc(u.email) + '</td>' +
       '<td class="c-rl" title="' + esc(u.roles.join(', ')) + '" data-roles="' + esc(rolesAttr) + '"><span class="role-txt">' + esc(u.roles.join(', ')) + '</span></td>' +
       '<td class="c-st">' + renderStatusHtml(u.status) + '</td>' +
@@ -728,6 +759,24 @@ function applySort(key) {
   renderTable();
   renderPagination();
   updateSortHeaders();
+}
+
+/** Rebuild `DATA` from `ORIGINAL_ORDER` using the current sort (no sort-key toggle). */
+function reapplyUserDatasetOrder() {
+  if (!sortKey) {
+    DATA = ORIGINAL_ORDER.slice();
+  } else {
+    DATA = ORIGINAL_ORDER.slice();
+    DATA.sort(function (a, b) {
+      var va = sortKey === "role" ? (a.roles[0] || "") : (a[sortKey] || "");
+      var vb = sortKey === "role" ? (b.roles[0] || "") : (b[sortKey] || "");
+      va = va.toLowerCase();
+      vb = vb.toLowerCase();
+      if (va < vb) return sortDir === "asc" ? -1 : 1;
+      if (va > vb) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+  }
 }
 
 function updateSortHeaders() {
@@ -1366,26 +1415,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "Media Plans": ["View", "Edit"],
         "Line Items": ["View", "Edit"]
       }
-    },
-    r011: {
-      "Core Planning": {
-        Orders: ["View", "Create", "Edit", "Assign"],
-        "Media Plans": ["View", "Edit"],
-        "Line Items": ["View", "Edit"]
-      }
-    },
-    r012: {
-      "Core Planning": {
-        Orders: ["View", "Edit"],
-        "Media Plans": ["View", "Edit"],
-        "Line Items": ["View"]
-      },
-      "IAM": {
-        Roles: ["View"],
-        Users: ["View", "Edit", "Impersonate users"],
-        Analytics: ["View"],
-        "Admin Actions": []
-      }
     }
   };
 
@@ -1774,6 +1803,8 @@ document.addEventListener("DOMContentLoaded", function () {
     closeAllPgnDd();
     var aup = document.getElementById("addUsersPage");
     if (!aup || aup.style.display === "none") return;
+    if (typeof window.__closeAuRemoveUserModal === "function") window.__closeAuRemoveUserModal();
+    if (typeof window.__closeAllAddUserCombos === "function") window.__closeAllAddUserCombos();
     var openDd = aup.querySelectorAll(".cr-dd.open");
     for (var oi = 0; oi < openDd.length; oi++) {
       detachCrDdLayeredMenu(openDd[oi]);
@@ -1898,30 +1929,58 @@ document.addEventListener("DOMContentLoaded", function () {
      selection is written into, and `onChange` is the callback that fires
      after each selection — Users passes `filters` + `applyFiltersLive`,
      R&P passes its draft object + a no-op (commit happens only on Apply). */
-  function initCombo(containerId, options, filterKey, allLabel, filterObj, onChange) {
+  function initCombo(containerId, options, filterKey, allLabel, filterObj, onChange, menuExtraClass) {
     if (!filterObj) filterObj = filters;
     if (!onChange) onChange = applyFiltersLive;
     var container = document.getElementById(containerId);
-    var selectedValue = "";
+    if (!container) {
+      function noop() {}
+      noop.setOptions = noop;
+      noop.close = noop;
+      noop.setDisabled = noop;
+      return noop;
+    }
+    var optionList = options && options.slice ? options.slice() : (options || []);
+    var selectedValue = (filterObj[filterKey] != null && filterObj[filterKey] !== "")
+      ? String(filterObj[filterKey])
+      : "";
     var kbIndex = -1;
     var isOpen = false;
+    var inputId = containerId + "-ctl";
+    var menuClass = "edl-combo-menu";
+    if (menuExtraClass) menuClass += " " + menuExtraClass;
+    else if (containerId === "roleCombo") menuClass += " edl-combo-menu--iam-roles";
 
     container.innerHTML =
       '<div class="edl-combo-input-wrap">' +
-        '<input type="text" class="edl-combo-input" placeholder="' + esc(allLabel) + '" autocomplete="off">' +
+        '<input type="text" id="' + esc(inputId) + '" class="edl-combo-input" placeholder="' + esc(allLabel) + '" autocomplete="off">' +
         '<button type="button" class="edl-combo-clear hidden" aria-label="Clear">' + CLEAR_SVG + '</button>' +
         '<button type="button" class="edl-combo-toggle" aria-label="Toggle dropdown">' + CHEV_SVG + '</button>' +
       '</div>';
 
     var menu = document.createElement("div");
-    menu.className = "edl-combo-menu";
+    menu.className = menuClass;
     document.body.appendChild(menu);
 
     var input = container.querySelector(".edl-combo-input");
     var clearBtn = container.querySelector(".edl-combo-clear");
     var toggleBtn = container.querySelector(".edl-combo-toggle");
 
-    function getVisibleItems() { return menu.querySelectorAll(".edl-combo-item:not([style*='display: none'])"); }
+    function labelForValue(val) {
+      if (val === undefined || val === null || val === "") return "";
+      for (var li = 0; li < optionList.length; li++) {
+        if (String(optionList[li].value) === String(val)) return optionList[li].label;
+      }
+      return String(val);
+    }
+
+    function getDisplayLabel() {
+      return selectedValue ? labelForValue(selectedValue) : "";
+    }
+
+    function getVisibleItems() {
+      return menu.querySelectorAll(".edl-combo-item:not([style*='display: none']):not(.is-disabled)");
+    }
 
     function positionMenu() {
       var rect = input.getBoundingClientRect();
@@ -1933,19 +1992,26 @@ document.addEventListener("DOMContentLoaded", function () {
     function renderMenu(filterText) {
       var q = (filterText || "").toLowerCase();
       var html = "";
-      for (var i = 0; i < options.length; i++) {
-        var opt = options[i];
+      if (!optionList.length) {
+        menu.innerHTML = '<div class="edl-combo-empty">No matches</div>';
+        kbIndex = -1;
+        return;
+      }
+      for (var i = 0; i < optionList.length; i++) {
+        var opt = optionList[i];
         var match = !q || opt.label.toLowerCase().indexOf(q) !== -1;
-        html += '<div class="edl-combo-item' + (opt.value === selectedValue ? ' selected' : '') + '"' +
+        var dis = !!opt.disabled;
+        html += '<div class="edl-combo-item' + (dis ? " is-disabled" : "") + (String(opt.value) === String(selectedValue) ? " selected" : "") + '"' +
           ' data-value="' + esc(opt.value) + '"' +
-          (match ? '' : ' style="display:none"') + '>' +
-          '<span>' + esc(opt.label) + '</span>' +
+          (dis ? ' aria-disabled="true"' : "") +
+          (match ? "" : ' style="display:none"') + ">" +
+          "<span>" + esc(opt.label) + "</span>" +
           CHECK_SVG +
-        '</div>';
+        "</div>";
       }
       var visible = 0;
-      for (var j = 0; j < options.length; j++) {
-        if (!q || options[j].label.toLowerCase().indexOf(q) !== -1) visible++;
+      for (var j = 0; j < optionList.length; j++) {
+        if (!q || optionList[j].label.toLowerCase().indexOf(q) !== -1) visible++;
       }
       if (visible === 0) html += '<div class="edl-combo-empty">No matches</div>';
       menu.innerHTML = html;
@@ -1953,6 +2019,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function openMenu() {
+      if (input.disabled) return;
       if (isOpen) return;
       isOpen = true;
       var openMenus = document.querySelectorAll(".edl-combo-menu.open");
@@ -1975,21 +2042,15 @@ document.addEventListener("DOMContentLoaded", function () {
       updateClear();
     }
 
-    function getDisplayLabel() { return selectedValue || ""; }
-
     function updateClear() {
       clearBtn.classList.toggle("hidden", !selectedValue);
-      if (!selectedValue) {
-        input.placeholder = allLabel;
-      } else {
-        input.placeholder = allLabel;
-      }
+      input.placeholder = allLabel;
     }
 
     function selectValue(val) {
-      selectedValue = val;
-      filterObj[filterKey] = val;
-      input.value = val || "";
+      selectedValue = val != null && val !== "" ? String(val) : "";
+      filterObj[filterKey] = selectedValue;
+      input.value = getDisplayLabel();
       updateClear();
       onChange();
     }
@@ -2003,20 +2064,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     input.addEventListener("focus", function () {
-      if (selectedValue && input.value === selectedValue) input.select();
+      if (input.disabled) return;
+      if (selectedValue && input.value === getDisplayLabel()) input.select();
       openMenu();
     });
 
     input.addEventListener("click", function () {
+      if (input.disabled) return;
       if (!isOpen) openMenu();
     });
 
     input.addEventListener("input", function () {
+      if (input.disabled) return;
       if (!isOpen) openMenu();
       renderMenu(this.value);
     });
 
     input.addEventListener("keydown", function (e) {
+      if (input.disabled) return;
       if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
         e.preventDefault();
         openMenu();
@@ -2027,10 +2092,12 @@ document.addEventListener("DOMContentLoaded", function () {
       var count = items.length;
       if (e.key === "ArrowDown") {
         e.preventDefault();
+        if (!count) return;
         kbIndex = (kbIndex + 1) % count;
         updateKbHighlight();
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
+        if (!count) return;
         kbIndex = (kbIndex - 1 + count) % count;
         updateKbHighlight();
       } else if (e.key === "Enter") {
@@ -2048,11 +2115,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     toggleBtn.addEventListener("mousedown", function (e) {
       e.preventDefault();
+      if (input.disabled) return;
       if (isOpen) { closeMenu(); input.blur(); } else { input.focus(); }
     });
 
     clearBtn.addEventListener("mousedown", function (e) {
       e.preventDefault();
+      if (input.disabled) return;
       selectValue("");
       input.value = "";
       input.focus();
@@ -2062,7 +2131,7 @@ document.addEventListener("DOMContentLoaded", function () {
     menu.addEventListener("mousedown", function (e) {
       e.preventDefault();
       var item = e.target.closest(".edl-combo-item");
-      if (!item) return;
+      if (!item || item.classList.contains("is-disabled")) return;
       selectValue(item.getAttribute("data-value"));
       closeMenu();
       input.blur();
@@ -2070,7 +2139,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     menu.addEventListener("mousemove", function (e) {
       var item = e.target.closest(".edl-combo-item");
-      if (!item) return;
+      if (!item || item.classList.contains("is-disabled")) return;
       var items = getVisibleItems();
       for (var i = 0; i < items.length; i++) {
         if (items[i] === item) { kbIndex = i; break; }
@@ -2083,34 +2152,46 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function setValue(val) {
-      selectedValue = val;
-      input.value = val || "";
+      selectedValue = val != null && val !== "" ? String(val) : "";
+      filterObj[filterKey] = selectedValue;
+      input.value = getDisplayLabel();
       updateClear();
       renderMenu("");
     }
 
+    setValue.setOptions = function (newOpts) {
+      optionList = newOpts && newOpts.slice ? newOpts.slice() : (newOpts || []);
+      var still = false;
+      for (var vi = 0; vi < optionList.length; vi++) {
+        if (String(optionList[vi].value) === String(selectedValue)) { still = true; break; }
+      }
+      if (!still) {
+        selectedValue = "";
+        filterObj[filterKey] = "";
+      }
+      input.value = getDisplayLabel();
+      updateClear();
+      renderMenu("");
+    };
+
+    setValue.close = function () {
+      closeMenu();
+    };
+
+    setValue.setDisabled = function (dis) {
+      var off = !!dis;
+      input.disabled = off;
+      toggleBtn.disabled = off;
+      clearBtn.disabled = off;
+      if (off) closeMenu();
+    };
+
+    input.value = getDisplayLabel();
     updateClear();
     renderMenu("");
     return setValue;
   }
 
-  var roleOptions = [
-    { value: "Account Executive", label: "Account Executive" },
-    { value: "Account Manager", label: "Account Manager" },
-    { value: "Ad Ops Specialist", label: "Ad Ops Specialist" },
-    { value: "Billing Operations Specialist", label: "Billing Operations Specialist" },
-    { value: "Campaign Manager", label: "Campaign Manager" },
-    { value: "Client Partnerships Manager", label: "Client Partnerships Manager" },
-    { value: "Core Planning Admin", label: "Core Planning Admin" },
-    { value: "Finance Analyst", label: "Finance Analyst" },
-    { value: "Inventory Analyst", label: "Inventory Analyst" },
-    { value: "Media Strategy Director", label: "Media Strategy Director" },
-    { value: "Programmatic Specialist", label: "Programmatic Specialist" },
-    { value: "Revenue Operations Analyst", label: "Revenue Operations Analyst" },
-    { value: "Sales Planner", label: "Sales Planner" },
-    { value: "Strategy & Planning Manager", label: "Strategy & Planning Manager" },
-    { value: "Yield Manager", label: "Yield Manager" }
-  ];
   var statusOptions = [
     { value: "Active", label: "Active" },
     { value: "Inactive", label: "Inactive" }
@@ -2122,7 +2203,7 @@ document.addEventListener("DOMContentLoaded", function () {
     { value: "LATAM", label: "LATAM" }
   ];
 
-  var setRole   = initCombo("roleCombo",   roleOptions,   "role",   "All Roles");
+  var setRole   = initCombo("roleCombo",   buildUserRoleFilterOptions(), "role",   "All Roles", filters, applyFiltersLive, "edl-combo-menu--iam-roles");
   var setStatus = initCombo("statusCombo", statusOptions, "status", "All Statuses");
   var setRegion = initCombo("regionCombo", regionOptions, "region", "All Regions");
 
@@ -2367,10 +2448,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var auBack = document.getElementById("auBack");
     var auCancel = document.getElementById("auCancel");
     var auSave = document.getElementById("auSave");
-    var auRoleDD = document.getElementById("auRoleDD");
-    var auRoleTrigger = document.getElementById("auRoleTrigger");
-    var auRoleValue = document.getElementById("auRoleValue");
-    var auRoleMenu = document.getElementById("auRoleMenu");
+    var auPageTitle = document.getElementById("auPageTitle");
+    var auPageSubtitle = document.getElementById("auPageSubtitle");
+    var auRemoveUser = document.getElementById("auRemoveUser");
+    var auRoleComboEl = document.getElementById("auRoleCombo");
     var auRoleAdd = document.getElementById("auRoleAdd");
     var auRoleCards = document.getElementById("auRoleCards");
 
@@ -2381,30 +2462,47 @@ document.addEventListener("DOMContentLoaded", function () {
     var auRegion = document.getElementById("auRegion");
     var auTimezone = document.getElementById("auTimezone");
     var auTeam = document.getElementById("auTeam");
-    var auRegionDD = document.getElementById("auRegionDD");
-    var auRegionTrigger = document.getElementById("auRegionTrigger");
-    var auRegionValue = document.getElementById("auRegionValue");
-    var auRegionMenu = document.getElementById("auRegionMenu");
-    var auTimezoneDD = document.getElementById("auTimezoneDD");
-    var auTimezoneTrigger = document.getElementById("auTimezoneTrigger");
-    var auTimezoneValue = document.getElementById("auTimezoneValue");
-    var auTimezoneMenu = document.getElementById("auTimezoneMenu");
-    var auTeamDD = document.getElementById("auTeamDD");
-    var auTeamTrigger = document.getElementById("auTeamTrigger");
-    var auTeamValue = document.getElementById("auTeamValue");
-    var auTeamMenu = document.getElementById("auTeamMenu");
     var auStatusValue = document.getElementById("auStatusValue");
     var auStatusSeg = document.getElementById("auStatusSeg");
     var auBasicCard = document.getElementById("auBasicCard");
     var auRolesCard = document.getElementById("auRolesCard");
     var auBasicSummary = document.getElementById("auBasicSummary");
     var auRolesSummary = document.getElementById("auRolesSummary");
+    var auInactiveConfirmBackdrop = document.getElementById("auInactiveConfirmBackdrop");
+    var auInactiveConfirmCancel = document.getElementById("auInactiveConfirmCancel");
+    var auInactiveConfirmPrimary = document.getElementById("auInactiveConfirmPrimary");
+    var auInactiveConfirmLastFocus = null;
+    var auRemoveUserBackdrop = document.getElementById("auRemoveUserBackdrop");
+    var auRemoveUserCancel = document.getElementById("auRemoveUserCancel");
+    var auRemoveUserConfirm = document.getElementById("auRemoveUserConfirm");
+    var auRemoveUserTitle = document.getElementById("auRemoveUserTitle");
+    var auRemoveUserBody = document.getElementById("auRemoveUserBody");
+    var auRemoveUserLastFocus = null;
 
     var auState = {
       selectedRoleId: "",
       selectedRoleIds: [],
       expandedRoleId: null
     };
+
+    var auComboState = {
+      addUserRegion: (auRegion && auRegion.value) || "NA",
+      addUserTimezone: (auTimezone && auTimezone.value) || "America/New_York",
+      addUserTeam: (auTeam && auTeam.value) || "",
+      addUserRolePick: ""
+    };
+    var setAuRegionCombo = null;
+    var setAuTimezoneCombo = null;
+    var setAuTeamCombo = null;
+    var setAuRoleCombo = null;
+
+    var auPageMode = "add";
+    var auEditingUserId = null;
+    var auEditBaselineJson = "";
+    var auEditOriginalTitle = "";
+    var auEditingDisplayName = "";
+    var AU_PAGE_TITLE_ADD = "Add users";
+    var AU_PAGE_SUB_ADD = "Capture user details and assign access for Atlas";
 
     var AU_REGION_TIMEZONES = {
       NA: [
@@ -2450,16 +2548,23 @@ document.addEventListener("DOMContentLoaded", function () {
       ANZ: "ANZ"
     };
 
+    /* Add User → Team list: AU_TEAM_NAMES (EDL combo options). */
     var AU_TEAM_NAMES = [
-      "National Ad Sales",
-      "Digital Media Planning",
+      "National Sales",
+      "Local Sales",
+      "Integrated Marketing & Sales",
       "Client Partnerships",
-      "Streaming Revenue",
-      "Ad Solutions & Innovation",
-      "Yield & Inventory",
       "Programmatic Sales",
-      "Revenue Operations",
-      "Ad Sales Finance"
+      "Sports Ad Sales",
+      "Entertainment Ad Sales",
+      "Kids & Family Ad Sales",
+      "Streaming/Streaming Ad Sales",
+      "Direct Response Sales",
+      "Sales Solutions & Strategy",
+      "Ad Operations & Yield Management",
+      "International Sales",
+      "Digital Ad Sales",
+      "Agency Partnerships"
     ];
 
     var TRASH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
@@ -2474,79 +2579,39 @@ document.addEventListener("DOMContentLoaded", function () {
       return "NA";
     }
 
-    function closeAuDd(dd) {
-      if (!dd) return;
-      detachCrDdLayeredMenu(dd);
-      dd.classList.remove("open");
-      var tr = dd.querySelector(".cr-dd-trigger");
-      if (tr) tr.setAttribute("aria-expanded", "false");
+    function closeAllAddUserCombos() {
+      if (setAuRegionCombo && setAuRegionCombo.close) setAuRegionCombo.close();
+      if (setAuTimezoneCombo && setAuTimezoneCombo.close) setAuTimezoneCombo.close();
+      if (setAuTeamCombo && setAuTeamCombo.close) setAuTeamCombo.close();
+      if (setAuRoleCombo && setAuRoleCombo.close) setAuRoleCombo.close();
     }
 
-    function closeAllAddUserDd() {
-      var list = [auRegionDD, auTimezoneDD, auTeamDD, auRoleDD];
-      for (var ci = 0; ci < list.length; ci++) {
-        if (list[ci]) closeAuDd(list[ci]);
-      }
-    }
-
-    function toggleAuDd(dd) {
-      if (!dd) return;
-      var tr = dd.querySelector(".cr-dd-trigger");
-      if (dd.classList.contains("open")) {
-        closeAuDd(dd);
-        return;
-      }
-      closeAllAddUserDd();
-      dd.classList.add("open");
-      if (tr) tr.setAttribute("aria-expanded", "true");
-      attachCrDdLayeredMenu(dd);
-    }
-
-    function ensureAuRegionMenu() {
-      if (!auRegionMenu || auRegionMenu.getAttribute("data-built") === "1") return;
-      auRegionMenu.setAttribute("data-built", "1");
+    function buildAuRegionOptions() {
       var order = ["NA", "LATAM", "EMEA", "ANZ"];
-      var h = "";
+      var out = [];
       for (var ri = 0; ri < order.length; ri++) {
         var rk = order[ri];
-        h += '<div class="cr-dd-option" role="option" data-au-region="' + esc(rk) + '">' + esc(AU_REGION_LABELS[rk]) + "</div>";
+        out.push({ value: rk, label: AU_REGION_LABELS[rk] });
       }
-      auRegionMenu.innerHTML = h;
+      return out;
     }
 
-    function syncAuRegionUi() {
-      if (!auRegionValue) return;
-      var v = (auRegion && auRegion.value) || "NA";
-      auRegionValue.textContent = AU_REGION_LABELS[v] || v;
-      if (!auRegionMenu) return;
-      var ro = auRegionMenu.querySelectorAll("[data-au-region]");
-      for (var i = 0; i < ro.length; i++) {
-        ro[i].classList.toggle("is-selected", ro[i].getAttribute("data-au-region") === v);
-      }
-    }
-
-    function ensureAuTeamMenu() {
-      if (!auTeamMenu || auTeamMenu.getAttribute("data-built") === "1") return;
-      auTeamMenu.setAttribute("data-built", "1");
-      var h = "";
+    function buildAuTeamOptions() {
+      var out = [];
       for (var ti = 0; ti < AU_TEAM_NAMES.length; ti++) {
         var nm = AU_TEAM_NAMES[ti];
-        h += '<div class="cr-dd-option" role="option" data-au-team="' + esc(nm) + '">' + esc(nm) + "</div>";
+        out.push({ value: nm, label: nm });
       }
-      auTeamMenu.innerHTML = h;
+      return out;
     }
 
-    function syncAuTeamUi() {
-      var v = auTeam ? (auTeam.value || "").trim() : "";
-      if (auTeamValue) {
-        auTeamValue.textContent = v ? v : "Select team";
-        auTeamValue.classList.toggle("is-placeholder", !v);
+    function buildAuTimezoneOptions(rkey) {
+      var opts = AU_REGION_TIMEZONES[rkey] || AU_REGION_TIMEZONES.NA;
+      var arr = [];
+      for (var i = 0; i < opts.length; i++) {
+        arr.push({ value: opts[i], label: opts[i] });
       }
-      if (!auTeamMenu) return;
-      var to = auTeamMenu.querySelectorAll("[data-au-team]");
-      for (var j = 0; j < to.length; j++) {
-        to[j].classList.toggle("is-selected", to[j].getAttribute("data-au-team") === v);
-      }
+      return arr;
     }
 
     function renderAUTimezones(regionKey, preferredTimezone) {
@@ -2554,14 +2619,70 @@ document.addEventListener("DOMContentLoaded", function () {
       var current = preferredTimezone || (auTimezone && auTimezone.value) || "";
       var chosen = (current && opts.indexOf(current) !== -1) ? current : opts[0];
       if (auTimezone) auTimezone.value = chosen;
-      var html = "";
-      for (var i = 0; i < opts.length; i++) {
-        var tz = opts[i];
-        html += '<div class="cr-dd-option' + (tz === chosen ? " is-selected" : "") + '" role="option" data-au-tz="' + esc(tz) + '">' + esc(tz) + "</div>";
+      auComboState.addUserTimezone = chosen;
+      if (setAuTimezoneCombo && setAuTimezoneCombo.setOptions) {
+        setAuTimezoneCombo.setOptions(buildAuTimezoneOptions(regionKey));
+        setAuTimezoneCombo(chosen);
       }
-      if (auTimezoneMenu) auTimezoneMenu.innerHTML = html;
-      if (auTimezoneValue) auTimezoneValue.textContent = chosen;
     }
+
+    setAuRegionCombo = initCombo(
+      "auRegionCombo",
+      buildAuRegionOptions(),
+      "addUserRegion",
+      "Select region",
+      auComboState,
+      function () {
+        if (auRegion) auRegion.value = auComboState.addUserRegion || "NA";
+        renderAUTimezones(getAURegionKey(), null);
+        updateAuSummaries();
+      },
+      "edl-combo-menu--add-user"
+    );
+
+    setAuTimezoneCombo = initCombo(
+      "auTimezoneCombo",
+      buildAuTimezoneOptions(getAURegionKey()),
+      "addUserTimezone",
+      "Select timezone",
+      auComboState,
+      function () {
+        if (auTimezone) auTimezone.value = auComboState.addUserTimezone || "";
+        updateAuSummaries();
+      },
+      "edl-combo-menu--add-user"
+    );
+
+    setAuTeamCombo = initCombo(
+      "auTeamCombo",
+      buildAuTeamOptions(),
+      "addUserTeam",
+      "Select team",
+      auComboState,
+      function () {
+        if (auTeam) auTeam.value = auComboState.addUserTeam ? auComboState.addUserTeam.trim() : "";
+        updateAuSummaries();
+      },
+      "edl-combo-menu--add-user"
+    );
+
+    setAuRoleCombo = initCombo(
+      "auRoleCombo",
+      [],
+      "addUserRolePick",
+      "Search or select a role",
+      auComboState,
+      function () {
+        auState.selectedRoleId = auComboState.addUserRolePick || "";
+        syncAuRoleChrome();
+        updateAuSummaries();
+      },
+      "edl-combo-menu--add-user"
+    );
+
+    window.__closeAllAddUserCombos = closeAllAddUserCombos;
+
+    renderAURolePicker();
 
     function setAUStatus(value) {
       var next = value === "Inactive" ? "Inactive" : "Active";
@@ -2574,6 +2695,53 @@ document.addEventListener("DOMContentLoaded", function () {
         btns[i].setAttribute("aria-pressed", on ? "true" : "false");
       }
       updateAuSummaries();
+      syncAuRoleChrome();
+    }
+
+    function syncAuRoleChrome() {
+      var inactive = selectedStatus() === "Inactive";
+      if (auRoleComboEl) {
+        auRoleComboEl.classList.toggle("is-au-roles-locked", inactive);
+        if (inactive && setAuRoleCombo && setAuRoleCombo.close) setAuRoleCombo.close();
+      }
+      if (setAuRoleCombo && setAuRoleCombo.setDisabled) setAuRoleCombo.setDisabled(inactive);
+      if (auRoleAdd) {
+        if (inactive) auRoleAdd.disabled = true;
+        else auRoleAdd.disabled = !auState.selectedRoleId || auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1;
+      }
+    }
+
+    function closeAuInactiveConfirm() {
+      if (!auInactiveConfirmBackdrop) return;
+      auInactiveConfirmBackdrop.setAttribute("hidden", "");
+      if (auInactiveConfirmLastFocus && typeof auInactiveConfirmLastFocus.focus === "function") {
+        auInactiveConfirmLastFocus.focus();
+      }
+      auInactiveConfirmLastFocus = null;
+    }
+
+    function openAuInactiveConfirm() {
+      if (!auInactiveConfirmBackdrop) return;
+      auInactiveConfirmLastFocus = document.activeElement;
+      auInactiveConfirmBackdrop.removeAttribute("hidden");
+      setTimeout(function () {
+        if (auInactiveConfirmCancel) auInactiveConfirmCancel.focus();
+      }, 0);
+    }
+
+    function cancelAuInactivePending() {
+      closeAuInactiveConfirm();
+      setAUStatus("Active");
+    }
+
+    function confirmAuInactive() {
+      closeAuInactiveConfirm();
+      auState.selectedRoleId = "";
+      auState.selectedRoleIds = [];
+      auState.expandedRoleId = null;
+      setAUStatus("Inactive");
+      renderAURolePicker();
+      renderAURoleCards();
     }
 
     function auExpandSections() {
@@ -2598,12 +2766,16 @@ document.addEventListener("DOMContentLoaded", function () {
       auPreferredName.value = "";
       auEmail.value = "";
       if (auRegion) auRegion.value = "NA";
-      ensureAuRegionMenu();
-      syncAuRegionUi();
-      renderAUTimezones("NA", "America/New_York");
+      if (auTimezone) auTimezone.value = "America/New_York";
       if (auTeam) auTeam.value = "";
-      ensureAuTeamMenu();
-      syncAuTeamUi();
+      auComboState.addUserRegion = "NA";
+      auComboState.addUserTimezone = "America/New_York";
+      auComboState.addUserTeam = "";
+      auComboState.addUserRolePick = "";
+      if (setAuRegionCombo) setAuRegionCombo("NA");
+      renderAUTimezones("NA", "America/New_York");
+      if (setAuTeamCombo) setAuTeamCombo("");
+      if (setAuRoleCombo) setAuRoleCombo("");
       setAUStatus("Active");
       renderAURolePicker();
       renderAURoleCards();
@@ -2616,14 +2788,33 @@ document.addEventListener("DOMContentLoaded", function () {
       if (createRolePage) createRolePage.style.display = "none";
       addUsersPage.style.display = "";
       window.scrollTo(0, 0);
+      auPageMode = "add";
+      auEditingUserId = null;
+      auEditBaselineJson = "";
+      auEditOriginalTitle = "";
+      auEditingDisplayName = "";
+      applyAuPageChrome();
       resetAddUsersState();
+      refreshAuSaveDirty();
     }
 
     function closeAddUsers() {
+      if (auInactiveConfirmBackdrop && !auInactiveConfirmBackdrop.hasAttribute("hidden")) {
+        closeAuInactiveConfirm();
+      }
+      if (auRemoveUserBackdrop && !auRemoveUserBackdrop.hasAttribute("hidden")) {
+        closeAuRemoveUserConfirm();
+      }
+      auPageMode = "add";
+      auEditingUserId = null;
+      auEditBaselineJson = "";
+      auEditOriginalTitle = "";
+      auEditingDisplayName = "";
+      applyAuPageChrome();
       addUsersPage.style.display = "none";
       if (mainPage) mainPage.style.display = "";
       switchTab("users");
-      closeAllAddUserDd();
+      closeAllAddUserCombos();
     }
 
     function getAURoleOptions() {
@@ -2631,7 +2822,6 @@ document.addEventListener("DOMContentLoaded", function () {
       for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
         items.push({ id: ROLES_PERMISSIONS_DATA[i].id, name: ROLES_PERMISSIONS_DATA[i].role });
       }
-      items.sort(function (a, b) { return a.name.localeCompare(b.name); });
       return items;
     }
 
@@ -2642,6 +2832,252 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
 
+    function findRoleIdByRoleName(roleName) {
+      for (var ri = 0; ri < ROLES_PERMISSIONS_DATA.length; ri++) {
+        if (ROLES_PERMISSIONS_DATA[ri].role === roleName) return ROLES_PERMISSIONS_DATA[ri].id;
+      }
+      return "";
+    }
+
+    function auDerivedTitleForSave() {
+      var p = auPreferredName ? auPreferredName.value.trim() : "";
+      if (p) return "Preferred: " + p;
+      if (auPageMode === "edit" && auEditOriginalTitle) return auEditOriginalTitle;
+      return "Atlas User";
+    }
+
+    function auSerializedRoleKey() {
+      var arr = auState.selectedRoleIds.slice();
+      arr.sort();
+      return arr.join("\u001f");
+    }
+
+    function serializeAuFormState() {
+      return JSON.stringify({
+        first: auFirstName ? auFirstName.value.trim() : "",
+        last: auLastName ? auLastName.value.trim() : "",
+        preferred: auPreferredName ? auPreferredName.value.trim() : "",
+        email: auEmail ? auEmail.value.trim() : "",
+        region: auRegion ? auRegion.value : "",
+        timezone: auTimezone ? auTimezone.value : "",
+        team: auTeam ? (auTeam.value || "").trim() : "",
+        status: auStatusValue ? auStatusValue.value : "Active",
+        roleKey: auSerializedRoleKey(),
+        title: auDerivedTitleForSave()
+      });
+    }
+
+    function isAuFormDirty() {
+      if (auPageMode !== "edit" || !auEditBaselineJson) return false;
+      return serializeAuFormState() !== auEditBaselineJson;
+    }
+
+    function captureAuEditBaseline() {
+      auEditBaselineJson = serializeAuFormState();
+    }
+
+    function refreshAuSaveDirty() {
+      if (!auSave) return;
+      if (auPageMode !== "edit") {
+        auSave.disabled = false;
+        return;
+      }
+      if (!auEditBaselineJson) {
+        auSave.disabled = true;
+        return;
+      }
+      auSave.disabled = !isAuFormDirty();
+    }
+
+    function applyAuPageChrome() {
+      if (auPageTitle) auPageTitle.textContent = auPageMode === "edit" ? "Edit User" : AU_PAGE_TITLE_ADD;
+      if (auPageSubtitle) {
+        auPageSubtitle.textContent = auPageMode === "edit"
+          ? ("Manage user details and access for " + (auEditingDisplayName || "this user"))
+          : AU_PAGE_SUB_ADD;
+      }
+      if (auRemoveUser) auRemoveUser.hidden = auPageMode !== "edit";
+      if (auSave) auSave.textContent = auPageMode === "edit" ? "Save User" : "Add User";
+    }
+
+    function populateEditFormFromUser(user) {
+      if (!user) return;
+      var parts = (user.name || "").trim().split(/\s+/);
+      var firstN = parts[0] || "";
+      var lastN = parts.length > 1 ? parts.slice(1).join(" ") : "";
+      var preferredN = "";
+      if (user.title && /^Preferred:\s*/i.test(user.title)) {
+        preferredN = user.title.replace(/^Preferred:\s*/i, "").trim();
+      } else {
+        preferredN = firstN;
+      }
+      if (auFirstName) auFirstName.value = firstN;
+      if (auLastName) auLastName.value = lastN;
+      if (auPreferredName) auPreferredName.value = preferredN;
+      if (auEmail) auEmail.value = user.email || "";
+      var reg = (user.region || "NA").trim() || "NA";
+      if (auRegion) auRegion.value = reg;
+      if (setAuRegionCombo) setAuRegionCombo(reg);
+      var rkey = getAURegionKey();
+      var tzOpts = AU_REGION_TIMEZONES[rkey] || AU_REGION_TIMEZONES.NA;
+      var tzPick = tzOpts[0];
+      if (user.timezone && tzOpts.indexOf(user.timezone) !== -1) tzPick = user.timezone;
+      if (auTimezone) auTimezone.value = tzPick;
+      renderAUTimezones(rkey, tzPick);
+      var teamVal = (user.team && user.team !== "Unassigned") ? user.team : "";
+      if (auTeam) auTeam.value = teamVal;
+      if (setAuTeamCombo) setAuTeamCombo(teamVal);
+      setAUStatus(user.status === "Inactive" ? "Inactive" : "Active");
+      var ids = [];
+      var rns = user.roles || [];
+      for (var rj = 0; rj < rns.length; rj++) {
+        var rid = findRoleIdByRoleName(rns[rj]);
+        if (rid && ids.indexOf(rid) === -1) ids.push(rid);
+      }
+      auState.selectedRoleId = "";
+      auState.selectedRoleIds = ids;
+      auState.expandedRoleId = null;
+      if (setAuRoleCombo) setAuRoleCombo("");
+      renderAURolePicker();
+      renderAURoleCards();
+      updateAuSummaries();
+    }
+
+    function openEditUserForId(userId) {
+      var user = findUserInOriginalById(userId);
+      if (!user) return;
+      if (mainPage) mainPage.style.display = "none";
+      if (createRolePage) createRolePage.style.display = "none";
+      addUsersPage.style.display = "";
+      window.scrollTo(0, 0);
+      auPageMode = "edit";
+      auEditingUserId = userId;
+      auEditingDisplayName = user.name || "";
+      auEditOriginalTitle = user.title || "";
+      auEditBaselineJson = "";
+      if (auSave) auSave.disabled = true;
+      applyAuPageChrome();
+      resetAddUsersState();
+      populateEditFormFromUser(user);
+      captureAuEditBaseline();
+      refreshAuSaveDirty();
+      var openedAs = userId;
+      requestAnimationFrame(function () {
+        if (auPageMode !== "edit" || auEditingUserId !== openedAs) return;
+        refreshAuSaveDirty();
+      });
+    }
+
+    function closeAuRemoveUserConfirm() {
+      if (!auRemoveUserBackdrop) return;
+      auRemoveUserBackdrop.setAttribute("hidden", "");
+      if (auRemoveUserLastFocus && typeof auRemoveUserLastFocus.focus === "function") {
+        auRemoveUserLastFocus.focus();
+      }
+      auRemoveUserLastFocus = null;
+    }
+
+    function openAuRemoveUserConfirm() {
+      if (!auRemoveUserBackdrop || auPageMode !== "edit" || !auEditingUserId) return;
+      auRemoveUserLastFocus = document.activeElement;
+      var dispName = ((auFirstName ? auFirstName.value.trim() : "") + " " + (auLastName ? auLastName.value.trim() : "")).trim();
+      if (!dispName) dispName = auEditingDisplayName || "user";
+      if (auRemoveUserTitle) auRemoveUserTitle.textContent = "Remove " + dispName + "?";
+      if (auRemoveUserBody) {
+        auRemoveUserBody.textContent = "This user will be removed from Atlas and their assigned roles and permissions will no longer apply. This action cannot be undone in this prototype session.";
+      }
+      auRemoveUserBackdrop.removeAttribute("hidden");
+      setTimeout(function () {
+        if (auRemoveUserCancel) auRemoveUserCancel.focus();
+      }, 0);
+    }
+
+    function confirmRemoveEditedUser() {
+      closeAuRemoveUserConfirm();
+      var removeId = auEditingUserId;
+      if (!removeId) return;
+      var removedRec = findUserInOriginalById(removeId);
+      var removedName = removedRec && removedRec.name ? removedRec.name : "User";
+      for (var ox = ORIGINAL_ORDER.length - 1; ox >= 0; ox--) {
+        if (ORIGINAL_ORDER[ox].id === removeId) {
+          ORIGINAL_ORDER.splice(ox, 1);
+          break;
+        }
+      }
+      TOTAL_ITEMS = Math.max(0, TOTAL_ITEMS - 1);
+      reapplyUserDatasetOrder();
+      var tpx = totalPages();
+      if (currentPage > tpx) currentPage = tpx;
+      updateSortHeaders();
+      renderTable();
+      renderPagination();
+      auPageMode = "add";
+      auEditingUserId = null;
+      auEditBaselineJson = "";
+      applyAuPageChrome();
+      addUsersPage.style.display = "none";
+      if (mainPage) mainPage.style.display = "";
+      switchTab("users");
+      closeAllAddUserCombos();
+      showEdlToast({
+        type: "success",
+        title: "User removed",
+        body: removedName + " has been removed from Atlas."
+      });
+    }
+
+    function handleSaveEditUser() {
+      if (auPageMode !== "edit" || !auEditingUserId) return;
+      if (!isAuFormDirty()) return;
+      var first = auFirstName.value.trim();
+      var last = auLastName.value.trim();
+      var email = auEmail.value.trim();
+      if (!first || !last || !email) {
+        showEdlToast({
+          type: "warning",
+          title: "Required fields missing",
+          body: "First name, last name, and email are required."
+        });
+        return;
+      }
+      if (selectedStatus() !== "Inactive" && auState.selectedRoleIds.length === 0) {
+        showEdlToast({
+          type: "warning",
+          title: "Role required",
+          body: "Assign at least one role before saving this user."
+        });
+        return;
+      }
+      var rec = findUserInOriginalById(auEditingUserId);
+      if (!rec) return;
+      var assignedRoleNames = [];
+      if (selectedStatus() !== "Inactive") {
+        for (var si = 0; si < auState.selectedRoleIds.length; si++) {
+          var role = findRoleById(auState.selectedRoleIds[si]);
+          if (role) assignedRoleNames.push(role.role);
+        }
+      }
+      rec.name = first + " " + last;
+      rec.email = email;
+      rec.roles = selectedStatus() === "Inactive" ? [] : assignedRoleNames;
+      rec.status = selectedStatus();
+      rec.team = auTeam && auTeam.value && auTeam.value.trim() ? auTeam.value.trim() : "Unassigned";
+      rec.region = selectedRegionCode();
+      rec.title = auDerivedTitleForSave();
+      var savedDisplayName = rec.name || ((first + " " + last).trim());
+      reapplyUserDatasetOrder();
+      updateSortHeaders();
+      renderTable();
+      renderPagination();
+      closeAddUsers();
+      resetAddUsersState();
+      showEdlToast({
+        type: "success",
+        title: "User updated",
+        body: savedDisplayName + "\u2019s user details have been saved."
+      });
+    }
+
     function auBuildBasicSummary() {
       var parts = [];
       var fn = auFirstName ? auFirstName.value.trim() : "";
@@ -2650,13 +3086,14 @@ document.addEventListener("DOMContentLoaded", function () {
       var em = auEmail ? auEmail.value.trim() : "";
       if (nm) parts.push(nm);
       else if (em) parts.push(em);
-      var reg = auRegionValue ? auRegionValue.textContent.trim() : "";
+      var regCode = auRegion ? (auRegion.value || "").trim() : "";
+      var reg = regCode ? (AU_REGION_LABELS[regCode] || regCode) : "";
       if (reg) {
         var shortReg = reg.indexOf("(") !== -1 ? reg.split("(")[0].trim() : reg;
         if (shortReg.length > 28) shortReg = shortReg.slice(0, 25) + "\u2026";
         parts.push(shortReg);
       }
-      var tz = auTimezoneValue ? auTimezoneValue.textContent.trim() : "";
+      var tz = auTimezone ? (auTimezone.value || "").trim() : "";
       if (tz && parts.length < 6) parts.push(tz);
       var team = auTeam && auTeam.value ? auTeam.value.trim() : "";
       if (team && parts.length < 6) parts.push(team);
@@ -2682,6 +3119,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateAuSummaries() {
       if (auBasicSummary) auBasicSummary.textContent = auBuildBasicSummary();
       if (auRolesSummary) auRolesSummary.textContent = auBuildRolesSummary();
+      refreshAuSaveDirty();
     }
 
     function auToggleSection(header) {
@@ -2690,7 +3128,7 @@ document.addEventListener("DOMContentLoaded", function () {
       var willCollapse = !card.classList.contains("collapsed");
       card.classList.toggle("collapsed", willCollapse);
       header.setAttribute("aria-expanded", willCollapse ? "false" : "true");
-      if (willCollapse) closeAllAddUserDd();
+      if (willCollapse) closeAllAddUserCombos();
       updateAuSummaries();
     }
 
@@ -2826,23 +3264,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderAURolePicker() {
       var options = getAURoleOptions();
-      var html = "";
+      var opts = [];
       for (var i = 0; i < options.length; i++) {
         var disabled = auState.selectedRoleIds.indexOf(options[i].id) !== -1;
-        var picked = auState.selectedRoleId === options[i].id && !disabled;
-        html += '<div class="cr-dd-option' + (disabled ? " is-disabled" : "") + (picked ? " is-selected" : "") + '" data-au-role-option="' + esc(options[i].id) + '"' + (disabled ? ' aria-disabled="true"' : "") + ">" + esc(options[i].name) + "</div>";
+        opts.push({ value: options[i].id, label: options[i].name, disabled: disabled });
       }
-      if (!html) html = '<div class="cr-dd-option is-empty" role="presentation">No roles available</div>';
-      auRoleMenu.innerHTML = html;
-      if (auState.selectedRoleId) {
-        var role = findRoleById(auState.selectedRoleId);
-        auRoleValue.textContent = role ? role.role : "Search or select a role";
-        auRoleValue.classList.toggle("is-placeholder", !role);
-      } else {
-        auRoleValue.textContent = "Search or select a role";
-        auRoleValue.classList.add("is-placeholder");
+      if (setAuRoleCombo && setAuRoleCombo.setOptions) {
+        setAuRoleCombo.setOptions(opts);
+        if (!auComboState.addUserRolePick) auState.selectedRoleId = "";
+        if (auState.selectedRoleId && auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1) {
+          auState.selectedRoleId = "";
+        }
+        setAuRoleCombo(auState.selectedRoleId || "");
       }
-      auRoleAdd.disabled = !auState.selectedRoleId || auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1;
+      syncAuRoleChrome();
       updateAuSummaries();
     }
 
@@ -2855,6 +3290,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleSaveUser() {
+      if (auPageMode === "edit" && auEditingUserId) {
+        handleSaveEditUser();
+        return;
+      }
       var first = auFirstName.value.trim();
       var last = auLastName.value.trim();
       var email = auEmail.value.trim();
@@ -2866,7 +3305,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return;
       }
-      if (auState.selectedRoleIds.length === 0) {
+      if (selectedStatus() !== "Inactive" && auState.selectedRoleIds.length === 0) {
         showEdlToast({
           type: "warning",
           title: "Role required",
@@ -2875,14 +3314,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       var assignedRoleNames = [];
-      for (var i = 0; i < auState.selectedRoleIds.length; i++) {
-        var role = findRoleById(auState.selectedRoleIds[i]);
-        if (role) assignedRoleNames.push(role.role);
+      if (selectedStatus() !== "Inactive") {
+        for (var i = 0; i < auState.selectedRoleIds.length; i++) {
+          var role = findRoleById(auState.selectedRoleIds[i]);
+          if (role) assignedRoleNames.push(role.role);
+        }
       }
 
       var newUser = {
         id: "u_local_" + Date.now(),
-        avatar: "avatars/photos/m01.png",
+        avatar: DEFAULT_ADD_USER_AVATAR,
         name: first + " " + last,
         email: email,
         roles: assignedRoleNames,
@@ -2891,13 +3332,17 @@ document.addEventListener("DOMContentLoaded", function () {
         title: auPreferredName.value.trim() ? ("Preferred: " + auPreferredName.value.trim()) : "Atlas User",
         region: selectedRegionCode()
       };
-      DATA.unshift(newUser);
       ORIGINAL_ORDER.unshift(newUser);
+      sortKey = null;
+      sortDir = null;
+      DATA = ORIGINAL_ORDER.slice();
       TOTAL_ITEMS += 1;
       currentPage = 1;
+      updateSortHeaders();
       renderTable();
       renderPagination();
       closeAddUsers();
+      resetAddUsersState();
       showEdlToast({
         type: "success",
         title: "User added",
@@ -2906,6 +3351,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     auRoleCards.addEventListener("click", function (e) {
+      if (selectedStatus() === "Inactive") return;
       var removeBtn = e.target.closest("[data-au-remove]");
       if (removeBtn) {
         var removeId = removeBtn.getAttribute("data-au-remove");
@@ -2926,23 +3372,8 @@ document.addEventListener("DOMContentLoaded", function () {
       renderAURoleCards();
     });
 
-    auRoleTrigger.addEventListener("click", function () {
-      renderAURolePicker();
-      toggleAuDd(auRoleDD);
-    });
-
-    auRoleMenu.addEventListener("click", function (e) {
-      var option = e.target.closest("[data-au-role-option]");
-      if (!option) return;
-      if (option.classList.contains("is-disabled")) return;
-      var roleId = option.getAttribute("data-au-role-option");
-      if (auState.selectedRoleIds.indexOf(roleId) !== -1) return;
-      auState.selectedRoleId = roleId;
-      renderAURolePicker();
-      closeAuDd(auRoleDD);
-    });
-
     auRoleAdd.addEventListener("click", function () {
+      if (selectedStatus() === "Inactive" || auRoleAdd.disabled) return;
       var roleId = auState.selectedRoleId;
       if (!roleId) return;
       if (auState.selectedRoleIds.indexOf(roleId) !== -1) return;
@@ -2952,83 +3383,75 @@ document.addEventListener("DOMContentLoaded", function () {
       renderAURoleCards();
     });
 
-    if (auRegionTrigger && auRegionDD) {
-      auRegionTrigger.addEventListener("click", function (e) {
-        e.stopPropagation();
-        ensureAuRegionMenu();
-        syncAuRegionUi();
-        toggleAuDd(auRegionDD);
-      });
-    }
-    if (auRegionMenu) {
-      auRegionMenu.addEventListener("click", function (e) {
-        var row = e.target.closest("[data-au-region]");
-        if (!row) return;
-        auRegion.value = row.getAttribute("data-au-region");
-        syncAuRegionUi();
-        renderAUTimezones(getAURegionKey(), auTimezone.value);
-        closeAuDd(auRegionDD);
-        updateAuSummaries();
-      });
-    }
-
-    if (auTimezoneTrigger && auTimezoneDD) {
-      auTimezoneTrigger.addEventListener("click", function (e) {
-        e.stopPropagation();
-        toggleAuDd(auTimezoneDD);
-      });
-    }
-    if (auTimezoneMenu) {
-      auTimezoneMenu.addEventListener("click", function (e) {
-        var row = e.target.closest("[data-au-tz]");
-        if (!row) return;
-        var tz = row.getAttribute("data-au-tz");
-        auTimezone.value = tz;
-        renderAUTimezones(getAURegionKey(), tz);
-        closeAuDd(auTimezoneDD);
-        updateAuSummaries();
-      });
-    }
-
-    if (auTeamTrigger && auTeamDD) {
-      auTeamTrigger.addEventListener("click", function (e) {
-        e.stopPropagation();
-        ensureAuTeamMenu();
-        syncAuTeamUi();
-        toggleAuDd(auTeamDD);
-      });
-    }
-    if (auTeamMenu) {
-      auTeamMenu.addEventListener("click", function (e) {
-        var row = e.target.closest("[data-au-team]");
-        if (!row) return;
-        auTeam.value = row.getAttribute("data-au-team");
-        syncAuTeamUi();
-        closeAuDd(auTeamDD);
-        updateAuSummaries();
-      });
-    }
-
     if (auStatusSeg) {
       auStatusSeg.addEventListener("click", function (e) {
         var btn = e.target.closest("[data-au-status]");
         if (!btn) return;
-        setAUStatus(btn.getAttribute("data-au-status"));
+        var val = btn.getAttribute("data-au-status");
+        if (val === "Inactive") {
+          if (auStatusValue && auStatusValue.value === "Active") {
+            openAuInactiveConfirm();
+          }
+          return;
+        }
+        if (val === "Active") {
+          setAUStatus("Active");
+        }
       });
     }
 
-    document.addEventListener("mousedown", function (e) {
-      if (addUsersPage.style.display === "none") return;
-      var list = [auRoleDD, auRegionDD, auTimezoneDD, auTeamDD];
-      for (var mi = 0; mi < list.length; mi++) {
-        var dd = list[mi];
-        if (!dd || !dd.classList.contains("open")) continue;
-        if (dd.contains(e.target)) continue;
-        var mnu = getCrDdMenuForHost(dd);
-        if (mnu && mnu.contains(e.target)) continue;
-        closeAuDd(dd);
-      }
-    });
+    if (auInactiveConfirmCancel) {
+      auInactiveConfirmCancel.addEventListener("click", function () {
+        cancelAuInactivePending();
+      });
+    }
+    if (auInactiveConfirmPrimary) {
+      auInactiveConfirmPrimary.addEventListener("click", function () {
+        confirmAuInactive();
+      });
+    }
+    if (auInactiveConfirmBackdrop) {
+      auInactiveConfirmBackdrop.addEventListener("click", function (e) {
+        if (e.target === auInactiveConfirmBackdrop) cancelAuInactivePending();
+      });
+    }
+
+    window.__cancelAuInactiveModal = cancelAuInactivePending;
+    window.__closeAuRemoveUserModal = function () {
+      if (auRemoveUserBackdrop && !auRemoveUserBackdrop.hasAttribute("hidden")) closeAuRemoveUserConfirm();
+    };
+
+    if (auRemoveUser) {
+      auRemoveUser.addEventListener("click", function () {
+        openAuRemoveUserConfirm();
+      });
+    }
+    if (auRemoveUserCancel) {
+      auRemoveUserCancel.addEventListener("click", function () {
+        closeAuRemoveUserConfirm();
+      });
+    }
+    if (auRemoveUserConfirm) {
+      auRemoveUserConfirm.addEventListener("click", function () {
+        confirmRemoveEditedUser();
+      });
+    }
+    if (auRemoveUserBackdrop) {
+      auRemoveUserBackdrop.addEventListener("click", function (e) {
+        if (e.target === auRemoveUserBackdrop) closeAuRemoveUserConfirm();
+      });
+    }
+
+    var tbodyUsers = document.getElementById("tbody");
+    if (tbodyUsers) {
+      tbodyUsers.addEventListener("click", function (e) {
+        var link = e.target.closest("a.name-link");
+        if (!link || !tbodyUsers.contains(link)) return;
+        e.preventDefault();
+        var uid = link.getAttribute("data-user-id");
+        if (uid && findUserInOriginalById(uid)) openEditUserForId(uid);
+      });
+    }
 
     var auToggleHeaders = addUsersPage.querySelectorAll(".cr-section-header[data-au-toggle]");
     for (var ahi = 0; ahi < auToggleHeaders.length; ahi++) {
@@ -4405,6 +4828,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     document.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
+      var auRb = document.getElementById("auRemoveUserBackdrop");
+      if (auRb && !auRb.hasAttribute("hidden") && typeof window.__closeAuRemoveUserModal === "function") {
+        window.__closeAuRemoveUserModal();
+        return;
+      }
+      var auIb = document.getElementById("auInactiveConfirmBackdrop");
+      if (auIb && !auIb.hasAttribute("hidden") && typeof window.__cancelAuInactiveModal === "function") {
+        window.__cancelAuInactiveModal();
+        return;
+      }
       if (crAppRemoveBackdrop && !crAppRemoveBackdrop.hasAttribute("hidden")) {
         closeRemoveAppConfirm();
         return;

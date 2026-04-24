@@ -427,7 +427,32 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .name-avatar { width: 48px; height: 48px; border-radius: 50%; background: #FFF; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .name-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .avatar-initials { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 50%; background: rgb(78, 136, 210); color: #FFFFFF; font-size: 16px; font-weight: 700; line-height: 1; letter-spacing: 0.5px; }
-.name-link { color: var(--text-primary); text-decoration: none; font-size: 14px; line-height: 21px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+/* Users table — name link is the only row affordance; each name opens Edit User for that row.
+   EDL Light: `--brand-text` is Indigo 70; Dark / ADS Preview remap for contrast. */
+#usersPanel #usersTable tbody .name-link {
+  display: block;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-self: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--brand-text);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+#usersPanel #usersTable tbody .name-link:hover {
+  color: var(--brand-text-hover);
+  text-decoration: underline;
+}
+#usersPanel #usersTable tbody .name-link:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 
 /* ─── Role cell ─── */
 .role-txt { font-size: 14px; line-height: 21px; color: var(--text-primary); }
@@ -537,16 +562,54 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 /* Dense variant of the EDL combo input when it lives inside the filter drawer
    — keeps the standard EDL combo component intact elsewhere (menu is portaled
    to <body> and untouched). Drawer controls share a single 36px baseline. */
-.flt-drawer .edl-combo-input { height: 36px; padding-right: 52px; padding-left: 12px; }
+.flt-drawer .edl-combo-input {
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding-right: 52px;
+  padding-left: 12px;
+  line-height: 36px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .flt-drawer .edl-combo-clear { right: 28px; width: 18px; height: 18px; }
 .flt-drawer .edl-combo-toggle { right: 8px; }
 
 /* ─── EDL COMBO BOX ─── searchable dropdown, matches EDL select + list pattern ─── */
 .edl-combo { position: relative; }
 
-.edl-combo-input-wrap { position: relative; display: flex; align-items: center; }
+.edl-combo-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
+}
 
-.edl-combo-input { width: 100%; height: 40px; padding: 0 60px 0 16px; border: 1px solid var(--input-border); border-radius: 8px; background: var(--bg-surface); font-family: inherit; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); outline: none; transition: border-color 0.15s ease, border-radius 0.1s ease; }
+/* Trigger: same fixed height as EDL text fields — single line, icons absolutely positioned (no height growth). */
+.edl-combo-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  margin: 0;
+  padding: 0 60px 0 16px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 40px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease, border-radius 0.1s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .edl-combo-input::placeholder { color: var(--text-placeholder); font-weight: 400; }
 .edl-combo-input:hover { border-color: var(--text-muted); }
 .edl-combo-input:focus { border-color: var(--brand-text); }
@@ -565,9 +628,48 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .edl-combo-menu.open { display: block; }
 
 .edl-combo-item { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 16px; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); cursor: pointer; white-space: nowrap; transition: background-color 0.1s ease; }
+/* IAM filter menus — comfortable row height. Add User uses `--add-user` with compact rows below. */
+.edl-combo-menu--iam-roles {
+  padding: 6px 0;
+  max-height: min(50vh, 320px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-muted) transparent;
+}
+.edl-combo-menu--add-user {
+  padding: 4px 0;
+  max-height: min(50vh, 320px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-muted) transparent;
+}
+.edl-combo-menu--iam-roles::-webkit-scrollbar,
+.edl-combo-menu--add-user::-webkit-scrollbar { width: 6px; }
+.edl-combo-menu--iam-roles::-webkit-scrollbar-thumb,
+.edl-combo-menu--add-user::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 6px;
+}
+.edl-combo-menu--iam-roles .edl-combo-item {
+  height: auto;
+  min-height: 44px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+}
+/* Add User field menus — compact row height (filters keep --iam-roles density above). */
+.edl-combo-menu--add-user .edl-combo-item {
+  height: auto;
+  min-height: 40px;
+  padding: 8px 16px;
+  box-sizing: border-box;
+}
+.edl-combo-item.is-disabled {
+  color: var(--text-placeholder);
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .edl-combo-item:hover, .edl-combo-item.kb-highlight { background: var(--bg-hover-soft); }
 .edl-combo-item.selected { background: var(--brand-bg-soft); font-weight: 500; }
 .edl-combo-item.selected:hover, .edl-combo-item.selected.kb-highlight { background: var(--brand-bg-selected); }
+.edl-combo-item:focus-visible { outline: 2px solid var(--brand-text); outline-offset: -2px; }
 
 .edl-combo-check { flex-shrink: 0; width: 16px; height: 16px; color: var(--brand-text); display: none; }
 .edl-combo-item.selected .edl-combo-check { display: block; }
@@ -915,7 +1017,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 /* Modal Cancel scoped override — matches the modal confirm button's
    optical-centering so both labels look balanced inside 32px. */
 #crConfirmCancel.btn-std,
-#crAppRemoveCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 12px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
+#crAppRemoveCancel.btn-std,
+#auInactiveConfirmCancel.btn-std,
+#auRemoveUserCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 12px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
 
 /* ─── EDL Toast — matches EDL Toast Figma spec (node 15094:75972) ───
    Container: fixed bottom-right stack. Each toast is 287px wide with
@@ -1046,23 +1150,39 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-card.collapsed .cr-section-summary { display: inline-block; }
 .cr-card.collapsed .cr-section-summary:not(:empty)::before { content: "·"; margin-right: 8px; color: var(--text-placeholder); }
 
-/* Create Role Basic + Add User sections: compact collapsed summary row (same height/density). */
-#crBasicCard.cr-card.collapsed,
-#auBasicCard.cr-card.collapsed,
-#auRolesCard.cr-card.collapsed {
+/* Create Role Basic: compact collapsed row with optional inline summary */
+#crBasicCard.cr-card.collapsed {
   padding: 10px 24px 12px;
 }
-#crBasicCard.cr-card.collapsed > .cr-section-header,
-#auBasicCard.cr-card.collapsed > .cr-section-header,
-#auRolesCard.cr-card.collapsed > .cr-section-header {
+#crBasicCard.cr-card.collapsed > .cr-section-header {
   padding: 2px 0;
   gap: 5px;
   align-items: center;
 }
-#crBasicCard.cr-card.collapsed .cr-section-summary:not(:empty)::before,
-#auBasicCard.cr-card.collapsed .cr-section-summary:not(:empty)::before,
-#auRolesCard.cr-card.collapsed .cr-section-summary:not(:empty)::before {
+#crBasicCard.cr-card.collapsed .cr-section-summary:not(:empty)::before {
   margin-right: 5px;
+}
+
+/* Add User — Basic + Roles: collapsed shows chevron + title only; matched row height and vertical centering */
+#auBasicCard.cr-card.collapsed,
+#auRolesCard.cr-card.collapsed {
+  padding: 10px 24px;
+}
+#auBasicCard.cr-card.collapsed > .cr-section-header,
+#auRolesCard.cr-card.collapsed > .cr-section-header {
+  padding: 0;
+  min-height: 44px;
+  gap: 8px;
+  align-items: center;
+}
+#auBasicCard.cr-card.collapsed .cr-section-summary,
+#auRolesCard.cr-card.collapsed .cr-section-summary {
+  display: none !important;
+}
+#auBasicCard.cr-card.collapsed .cr-section-chev,
+#auRolesCard.cr-card.collapsed .cr-section-chev {
+  display: block;
+  flex-shrink: 0;
 }
 
 .cr-field { margin-top: 16px; }
@@ -1590,15 +1710,35 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .au-header-left { min-width: 0; }
 .au-title { font-family: "MultiplaneTWDC Display", var(--ff); font-size: 28px; font-weight: 500; line-height: 38px; color: var(--text-primary); }
 .au-subtitle { margin-top: 11px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); }
-.au-header-actions { display: inline-flex; align-items: center; gap: 10px; margin-top: -2px; }
-.au-btn-save { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; border: none; border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; color: var(--text-on-brand); background: var(--brand); white-space: nowrap; cursor: pointer; transition: background-color 0.15s ease; -webkit-font-smoothing: antialiased; }
-.au-btn-save:hover { background: var(--brand-hover); }
+.au-header-actions { display: inline-flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 16px; margin-top: -2px; }
+.au-remove-user-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--brand-text);
+  cursor: pointer;
+  text-decoration: none;
+}
+.au-remove-user-link:hover { color: var(--brand-text-hover); text-decoration: underline; }
+.au-remove-user-link:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 2px; border-radius: 4px; }
+.au-remove-user-link[hidden] { display: none !important; }
 
-.au-card { margin-top: 24px; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 16px; padding: 16px 24px 24px; }
+.au-btn-save { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; border: none; border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; color: var(--text-on-brand); background: var(--brand); white-space: nowrap; cursor: pointer; transition: background-color 0.15s ease; -webkit-font-smoothing: antialiased; }
+.au-btn-save:hover:not(:disabled) { background: var(--brand-hover); }
+.au-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: default; opacity: 1; }
+
+.au-card { margin-top: 24px; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 16px; padding: 12px 24px 18px; }
 /* Add User accordion bodies (Create Role uses `.cr-field` siblings; AU wraps grid + roles in one node). */
 #addUsersPage .au-section-body { min-width: 0; }
+#addUsersPage .cr-section-header[data-au-toggle] {
+  padding: 6px 0 4px;
+}
 
-.au-grid { margin-top: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.au-grid { margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .au-field { min-width: 0; }
 /* Status: label stacked above Active/Inactive toggle (same rhythm as other Basic fields). */
 .au-field-status {
@@ -1609,67 +1749,142 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .au-field-status .au-label {
   display: block;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 .au-field-status .au-status-seg {
   align-self: flex-start;
 }
-.au-label { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 4px; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-muted); }
+.au-label { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 5px; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-muted); }
 .au-req { color: #E52F52; }
 .au-info { width: 12px; height: 12px; color: var(--text-muted); }
-.au-input { width: 100%; height: 32px; border: 1px solid var(--border-input); border-radius: 8px; background: var(--bg-surface); font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); padding: 0 12px; outline: none; transition: border-color 0.15s ease; }
+.au-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  margin: 0;
+  padding: 8px 16px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .au-input::placeholder { color: var(--text-placeholder); }
 .au-input:hover { border-color: var(--text-muted); }
 .au-input:focus { border-color: var(--brand-text); }
-/* Add User selects: EDL dropdown (`.cr-dd`) — full width in grid fields */
-#addUsersPage .au-field-dd.cr-dd {
+/* Add User selects: official EDL combo — full width, no wrapper margin, 40px trigger (compact padding). */
+#addUsersPage .au-field-dd.edl-combo {
   display: block;
   width: 100%;
+  margin: 0;
 }
-#addUsersPage .au-field-dd .cr-dd-menu {
-  width: 100%;
+#addUsersPage .au-field-dd.edl-combo .edl-combo-input-wrap {
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  box-sizing: border-box;
 }
-.au-status-seg { margin-top: 0; display: inline-flex; width: auto; max-width: 100%; align-items: stretch; border: 1px solid var(--border-input); border-radius: 8px; overflow: hidden; background: var(--bg-surface); }
-.au-status-opt { flex: 0 0 92px; min-width: 92px; height: 32px; padding: 0 12px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); background: transparent; border: 0; border-right: 1px solid var(--border-input); display: inline-flex; align-items: center; justify-content: center; transition: background-color 0.14s ease, color 0.14s ease; }
+#addUsersPage .au-field-dd.edl-combo .edl-combo-input {
+  box-sizing: border-box;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  margin: 0;
+  padding: 8px 60px 8px 16px;
+  line-height: 22px;
+}
+/* Assign Roles: same column shell as Region/Team (`.au-field` + `.cr-dd`) — flex sizing on wrapper, not on `.cr-dd`. */
+#addUsersPage .au-role-row > .au-role-dd-field {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.au-status-seg {
+  margin-top: 0;
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  align-items: stretch;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+.au-status-opt {
+  flex: 0 0 92px;
+  min-width: 92px;
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
+  padding: 0 12px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border-input);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.14s ease, color 0.14s ease;
+}
 .au-status-opt:last-child { border-right: 0; }
 .au-status-opt:hover { background: var(--bg-hover); color: var(--text-primary); }
 .au-status-opt.is-selected { background: var(--brand-bg-selected); color: var(--brand-text); }
 .au-status-opt:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; }
 .au-profile-field { align-self: start; }
-.au-profile-field .au-label { margin-bottom: 4px; }
+.au-profile-field .au-label { margin-bottom: 5px; }
 .au-profile-sync-note { margin-top: 4px; font-size: 13px; font-weight: 400; line-height: 18px; color: var(--text-secondary); }
 
-.au-access-card { margin-top: 16px; }
-.au-role-field { margin-top: 12px; }
-.au-role-field .au-role-label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  color: var(--text-primary);
-}
+.au-access-card { margin-top: 12px; }
+.au-role-field { margin-top: 8px; }
 /* Cap row to one role-card column (matches `.au-role-cards` 2-col gap math). */
 #auRolesCard .au-role-row {
   max-width: min(100%, calc((100% - 28px) / 2));
 }
-.au-role-row { margin-top: 0; display: flex; align-items: flex-end; gap: 13px; flex-wrap: nowrap; }
-/* Assign Roles: same `.cr-dd` / `.cr-dd-menu` as Create Role + Add User fields */
-.au-role-row .au-role-dd.cr-dd {
-  position: relative;
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 100%;
-  width: auto;
-  display: block;
-}
+.au-role-row { margin-top: 0; display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
 .au-role-row .au-btn-add { flex-shrink: 0; }
-.au-role-row .au-role-dd .cr-dd-menu {
-  width: 100%;
+/* Add User: Inactive status — cannot assign roles (EDL disabled treatment) */
+#addUsersPage .au-role-row .edl-combo.is-au-roles-locked .edl-combo-input-wrap {
+  pointer-events: none;
+  opacity: 0.55;
+  cursor: not-allowed;
 }
-.au-role-dd .cr-dd-option.is-empty { color: var(--text-placeholder); cursor: default; }
-.au-role-dd .cr-dd-option.is-empty:hover { background: var(--bg-surface); }
-.au-btn-add { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 14px; border: 1px solid var(--brand-text); border-radius: 8px; background: var(--bg-surface); color: var(--brand-text); font-size: 14px; font-weight: 500; line-height: 20px; }
+#addUsersPage .au-role-row .au-btn-add:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.au-btn-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--brand-text);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--brand-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
 .au-btn-add:hover:not(:disabled) { background: var(--brand-bg-selected); }
 .au-btn-add:disabled { border-color: var(--border-input); color: var(--text-placeholder); cursor: default; background: var(--bg-surface); }
 
@@ -1683,7 +1898,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: start;
   align-content: start;
 }
-.au-role-cards.has-roles { margin-top: 32px; }
+.au-role-cards.has-roles { margin-top: 24px; }
 /* Role summary cards — structural rhythm aligned with Create Role `.cr-app-section` cards. */
 .au-role-card {
   display: flex;
@@ -1830,9 +2045,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .cr-header { flex-wrap: wrap; }
   .cr-header-actions { width: 100%; justify-content: flex-end; padding-top: 0; }
   .cr-card { padding: 16px 20px 20px; }
-  #crBasicCard.cr-card.collapsed,
+  #crBasicCard.cr-card.collapsed { padding: 10px 20px 12px; }
   #auBasicCard.cr-card.collapsed,
-  #auRolesCard.cr-card.collapsed { padding: 10px 20px 12px; }
+  #auRolesCard.cr-card.collapsed { padding: 10px 20px; }
   .cr-input, .cr-dd { width: 100%; }
   .cr-app-row { align-items: flex-end; }
   .cr-app-row-field { flex: 1 1 auto; min-width: 0; }
@@ -1841,8 +2056,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .pgn-dd.cr-dd { width: auto; min-width: 56px; }
 
   .au-shell { width: min(1048px, calc(100% - 64px)); }
-  .au-card { padding: 16px 20px 20px; }
-  .au-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .au-card { padding: 12px 20px 15px; }
+  .au-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .au-role-cards { gap: 20px; }
   #auRolesCard .au-role-row { max-width: min(100%, calc((100% - 20px) / 2)); }
 }
@@ -1874,9 +2089,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .cr-subtitle { line-height: 20px; }
   .cr-header-actions { justify-content: flex-start; flex-wrap: wrap; }
   .cr-card { padding: 14px 16px 16px; margin-bottom: 16px; }
-  #crBasicCard.cr-card.collapsed,
+  #crBasicCard.cr-card.collapsed { padding: 8px 16px 10px; }
   #auBasicCard.cr-card.collapsed,
-  #auRolesCard.cr-card.collapsed { padding: 8px 16px 10px; }
+  #auRolesCard.cr-card.collapsed { padding: 10px 16px; }
   .cr-perms-content { grid-template-columns: 1fr; }
   .au-role-cards { grid-template-columns: 1fr; gap: 16px; }
 
@@ -1889,10 +2104,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   /* Role cards single-column; Assign row spans card width but stays compact (no full-bleed stretch). */
   #auRolesCard .au-role-row { max-width: 100%; }
   .au-role-row { flex-wrap: nowrap; gap: 10px; }
-  .au-role-row .au-role-dd.cr-dd {
+  #addUsersPage .au-role-row > .au-role-dd-field {
     flex: 0 1 320px;
-    width: auto;
-    max-width: min(320px, calc(100% - 90px));
+    max-width: min(320px, calc(100% - 96px));
   }
   .au-btn-add { min-width: 72px; }
   .au-role-cards.has-roles { margin-top: 16px; }
@@ -1951,15 +2165,14 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .au-shell { width: calc(100% - 32px); margin: 8px auto 28px; }
   .au-title { font-size: 26px; line-height: 34px; }
   .au-subtitle { margin-top: 8px; }
-  .au-card { margin-top: 16px; padding: 14px 12px 14px; }
+  .au-card { margin-top: 16px; padding: 11px 12px 11px; }
   #addUsersPage .cr-section-title { font-size: 17px; }
   .au-header-actions { justify-content: flex-start; }
-  #auRolesCard .au-role-row { align-items: flex-end; flex-wrap: nowrap; }
-  #auRolesCard .au-role-row .au-role-dd.cr-dd {
+  #auRolesCard .au-role-row { align-items: center; flex-wrap: nowrap; }
+  #auRolesCard .au-role-row > .au-role-dd-field {
     flex: 1 1 auto;
-    width: auto;
     min-width: 0;
-    max-width: min(280px, calc(100% - 86px));
+    max-width: min(280px, calc(100% - 92px));
   }
   #auRolesCard .au-role-row .au-btn-add { width: auto; }
   .au-role-cards { grid-template-columns: 1fr; gap: 12px; }
@@ -2502,6 +2715,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: var(--brand-bg-selected);
   color: var(--brand-text);
 }
+[data-theme="ads-preview"] .edl-combo-menu--iam-roles .edl-combo-item.selected {
+  background: var(--brand-bg-selected);
+  color: var(--brand-text);
+}
 
 /* ─── 9. Search dropdown / combo-box menu — ADS elevation ───
    EDL renders these as a 1px violet ring + flat pop-shadow. ADS Dropdown
@@ -2575,10 +2792,12 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    both so every ADS-Preview CTA reads the same way. Background/height
    stay token-driven. */
 [data-theme="ads-preview"] .cr-btn-save,
+[data-theme="ads-preview"] .au-btn-save,
 [data-theme="ads-preview"] .cr-btn-danger-solid {
   border-radius: var(--ads-radius-sm);
 }
 [data-theme="ads-preview"] .cr-btn-save:active:not(:disabled),
+[data-theme="ads-preview"] .au-btn-save:active:not(:disabled),
 [data-theme="ads-preview"] .cr-btn-danger-solid:active {
   background: var(--ads-brand-pressed);
 }
@@ -3237,7 +3456,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 [data-theme="ads-preview"] .cr-btn-save,
 [data-theme="ads-preview"] .cr-btn-danger-solid,
 [data-theme="ads-preview"] #crCancel.btn-std,
-[data-theme="ads-preview"] #crConfirmCancel.btn-std {
+[data-theme="ads-preview"] #crConfirmCancel.btn-std,
+[data-theme="ads-preview"] #auInactiveConfirmCancel.btn-std,
+[data-theme="ads-preview"] #auRemoveUserCancel.btn-std {
   font-family: var(--ff);
   letter-spacing: 0.1px;
 }
@@ -3278,8 +3499,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    Sans the role-link weight wants a nudge to 500 so the link reads as
    an affordance rather than just coloured body text. Underline already
    paints on hover. */
-[data-theme="ads-preview"] .rp-role-link,
-[data-theme="ads-preview"] .name-link {
+[data-theme="ads-preview"] .rp-role-link {
   font-weight: 500;
 }
 
