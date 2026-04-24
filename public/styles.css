@@ -2266,9 +2266,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
      • Net visual effect: a small, cleaner gap opens up between
        Status and Team without touching Role, Region, the CTA, or
        any other column. Team's content area is ~6 px narrower at
-       typical desktop widths; the existing `title` tooltip on
-       every Team cell (see renderRow in app.js) makes any borderline
-       truncation recoverable via hover. */
+       typical desktop widths; EDL truncation tooltips in app.js only
+       when a cell is clipped. */
 #usersColgroup col[data-u-col="rl"] { width: 32.00%; }
 #usersColgroup col[data-u-col="st"] { width:  8.00%; }
 #usersColgroup col[data-u-col="tm"] { width: 13.50%; }

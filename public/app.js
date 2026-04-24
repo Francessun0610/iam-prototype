@@ -583,11 +583,11 @@ function renderTable() {
     html += '<tr data-id="' + esc(u.id) + '">' +
       '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, currentPage === 2 && !isSessionAddedUser(u)) +
         '<a class="name-link" href="#" data-user-id="' + esc(u.id) + '" title="' + esc(u.name) + '" aria-label="' + esc(editHint) + '">' + esc(u.name) + "</a></div></td>" +
-      '<td class="c-em" title="' + esc(u.email) + '">' + esc(u.email) + '</td>' +
-      '<td class="c-rl" title="' + esc(u.roles.join(', ')) + '" data-roles="' + esc(rolesAttr) + '"><span class="role-txt">' + esc(u.roles.join(', ')) + '</span></td>' +
+      '<td class="c-em">' + esc(u.email) + '</td>' +
+      '<td class="c-rl" data-roles="' + esc(rolesAttr) + '"><span class="role-txt">' + esc(u.roles.join(', ')) + '</span></td>' +
       '<td class="c-st">' + renderStatusHtml(u.status) + '</td>' +
-      '<td class="c-tm" title="' + esc(u.team) + '">' + esc(u.team) + '</td>' +
-      '<td class="c-ct" title="' + esc(u.title) + '">' + esc(u.title) + '</td>' +
+      '<td class="c-tm">' + esc(u.team) + '</td>' +
+      '<td class="c-ct">' + esc(u.title) + '</td>' +
       '<td class="c-rg">' + esc(u.region) + '</td>' +
       '</tr>';
   }
@@ -613,8 +613,8 @@ function renderTable() {
         and append a "+N role(s)" chip until the cell fits. Stops at
         1 visible role; if even that plus the chip overflows, the
         cell's natural ellipsis truncates inside the last role — the
-        title tooltip + universal cell-truncation tooltip still
-        reveal the full list on hover, so nothing is lost.
+        EDL truncation tooltip (when scrollWidth > clientWidth) and the
+        +N chip's data-tooltip reveal the full list on hover, so nothing is lost.
      3. A +1px tolerance on the fit check absorbs sub-pixel rounding
         from the browser so cells right at the boundary don't flap
         between states during resize.
@@ -640,6 +640,7 @@ function fitUsersRoleCells() {
     var rolesAttr = cell.getAttribute("data-roles") || "";
     var roles = rolesAttr ? rolesAttr.split("|") : [];
     if (!roles.length) continue;
+    cell.removeAttribute("title");
     span.innerHTML = esc(roles.join(", "));
     if (cell.scrollWidth <= cell.clientWidth + 1) continue;
     var tooltip = roles.join("\n");
@@ -651,6 +652,7 @@ function fitUsersRoleCells() {
         '">+' + extra + " role" + (extra > 1 ? "s" : "") + "</a>";
       if (cell.scrollWidth <= cell.clientWidth + 1) break;
     }
+    cell.removeAttribute("title");
   }
 }
 
@@ -1352,6 +1354,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (td.classList.contains("empty-state")) return null;
     if (td.classList.contains("c-ct")) return null; // hidden Company Title column
     if (td.classList.contains("rp-func")) return null;
+    /* Role column: no native title — full text from data-roles only when clipped. */
+    if (td.classList.contains("c-rl")) {
+      if (td.scrollWidth <= td.clientWidth + 1) return null;
+      var ra = td.getAttribute("data-roles") || "";
+      var roleFull = ra ? ra.split("|").join(", ") : td.textContent.trim();
+      return { el: td, text: roleFull };
+    }
     var INNER_SELECTORS = ".name-link";
     var innerMatches = td.querySelectorAll(INNER_SELECTORS);
     for (var i = 0; i < innerMatches.length; i++) {
