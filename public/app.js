@@ -3183,39 +3183,55 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!fns.length) {
         return '<p class="au-role-section-text">No applications assigned.</p>';
       }
-      var html = "";
+      var cards = [];
       for (var fi = 0; fi < fns.length; fi++) {
         var appName = fns[fi].name;
         var access = fns[fi].access || roleAccessLevel(roleRecord.id, appName);
         var detail = getRoleAppAccessDetails(roleRecord.id, appName, access);
         var model = APP_ACCESS_MODEL[appName];
         var display = RP_FUNC_DISPLAY_NAME[appName] || appName;
+        var cardHtml;
         if (!model) {
           var labs = resolveFunctionLabels(roleRecord.id, appName, fns[fi].count);
-          html += '<div class="au-role-app-section">' +
+          cardHtml =
+            '<div class="au-role-app-section au-perm-card">' +
             '<div class="cr-label">' + esc(display) + " permissions</div>" +
+            '<div class="au-role-app-detail">' +
             '<ul class="au-role-list-fallback">';
           for (var li = 0; li < labs.length; li++) {
-            html += "<li>" + esc(labs[li]) + "</li>";
+            cardHtml += "<li>" + esc(labs[li]) + "</li>";
           }
-          html += "</ul></div>";
-          continue;
+          cardHtml += "</ul></div></div>";
+        } else {
+          cardHtml =
+            '<div class="au-role-app-section au-perm-card">' +
+            '<div class="cr-label">' + esc(display) + " permissions</div>" +
+            '<div class="au-role-app-detail">' +
+            '<div class="au-role-perm-summary-list">';
+          for (var gi = 0; gi < model.groups.length; gi++) {
+            var grp = model.groups[gi];
+            var actions = detail.groups[grp] || [];
+            if (!actions.length) continue;
+            cardHtml +=
+              '<div class="au-role-perm-line">' +
+              '<span class="au-role-perm-cat">' + esc(grp) + "</span>" +
+              '<span class="au-role-perm-actions">' + esc(actions.join(", ")) + "</span>" +
+              "</div>";
+          }
+          cardHtml += "</div></div></div>";
         }
-        html += '<div class="au-role-app-section">' +
-          '<div class="cr-label">' + esc(display) + " permissions</div>" +
-          '<div class="au-role-perm-summary-list">';
-        for (var gi = 0; gi < model.groups.length; gi++) {
-          var grp = model.groups[gi];
-          var actions = detail.groups[grp] || [];
-          if (!actions.length) continue;
-          html += '<div class="au-role-perm-line">' +
-            '<span class="au-role-perm-cat">' + esc(grp) + "</span>" +
-            '<span class="au-role-perm-actions">' + esc(actions.join(", ")) + "</span>" +
-            "</div>";
-        }
-        html += "</div></div>";
+        cards.push(cardHtml);
       }
-      return html;
+      var rows = [];
+      for (var ri = 0; ri < cards.length; ri += 2) {
+        rows.push(
+          '<div class="au-perm-card-row">' +
+            '<div class="au-perm-card-stack">' + cards[ri] + "</div>" +
+            (cards[ri + 1] ? '<div class="au-perm-card-stack">' + cards[ri + 1] + "</div>" : "") +
+          "</div>"
+        );
+      }
+      return '<div class="au-perm-card-list">' + rows.join("") + "</div>";
     }
 
     function renderAURoleCards() {
@@ -3225,47 +3241,53 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       auRoleCards.classList.add("has-roles");
-      var html = "";
+      var cards = [];
       for (var i = 0; i < auState.selectedRoleIds.length; i++) {
         var role = findRoleById(auState.selectedRoleIds[i]);
         if (!role) continue;
         var isExpanded = auState.expandedRoleId === role.id;
-        html += '<article class="au-role-card' + (isExpanded ? ' expanded' : '') + '" data-au-role-id="' + esc(role.id) + '">' +
-          '<div class="au-role-card-top">' +
-            '<div class="cr-app-section-head">' +
-              '<div class="cr-app-head-left">' +
-                '<h3 class="cr-app-title">' + esc(role.role) + '</h3>' +
-              '</div>' +
-              '<button type="button" class="cr-app-remove" data-au-remove="' + esc(role.id) + '" aria-label="Remove ' + esc(role.role) + '">' +
-                TRASH_SVG +
-                "Remove" +
-              "</button>" +
-            "</div>" +
-            '<div class="cr-app-body">' +
-              '<div class="au-role-block">' +
-                '<div class="cr-label">Description</div>' +
-                '<p class="au-role-section-text">' + esc(roleDescription(role)) + '</p>' +
-              '</div>' +
-              '<div class="au-role-block">' +
-                '<div class="cr-label">Access level</div>' +
-                '<p class="cr-access-module-perms au-role-access-value" aria-live="polite">' + esc(roleAccessLevelSummary(role)) + "</p>" +
-              '</div>' +
-              '<button type="button" class="cr-customize-link au-role-view-toggle" data-au-toggle="' + esc(role.id) + '" aria-expanded="' + (isExpanded ? "true" : "false") + '">' +
-                '<span class="au-role-toggle-label">' +
-                (isExpanded ? "Hide all permissions" : "Show all permissions") +
-                "</span>" +
-                '<span class="au-role-toggle-arr" aria-hidden="true">' +
-                (isExpanded ? "\u2191" : "\u2193") +
-                "</span>" +
-              "</button>" +
-            "</div>" +
-          '</div>' +
-          '<div class="au-role-expand">' +
-            '<div class="au-role-expand-inner">' +
-            buildAURolePermissionDetailHtml(role) +
-          '</div>' +
-          '</div>' +
-        '</article>';
+        cards.push(
+          '<article class="au-role-card' + (isExpanded ? ' expanded' : '') + '" data-au-role-id="' + esc(role.id) + '">' +
+            '<div class="au-role-card-top">' +
+              '<div class="cr-app-section-head">' +
+                '<div class="cr-app-head-left">' +
+                  '<h3 class="cr-app-title">' + esc(role.role) + '</h3>' +
+                '</div>' +
+                '<button type="button" class="cr-app-remove" data-au-remove="' + esc(role.id) + '" aria-label="Remove ' + esc(role.role) + '">' +
+                  TRASH_SVG +
+                  "Remove" +
+                "</button>" +
+              "</div>" +
+              '<div class="cr-app-body">' +
+                '<div class="au-role-block">' +
+                  '<div class="cr-label">Description</div>' +
+                  '<p class="au-role-section-text">' + esc(roleDescription(role)) + '</p>' +
+                '</div>' +
+                '<div class="au-role-block">' +
+                  '<div class="cr-label">Access level</div>' +
+                  '<p class="cr-access-module-perms au-role-access-value" aria-live="polite">' + esc(roleAccessLevelSummary(role)) + "</p>" +
+                '</div>' +
+                '<button type="button" class="cr-customize-link au-role-view-toggle" data-au-toggle="' + esc(role.id) + '" aria-expanded="' + (isExpanded ? "true" : "false") + '">' +
+                  '<span class="au-role-toggle-label">' +
+                  (isExpanded ? "Hide all permissions" : "Show all permissions") +
+                  "</span>" +
+                  '<span class="au-role-toggle-arr" aria-hidden="true">' +
+                  (isExpanded ? "\u2191" : "\u2193") +
+                  "</span>" +
+                "</button>" +
+              "</div>" +
+            '</div>' +
+            '<div class="au-role-expand">' +
+              '<div class="au-role-expand-inner">' +
+              buildAURolePermissionDetailHtml(role) +
+            '</div>' +
+            '</div>' +
+          '</article>'
+        );
+      }
+      var html = "";
+      for (var r = 0; r < cards.length; r += 2) {
+        html += '<div class="au-role-cards-row">' + cards[r] + (cards[r + 1] || "") + "</div>";
       }
       auRoleCards.innerHTML = html;
       updateAuSummaries();

@@ -1278,29 +1278,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 /* EDL segmented control: one grid column per label, width = max-content
    (not equal-width flex). Short “Custom” label stays inside the bordered shell. */
 .cr-access-level-wrap {
-  display: block;
+  display: inline-flex;
+  align-items: stretch;
   width: 100%;
   max-width: 100%;
 }
 .cr-access-level-options {
-  display: inline-grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  display: inline-flex;
+  flex-direction: row;
   align-items: stretch;
+  flex-wrap: nowrap;
   width: max-content;
   max-width: 100%;
   box-sizing: border-box;
   border: 1px solid var(--border-input);
   border-radius: 8px;
   background: var(--bg-surface);
-  overflow: visible;
+  overflow: hidden;
 }
 .cr-access-level-btn {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  height: 32px;
+  min-height: 32px;
   padding: 0 16px;
   margin: 0;
   border: 0;
@@ -1309,23 +1311,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   color: var(--text-secondary);
   font-family: var(--ff);
   font-size: 14px;
-  line-height: 22px;
+  line-height: normal;
   font-weight: 500;
   white-space: nowrap;
-  overflow: visible;
+  overflow: hidden;
   text-overflow: clip;
-}
-.cr-access-level-btn:first-child {
-  padding-left: 18px;
-  padding-right: 16px;
+  flex: 0 0 auto;
+  align-self: stretch;
 }
 .cr-access-level-btn:last-child {
-  padding-left: 16px;
-  padding-right: 18px;
   border-right: 0;
 }
 .cr-access-level-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-.cr-access-level-btn.is-selected { background: var(--brand-bg-selected); color: var(--brand-text); }
+.cr-access-level-btn.is-selected {
+  background: var(--brand-bg-selected);
+  color: var(--brand-text);
+  border: 0;
+  border-right: 1px solid var(--border-input);
+  padding: 0 16px;
+  margin: 0;
+  box-shadow: none;
+  transform: none;
+}
+.cr-access-level-btn.is-selected:last-child {
+  border-right: 0;
+}
 .cr-access-level-btn:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; }
 /* Summary body (filled by JS); visual card is .cr-access-summary-card */
 .cr-access-summary {
@@ -1413,11 +1423,12 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-customize-link:hover { color: var(--brand-text-hover); }
 .cr-customize-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 2px; }
 .cr-collapse-all-link { margin-top: 14px; }
-.cr-summary-cta {
-  margin-top: 16px;
-  padding-top: 0;
+/* Create Role Permissions only: `.cr-summary-cta` is not used on Add/Edit User. */
+#createRolePage .cr-access-summary-card .cr-summary-cta {
+  margin-top: auto;
+  /* Minimum gap above link; `margin-top: auto` still absorbs row stretch. */
+  padding-top: 24px;
   flex-shrink: 0;
-  align-self: flex-start;
 }
 
 /* ═══ EDL DROPDOWN ═══ Exact Figma fidelity (node 390:15700, 390:15519) */
@@ -1556,22 +1567,23 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: var(--bg-surface);
 }
 
-/* Two application cards per row; equal columns with balanced gap.
-   align-items: start — each card height follows its own content (no row stretch).
-   Narrow breakpoints override to a single column (see media queries). */
-.cr-perms-content {
+/* Two application cards per row — equal width and equal row height (grid stretch).
+   Inner summary card flex-grows; CTA uses margin-top: auto + padding-top so short
+   rows keep a minimum gap above the link and stretched rows keep the link low. */
+#createRolePage .cr-perms-content {
   margin-top: 32px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 28px;
-  align-items: start;
+  align-items: stretch;
 }
 .cr-app-section {
   display: flex;
   flex-direction: column;
-  height: auto;
-  align-self: start;
+  min-width: 0;
   min-height: 0;
+  align-self: stretch;
+  height: 100%;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: 12px;
@@ -1587,6 +1599,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 4px;
+  flex-shrink: 0;
 }
 .cr-app-section-head:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 4px; }
 .cr-app-head-left { display: flex; flex-direction: row; align-items: center; gap: 8px; min-width: 0; }
@@ -1622,18 +1635,25 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-app-remove:hover { color: var(--brand-text-hover); }
 .cr-app-remove:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
 
-.cr-app-body { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; overflow-x: visible; }
-/* Summary stack hugs content; no shared min-height across the Functions grid. */
+.cr-app-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow-x: visible; }
+/* Fills remaining space below the access-level row so the inner summary card
+   can stretch to match the sibling card in the same flex row. */
 .cr-summary-stack {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   margin-top: 20px;
+  min-height: 0;
 }
 .cr-access-summary-card {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 0;
   /* Slightly tighter side padding so summary text has a bit more horizontal room
      without changing the outer app card shell. */
   padding: 20px 16px 18px;
@@ -1938,8 +1958,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .au-btn-add:hover:not(:disabled) { background: var(--brand-bg-selected); }
 .au-btn-add:disabled { border-color: var(--border-input); color: var(--text-placeholder); cursor: default; background: var(--bg-surface); }
 
-/* Match Create Role `.cr-perms-content`: two columns when space allows, single column ≤1023px.
-   align-items: start — each role card keeps its own height; expanding one must not stretch siblings. */
+/* Match Create Role `.cr-perms-content`: two-column grid when space allows, single column ≤1023px.
+   align-items: start — each role card keeps its own height; expanding one must not stretch siblings.
+   Add/Edit User (`#addUsersPage`) uses `.au-role-cards-row` + stretch grid (see after `.au-role-list-fallback li`).
+   Create Role app cards use `#createRolePage .cr-perms-content` grid + stretch. */
 .au-role-cards {
   margin-top: 0;
   display: grid;
@@ -2026,7 +2048,13 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 /* Expand panel: mirror Create Role `.cr-access-summary-list` two-column layout per app. */
 .au-role-app-section { margin-top: 20px; }
 .au-role-expand-inner > .au-role-app-section:first-child { margin-top: 0; }
+.au-role-expand-inner > .au-perm-card-list:first-child { margin-top: 0; }
 .au-role-app-section > .cr-label { margin-bottom: 8px; }
+/* Wrapper for Add/Edit User permission list: `display: contents` by default so
+   layout is unchanged; #addUsersPage ≥1024px overrides to a flex-growing inner panel. */
+.au-role-app-detail {
+  display: contents;
+}
 .au-role-perm-summary-list {
   display: grid;
   grid-template-columns: 180px 1fr;
@@ -2069,6 +2097,124 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   color: var(--text-primary);
 }
 
+/* ─── Add/Edit User (#addUsersPage) — Roles & Permissions layout ───
+   Role cards: `.au-role-cards-row` pairs + stretch grid.
+   Permission apps: `.au-perm-card-list` stacks `.au-perm-card-row` (pairs of
+   `.au-perm-card` / `.au-role-app-section`) so each row is a real 2-col grid
+   with equal-height stretch; inner `.au-role-app-detail` flex-grows. */
+#addUsersPage .au-role-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+#addUsersPage .au-role-cards-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  align-items: stretch;
+}
+#addUsersPage .au-role-card {
+  align-self: stretch;
+  height: 100%;
+  min-height: 0;
+}
+/* Expanded role card: expand region participates in column flex so inner permission
+   rows can receive a definite height chain (scrollport ≤ max-height). */
+#addUsersPage .au-role-card.expanded .au-role-expand {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#addUsersPage .au-role-card.expanded .au-role-expand-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0;
+}
+#addUsersPage .au-role-card-top {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add/Edit User — permission apps: DOM is
+   .au-role-expand-inner > .au-perm-card-list > .au-perm-card-row >
+     .au-perm-card-stack > .au-role-app-section.au-perm-card > (.cr-label + .au-role-app-detail > list) */
+#addUsersPage .au-perm-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+#addUsersPage .au-perm-card-list .au-role-app-section {
+  margin-top: 0;
+}
+#addUsersPage .au-perm-card-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+/* Grid cell → stack fills row track → card fills stack (height chain). */
+#addUsersPage .au-perm-card-row > .au-perm-card-stack {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+#addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+@media (min-width: 1024px) {
+  #addUsersPage .au-perm-card-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .cr-label {
+    flex-shrink: 0;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    box-sizing: border-box;
+    padding: 20px 16px 18px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(17, 24, 39, 0.06);
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail > .au-role-perm-summary-list {
+    flex: 0 0 auto;
+    min-height: 0;
+    align-content: start;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail > .au-role-list-fallback {
+    flex: 0 0 auto;
+    min-height: 0;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 1023px) {
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack,
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card {
+    height: auto;
+  }
+}
+
 /* ═══ RESPONSIVE LAYOUT BREAKPOINTS ═══
    Design anchor: 1440x1080 (desktop-ideal). */
 
@@ -2109,6 +2255,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .au-card { padding: 12px 20px 15px; }
   .au-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .au-role-cards { gap: 20px; }
+  #addUsersPage .au-role-cards,
+  #addUsersPage .au-role-cards-row {
+    gap: 20px;
+  }
   #auRolesCard .au-role-row { max-width: min(100%, calc((100% - 20px) / 2)); }
 }
 
@@ -2142,8 +2292,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   #crBasicCard.cr-card.collapsed { padding: 8px 16px 10px; }
   #auBasicCard.cr-card.collapsed,
   #auRolesCard.cr-card.collapsed { padding: 10px 16px; }
-  .cr-perms-content { grid-template-columns: 1fr; }
+  #createRolePage .cr-perms-content {
+    grid-template-columns: 1fr;
+  }
+  .cr-app-section { flex: 0 0 auto; width: 100%; max-width: 100%; height: auto; }
   .au-role-cards { grid-template-columns: 1fr; gap: 16px; }
+  #addUsersPage .au-role-cards-row {
+    grid-template-columns: 1fr;
+  }
+  #addUsersPage .au-role-cards {
+    gap: 16px;
+  }
 
   .au-shell { width: min(1048px, calc(100% - 48px)); margin-bottom: 40px; }
   .au-header { flex-wrap: wrap; gap: 14px; }
@@ -2161,6 +2320,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .au-btn-add { min-width: 72px; }
   .au-role-cards.has-roles { margin-top: 16px; }
   .au-role-card { min-height: 176px; }
+  #addUsersPage .au-role-card { min-height: 0; }
 }
 
 /* <768: single-column mobile layout with no clipping/overflow */
@@ -2210,7 +2370,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .cr-dd, .cr-dd-menu { width: 100%; }
   .pgn-dd.cr-dd { width: auto; min-width: 56px; }
   .cr-btn-add { width: 100%; }
-  .cr-perms-content { grid-template-columns: 1fr; }
+  #createRolePage .cr-perms-content {
+    grid-template-columns: 1fr;
+  }
+  .cr-app-section { flex: 0 0 auto; width: 100%; max-width: 100%; height: auto; }
 
   .au-shell { width: calc(100% - 32px); margin: 8px auto 28px; }
   .au-title { font-size: 26px; line-height: 34px; }
@@ -2226,6 +2389,13 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   }
   #auRolesCard .au-role-row .au-btn-add { width: auto; }
   .au-role-cards { grid-template-columns: 1fr; gap: 12px; }
+  #addUsersPage .au-role-cards-row {
+    grid-template-columns: 1fr;
+  }
+  #addUsersPage .au-role-cards,
+  #addUsersPage .au-role-cards-row {
+    gap: 12px;
+  }
   .au-role-card-top { padding: 14px 14px 16px; }
   .au-role-expand-inner { padding: 14px 14px 16px; }
 }
