@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DCM Access Management</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("atlas:theme");
+        /* Any non-"light" value becomes the data-theme attribute (e.g. "dark",
+           "ads-preview"). "light" or missing leaves the attribute off so
+           :root (EDL Light) defaults apply. This is an additive broadening of
+           the previous dark-only bootstrap; EDL Light and EDL Dark behavior
+           are unchanged. */
+        if (t && t !== "light") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Open Sans — ADS Preview typography only. EDL Light/Dark continue
+       to use InspireTWDC / MultiplaneTWDC Display via the :root --ff token.
+       The font only becomes active when [data-theme="ads-preview"] remaps
+       --ff to the Open Sans stack; under EDL themes this is inert weight in
+       the cache and never renders. preconnect hints shave off the TLS round
+       trip when a user first switches to ADS Preview. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../styles.css?v=dcm1">
+  <link rel="stylesheet" href="dcm.css?v=dcm1">
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-l">
+    <div class="nav-mod">
+      <div class="nav-logo-group">
+        <a href="../slides.html" class="nav-logo-link" aria-label="Open IAM executive introduction (slides)">
+          <img src="../nav/logo.svg" alt="Disney Advertising" class="nav-logo-img">
+        </a>
+        <span class="nav-divider"></span>
+      </div>
+      <a href="#" class="nav-a">Sales</a>
+      <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+      <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+      <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+      <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    </div>
+  </div>
+  <div class="nav-r">
+    <!-- ADS-Preview-only search pill. Hidden via CSS under EDL Light/Dark
+         (`display:none`) so it never affects those themes. Non-functional
+         decoration (readonly + tabindex="-1") — this is a visual preview
+         of the ADS search field, not wired to any search behavior. -->
+    <div class="ads-nav-search" aria-hidden="true">
+      <svg class="ads-nav-search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="ads-nav-search-inp" placeholder="Search" readonly tabindex="-1" aria-label="Search (preview only)">
+    </div>
+    <button class="nav-r-btn" aria-label="Notifications"><img src="../nav/bell.svg" alt="" width="24" height="24"></button>
+    <div class="user-menu" id="userMenu">
+      <button class="nav-r-btn" id="userMenuTrigger" aria-label="User menu" aria-haspopup="menu" aria-expanded="false"><img src="../nav/avatar.png" alt="" class="nav-avatar-img"></button>
+      <div class="user-menu-pop" id="userMenuPop" role="menu" aria-labelledby="userMenuTrigger">
+        <div class="user-menu-hdr">
+          <div class="user-menu-name">Simpson, Marge</div>
+          <div class="user-menu-email">marge.simpson@disney.com</div>
+        </div>
+        <div class="user-menu-sep"></div>
+        <div class="user-menu-row" role="menuitem" tabindex="-1">
+          <span class="user-menu-label">Version</span>
+          <span class="user-menu-value">1.0</span>
+        </div>
+        <div class="user-menu-row has-sub" id="userMenuTheme" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false">
+          <span class="user-menu-label">Theme</span>
+          <svg class="user-menu-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="user-menu-sub" role="menu" aria-label="Theme">
+            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-theme="light" tabindex="-1">EDL Light</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="dark" tabindex="-1">EDL Dark</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="ads-preview" tabindex="-1">ADS Preview</div>
+          </div>
+        </div>
+        <div class="user-menu-sep"></div>
+        <div class="user-menu-row" role="menuitem" tabindex="-1" id="userMenuLogout">
+          <span class="user-menu-label">Log Out</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ PAGE ═══ -->
+<main class="page">
+  <div class="hdr">
+    <h1>DCM Access Management</h1>
+    <p>Organization, Brand, and Ad Account scoped roles for Disney Campaign Manager</p>
+  </div>
+
+  <div class="card">
+    <!-- Tabs -->
+    <div class="tabs-row">
+      <nav>
+        <button class="tab-btn on">Users&nbsp;<span class="tab-count">(60 total)</span></button>
+        <button class="tab-btn">Roles and Permissions</button>
+      </nav>
+    </div>
+
+    <div id="usersPanel">
+    <!-- Toolbar -->
+    <div class="tbar">
+      <div class="tbar-l">
+        <button class="btn-std">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filter
+        </button>
+        <div class="search" id="searchWrap">
+          <input type="text" id="searchInput" placeholder="Search by name, email, organization role, or ad account access" autocomplete="off">
+          <svg class="search-ico" id="searchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <button type="button" class="search-clear hidden" id="searchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <div class="search-dropdown" id="searchDropdown">
+            <div id="searchDDContent"></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Users
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="tbl-wrap">
+      <table class="tbl" id="usersTable">
+        <colgroup id="usersColgroup">
+          <col data-u-col="nm">
+          <col data-u-col="em">
+          <col data-u-col="or">
+          <col data-u-col="aa">
+          <col data-u-col="st">
+          <col data-u-col="ll">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="c-nm" data-sort="name"><div class="th-inner"><span>Name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-em" data-sort="email"><div class="th-inner"><span>Email</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-or" data-sort="organizationRole"><div class="th-inner"><span>Organization Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-aa" data-sort="adAccountAccess"><div class="th-inner"><span>Ad Account Access</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-st" data-sort="status"><div class="th-inner"><span>Status</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-ll" data-sort="lastLogin"><div class="th-inner"><span>Last Login</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pgn">
+        <div class="pgn-show">
+        <span class="pgn-lbl">Show</span>
+        <div class="pgn-sel-wrap">
+          <div class="cr-dd pgn-dd" id="usersPageSizeDD">
+            <button type="button" class="cr-dd-trigger" id="usersPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="usersPageSizeMenu">
+              <span class="cr-dd-value" id="usersPageSizeValue">10</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="usersPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+          </div>
+        </div>
+        <span class="pgn-lbl">of 610 items</span>
+      </div>
+      <div class="pgn-pages">
+        <button class="pg-nav off" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="pg-nav off" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="pg-nums">
+          <button class="pg-n on">1</button>
+          <button class="pg-n">2</button>
+          <button class="pg-n">3</button>
+          <span class="pg-dots">…</span>
+          <button class="pg-n">10</button>
+        </div>
+        <button class="pg-nav" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="pg-nav" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="pgn-jump">
+        <span class="pgn-lbl">Go to page</span>
+        <div class="pgn-sel-wrap">
+          <div class="cr-dd pgn-dd" id="usersJumpDD">
+            <button type="button" class="cr-dd-trigger" id="usersJumpTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="usersJumpMenu">
+              <span class="cr-dd-value" id="usersJumpValue">1</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="usersJumpMenu" role="listbox" aria-label="Page"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div id="rolesPanel" style="display:none">
+      <div class="tbar">
+        <div class="tbar-l">
+          <button class="btn-std" id="rpFilterBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filter
+          </button>
+          <div class="search" id="rpSearchWrap">
+            <input type="text" id="rpSearchInput" placeholder="Search by role, scope, description, or access summary" autocomplete="off">
+            <svg class="search-ico" id="rpSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <button type="button" class="search-clear hidden" id="rpSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <button class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Role
+        </button>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="tbl rp-tbl" id="rpTable">
+          <colgroup id="rpColgroup">
+            <col data-rp-col="role">
+            <col data-rp-col="scope">
+            <col data-rp-col="desc">
+            <col data-rp-col="summary">
+            <col data-rp-col="by">
+            <col data-rp-col="date">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="rp-role" data-rp-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-func" data-rp-sort="dcmScope"><div class="th-inner"><span>Scope</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-desc" data-rp-sort="description"><div class="th-inner"><span>Description</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-sum" data-rp-sort="accessSummary"><div class="th-inner"><span>Access Summary</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-by" data-rp-sort="createdBy"><div class="th-inner"><span>Created By</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-date" data-rp-sort="createDate"><div class="th-inner"><span>Create Date</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            </tr>
+          </thead>
+          <tbody id="rpTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pgn" id="rpPgn">
+        <div class="pgn-show">
+          <span class="pgn-lbl">Show</span>
+          <div class="pgn-sel-wrap">
+            <div class="cr-dd pgn-dd" id="rpPageSizeDD">
+              <button type="button" class="cr-dd-trigger" id="rpPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="rpPageSizeMenu">
+                <span class="cr-dd-value" id="rpPageSizeValue">10</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="rpPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+            </div>
+          </div>
+          <span class="pgn-lbl" id="rpItemCount">of 15 items</span>
+        </div>
+        <div class="pgn-pages" id="rpPgnPages">
+          <button class="pg-nav off" data-rp-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+          <button class="pg-nav off" data-rp-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="pg-nums" id="rpPgNums"></div>
+          <button class="pg-nav" data-rp-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="pg-nav" data-rp-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+        </div>
+        <div class="pgn-jump">
+          <span class="pgn-lbl">Go to page</span>
+          <div class="pgn-sel-wrap">
+            <div class="cr-dd pgn-dd" id="rpJumpDD">
+              <button type="button" class="cr-dd-trigger" id="rpJumpTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="rpJumpMenu">
+                <span class="cr-dd-value" id="rpJumpValue">1</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="rpJumpMenu" role="listbox" aria-label="Page"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══ ADD USERS PAGE ═══ -->
+<div id="addUsersPage" class="au-page" style="display:none">
+  <div class="au-shell">
+    <button class="au-back" id="auBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to users
+    </button>
+
+    <div class="au-header">
+      <div class="au-header-left">
+        <h1 class="au-title" id="auPageTitle">Add users</h1>
+        <p class="au-subtitle" id="auPageSubtitle">Capture user details and assign scoped Organization and Ad Account access for Disney Campaign Manager</p>
+      </div>
+      <div class="au-header-actions">
+        <button type="button" class="au-remove-user-link" id="auRemoveUser" hidden>Remove User</button>
+        <button class="btn-std" id="auCancel">Cancel</button>
+        <button class="au-btn-save" id="auSave">Add User</button>
+      </div>
+    </div>
+
+    <section class="au-card cr-card" id="auBasicCard" aria-labelledby="auBasicTitle">
+      <div class="cr-section-header" data-au-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auBasicTitle">Basic Information</span>
+        <span class="cr-section-summary" id="auBasicSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="au-section-body">
+      <div class="au-grid">
+        <div class="au-field">
+          <label class="au-label" for="auFirstName">First name<span class="au-req">*</span></label>
+          <input class="au-input" id="auFirstName" type="text" placeholder="Enter first name" autocomplete="off">
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auLastName">Last name<span class="au-req">*</span></label>
+          <input class="au-input" id="auLastName" type="text" placeholder="Enter last name" autocomplete="off">
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auPreferredName">Preferred name
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input class="au-input" id="auPreferredName" type="text" placeholder="Enter preferred name" autocomplete="off">
+        </div>
+
+        <div class="au-field">
+          <label class="au-label" for="auEmail">Email<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
+        </div>
+        <div class="au-field">
+          <label class="au-label" for="auOrganization">Organization<span class="au-req">*</span></label>
+          <input class="au-input" id="auOrganization" type="text" placeholder="Organization name" autocomplete="off">
+        </div>
+        <div class="au-field au-field-status">
+          <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
+          <div class="au-status-seg" id="auStatusSeg" role="radiogroup" aria-labelledby="auStatusLabel">
+            <button type="button" class="au-status-opt is-selected" data-au-status="Active" aria-pressed="true">Active</button>
+            <button type="button" class="au-status-opt" data-au-status="Inactive" aria-pressed="false">Inactive</button>
+          </div>
+          <input type="hidden" id="auStatusValue" value="Active" required>
+        </div>
+        <div class="au-field au-profile-field">
+          <label class="au-label">Profile picture</label>
+          <p class="au-profile-sync-note">Synced from Disney Rostr when available.</p>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="au-card cr-card au-access-card" id="auRolesCard" aria-labelledby="auRolesPermissionsTitle">
+      <div class="cr-section-header" data-au-toggle="roles" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auRolesPermissionsTitle">Organization role &amp; Ad Account assignments</span>
+        <span class="cr-section-summary" id="auRolesSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="au-section-body">
+      <div class="au-field au-role-field">
+        <label class="au-label" for="auOrgRoleCombo-ctl">Organization Role<span class="au-req">*</span></label>
+        <div class="edl-combo au-field-dd" id="auOrgRoleCombo" aria-label="Organization role"></div>
+      </div>
+
+      <div class="au-assign-subsection is-empty" id="auAssignSubsection">
+        <div class="au-assign-subsection-head">
+          <h3 class="au-assign-subsection-title" id="auAssignmentsSubTitle">Ad Account Assignments</h3>
+          <div class="au-assign-add-wrap">
+            <button type="button" class="btn-std au-assign-add-btn" id="auAssignmentAdd">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add assignment
+            </button>
+          </div>
+        </div>
+        <div id="auAssignmentsBody" class="dc-au-assignment-list"></div>
+      </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ═══ CREATE ROLE PAGE ═══ -->
+<div id="createRolePage" class="cr-page" style="display:none">
+  <div class="cr-shell">
+    <button class="cr-back" id="crBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Roles and Permissions
+    </button>
+
+    <div class="cr-header">
+      <div class="cr-header-left">
+        <h1 class="cr-title">Create Role</h1>
+        <p class="cr-subtitle">Define role details and scoped access for Disney Campaign Manager</p>
+      </div>
+      <div class="cr-header-actions">
+        <button class="cr-btn-remove" id="crRemove" type="button" hidden>
+          <span>Remove Role</span>
+        </button>
+        <button class="btn-std" id="crCancel">Cancel</button>
+        <button class="cr-btn-save" id="crSave" disabled>Save Role</button>
+      </div>
+    </div>
+
+    <!-- Basic Information Card -->
+    <div class="cr-card" id="crBasicCard">
+      <div class="cr-section-header" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title">Basic Information</span>
+        <span class="cr-section-summary" id="crBasicSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Role Name <span class="cr-req">*</span></label>
+        <input type="text" class="cr-input" id="crRoleName" placeholder="Enter Role Name" autocomplete="off">
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Scope <span class="cr-req">*</span></label>
+        <div class="edl-combo" id="crScopeCombo"></div>
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Description</label>
+        <textarea class="cr-textarea" id="crDescription" placeholder="A brief summary of the role and its primary audience"></textarea>
+      </div>
+    </div>
+
+    <!-- Permissions Card -->
+    <div class="cr-card" id="crFuncsCard">
+      <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="crFunctionsTitle">Role configuration</span>
+        <span class="cr-section-summary" id="crFuncsSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Access level <span class="cr-req">*</span></label>
+        <div class="edl-combo" id="crAccessCombo"></div>
+      </div>
+      <div class="cr-field">
+        <label class="cr-label">Applies to</label>
+        <p class="au-role-section-text" id="crAppliesToText"></p>
+      </div>
+      <div class="cr-field">
+        <label class="cr-label">Permission summary</label>
+        <ul class="cr-permission-summary" id="crPermissionSummary"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FILTER DRAWER ═══ -->
+<div class="flt-overlay" id="fltOverlay"></div>
+<aside class="flt-drawer" id="fltDrawer">
+  <div class="flt-header">
+    <h2 class="flt-title">Filters</h2>
+    <button class="flt-close" id="fltClose" aria-label="Close filters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flt-body">
+    <div class="flt-field">
+      <label class="flt-label">Name</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltName" placeholder="Search name">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear name" data-for="fltName"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Email</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltEmail" placeholder="Search email">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear email" data-for="fltEmail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Organization Role</label>
+      <div class="edl-combo" id="roleCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Status</label>
+      <div class="edl-combo" id="statusCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Ad Account Access</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltAdAccess" placeholder="Brand, account, or role">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear ad account access" data-for="fltAdAccess"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="flt-footer">
+    <button class="flt-btn-reset" id="fltReset">Reset Filters</button>
+    <div class="flt-footer-r">
+      <button class="flt-btn-cancel" id="fltCancel">Cancel</button>
+      <button class="flt-btn-apply" id="fltApply">Apply</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ ROLES & PERMISSIONS FILTER DRAWER ═══
+     Structural twin of #fltDrawer above — same .flt-* classes, same .edl-combo
+     component, same header / body / footer rhythm. Only the fields + IDs
+     change. No new CSS is introduced; the drawer inherits every EDL token. -->
+<div class="flt-overlay" id="rpFltOverlay"></div>
+<aside class="flt-drawer" id="rpFltDrawer">
+  <div class="flt-header">
+    <h2 class="flt-title">Filters</h2>
+    <button class="flt-close" id="rpFltClose" aria-label="Close filters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flt-body">
+    <div class="flt-field">
+      <label class="flt-label">Role</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="rpFltRole" placeholder="Search role name">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear role" data-for="rpFltRole"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Description</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="rpFltDesc" placeholder="Search description">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear description" data-for="rpFltDesc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Scope</label>
+      <div class="edl-combo" id="rpScopeCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Created By</label>
+      <div class="edl-combo" id="rpCreatorCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Create Date</label>
+      <div class="flt-input-wrap">
+        <input type="date" class="flt-input" id="rpFltDate">
+      </div>
+    </div>
+  </div>
+  <div class="flt-footer">
+    <button class="flt-btn-reset" id="rpFltReset">Reset Filters</button>
+    <div class="flt-footer-r">
+      <button class="flt-btn-cancel" id="rpFltCancel">Cancel</button>
+      <button class="flt-btn-apply" id="rpFltApply">Apply</button>
+    </div>
+  </div>
+</aside>
+
+<!-- EDL toast container — visually matches the EDL Toast component (Figma node 15094:75972).
+     Live region so screen readers announce toasts as they appear. -->
+<div class="edl-toast-container" id="edlToastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+<!-- Remove Role confirmation dialog -->
+<div class="cr-confirm-backdrop" id="crConfirmBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crConfirmTitle" aria-describedby="crConfirmBody">
+    <h2 class="cr-confirm-title" id="crConfirmTitle">Remove role?</h2>
+    <p class="cr-confirm-body" id="crConfirmBody">
+      Are you sure you want to remove <strong id="crConfirmRoleName">this role</strong>? This action cannot be undone.
+    </p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="crConfirmCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="crConfirmRemove" type="button">Remove Role</button>
+    </div>
+  </div>
+</div>
+
+<!-- Remove application from role (Edit Role only — same EDL modal shell as Remove Role) -->
+<div class="cr-confirm-backdrop" id="crAppRemoveBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crAppRemoveTitle" aria-describedby="crAppRemoveBody">
+    <h2 class="cr-confirm-title" id="crAppRemoveTitle">Remove application from role?</h2>
+    <p class="cr-confirm-body" id="crAppRemoveBody">Removing this application will remove its permissions from this role. Users assigned to this role may lose access.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="crAppRemoveCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="crAppRemoveConfirm" type="button">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add User: Inactive status — same EDL `.cr-confirm-*` shell as Remove Role -->
+<div class="cr-confirm-backdrop" id="auInactiveConfirmBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auInactiveConfirmTitle" aria-describedby="auInactiveConfirmBody">
+    <h2 class="cr-confirm-title" id="auInactiveConfirmTitle">Set user as inactive?</h2>
+    <p class="cr-confirm-body" id="auInactiveConfirmBody">Inactive users cannot be assigned roles at Organization or Ad Account scope in Disney Campaign Manager. Any selected access will be removed before this user is added.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="auInactiveConfirmCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="auInactiveConfirmPrimary" type="button">Set as Inactive</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User: remove confirmation (Homer prototype) -->
+<div class="cr-confirm-backdrop" id="auRemoveUserBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auRemoveUserTitle" aria-describedby="auRemoveUserBody">
+    <h2 class="cr-confirm-title" id="auRemoveUserTitle">Remove user?</h2>
+    <p class="cr-confirm-body" id="auRemoveUserBody">This user will be removed from Disney Campaign Manager and their assigned access will no longer apply. This action cannot be undone in this prototype session.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="auRemoveUserCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="auRemoveUserConfirm" type="button">Remove User</button>
+    </div>
+  </div>
+</div>
+
+<script src="app-dcm.js?v=dcm1"></script>
+</body>
+</html>

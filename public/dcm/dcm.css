@@ -1,0 +1,156 @@
+/* DCM prototype — additive styles only (IAM styles.css unchanged).
+   Scoped access columns reuse .rp-func / .rp-func-text from IAM for typography. */
+
+#rolesPanel .rp-tbl td.rp-func + td.rp-desc {
+  padding-left: 4px;
+}
+
+/*
+ * Ad Account Assignments (Edit User only) — `renderAuAssignmentsTable` in public/dcm/app-dcm.js
+ * Does not alter Basic Information, header actions, page width, or accordion behavior.
+ */
+.au-assign-subsection {
+  margin-top: 24px;
+}
+
+.au-assign-subsection-head {
+  display: block;
+}
+
+.au-assign-subsection-title {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary);
+}
+
+.au-assign-add-wrap {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+.au-assign-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.au-assign-subsection.is-empty .au-assign-add-wrap {
+  display: none;
+}
+
+.au-assign-empty {
+  text-align: center;
+  padding: 40px 24px 44px;
+}
+
+.au-assign-empty-title {
+  margin: 0 0 8px;
+  font-family: var(--ff);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary);
+}
+
+.au-assign-empty-desc {
+  margin: 0 auto 14px;
+  max-width: 420px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-muted);
+}
+
+/* List of assignment cards — 16px between cards */
+#addUsersPage #auAssignmentsBody.dc-au-assignment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Bordered card — align with EDL/cr-card radius + light border; 16px padding */
+#addUsersPage #auAssignmentsBody .dc-au-assignment {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--bg-surface);
+}
+
+/* Title row + remove — never mixed into the field grid */
+#addUsersPage #auAssignmentsBody .dc-au-assignment-hd {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  min-height: 32px;
+}
+
+#addUsersPage #auAssignmentsBody .dc-au-assignment-title {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+#addUsersPage #auAssignmentsBody .dc-au-assignment-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+#addUsersPage #auAssignmentsBody .dc-au-assignment-rm {
+  flex-shrink: 0;
+}
+
+/*
+ * Four compact columns on desktop (not stacked full-width sausages).
+ * No au-grid here — avoids IAM 3-column `.au-grid` conflicts.
+ */
+#addUsersPage #auAssignmentsBody .dc-au-assignment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 14px;
+  row-gap: 16px;
+  align-items: start;
+}
+
+#addUsersPage #auAssignmentsBody .dc-au-assignment-grid > .au-field {
+  min-width: 0;
+}
+
+/* Inputs fill grid cells only (32px height from IAM `.au-input`) */
+#addUsersPage #auAssignmentsBody .dc-au-assignment-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  #addUsersPage #auAssignmentsBody .dc-au-assignment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cr-permission-summary {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.cr-permission-summary li {
+  margin-bottom: 6px;
+}
