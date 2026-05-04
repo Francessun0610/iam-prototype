@@ -1,79 +1,160 @@
 var DATA = [
   /* ── Page 1 ── */
-  { id: "u001", avatar: "avatars/photos/m01.png", name: "Homer Simpson", email: "Homer.Simpson@disney.com", roles: ["Core Planning Admin", "Planning Manager", "Planner"], status: "Active", team: "National Ad Sales", title: "VP, Ad Sales Operations", region: "NA" },
-  { id: "u002", avatar: "avatars/photos/f01.png", name: "Marge Simpson", email: "Marge.Simpson@disney.com", roles: ["Planner", "Planning Specialist"], status: "Active", team: "Digital Media Planning", title: "Director, Media Strategy", region: "NA" },
-  { id: "u003", avatar: "avatars/photos/m02.png", name: "Bart Simpson", email: "Bart.Simpson@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Client Partnerships", title: "Coordinator, Sales Support", region: "NA" },
-  { id: "u004", avatar: "avatars/photos/m03.png", name: "Ned Flanders", email: "Ned.Flanders@disney.com", roles: ["Planner", "Campaign Planner", "Read-Only Viewer"], status: "Active", team: "Streaming Revenue", title: "Manager, Client Partnerships", region: "EMEA" },
-  { id: "u005", avatar: "avatars/photos/f02.png", name: "Lisa Simpson", email: "Lisa.Simpson@disney.com", roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Sr. Analyst, Audience Insights", region: "NA" },
-  { id: "u006", avatar: "avatars/photos/m04.png", name: "Montgomery Burns", email: "Montgomery.Burns@disney.com", roles: ["Campaign Planner", "Planning Manager"], status: "Inactive", team: "Yield & Inventory", title: "SVP, Revenue Strategy", region: "NA" },
-  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten", email: "Milhouse.VanHouten@disney.com", roles: ["Operations Admin"], status: "Active", team: "Programmatic Sales", title: "Analyst, Campaign Planning", region: "ANZ" },
-  { id: "u008", avatar: "avatars/photos/f03.png", name: "Maggie Simpson", email: "Maggie.Simpson@disney.com", roles: ["Read-Only Viewer", "Planner"], status: "Active", team: "Revenue Operations", title: "Associate, Revenue Ops", region: "NA" },
-  { id: "u009", avatar: "avatars/photos/m06.png", name: "Waylon Smithers", email: "Waylon.Smithers@disney.com", roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"], status: "Inactive", team: "Ad Sales Finance", title: "Lead, Billing Operations", region: "NA" },
-  { id: "u010", avatar: "avatars/photos/m07.png", name: "Nelson Muntz", email: "Nelson.Muntz@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Finance & Planning", region: "LATAM" },
+  { id: "u001", avatar: "avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["Core Planning Admin", "Planning Manager", "Planner"],              status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
+  { id: "u002", avatar: "avatars/photos/f01.png", name: "Marge Simpson",                email: "Marge.Simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
+  { id: "u003", avatar: "avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
+  { id: "u004", avatar: "avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Streaming Revenue",          title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
+  { id: "u005", avatar: "avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation",  title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
+  { id: "u006", avatar: "avatars/photos/m04.png", name: "Montgomery Burns",             email: "Montgomery.Burns@disney.com",             roles: ["Campaign Planner", "Planning Manager"],                             status: "Inactive", team: "Yield & Inventory",          title: "SVP, Revenue Strategy",                region: "NA",    lastLogin: "Feb 14, 2026, 10:30 AM"  },
+  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Operations Admin"],                                                 status: "Active",   team: "Programmatic Sales",         title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
+  { id: "u008", avatar: "avatars/photos/f03.png", name: "Maggie Simpson",               email: "Maggie.Simpson@disney.com",               roles: ["Read-Only Viewer", "Planner"],                                      status: "Active",   team: "Revenue Operations",         title: "Associate, Revenue Ops",               region: "NA",    lastLogin: "May 2, 2026, 7:00 PM"   },
+  { id: "u009", avatar: "avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"],                status: "Inactive", team: "Ad Sales Finance",           title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
+  { id: "u010", avatar: "avatars/photos/m07.png", name: "Nelson Muntz",                 email: "Nelson.Muntz@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Finance & Planning",        region: "LATAM", lastLogin: "Apr 25, 2026, 5:30 PM"   },
 
   /* ── Page 2 ── */
-  { id: "u011", avatar: "avatars/photos/m08.png", name: "Ralph Wiggum", email: "Ralph.Wiggum@disney.com", roles: ["Ad Operations Specialist", "Campaign Planner"], status: "Active", team: "Addressable Ad Ops", title: "Associate, Ad Operations", region: "NA" },
-  { id: "u012", avatar: "avatars/photos/m09.png", name: "Principal Skinner", email: "Principal.Skinner@disney.com", roles: ["Planner", "Campaign Planner", "Read-Only Viewer"], status: "Active", team: "Agency Sales", title: "Sr. Manager, Agency Partnerships", region: "NA" },
-  { id: "u013", avatar: "avatars/photos/m10.png", name: "Krusty the Clown", email: "Krusty.TheClown@disney.com", roles: ["Campaign Planner"], status: "Active", team: "National Ad Sales", title: "Director, Brand Partnerships", region: "NA" },
-  { id: "u014", avatar: "avatars/photos/f04.png", name: "Selma Bouvier", email: "Selma.Bouvier@disney.com", roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"], status: "Active", team: "Ad Sales Finance", title: "Manager, Billing Operations", region: "EMEA" },
-  { id: "u015", avatar: "avatars/photos/f05.png", name: "Patty Bouvier", email: "Patty.Bouvier@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Revenue Reporting", region: "EMEA" },
-  { id: "u016", avatar: "avatars/photos/m11.png", name: "Lenny Leonard", email: "Lenny.Leonard@disney.com", roles: ["Planner", "Planning Specialist", "Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Media Investment", region: "NA" },
-  { id: "u017", avatar: "avatars/photos/m12.png", name: "Carl Carlson", email: "Carl.Carlson@disney.com", roles: ["Operations Admin", "Planning Specialist"], status: "Active", team: "Yield & Inventory", title: "Manager, Yield Optimization", region: "NA" },
-  { id: "u018", avatar: "avatars/photos/m13.png", name: "Moe Szyslak", email: "Moe.Szyslak@disney.com", roles: ["Read-Only Viewer", "Planner"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, Client Services", region: "LATAM" },
-  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon", email: "Apu.Nahasapeemapetilon@disney.com", roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Global Partnerships", title: "Sr. Manager, International Strategy", region: "ANZ" },
-  { id: "u020", avatar: "avatars/photos/m15.png", name: "Comic Book Guy", email: "Comic.BookGuy@disney.com", roles: ["Read-Only Viewer", "Operations Admin"], status: "Active", team: "Ad Sales Finance", title: "Analyst, Financial Planning", region: "NA" },
+  { id: "u011", avatar: "avatars/photos/m08.png", name: "Ralph Wiggum",                 email: "Ralph.Wiggum@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Ad Operations",             region: "NA",    lastLogin: "Apr 29, 2026, 1:15 PM"   },
+  { id: "u012", avatar: "avatars/photos/m09.png", name: "Principal Skinner",            email: "Principal.Skinner@disney.com",            roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Agency Sales",               title: "Sr. Manager, Agency Partnerships",     region: "NA",    lastLogin: "May 1, 2026, 10:00 AM"   },
+  { id: "u013", avatar: "avatars/photos/m10.png", name: "Krusty the Clown",             email: "Krusty.TheClown@disney.com",              roles: ["Campaign Planner"],                                                 status: "Active",   team: "National Ad Sales",          title: "Director, Brand Partnerships",         region: "NA",    lastLogin: "Apr 22, 2026, 2:00 PM"   },
+  { id: "u014", avatar: "avatars/photos/f04.png", name: "Selma Bouvier",                email: "Selma.Bouvier@disney.com",                roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"],      status: "Active",   team: "Ad Sales Finance",           title: "Manager, Billing Operations",          region: "EMEA",  lastLogin: "Apr 18, 2026, 9:30 AM"   },
+  { id: "u015", avatar: "avatars/photos/f05.png", name: "Patty Bouvier",                email: "Patty.Bouvier@disney.com",                roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Revenue Reporting",       region: "EMEA",  lastLogin: "May 2, 2026, 11:45 AM"   },
+  { id: "u016", avatar: "avatars/photos/m11.png", name: "Lenny Leonard",                email: "Lenny.Leonard@disney.com",                roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Media Investment",        region: "NA",    lastLogin: "Apr 30, 2026, 4:15 PM"   },
+  { id: "u017", avatar: "avatars/photos/m12.png", name: "Carl Carlson",                 email: "Carl.Carlson@disney.com",                 roles: ["Operations Admin", "Planning Specialist"],                          status: "Active",   team: "Yield & Inventory",          title: "Manager, Yield Optimization",          region: "NA",    lastLogin: "Apr 27, 2026, 3:00 PM"   },
+  { id: "u018", avatar: "avatars/photos/m13.png", name: "Moe Szyslak",                  email: "Moe.Szyslak@disney.com",                  roles: ["Read-Only Viewer", "Planner"],                                      status: "Inactive", team: "Client Partnerships",        title: "Coordinator, Client Services",         region: "LATAM", lastLogin: "Mar 10, 2026, 6:00 PM"   },
+  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon",       email: "Apu.Nahasapeemapetilon@disney.com",       roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Global Partnerships",    title: "Sr. Manager, International Strategy",  region: "ANZ",   lastLogin: "May 3, 2026, 7:30 AM"   },
+  { id: "u020", avatar: "avatars/photos/m15.png", name: "Comic Book Guy",               email: "Comic.BookGuy@disney.com",                roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Ad Sales Finance",           title: "Analyst, Financial Planning",          region: "NA",    lastLogin: "Apr 14, 2026, 12:30 PM"  },
 
   /* ── Page 3 ── */
-  { id: "u021", avatar: "avatars/photos/m16.png", name: "Chief Wiggum", email: "Chief.Wiggum@disney.com", roles: ["Planner"], status: "Active", team: "National Ad Sales", title: "VP, Client Solutions", region: "NA" },
-  { id: "u022", avatar: "avatars/photos/f06.png", name: "Edna Krabappel", email: "Edna.Krabappel@disney.com", roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"], status: "Active", team: "Digital Media Planning", title: "Director, Planning & Activation", region: "NA" },
-  { id: "u023", avatar: "avatars/photos/m17.png", name: "Groundskeeper Willie", email: "Groundskeeper.Willie@disney.com", roles: ["Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Lead, Campaign Trafficking", region: "EMEA" },
-  { id: "u024", avatar: "avatars/photos/m18.png", name: "Fat Tony", email: "Fat.Tony@disney.com", roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"], status: "Active", team: "Streaming Revenue", title: "SVP, Distribution Strategy", region: "NA" },
-  { id: "u025", avatar: "avatars/photos/m19.png", name: "Dr. Hibbert", email: "Julius.Hibbert@disney.com", roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"], status: "Active", team: "Revenue Operations", title: "Manager, Revenue Analytics", region: "NA" },
-  { id: "u026", avatar: "avatars/photos/m20.png", name: "Professor Frink", email: "Professor.Frink@disney.com", roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Programmatic Sales", title: "Sr. Analyst, Programmatic Yield", region: "NA" },
-  { id: "u027", avatar: "avatars/photos/m21.png", name: "Barney Gumble", email: "Barney.Gumble@disney.com", roles: ["Campaign Planner", "Ad Operations Specialist"], status: "Inactive", team: "Addressable Ad Ops", title: "Coordinator, Campaign Delivery", region: "NA" },
-  { id: "u028", avatar: "avatars/photos/m22.png", name: "Sideshow Bob", email: "Sideshow.Bob@disney.com", roles: ["Read-Only Viewer", "Campaign Planner", "Planner"], status: "Active", team: "Agency Sales", title: "Director, Agency Development", region: "EMEA" },
-  { id: "u029", avatar: "avatars/photos/m23.png", name: "Kent Brockman", email: "Kent.Brockman@disney.com", roles: ["Core Planning Admin", "Planning Manager"], status: "Active", team: "Global Partnerships", title: "VP, Global Media Sales", region: "NA" },
-  { id: "u030", avatar: "avatars/photos/m24.png", name: "Otto Mann", email: "Otto.Mann@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Ad Sales Finance", title: "Associate, Accounts Receivable", region: "LATAM" },
+  { id: "u021", avatar: "avatars/photos/m16.png", name: "Chief Wiggum",                 email: "Chief.Wiggum@disney.com",                 roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "VP, Client Solutions",                 region: "NA",    lastLogin: "Apr 24, 2026, 10:15 AM"  },
+  { id: "u022", avatar: "avatars/photos/f06.png", name: "Edna Krabappel",               email: "Edna.Krabappel@disney.com",               roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"],         status: "Active",   team: "Digital Media Planning",     title: "Director, Planning & Activation",      region: "NA",    lastLogin: "May 1, 2026, 3:30 PM"   },
+  { id: "u023", avatar: "avatars/photos/m17.png", name: "Groundskeeper Willie",         email: "Groundskeeper.Willie@disney.com",         roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Lead, Campaign Trafficking",           region: "EMEA",  lastLogin: "Apr 20, 2026, 8:00 AM"   },
+  { id: "u024", avatar: "avatars/photos/m18.png", name: "Fat Tony",                     email: "Fat.Tony@disney.com",                     roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"],      status: "Active",   team: "Streaming Revenue",          title: "SVP, Distribution Strategy",           region: "NA",    lastLogin: "Apr 16, 2026, 1:00 PM"   },
+  { id: "u025", avatar: "avatars/photos/m19.png", name: "Dr. Hibbert",                  email: "Julius.Hibbert@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"],         status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Analytics",           region: "NA",    lastLogin: "Apr 29, 2026, 9:45 AM"   },
+  { id: "u026", avatar: "avatars/photos/m20.png", name: "Professor Frink",              email: "Professor.Frink@disney.com",              roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Programmatic Sales",         title: "Sr. Analyst, Programmatic Yield",      region: "NA",    lastLogin: "Apr 12, 2026, 2:15 PM"   },
+  { id: "u027", avatar: "avatars/photos/m21.png", name: "Barney Gumble",                email: "Barney.Gumble@disney.com",                roles: ["Campaign Planner", "Ad Operations Specialist"],                     status: "Inactive", team: "Addressable Ad Ops",         title: "Coordinator, Campaign Delivery",       region: "NA",    lastLogin: "Feb 28, 2026, 11:00 AM"  },
+  { id: "u028", avatar: "avatars/photos/m22.png", name: "Sideshow Bob",                 email: "Sideshow.Bob@disney.com",                 roles: ["Read-Only Viewer", "Campaign Planner", "Planner"],                  status: "Active",   team: "Agency Sales",               title: "Director, Agency Development",         region: "EMEA",  lastLogin: "Apr 8, 2026, 4:45 PM"    },
+  { id: "u029", avatar: "avatars/photos/m23.png", name: "Kent Brockman",                email: "Kent.Brockman@disney.com",                roles: ["Core Planning Admin", "Planning Manager"],                          status: "Active",   team: "Global Partnerships",        title: "VP, Global Media Sales",               region: "NA",    lastLogin: "May 2, 2026, 6:30 PM"   },
+  { id: "u030", avatar: "avatars/photos/m24.png", name: "Otto Mann",                    email: "Otto.Mann@disney.com",                    roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Accounts Receivable",       region: "LATAM", lastLogin: "Apr 5, 2026, 10:00 AM"   },
 
   /* ── Page 4 ── */
-  { id: "u031", avatar: "avatars/photos/m25.png", name: "Mayor Quimby", email: "Mayor.Quimby@disney.com", roles: ["Planning Manager", "Planning Specialist"], status: "Active", team: "National Ad Sales", title: "SVP, Sales & Partnerships", region: "NA" },
-  { id: "u032", avatar: "avatars/photos/m26.png", name: "Hans Moleman", email: "Hans.Moleman@disney.com", roles: ["Operations Admin"], status: "Active", team: "Ad Sales Finance", title: "Associate, Billing Support", region: "NA" },
-  { id: "u033", avatar: "avatars/photos/m27.png", name: "Gil Gunderson", email: "Gil.Gunderson@disney.com", roles: ["Read-Only Viewer", "Planner", "Campaign Planner"], status: "Inactive", team: "Client Partnerships", title: "Coordinator, New Business", region: "NA" },
-  { id: "u034", avatar: "avatars/photos/m28.png", name: "Rainier Wolfcastle", email: "Rainier.Wolfcastle@disney.com", roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Streaming Revenue", title: "Director, Content Partnerships", region: "EMEA" },
-  { id: "u035", avatar: "avatars/photos/m29.png", name: "Troy McClure", email: "Troy.McClure@disney.com", roles: ["Planner", "Planning Specialist"], status: "Active", team: "Digital Media Planning", title: "Manager, Cross-Platform Planning", region: "NA" },
-  { id: "u036", avatar: "avatars/photos/m30.png", name: "Disco Stu", email: "Disco.Stu@disney.com", roles: ["Ad Operations Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Analyst, Creative Ad Solutions", region: "LATAM" },
-  { id: "u037", avatar: "avatars/photos/m31.png", name: "Dr. Nick Riviera", email: "Nick.Riviera@disney.com", roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"], status: "Active", team: "Revenue Operations", title: "Analyst, Revenue Reconciliation", region: "NA" },
-  { id: "u038", avatar: "avatars/photos/m32.png", name: "Kirk Van Houten", email: "Kirk.VanHouten@disney.com", roles: ["Operations Admin", "Planning Specialist"], status: "Inactive", team: "Yield & Inventory", title: "Associate, Inventory Management", region: "NA" },
-  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten", email: "Luann.VanHouten@disney.com", roles: ["Planner", "Campaign Planner"], status: "Active", team: "Agency Sales", title: "Manager, Client Relations", region: "ANZ" },
-  { id: "u040", avatar: "avatars/photos/f08.png", name: "Agnes Skinner", email: "Agnes.Skinner@disney.com", roles: ["Read-Only Viewer", "TOM Admin"], status: "Active", team: "Addressable Ad Ops", title: "Sr. Analyst, Financial Controls", region: "NA" },
+  { id: "u031", avatar: "avatars/photos/m25.png", name: "Mayor Quimby",                 email: "Mayor.Quimby@disney.com",                 roles: ["Planning Manager", "Planning Specialist"],                          status: "Active",   team: "National Ad Sales",          title: "SVP, Sales & Partnerships",            region: "NA",    lastLogin: "Apr 3, 2026, 11:30 AM"   },
+  { id: "u032", avatar: "avatars/photos/m26.png", name: "Hans Moleman",                 email: "Hans.Moleman@disney.com",                 roles: ["Operations Admin"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Billing Support",           region: "NA",    lastLogin: "Apr 18, 2026, 8:15 AM"   },
+  { id: "u033", avatar: "avatars/photos/m27.png", name: "Gil Gunderson",                email: "Gil.Gunderson@disney.com",                roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Inactive", team: "Client Partnerships",        title: "Coordinator, New Business",            region: "NA",    lastLogin: "Jan 15, 2026, 3:00 PM"   },
+  { id: "u034", avatar: "avatars/photos/m28.png", name: "Rainier Wolfcastle",           email: "Rainier.Wolfcastle@disney.com",           roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Streaming Revenue",          title: "Director, Content Partnerships",       region: "EMEA",  lastLogin: "Apr 14, 2026, 9:00 AM"   },
+  { id: "u035", avatar: "avatars/photos/m29.png", name: "Troy McClure",                 email: "Troy.McClure@disney.com",                 roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Manager, Cross-Platform Planning",     region: "NA",    lastLogin: "Apr 10, 2026, 2:45 PM"   },
+  { id: "u036", avatar: "avatars/photos/m30.png", name: "Disco Stu",                    email: "Disco.Stu@disney.com",                    roles: ["Ad Operations Specialist"],                                         status: "Active",   team: "Ad Solutions & Innovation",  title: "Analyst, Creative Ad Solutions",       region: "LATAM", lastLogin: "Mar 28, 2026, 12:00 PM"  },
+  { id: "u037", avatar: "avatars/photos/m31.png", name: "Dr. Nick Riviera",             email: "Nick.Riviera@disney.com",                 roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Active",   team: "Revenue Operations",         title: "Analyst, Revenue Reconciliation",      region: "NA",    lastLogin: "Apr 22, 2026, 11:15 AM"  },
+  { id: "u038", avatar: "avatars/photos/m32.png", name: "Kirk Van Houten",              email: "Kirk.VanHouten@disney.com",               roles: ["Operations Admin", "Planning Specialist"],                          status: "Inactive", team: "Yield & Inventory",          title: "Associate, Inventory Management",      region: "NA",    lastLogin: "Mar 5, 2026, 4:00 PM"    },
+  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten",             email: "Luann.VanHouten@disney.com",              roles: ["Planner", "Campaign Planner"],                                      status: "Active",   team: "Agency Sales",               title: "Manager, Client Relations",            region: "ANZ",   lastLogin: "Apr 25, 2026, 8:30 AM"   },
+  { id: "u040", avatar: "avatars/photos/f08.png", name: "Agnes Skinner",                email: "Agnes.Skinner@disney.com",                roles: ["Read-Only Viewer", "TOM Admin"],                                    status: "Active",   team: "Addressable Ad Ops",         title: "Sr. Analyst, Financial Controls",      region: "NA",    lastLogin: "Apr 17, 2026, 1:30 PM"   },
 
   /* ── Page 5 ── */
-  { id: "u041", avatar: "avatars/photos/m43.png", name: "Snake Jailbird", email: "Snake.Jailbird@disney.com", roles: ["Read-Only Viewer", "Planner", "Campaign Planner"], status: "Active", team: "Programmatic Sales", title: "Coordinator, Programmatic Deals", region: "NA" },
-  { id: "u042", avatar: "avatars/photos/m44.png", name: "Jimbo Jones", email: "Jimbo.Jones@disney.com", roles: ["Ad Operations Specialist", "Campaign Planner"], status: "Active", team: "Addressable Ad Ops", title: "Analyst, Ad Targeting", region: "NA" },
-  { id: "u043", avatar: "avatars/photos/m45.png", name: "Dolph Starbeam", email: "Dolph.Starbeam@disney.com", roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy", region: "EMEA" },
-  { id: "u044", avatar: "avatars/photos/f09.png", name: "Sherri Mackleberry", email: "Sherri.Mackleberry@disney.com", roles: ["Planner"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Audience Strategy", region: "NA" },
-  { id: "u045", avatar: "avatars/photos/f10.png", name: "Terri Mackleberry", email: "Terri.Mackleberry@disney.com", roles: ["Planner", "Planning Specialist", "Planning Manager"], status: "Active", team: "Digital Media Planning", title: "Sr. Planner, Integrated Media", region: "NA" },
-  { id: "u046", avatar: "avatars/photos/m33.png", name: "Martin Prince", email: "Martin.Prince@disney.com", roles: ["Read-Only Viewer", "Planning Manager"], status: "Active", team: "Revenue Operations", title: "Sr. Analyst, Data Governance", region: "NA" },
-  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy", email: "Timothy.Lovejoy@disney.com", roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts", region: "ANZ" },
-  { id: "u048", avatar: "avatars/photos/m35.png", name: "Cletus Spuckler", email: "Cletus.Spuckler@disney.com", roles: ["Operations Admin", "Read-Only Viewer"], status: "Active", team: "Ad Sales Finance", title: "Coordinator, Invoice Processing", region: "NA" },
-  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan", email: "Cookie.Kwan@disney.com", roles: ["Planner"], status: "Active", team: "National Ad Sales", title: "Sr. Manager, Regional Sales", region: "ANZ" },
-  { id: "u050", avatar: "avatars/photos/f12.png", name: "Lindsey Naegle", email: "Lindsey.Naegle@disney.com", roles: ["Operations Admin", "Planning Specialist", "TOM Admin"], status: "Active", team: "Yield & Inventory", title: "Director, Yield Strategy", region: "NA" },
+  { id: "u041", avatar: "avatars/photos/m43.png", name: "Snake Jailbird",               email: "Snake.Jailbird@disney.com",               roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Coordinator, Programmatic Deals",      region: "NA",    lastLogin: "Apr 2, 2026, 9:15 AM"    },
+  { id: "u042", avatar: "avatars/photos/m44.png", name: "Jimbo Jones",                  email: "Jimbo.Jones@disney.com",                  roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Analyst, Ad Targeting",                region: "NA",    lastLogin: "Apr 30, 2026, 2:00 PM"   },
+  { id: "u043", avatar: "avatars/photos/m45.png", name: "Dolph Starbeam",               email: "Dolph.Starbeam@disney.com",               roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy",         region: "EMEA",  lastLogin: "Mar 20, 2026, 10:45 AM"  },
+  { id: "u044", avatar: "avatars/photos/f09.png", name: "Sherri Mackleberry",           email: "Sherri.Mackleberry@disney.com",           roles: ["Planner"],                                                          status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Audience Strategy",       region: "NA",    lastLogin: "May 1, 2026, 8:45 AM"    },
+  { id: "u045", avatar: "avatars/photos/f10.png", name: "Terri Mackleberry",            email: "Terri.Mackleberry@disney.com",            roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Integrated Media",        region: "NA",    lastLogin: "Apr 28, 2026, 5:00 PM"   },
+  { id: "u046", avatar: "avatars/photos/m33.png", name: "Martin Prince",                email: "Martin.Prince@disney.com",                roles: ["Read-Only Viewer", "Planning Manager"],                             status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Data Governance",         region: "NA",    lastLogin: "Apr 24, 2026, 3:15 PM"   },
+  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy",              email: "Timothy.Lovejoy@disney.com",              roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts",        region: "ANZ",   lastLogin: "Apr 19, 2026, 10:30 AM"  },
+  { id: "u048", avatar: "avatars/photos/m35.png", name: "Cletus Spuckler",              email: "Cletus.Spuckler@disney.com",              roles: ["Operations Admin", "Read-Only Viewer"],                             status: "Active",   team: "Ad Sales Finance",           title: "Coordinator, Invoice Processing",      region: "NA",    lastLogin: "Apr 13, 2026, 12:00 PM"  },
+  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan",                  email: "Cookie.Kwan@disney.com",                  roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "Sr. Manager, Regional Sales",          region: "ANZ",   lastLogin: "May 2, 2026, 9:00 AM"    },
+  { id: "u050", avatar: "avatars/photos/f12.png", name: "Lindsey Naegle",               email: "Lindsey.Naegle@disney.com",               roles: ["Operations Admin", "Planning Specialist", "TOM Admin"],             status: "Active",   team: "Yield & Inventory",          title: "Director, Yield Strategy",             region: "NA",    lastLogin: "Apr 26, 2026, 4:30 PM"   },
 
   /* ── Page 6 ── */
-  { id: "u051", avatar: "avatars/photos/m36.png", name: "Lionel Hutz", email: "Lionel.Hutz@disney.com", roles: ["Read-Only Viewer"], status: "Active", team: "Client Partnerships", title: "Manager, Business Development", region: "NA" },
-  { id: "u052", avatar: "avatars/photos/f13.png", name: "Helen Lovejoy", email: "Helen.Lovejoy@disney.com", roles: ["Planner", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Agency Sales", title: "Sr. Planner, Agency Investment", region: "EMEA" },
-  { id: "u053", avatar: "avatars/photos/m37.png", name: "Artie Ziff", email: "Artie.Ziff@disney.com", roles: ["Planning Manager", "Core Planning Admin"], status: "Active", team: "Streaming Revenue", title: "VP, Digital Revenue", region: "NA" },
-  { id: "u054", avatar: "avatars/photos/f14.png", name: "Ruth Powers", email: "Ruth.Powers@disney.com", roles: ["Read-Only Viewer", "Operations Admin"], status: "Active", team: "Revenue Operations", title: "Manager, Revenue Systems", region: "NA" },
-  { id: "u055", avatar: "avatars/photos/m38.png", name: "Herman Hermann", email: "Herman.Hermann@disney.com", roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"], status: "Inactive", team: "Ad Sales Finance", title: "Analyst, Cost Allocation", region: "LATAM" },
-  { id: "u056", avatar: "avatars/photos/m39.png", name: "Wendell Borton", email: "Wendell.Borton@disney.com", roles: ["Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation", title: "Associate, Creative Operations", region: "NA" },
-  { id: "u057", avatar: "avatars/photos/m40.png", name: "Lyle Lanley", email: "Lyle.Lanley@disney.com", roles: ["Campaign Planner", "Planning Manager", "Planner"], status: "Active", team: "Programmatic Sales", title: "Sr. Manager, Programmatic Sales", region: "NA" },
-  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark", email: "Lewis.Clark@disney.com", roles: ["Operations Admin"], status: "Inactive", team: "Yield & Inventory", title: "Analyst, Inventory Forecasting", region: "ANZ" },
-  { id: "u059", avatar: "avatars/photos/m42.png", name: "Kearney Zzyzwicz", email: "Kearney.Zzyzwicz@disney.com", roles: ["Planner", "Campaign Planner", "Read-Only Viewer"], status: "Active", team: "Global Partnerships", title: "Coordinator, Partner Relations", region: "EMEA" },
-  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon", email: "Manjula.Nahasapeemapetilon@disney.com", roles: ["Operations Admin", "Read-Only Viewer", "Planner"], status: "Active", team: "Addressable Ad Ops", title: "Lead, Operations Support", region: "ANZ" }
+  { id: "u051", avatar: "avatars/photos/m36.png", name: "Lionel Hutz",                  email: "Lionel.Hutz@disney.com",                  roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Manager, Business Development",        region: "NA",    lastLogin: "Apr 11, 2026, 2:45 PM"   },
+  { id: "u052", avatar: "avatars/photos/f13.png", name: "Helen Lovejoy",                email: "Helen.Lovejoy@disney.com",                roles: ["Planner", "Campaign Planner", "Planning Specialist"],               status: "Active",   team: "Agency Sales",               title: "Sr. Planner, Agency Investment",        region: "EMEA",  lastLogin: "Apr 22, 2026, 10:00 AM"  },
+  { id: "u053", avatar: "avatars/photos/m37.png", name: "Artie Ziff",                   email: "Artie.Ziff@disney.com",                   roles: ["Planning Manager", "Core Planning Admin"],                          status: "Active",   team: "Streaming Revenue",          title: "VP, Digital Revenue",                  region: "NA",    lastLogin: "May 3, 2026, 11:00 AM"   },
+  { id: "u054", avatar: "avatars/photos/f14.png", name: "Ruth Powers",                  email: "Ruth.Powers@disney.com",                  roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Systems",             region: "NA",    lastLogin: "Apr 27, 2026, 3:30 PM"   },
+  { id: "u055", avatar: "avatars/photos/m38.png", name: "Herman Hermann",               email: "Herman.Hermann@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Inactive", team: "Ad Sales Finance",           title: "Analyst, Cost Allocation",             region: "LATAM", lastLogin: "Feb 8, 2026, 9:15 AM"    },
+  { id: "u056", avatar: "avatars/photos/m39.png", name: "Wendell Borton",               email: "Wendell.Borton@disney.com",               roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Associate, Creative Operations",       region: "NA",    lastLogin: "Apr 23, 2026, 1:45 PM"   },
+  { id: "u057", avatar: "avatars/photos/m40.png", name: "Lyle Lanley",                  email: "Lyle.Lanley@disney.com",                  roles: ["Campaign Planner", "Planning Manager", "Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Sr. Manager, Programmatic Sales",      region: "NA",    lastLogin: "May 1, 2026, 7:30 PM"    },
+  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark",                  email: "Lewis.Clark@disney.com",                  roles: ["Operations Admin"],                                                 status: "Inactive", team: "Yield & Inventory",          title: "Analyst, Inventory Forecasting",       region: "ANZ",   lastLogin: "Mar 14, 2026, 11:00 AM"  },
+  { id: "u059", avatar: "avatars/photos/m42.png", name: "Kearney Zzyzwicz",             email: "Kearney.Zzyzwicz@disney.com",             roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Global Partnerships",        title: "Coordinator, Partner Relations",       region: "EMEA",  lastLogin: "Apr 16, 2026, 6:15 PM"   },
+  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon",   email: "Manjula.Nahasapeemapetilon@disney.com",   roles: ["Operations Admin", "Read-Only Viewer", "Planner"],                  status: "Active",   team: "Addressable Ad Ops",         title: "Lead, Operations Support",             region: "ANZ",   lastLogin: "Apr 29, 2026, 8:00 AM"   }
 ];
 
 var ORIGINAL_ORDER = DATA.slice();
 var TOTAL_ITEMS = 610;
+
+/* ─── User view toggle state ───
+   userView: 'internal' (default) | 'external'
+   Switching swaps DATA / ORIGINAL_ORDER / TOTAL_ITEMS so that all
+   existing filter, sort, and pagination logic works without modification. */
+var INTERNAL_ORIGINAL_SNAPSHOT = ORIGINAL_ORDER.slice();
+var INTERNAL_TOTAL = TOTAL_ITEMS;
+
+/* External (agency / partner) users — 12 representative records.
+   Structure matches internal DATA except: no `avatar` (initials shown),
+   no `team` (replaced by `organization` in the Team column). */
+var EXTERNAL_DATA_ARRAY = [
+  /* ── Page 1 — Omnicom, OMD, PHD, Hearts & Science, GroupM ── */
+  { id: "e001", name: "Rachel Morales",       email: "r.morales@omnicommedia.com",   roles: ["Agency Admin"],             status: "Active",   organization: "Omnicom Media Group", title: "VP, Media Partnerships",           region: "NA",    lastLogin: "Apr 30, 2026, 10:15 AM"  },
+  { id: "e002", name: "Kevin Zhang",          email: "k.zhang@omnicommedia.com",     roles: ["Campaign Planner"],         status: "Active",   organization: "Omnicom Media Group", title: "Group Director, Media",            region: "NA",    lastLogin: "May 2, 2026, 3:00 PM"    },
+  { id: "e003", name: "Danielle Foster",      email: "d.foster@omd.com",             roles: ["Campaign Planner"],         status: "Active",   organization: "OMD",                 title: "Sr. Media Planner",                region: "NA",    lastLogin: "Apr 28, 2026, 2:30 PM"   },
+  { id: "e004", name: "James Okonkwo",        email: "j.okonkwo@omd.com",            roles: ["Planning Manager"],         status: "Active",   organization: "OMD",                 title: "Director, Media Planning",         region: "EMEA",  lastLogin: "May 1, 2026, 9:45 AM"    },
+  { id: "e005", name: "Leila Sharma",         email: "l.sharma@omd.com",             roles: ["Read-Only Viewer"],         status: "Active",   organization: "OMD",                 title: "Media Analyst",                    region: "NA",    lastLogin: "Apr 27, 2026, 11:00 AM"  },
+  { id: "e006", name: "Thomas Erikson",       email: "t.erikson@phdmedia.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "PHD",                 title: "Media Investment Lead",            region: "EMEA",  lastLogin: "Apr 24, 2026, 4:30 PM"   },
+  { id: "e007", name: "Ana Gutierrez",        email: "a.gutierrez@phdmedia.com",     roles: ["Planner"],                  status: "Active",   organization: "PHD",                 title: "Associate Media Director",         region: "LATAM", lastLogin: "May 3, 2026, 8:15 AM"    },
+  { id: "e008", name: "Michelle Kim",         email: "m.kim@heartsci.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Hearts & Science",    title: "Sr. Campaign Manager",             region: "NA",    lastLogin: "Apr 29, 2026, 1:30 PM"   },
+  { id: "e009", name: "Brandon Wu",           email: "b.wu@heartsci.com",            roles: ["Ad Operations Specialist"], status: "Active",   organization: "Hearts & Science",    title: "Programmatic Operations Lead",     region: "NA",    lastLogin: "Apr 25, 2026, 3:45 PM"   },
+  { id: "e010", name: "Sophie Laurent",       email: "s.laurent@groupm.com",         roles: ["External Partner Admin"],   status: "Active",   organization: "WPP / GroupM",        title: "Director, Partner Engagement",     region: "EMEA",  lastLogin: "May 2, 2026, 10:00 AM"   },
+  /* ── Page 2 — GroupM, Mindshare, Wavemaker, EssenceMediacom, Publicis ── */
+  { id: "e011", name: "Patrick O'Brien",      email: "p.obrien@groupm.com",          roles: ["Read-Only Viewer"],         status: "Active",   organization: "WPP / GroupM",        title: "Media Finance Analyst",            region: "NA",    lastLogin: "Apr 22, 2026, 2:15 PM"   },
+  { id: "e012", name: "Yuki Tanaka",          email: "y.tanaka@mindshare.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "Mindshare",           title: "Media Planner",                    region: "APAC",  lastLogin: "Apr 30, 2026, 9:00 AM"   },
+  { id: "e013", name: "Nadia Hassan",         email: "n.hassan@mindshare.com",       roles: ["Planning Manager"],         status: "Active",   organization: "Mindshare",           title: "Head of Planning",                 region: "EMEA",  lastLogin: "May 1, 2026, 11:30 AM"   },
+  { id: "e014", name: "Derek Williams",       email: "d.williams@mindshare.com",     roles: ["Read-Only Viewer"],         status: "Inactive", organization: "Mindshare",           title: "Digital Activation Specialist",    region: "NA",    lastLogin: "Feb 20, 2026, 3:00 PM"   },
+  { id: "e015", name: "Camille Rousseau",     email: "c.rousseau@wavemaker.com",     roles: ["Planner"],                  status: "Active",   organization: "Wavemaker",           title: "Content Investment Planner",       region: "EMEA",  lastLogin: "Apr 26, 2026, 1:00 PM"   },
+  { id: "e016", name: "Marcus Johnson",       email: "m.johnson@wavemaker.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Wavemaker",           title: "Sr. Media Planner",                region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"    },
+  { id: "e017", name: "Pooja Patel",          email: "p.patel@essencemediacom.com",  roles: ["External Partner Admin"],   status: "Active",   organization: "EssenceMediacom",     title: "Partner Solutions Director",       region: "NA",    lastLogin: "Apr 21, 2026, 4:00 PM"   },
+  { id: "e018", name: "Ryan Nguyen",          email: "r.nguyen@essencemediacom.com", roles: ["Ad Operations Specialist"], status: "Active",   organization: "EssenceMediacom",     title: "Programmatic Trader",              region: "NA",    lastLogin: "Apr 28, 2026, 10:30 AM"  },
+  { id: "e019", name: "Isabella Torres",      email: "i.torres@publicismedia.com",   roles: ["Campaign Planner"],         status: "Active",   organization: "Publicis Media",      title: "Sr. Campaign Planner",             region: "LATAM", lastLogin: "Apr 18, 2026, 2:00 PM"   },
+  { id: "e020", name: "Omar Shaikh",          email: "o.shaikh@publicismedia.com",   roles: ["Planning Manager"],         status: "Active",   organization: "Publicis Media",      title: "VP, Media Planning",               region: "NA",    lastLogin: "May 2, 2026, 9:15 AM"    },
+  /* ── Page 3 — Starcom, Zenith, Spark Foundry, IPG Mediabrands, UM ── */
+  { id: "e021", name: "Caroline Berg",        email: "c.berg@starcom.com",           roles: ["Planner"],                  status: "Active",   organization: "Starcom",             title: "Associate Media Director",         region: "EMEA",  lastLogin: "Apr 16, 2026, 11:45 AM"  },
+  { id: "e022", name: "Andre Dupont",         email: "a.dupont@starcom.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Starcom",             title: "Media Investment Director",        region: "EMEA",  lastLogin: "Apr 29, 2026, 3:30 PM"   },
+  { id: "e023", name: "Hiroshi Nakamura",     email: "h.nakamura@zenith.com",        roles: ["Read-Only Viewer"],         status: "Active",   organization: "Zenith",              title: "Digital Planner",                  region: "APAC",  lastLogin: "Apr 14, 2026, 10:00 AM"  },
+  { id: "e024", name: "Elena Petrov",         email: "e.petrov@zenith.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "Zenith",              title: "Sr. Programmatic Planner",         region: "EMEA",  lastLogin: "May 1, 2026, 8:00 AM"    },
+  { id: "e025", name: "Jasmine Reed",         email: "j.reed@sparkfoundry.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Spark Foundry",       title: "Media Campaign Manager",           region: "NA",    lastLogin: "Apr 24, 2026, 2:45 PM"   },
+  { id: "e026", name: "Trevor Blackwood",     email: "t.blackwood@sparkfoundry.com", roles: ["Planner"],                  status: "Inactive", organization: "Spark Foundry",       title: "Media Planner",                    region: "NA",    lastLogin: "Jan 30, 2026, 11:00 AM"  },
+  { id: "e027", name: "Amara Diallo",         email: "a.diallo@ipgmediabrands.com",  roles: ["External Partner Admin"],   status: "Active",   organization: "IPG Mediabrands",     title: "Partner Activation Lead",          region: "NA",    lastLogin: "Apr 20, 2026, 4:15 PM"   },
+  { id: "e028", name: "Steven Park",          email: "s.park@ipgmediabrands.com",    roles: ["Read-Only Viewer"],         status: "Active",   organization: "IPG Mediabrands",     title: "Investment Analyst",               region: "NA",    lastLogin: "May 2, 2026, 1:30 PM"    },
+  { id: "e029", name: "Fatima Al-Rashid",     email: "f.alrashid@umww.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "UM",                  title: "Global Media Planner",             region: "EMEA",  lastLogin: "Apr 17, 2026, 9:30 AM"   },
+  { id: "e030", name: "Lucas Martins",        email: "l.martins@umww.com",           roles: ["Planner"],                  status: "Active",   organization: "UM",                  title: "Associate Media Planner",          region: "LATAM", lastLogin: "Apr 27, 2026, 2:00 PM"   },
+  /* ── Page 4 — Initiative, Dentsu, Carat, iProspect, Havas ── */
+  { id: "e031", name: "Diana Hoffman",        email: "d.hoffman@initiative.com",     roles: ["Planning Manager"],         status: "Active",   organization: "Initiative",          title: "Director, Strategic Planning",     region: "NA",    lastLogin: "May 3, 2026, 10:00 AM"   },
+  { id: "e032", name: "Kwame Asante",         email: "k.asante@initiative.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Initiative",          title: "Sr. Media Planner",                region: "NA",    lastLogin: "Apr 22, 2026, 3:15 PM"   },
+  { id: "e033", name: "Mei-Ling Chen",        email: "m.chen@dentsu.com",            roles: ["Agency Admin"],             status: "Active",   organization: "Dentsu",              title: "Managing Director",                region: "APAC",  lastLogin: "Apr 15, 2026, 9:45 AM"   },
+  { id: "e034", name: "Roberto Russo",        email: "r.russo@dentsu.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Dentsu",              title: "Media Activation Manager",         region: "EMEA",  lastLogin: "Apr 30, 2026, 11:30 AM"  },
+  { id: "e035", name: "Zoe Mitchell",         email: "z.mitchell@carat.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Carat",               title: "Digital Campaign Planner",         region: "NA",    lastLogin: "Apr 28, 2026, 2:00 PM"   },
+  { id: "e036", name: "Aleksei Volkov",       email: "a.volkov@carat.com",           roles: ["Planner"],                  status: "Active",   organization: "Carat",               title: "Media Planner",                    region: "EMEA",  lastLogin: "May 1, 2026, 10:15 AM"   },
+  { id: "e037", name: "Tanya Iyer",           email: "t.iyer@iprospect.com",         roles: ["Ad Operations Specialist"], status: "Active",   organization: "iProspect",           title: "Biddable Media Specialist",        region: "NA",    lastLogin: "Apr 19, 2026, 4:30 PM"   },
+  { id: "e038", name: "Christopher Lam",      email: "c.lam@iprospect.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "iProspect",           title: "Performance Media Manager",        region: "APAC",  lastLogin: "Apr 25, 2026, 8:45 AM"   },
+  { id: "e039", name: "Samira Khalil",        email: "s.khalil@havasmedia.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Havas Media",         title: "Media Campaign Lead",              region: "EMEA",  lastLogin: "May 2, 2026, 3:45 PM"    },
+  { id: "e040", name: "Ben Nakajima",         email: "b.nakajima@havasmedia.com",    roles: ["Read-Only Viewer"],         status: "Active",   organization: "Havas Media",         title: "Media Analytics Lead",             region: "APAC",  lastLogin: "Apr 13, 2026, 12:00 PM"  },
+  /* ── Page 5 — Horizon, Stagwell, Assembly, Amazon Ads, Walmart Connect, Coca-Cola ── */
+  { id: "e041", name: "Veronica Cruz",        email: "v.cruz@horizonmedia.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Sr. Campaign Manager",             region: "NA",    lastLogin: "Apr 29, 2026, 10:30 AM"  },
+  { id: "e042", name: "Daniel Schwartz",      email: "d.schwartz@horizonmedia.com",  roles: ["Planning Manager"],         status: "Active",   organization: "Horizon Media",       title: "VP, Investment",                   region: "NA",    lastLogin: "May 3, 2026, 9:00 AM"    },
+  { id: "e043", name: "Naomi Clarke",         email: "n.clarke@stagwellglobal.com",  roles: ["External Partner Admin"],   status: "Active",   organization: "Stagwell",            title: "Partner Development Director",     region: "NA",    lastLogin: "Apr 23, 2026, 1:15 PM"   },
+  { id: "e044", name: "Felix Andersson",      email: "f.andersson@stagwellglobal.com", roles: ["Campaign Planner"],       status: "Active",   organization: "Stagwell",            title: "Media Strategy Manager",           region: "EMEA",  lastLogin: "Apr 26, 2026, 4:00 PM"   },
+  { id: "e045", name: "Jade Thompson",        email: "j.thompson@assemblyglobal.com", roles: ["Campaign Planner"],        status: "Active",   organization: "Assembly",            title: "Sr. Media Planner",                region: "NA",    lastLogin: "May 1, 2026, 2:30 PM"    },
+  { id: "e046", name: "Ravi Mehta",           email: "r.mehta@assemblyg.com",        roles: ["Ad Operations Specialist"], status: "Active",   organization: "Assembly",            title: "Programmatic Lead",                region: "NA",    lastLogin: "Apr 21, 2026, 11:00 AM"  },
+  { id: "e047", name: "Christine Wu",         email: "c.wu@amazon.com",              roles: ["External Partner Admin"],   status: "Active",   organization: "Amazon Ads",          title: "Partner Account Manager",          region: "NA",    lastLogin: "Apr 28, 2026, 9:30 AM"   },
+  { id: "e048", name: "Michael Torres",       email: "m.torres@amazon.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "Amazon Ads",          title: "Advertising Campaign Manager",     region: "NA",    lastLogin: "May 2, 2026, 4:15 PM"    },
+  { id: "e049", name: "Ashley Brennan",       email: "a.brennan@walmartconnect.com", roles: ["Read-Only Viewer"],         status: "Active",   organization: "Walmart Connect",     title: "Retail Media Planner",             region: "NA",    lastLogin: "Apr 24, 2026, 10:45 AM"  },
+  { id: "e050", name: "Sophia Adebayo",       email: "s.adebayo@coca-cola.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Coca-Cola",           title: "Global Media Manager",             region: "NA",    lastLogin: "Apr 30, 2026, 3:00 PM"   },
+  /* ── Page 6 — Coca-Cola, PepsiCo, P&G, Nike, Toyota, Verizon, T-Mobile, Samsung, Apple ── */
+  { id: "e051", name: "Gregory Faulkner",     email: "g.faulkner@coca-cola.com",     roles: ["Read-Only Viewer"],         status: "Active",   organization: "Coca-Cola",           title: "Media Analytics Director",         region: "NA",    lastLogin: "Apr 17, 2026, 2:15 PM"   },
+  { id: "e052", name: "Natalia Romero",       email: "n.romero@pepsico.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "PepsiCo",             title: "Sr. Media Manager",                region: "NA",    lastLogin: "May 3, 2026, 11:30 AM"   },
+  { id: "e053", name: "William Chen",         email: "w.chen@pg.com",                roles: ["Planning Manager"],         status: "Active",   organization: "Procter & Gamble",    title: "Media Investment Lead",            region: "NA",    lastLogin: "Apr 25, 2026, 9:00 AM"   },
+  { id: "e054", name: "Amelia Grant",         email: "a.grant@pg.com",               roles: ["Campaign Planner"],         status: "Active",   organization: "Procter & Gamble",    title: "Sr. Brand Media Planner",          region: "NA",    lastLogin: "Apr 29, 2026, 1:45 PM"   },
+  { id: "e055", name: "Jordan Rivera",        email: "j.rivera@nike.com",            roles: ["Campaign Planner"],         status: "Active",   organization: "Nike",                title: "Global Sports Media Manager",      region: "NA",    lastLogin: "Apr 22, 2026, 4:00 PM"   },
+  { id: "e056", name: "Takeshi Yamamoto",     email: "t.yamamoto@toyota.com",        roles: ["Read-Only Viewer"],         status: "Active",   organization: "Toyota",              title: "Media Planning Specialist",        region: "APAC",  lastLogin: "Apr 15, 2026, 10:30 AM"  },
+  { id: "e057", name: "Catherine O'Sullivan", email: "c.osullivan@verizon.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Verizon",             title: "National Media Planner",           region: "NA",    lastLogin: "May 2, 2026, 8:30 AM"    },
+  { id: "e058", name: "Brandon Nguyen",       email: "b.nguyen@t-mobile.com",        roles: ["Ad Operations Specialist"], status: "Active",   organization: "T-Mobile",            title: "Digital Activation Manager",       region: "NA",    lastLogin: "Apr 27, 2026, 2:45 PM"   },
+  { id: "e059", name: "Ji-Young Park",        email: "j.park@samsung.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Samsung",             title: "Sr. Campaign Strategist",          region: "APAC",  lastLogin: "Apr 20, 2026, 11:15 AM"  },
+  { id: "e060", name: "Rachel Huang",         email: "r.huang@apple.com",            roles: ["External Partner Admin"],   status: "Inactive", organization: "Apple",               title: "Partner Channel Manager",          region: "NA",    lastLogin: "Feb 11, 2026, 3:30 PM"   }
+];
+var EXTERNAL_TOTAL = 60;
+var userView = "internal";
 /* Session-added users (Add User flow) — same image for every new row until page refresh. */
 var DEFAULT_ADD_USER_AVATAR = "avatars/default-add-user.png";
 var currentPage = 1;
@@ -148,12 +229,12 @@ function repositionOpenCrDdMenus() {
 var searchTerm = "";
 var filters = { name: "", email: "", role: "", status: "", team: "", title: "", region: "" };
 var filterSnapshot = null;
-var SEARCH_FIELDS = ["name", "email", "status", "team", "title", "region"];
+var SEARCH_FIELDS = ["name", "email", "status", "team", "organization", "title", "region"];
 /* R&P search fields — mirrors SEARCH_FIELDS above so the two tabs share
    the same case-insensitive substring-match model. `functions` is an
    array of {name, count} and is handled separately in getRPFilteredData
    (parallel to how `roles` is handled for the Users tab). */
-var RP_SEARCH_FIELDS = ["role", "description", "status", "createdBy", "createDate"];
+var RP_SEARCH_FIELDS = ["role", "status", "createdBy", "createDate"];
 var activeTab = "users";
 
 /* ═══ ROLES & PERMISSIONS DATA ═══
@@ -442,7 +523,7 @@ function getInitialsColor(name) {
 }
 
 function renderAvatarHtml(user, forceInitials) {
-  if (forceInitials) {
+  if (forceInitials || !user.avatar) {
     return '<div class="name-avatar">' +
       '<div class="avatar-initials" aria-label="' + esc(user.name) + '">' +
         esc(getInitials(user.name)) +
@@ -555,39 +636,91 @@ var STATUS_ICON_INACTIVE =
   '</svg>';
 function renderStatusHtml(status) {
   var icon = status === "Active" ? STATUS_ICON_ACTIVE : STATUS_ICON_INACTIVE;
-  return '<span style="display:inline-flex;align-items:center;gap:6px;line-height:16px;vertical-align:middle;white-space:nowrap">' +
-    icon + '<span>' + esc(status) + '</span></span>';
+  var label = esc(status);
+  return '<span class="status-icon-wrap" data-status-tooltip="' + label + '" aria-label="' + label + '" role="img" tabindex="0">' + icon + '</span>';
+}
+
+function setupStatusTooltip() {
+  var tooltip = document.getElementById("statusTooltip");
+  if (!tooltip) {
+    tooltip = document.createElement("div");
+    tooltip.id = "statusTooltip";
+    tooltip.className = "edl-status-tooltip";
+    tooltip.setAttribute("role", "tooltip");
+    tooltip.setAttribute("aria-hidden", "true");
+    document.body.appendChild(tooltip);
+  }
+
+  function show(target) {
+    var label = target.getAttribute("data-status-tooltip");
+    if (!label) return;
+    tooltip.textContent = label;
+    tooltip.setAttribute("aria-hidden", "false");
+    tooltip.classList.add("is-visible");
+
+    var rect = target.getBoundingClientRect();
+    var tt = tooltip.getBoundingClientRect();
+    var left = rect.left + (rect.width / 2) - (tt.width / 2);
+    left = Math.max(8, Math.min(left, window.innerWidth - tt.width - 8));
+    var top = rect.top - tt.height - 8;
+    if (top < 8) top = rect.bottom + 8;
+
+    tooltip.style.left = Math.round(left) + "px";
+    tooltip.style.top = Math.round(top) + "px";
+  }
+
+  function hide() {
+    tooltip.classList.remove("is-visible");
+    tooltip.setAttribute("aria-hidden", "true");
+  }
+
+  document.addEventListener("mouseover", function (e) {
+    var target = e.target.closest(".status-icon-wrap");
+    if (target) show(target);
+  });
+  document.addEventListener("mouseout", function (e) {
+    if (e.target.closest(".status-icon-wrap")) hide();
+  });
+  document.addEventListener("focusin", function (e) {
+    var target = e.target.closest(".status-icon-wrap");
+    if (target) show(target);
+  });
+  document.addEventListener("focusout", function (e) {
+    if (e.target.closest(".status-icon-wrap")) hide();
+  });
+  window.addEventListener("scroll", hide, true);
+  window.addEventListener("resize", hide);
 }
 
 function renderTable() {
   var rows = getPageData();
   var tb = document.getElementById("tbody");
   if (rows.length === 0) {
-    tb.innerHTML = '<tr><td colspan="7" class="empty-state">No results found</td></tr>';
+    tb.innerHTML = '<tr><td colspan="8" class="empty-state">No results found</td></tr>';
     return;
   }
   var html = "";
+  var isExternal = userView === "external";
   for (var i = 0; i < rows.length; i++) {
     var u = rows[i];
-    /* Render the FULL role list inline, with no overflow chip. The
-       "+N role(s)" chip is added post-render by fitUsersRoleCells()
-       only when the cell's rendered content actually overflows its
-       column — so on wide layouts all roles stay visible, and on
-       narrow / resized-narrower layouts only the hidden remainder
-       collapses into the chip. Roles are stashed pipe-delimited on
-       the td (simpler than JSON to round-trip through an HTML attr)
-       so the fitter can reconstruct them after pagination/filter/
-       tab-switch/resize without re-querying the data array. */
     var rolesAttr = u.roles.join("|");
     var editHint = "Edit user " + u.name;
+    var forceInitials = isExternal || (currentPage === 2 && !isSessionAddedUser(u));
+    var teamOrOrg = isExternal ? (u.organization || "") : u.team;
+    var loginStr = u.lastLogin ? esc(u.lastLogin) : "—";
     html += '<tr data-id="' + esc(u.id) + '">' +
-      '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, currentPage === 2 && !isSessionAddedUser(u)) +
-        '<a class="name-link" href="#" data-user-id="' + esc(u.id) + '" title="' + esc(u.name) + '" aria-label="' + esc(editHint) + '">' + esc(u.name) + "</a></div></td>" +
+      '<td class="c-nm"><div class="name-cell">' + renderAvatarHtml(u, forceInitials) +
+        '<div class="name-cell-text">' +
+          '<a class="name-link" href="#" data-user-id="' + esc(u.id) + '" title="' + esc(u.name) + '" aria-label="' + esc(editHint) + '">' + esc(u.name) + '</a>' +
+          '<span class="name-cell-email">' + esc(u.email) + '</span>' +
+        '</div>' +
+      '</div></td>' +
       '<td class="c-em">' + esc(u.email) + '</td>' +
       '<td class="c-rl" data-roles="' + esc(rolesAttr) + '"><span class="role-txt">' + esc(u.roles.join(', ')) + '</span></td>' +
       '<td class="c-st">' + renderStatusHtml(u.status) + '</td>' +
-      '<td class="c-tm">' + esc(u.team) + '</td>' +
+      '<td class="c-tm">' + esc(teamOrOrg) + '</td>' +
       '<td class="c-ct">' + esc(u.title) + '</td>' +
+      '<td class="c-ll">' + loginStr + '</td>' +
       '<td class="c-rg">' + esc(u.region) + '</td>' +
       '</tr>';
   }
@@ -730,8 +863,54 @@ function renderPagination() {
   var displayCount = hasActiveFilters() ? filteredCount : TOTAL_ITEMS;
   document.querySelector(".pgn-show .pgn-lbl:last-child").textContent = "of " + displayCount + " items";
 
+  updateTotalLabel();
   renderUsersJumpDdMenu();
   renderUsersPageSizeDdMenu();
+}
+
+/* ─── User view toggle helpers ─── */
+
+function updateTotalLabel() {
+  var el = document.getElementById("usersTotalLabel");
+  if (!el) return;
+  var suffix = userView === "external" ? " (External)" : " (Internal)";
+  el.textContent = "Total users: " + TOTAL_ITEMS + suffix;
+}
+
+function updateUserViewColumns() {
+  var thTm = document.querySelector("#usersTable th.c-tm");
+  if (!thTm) return;
+  var span = thTm.querySelector(".th-inner span");
+  if (span) span.textContent = userView === "external" ? "Organization" : "Team";
+  thTm.setAttribute("data-sort", userView === "external" ? "organization" : "team");
+}
+
+function switchUserView(view) {
+  if (view === userView) return;
+  userView = view;
+  /* Swap active dataset and virtual total */
+  if (view === "external") {
+    DATA = EXTERNAL_DATA_ARRAY.slice();
+    ORIGINAL_ORDER = EXTERNAL_DATA_ARRAY.slice();
+    TOTAL_ITEMS = EXTERNAL_TOTAL;
+  } else {
+    DATA = INTERNAL_ORIGINAL_SNAPSHOT.slice();
+    ORIGINAL_ORDER = INTERNAL_ORIGINAL_SNAPSHOT.slice();
+    TOTAL_ITEMS = INTERNAL_TOTAL;
+  }
+  /* Reset sort/page state */
+  sortKey = null;
+  sortDir = null;
+  currentPage = 1;
+  /* Reflect new view in UI */
+  var segBtns = document.querySelectorAll("#userViewToggle .seg-btn");
+  for (var i = 0; i < segBtns.length; i++) {
+    segBtns[i].classList.toggle("on", segBtns[i].dataset.view === view);
+  }
+  updateUserViewColumns();
+  updateSortHeaders();
+  renderTable();
+  renderPagination();
 }
 
 function applySort(key) {
@@ -806,6 +985,22 @@ document.addEventListener("DOMContentLoaded", function () {
   renderTable();
   renderPagination();
 
+  /* Stamp total-users count into pagination footer from the single source of truth. */
+  var totalEl = document.getElementById("usersTotalCount");
+  if (totalEl) totalEl.textContent = TOTAL_ITEMS;
+
+  /* ─── Segmented user-view toggle ─── */
+  var toggle = document.getElementById("userViewToggle");
+  if (toggle) {
+    toggle.addEventListener("click", function (e) {
+      var btn = e.target.closest(".seg-btn");
+      if (btn && btn.dataset.view) switchUserView(btn.dataset.view);
+    });
+  }
+  updateUserViewColumns();
+  updateTotalLabel();
+  setupStatusTooltip();
+
   /* ─── Column resize ─── Restores drag-to-resize on every visible
      column in both the Users and Roles & Permissions tables. Uses the
      existing `.col-resize-handle` styling already in styles.css.
@@ -841,8 +1036,7 @@ document.addEventListener("DOMContentLoaded", function () {
        visible content meaningful when a user drags narrow.
 
        Short-content columns (single word / single badge):
-         st  (Status, 100)  — header "Status" + sort icon ≈ 66px;
-                              pill max ≈ 85px. 100 leaves pill air.
+         st  (Status, 60)   — icon-only status cell with compact header.
          rg  (Region, 80)   — 2–4 char codes ("NA", "EMEA").
          date(Create Date,120)— header "Create Date" ≈ 85px; body
                               "MM/DD/YYYY" ≈ 75px.
@@ -850,12 +1044,12 @@ document.addEventListener("DOMContentLoaded", function () {
          nm  (Name, 200)    — 48px avatar + gap + name text.
          tm  (Team, 140)    — team names can truncate gracefully
                               (e.g. "Ad Solutions & Innovation").
+         ll  (Last Login,170)— full date strings ("Apr 30, 2026, 3:00 PM").
          by  (Created By,130)— user names ("Homer Simpson" ≈ 100px).
        Long-content columns (multi-item / long prose):
          em  (Email, 220)   — "first.last@disney.com" fits cleanly.
          rl  (Role, 220)    — one role + "+N role" chip fit at 220;
                               fitUsersRoleCells picks up from there.
-         desc(Description,220)
          func(Functions,240)— keeps at least one app-group tag
                               visible alongside its (N) count button.
 
@@ -864,10 +1058,10 @@ document.addEventListener("DOMContentLoaded", function () {
        (see getCellTruncationInfo), so nothing is ever lost — only
        visibly truncated when the column is too narrow to show it. */
     var MIN_WIDTHS = {
-      "nm": 200, "em": 220, "rl": 220, "st": 100, "tm": 140, "rg": 80,
-      "role": 160, "desc": 220, "func": 240, "by": 130, "date": 120
+      "nm": 200, "rl": 220, "st": 60, "tm": 140, "ll": 170, "rg": 80,
+      "role": 160, "func": 240, "by": 130, "date": 120
     };
-    var SKIP_KEYS = { "ct": 1 };
+    var SKIP_KEYS = { "ct": 1, "em": 1 };
 
     function attach(table) {
       if (!table) return;
@@ -1073,41 +1267,20 @@ document.addEventListener("DOMContentLoaded", function () {
       if (oldTotalOthers <= 0 || newTotalOthers <= 0) return;
 
       /* R&P only: keep Role and Created By at their measured widths; give
-         all horizontal slack to Description and Functions (Data Access column
-         removed — no third middle column to preserve). */
-      if (table.id === "rpTable" && oldWidths.length >= 5 && rightIdx === 4) {
-        var MIN_DESC = 200;
+         all horizontal slack to Functions (Description column removed). */
+      if (table.id === "rpTable" && oldWidths.length >= 4 && rightIdx === 3) {
         var MIN_FUNC = 220;
         var rolePx = oldWidths[0];
-        var desc0 = oldWidths[1];
-        var func0 = oldWidths[2];
-        var byPx = oldWidths[3];
+        var func0 = oldWidths[1];
+        var byPx = oldWidths[2];
         var rem = newTotalOthers - rolePx - byPx;
-        if (rem >= MIN_DESC + MIN_FUNC) {
-          var sumPair = desc0 + func0;
-          var ratio = sumPair > 0 ? desc0 / sumPair : 0.5;
-          var descPx = Math.max(MIN_DESC, Math.round(rem * ratio));
-          var funcPx = rem - descPx;
-          if (funcPx < MIN_FUNC) {
-            funcPx = MIN_FUNC;
-            descPx = rem - funcPx;
-          }
-          /* Shift ~3.5% of the desc+func pool from Description → Functions
-             (same intent as the CSS col % tweak) so long function strings
-             get more room before ellipsis while desc stays readable. */
-          var nudge = Math.round(rem * 0.035);
-          if (nudge > 0 && descPx - nudge >= MIN_DESC && funcPx + nudge >= MIN_FUNC) {
-            descPx -= nudge;
-            funcPx += nudge;
-          }
-          if (descPx >= MIN_DESC && funcPx >= MIN_FUNC) {
-            cols[0].style.width = Math.max(1, Math.round(rolePx)) + "px";
-            cols[1].style.width = descPx + "px";
-            cols[2].style.width = funcPx + "px";
-            cols[3].style.width = Math.max(1, Math.round(byPx)) + "px";
-            cols[4].style.width = targetRightPx + "px";
-            return;
-          }
+        if (rem >= MIN_FUNC) {
+          var funcPx = Math.max(MIN_FUNC, rem);
+          cols[0].style.width = Math.max(1, Math.round(rolePx)) + "px";
+          cols[1].style.width = funcPx + "px";
+          cols[2].style.width = Math.max(1, Math.round(byPx)) + "px";
+          cols[3].style.width = targetRightPx + "px";
+          return;
         }
       }
 
@@ -3628,7 +3801,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var roleCell = '<a class="rp-role-link" href="#" data-role-edit="' + esc(r.id) + '">' + esc(r.role) + '</a>';
       html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="rp-role" title="' + esc(r.role) + '">' + roleCell + '</td>' +
-        '<td class="rp-desc" title="' + esc(r.description) + '">' + esc(r.description) + '</td>' +
         '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + "</span></td>" +
         '<td class="rp-by">' + esc(r.createdBy) + '</td>' +
         '<td class="rp-date">' + esc(r.createDate) + '</td>' +

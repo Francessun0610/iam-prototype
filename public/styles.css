@@ -1,9 +1,51 @@
-@font-face { font-family: 'InspireTWDC'; font-weight: 400; font-style: normal; src: local('InspireTWDC Roman'), local('InspireTWDC-Roman'), local('Inspire TWDC Roman'), local('Inspire TWDC'), local('InspireTWDC'); }
-@font-face { font-family: 'InspireTWDC'; font-weight: 500; font-style: normal; src: local('InspireTWDC Medium'), local('InspireTWDC-Medium'), local('Inspire TWDC Medium'); }
-@font-face { font-family: 'InspireTWDC'; font-weight: 700; font-style: normal; src: local('InspireTWDC Bold'), local('InspireTWDC-Bold'), local('Inspire TWDC Bold'); }
-@font-face { font-family: 'InspireTWDC'; font-weight: 800; font-style: normal; src: local('InspireTWDC Heavy'), local('InspireTWDC-Heavy'), local('Inspire TWDC Heavy'); }
-@font-face { font-family: 'InspireTWDC'; font-weight: 900; font-style: normal; src: local('InspireTWDC ExtraBold'), local('InspireTWDC-ExtraBold'), local('Inspire TWDC ExtraBold'); }
-@font-face { font-family: 'MultiplaneTWDC Display'; font-weight: 500; font-style: normal; src: local('MultiplaneTWDC Display Medium'), local('MultiplaneTWDC_Display-Medium'), local('MultiplaneTWDC Display'), local('MultiplaneTWDC_Display'); }
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/InspireTWDC-Roman.woff2') format('woff2'),
+       local('InspireTWDC Roman'), local('InspireTWDC-Roman'), local('Inspire TWDC Roman'), local('InspireTWDC');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/InspireTWDC-Medium.woff2') format('woff2'),
+       local('InspireTWDC Medium'), local('InspireTWDC-Medium'), local('Inspire TWDC Medium');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
+       local('InspireTWDC Bold'), local('InspireTWDC-Bold'), local('Inspire TWDC Bold');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
+       local('InspireTWDC Heavy'), local('InspireTWDC-Heavy'), local('Inspire TWDC Heavy');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/InspireTWDC-Black.woff2') format('woff2'),
+       local('InspireTWDC Black'), local('InspireTWDC-Black'), local('Inspire TWDC Black');
+}
+@font-face {
+  font-family: 'MultiplaneTWDC Display';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/MultiplaneTWDC-Display-Medium.woff2') format('woff2'),
+       local('MultiplaneTWDC Display Medium'), local('MultiplaneTWDC_Display-Medium'), local('MultiplaneTWDC Display');
+}
 
 :root {
   /* EDL Primary — Gray */
@@ -313,9 +355,12 @@ table { border-spacing: 0; border-collapse: collapse; }
 .tbar-l { display: flex; align-items: center; gap: 16px; }
 .tbar > .btn-ghost { align-self: center; margin-top: 0; margin-bottom: 0; }
 
-/* EDL Standard button — 32px, indigo border, rounded-8 */
+/* EDL Standard button — secondary outline, 32px */
 .btn-std { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--brand-text); border-radius: 8px; background: var(--bg-surface); font-size: 14px; font-weight: 500; line-height: 16px; color: var(--brand-text); white-space: nowrap; transition: background-color 0.15s ease; }
 .btn-std:hover { background: var(--brand-bg-soft); }
+.btn-std:active { background: var(--brand-bg-selected); }
+.btn-std:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-std:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 .btn-std svg { flex-shrink: 0; }
 
 /* EDL Search — 32px input with dropdown panel */
@@ -346,8 +391,8 @@ table { border-spacing: 0; border-collapse: collapse; }
 .search-dd-divider { height: 1px; background: var(--border-subtle); margin: 10px 0; }
 .search-dd-empty { font-size: 13px; line-height: 21px; color: var(--text-muted); padding: 4px 0; }
 
-/* EDL Demoted button — ghost, no border (Figma 362:55896 w=111) */
-/* Ghost action buttons ("+ Create Role", "+ Add Users") sit in .tbar which
+/* EDL toolbar primary CTA treatment for "+ Add Users" / "+ Create Role". */
+/* CTA action buttons sit in .tbar which
    already anchors the right edge at 32px from the card (matching .pgn and
    .rp-act). Zero horizontal padding on the button keeps the icon+text
    optically aligned to that same right-side system instead of being inset
@@ -358,11 +403,73 @@ table { border-spacing: 0; border-collapse: collapse; }
    native <button> UA layout resolves a taller strut (line-height: 20)
    differently from .btn-std's 16px strut and the glyphs can read as
    sitting ~1–2 px higher than Filter/Search on the same flex row. */
-.btn-ghost { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; line-height: 16px; color: var(--brand-text); white-space: nowrap; overflow: visible; cursor: pointer; vertical-align: middle; }
+/* EDL Ghost button — text-only, transparent background */
+.btn-ghost { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; line-height: 16px; color: var(--brand-text); white-space: nowrap; overflow: visible; cursor: pointer; vertical-align: middle; transition: background-color 0.15s ease, color 0.15s ease; }
 .btn-ghost svg { flex-shrink: 0; display: block; }
-.btn-ghost:hover { color: var(--brand-text-hover); }
+.btn-ghost:hover { background: var(--brand-bg-soft); color: var(--brand-text-hover); }
+.btn-ghost:active { background: var(--brand-bg-selected); color: var(--brand-text-hover); }
+.btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
-/* ─── TABLE ─── header h-48, data rows h-64 (avatar), full-width borders ─── */
+/* EDL Primary CTA — toolbar "Add Users" / "Create Role" promoted to filled primary */
+.tbar > .btn-ghost {
+  padding: 0 12px;
+  background: var(--brand);
+  color: var(--text-on-brand);
+  border-radius: 8px;
+}
+.tbar > .btn-ghost:hover {
+  background: var(--brand-hover);
+  color: var(--text-on-brand);
+}
+.tbar > .btn-ghost:active {
+  background: var(--indigo-95);
+  color: var(--text-on-brand);
+}
+.tbar > .btn-ghost:disabled {
+  background: var(--brand-disabled-bg);
+  color: var(--brand-disabled-fg);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* ─── EDL Multi-Segment Control ─── 32px, Gray/30 stroke, Indigo/10 selected ─── */
+.seg-ctrl {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  margin-left: 8px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+.seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 96px;
+  padding: 0 16px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--brand-text);
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.seg-btn + .seg-btn { border-left: 1px solid var(--border-input); }
+.seg-btn.on { background: var(--brand-bg-selected); color: var(--brand-text); }
+.seg-btn:not(.on):hover { background: var(--brand-bg-soft); }
+.seg-btn.on:hover { background: var(--brand-bg-selected); }
+.seg-btn:active { opacity: 0.85; }
+.seg-btn:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; z-index: 1; }
 /* The table itself spans the full card width so the row-divider borders
    (.tbl tbody tr { border-bottom }) draw cleanly from edge to edge with
    no gap on the right. The 56px right-gutter rail that aligns the CTA
@@ -382,32 +489,19 @@ table { border-spacing: 0; border-collapse: collapse; }
 .tbl td { height: 64px; }
 
 /* ─── Column widths — proportional percentages, all columns participate ─── */
-#usersColgroup col[data-u-col="nm"] { width: 17.72%; }
-#usersColgroup col[data-u-col="em"] { width: 16.79%; }
-#usersColgroup col[data-u-col="rl"] { width: 22.08%; }
-#usersColgroup col[data-u-col="st"] { width: 6.41%; }
-#usersColgroup col[data-u-col="tm"] { width: 12.52%; }
-#usersColgroup col[data-u-col="ct"] { width: 17.28%; }
-#usersColgroup col[data-u-col="rg"] { width: 7.20%; }
+/* Column base widths are now set in the Figma-matched block below (after the c-ct/c-em hidden section). */
 
-/* Checkbox column removed — its 3.86% returns to Description. The original
+/* Checkbox column removed — its 3.86% returns to Role. The original
    28px left gutter (which previously came from the checkbox cell's padding)
    is re-applied to the new first column (rp-role) below so the table's left
    edge alignment is preserved and no empty gap is introduced. */
-/* R&P table: five columns (Data Access removed). Create Date is JS-aligned
-   to the Create Role CTA; Role / Created By widths are held stable in
-   `setupRightmostAlignment` while Description + Functions absorb slack. */
-#rpColgroup col[data-rp-col="role"] { width: 13.00%; }
-#rpColgroup col[data-rp-col="desc"] { width: 26.00%; }
-#rpColgroup col[data-rp-col="func"] { width: 36.00%; }
-#rpColgroup col[data-rp-col="by"]   { width: 11.00%; }
+/* R&P table: four columns (Description removed per Figma, space given to
+   Functions). Create Date is JS-aligned to the Create Role CTA; Role and
+   Created By widths held stable in the column-resize handler. */
+#rpColgroup col[data-rp-col="role"] { width: 15.00%; }
+#rpColgroup col[data-rp-col="func"] { width: 58.00%; }
+#rpColgroup col[data-rp-col="by"]   { width: 13.00%; }
 #rpColgroup col[data-rp-col="date"] { width: 14.00%; }
-
-/* Large-desktop: keep Functions wider than Description for long app lists. */
-@media (min-width: 1920px) {
-  #rpColgroup col[data-rp-col="desc"] { width: 27.00%; }
-  #rpColgroup col[data-rp-col="func"] { width: 35.00%; }
-}
 
 .tbl thead tr { background: var(--bg-surface); border-bottom: 1px solid var(--border-default); }
 .tbl th { font-size: 12px; font-weight: 400; line-height: 18px; color: var(--text-secondary); position: relative; }
@@ -426,6 +520,59 @@ th.c-nm { overflow: visible; text-overflow: clip; padding-left: 32px; }
 /* ─── Name cell with avatar ─── */
 td.c-nm { padding: 0 !important; overflow: visible !important; white-space: normal !important; }
 .name-cell { display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 0 0 32px; }
+.name-cell-text { display: flex; flex-direction: column; justify-content: center; gap: 2px; min-width: 0; overflow: hidden; }
+.name-cell-email { font-size: 12px; font-weight: 400; line-height: 16px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Status column — icon only, centered. Tooltip is rendered at body level
+   by app.js so table/card overflow cannot clip it. */
+td.c-st { text-align: center; padding: 0 !important; }
+th.c-st { text-align: center; }
+th.c-st .th-inner { justify-content: center; }
+.status-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  border-radius: 4px;
+}
+.status-icon-wrap:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+.edl-status-tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10000;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  padding: 8px;
+  border-radius: 8px;
+  background: #3A4652;
+  color: #FFFFFF;
+  box-shadow: 0 1px 1.5px rgba(16, 17, 19, 0.24);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+  transform: translateY(2px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.edl-status-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  background: #3A4652;
+  transform: translateX(-50%) rotate(45deg);
+}
+.edl-status-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 .name-avatar { width: 48px; height: 48px; border-radius: 50%; background: #FFF; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .name-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .avatar-initials { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 50%; background: rgb(78, 136, 210); color: #FFFFFF; font-size: 16px; font-weight: 700; line-height: 1; letter-spacing: 0.5px; }
@@ -434,8 +581,8 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 #usersPanel #usersTable tbody .name-link {
   display: block;
   min-width: 0;
-  flex: 1 1 auto;
-  align-self: center;
+  flex: none;
+  align-self: auto;
   font-size: 14px;
   font-weight: 400;
   line-height: 21px;
@@ -521,6 +668,9 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 .pg-n:hover:not(.on) { background: var(--bg-hover); }
 .pg-dots { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 12px; color: var(--text-primary); }
 
+/* Users pagination total count: lives where the old "Go to page" control was. */
+#usersTotalLabel { color: var(--text-primary); font-weight: 400; }
+
 /* ─── FILTER DRAWER ─── left-side HARPS panel ─── */
 .flt-overlay { position: fixed; inset: 0; background: var(--overlay-scrim); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 .flt-overlay.open { opacity: 1; pointer-events: auto; }
@@ -554,12 +704,21 @@ td.c-nm { padding: 0 !important; overflow: visible !important; white-space: norm
 
 .flt-footer { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 20px; border-top: 1px solid var(--border-default); flex-shrink: 0; }
 .flt-footer-r { display: flex; align-items: center; gap: 12px; }
-.flt-btn-reset { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: none; padding: 0; }
-.flt-btn-reset:hover { color: var(--brand-text-hover); }
+.flt-btn-reset { display: inline-flex; align-items: center; border-radius: 8px; padding: 0 8px; height: 36px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: none; transition: background-color 0.15s ease, color 0.15s ease; }
+.flt-btn-reset:hover { background: var(--brand-bg-soft); color: var(--brand-text-hover); }
+.flt-btn-reset:active { background: var(--brand-bg-selected); }
+.flt-btn-reset:disabled { opacity: 0.5; cursor: not-allowed; }
+.flt-btn-reset:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 .flt-btn-cancel { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: 1px solid var(--brand-text); border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: var(--bg-surface); transition: background-color 0.15s ease; }
 .flt-btn-cancel:hover { background: var(--brand-bg-soft); }
+.flt-btn-cancel:active { background: var(--brand-bg-selected); }
+.flt-btn-cancel:disabled { opacity: 0.5; cursor: not-allowed; }
+.flt-btn-cancel:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 .flt-btn-apply { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-on-brand); background: var(--brand); transition: background-color 0.15s ease; }
 .flt-btn-apply:hover { background: var(--brand-hover); }
+.flt-btn-apply:active { background: var(--indigo-95); }
+.flt-btn-apply:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); opacity: 1; cursor: not-allowed; }
+.flt-btn-apply:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 /* Dense variant of the EDL combo input when it lives inside the filter drawer
    — keeps the standard EDL combo component intact elsewhere (menu is portaled
@@ -881,7 +1040,6 @@ body.col-resizing * { cursor: col-resize !important; user-select: none !importan
 .rp-check-input { width: 12px; height: 12px; accent-color: var(--brand-text); cursor: pointer; vertical-align: middle; }
 
 td.rp-cb { text-align: left !important; padding-left: 28px !important; padding-right: 8px !important; }
-td.rp-desc { white-space: nowrap !important; }
 td.rp-act { text-align: right !important; overflow: visible !important; }
 
 /* EDL link treatment for clickable role name — brand color, underline on hover.
@@ -936,7 +1094,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    so centering stays consistent across them. */
 .cr-btn-save { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; border: none; border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; letter-spacing: 0; color: var(--text-on-brand); background: var(--brand); white-space: nowrap; cursor: pointer; transition: background-color 0.15s ease, opacity 0.15s ease; -webkit-font-smoothing: antialiased; }
 .cr-btn-save:hover:not(:disabled) { background: var(--brand-hover); }
-.cr-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: default; opacity: 1; }
+.cr-btn-save:active:not(:disabled) { background: var(--indigo-95); }
+.cr-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: not-allowed; opacity: 1; }
+.cr-btn-save:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 /* Cancel button scoped override — matches Save Role dimensions and the
    same optical-centering padding so the two buttons feel balanced. */
@@ -972,7 +1132,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .cr-btn-remove[hidden] { display: none !important; }
 .cr-btn-remove:hover { background: var(--brand-bg-soft); }
-.cr-btn-remove:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+.cr-btn-remove:active { background: var(--brand-bg-selected); }
+.cr-btn-remove:disabled { opacity: 0.5; cursor: not-allowed; }
+.cr-btn-remove:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 /* ─── Remove Role confirmation dialog ─── */
 .cr-confirm-backdrop {
@@ -1043,7 +1205,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   -webkit-font-smoothing: antialiased;
 }
 .cr-btn-danger-solid:hover { background: var(--brand-hover); }
-.cr-btn-danger-solid:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+.cr-btn-danger-solid:active { background: var(--indigo-95); }
+.cr-btn-danger-solid:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); opacity: 1; cursor: not-allowed; }
+.cr-btn-danger-solid:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 /* Modal Cancel scoped override — matches the modal confirm button's
    optical-centering so both labels look balanced inside 32px. */
@@ -1559,13 +1723,15 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   -webkit-font-smoothing: antialiased;
 }
 .cr-btn-add svg { flex-shrink: 0; }
-.cr-btn-add:hover:not(:disabled) { background: var(--brand-bg-selected); }
+.cr-btn-add:hover:not(:disabled) { background: var(--brand-bg-soft); }
+.cr-btn-add:active:not(:disabled) { background: var(--brand-bg-selected); }
 .cr-btn-add:disabled {
   border-color: var(--border-input);
   color: var(--text-placeholder);
-  cursor: default;
+  cursor: not-allowed;
   background: var(--bg-surface);
 }
+.cr-btn-add:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 /* Two application cards per row — equal width and equal row height (grid stretch).
    Inner summary card flex-grows; CTA uses margin-top: auto + padding-top so short
@@ -1780,7 +1946,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 .au-btn-save { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; border: none; border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; color: var(--text-on-brand); background: var(--brand); white-space: nowrap; cursor: pointer; transition: background-color 0.15s ease; -webkit-font-smoothing: antialiased; }
 .au-btn-save:hover:not(:disabled) { background: var(--brand-hover); }
-.au-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: default; opacity: 1; }
+.au-btn-save:active:not(:disabled) { background: var(--indigo-95); }
+.au-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: not-allowed; opacity: 1; }
+.au-btn-save:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 .au-card { margin-top: 24px; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 16px; padding: 12px 24px 18px; }
 /* Add User accordion bodies (Create Role uses `.cr-field` siblings; AU wraps grid + roles in one node). */
@@ -1954,9 +2122,13 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
-.au-btn-add:hover:not(:disabled) { background: var(--brand-bg-selected); }
-.au-btn-add:disabled { border-color: var(--border-input); color: var(--text-placeholder); cursor: default; background: var(--bg-surface); }
+.au-btn-add:hover:not(:disabled) { background: var(--brand-bg-soft); }
+.au-btn-add:active:not(:disabled) { background: var(--brand-bg-selected); }
+.au-btn-add:disabled { border-color: var(--border-input); color: var(--text-placeholder); cursor: not-allowed; background: var(--bg-surface); opacity: 1; }
+.au-btn-add:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
 /* Match Create Role `.cr-perms-content`: two-column grid when space allows, single column ≤1023px.
    align-items: start — each role card keeps its own height; expanding one must not stretch siblings.
@@ -2418,6 +2590,12 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    doesn't pop against the navy table surface. */
 [data-theme="dark"] .name-avatar { background: #1E2B44; }
 
+/* Segmented control dark-mode: tokens remap automatically via --brand-text
+   and --bg-surface, so only the divider between segments needs explicit
+   alignment with the dark border token. */
+[data-theme="dark"] .seg-btn + .seg-btn { border-left-color: var(--brand-text); }
+[data-theme="dark"] .seg-ctrl { border-color: var(--brand-text); }
+
 /* Search input icon contrast on dark */
 [data-theme="dark"] .search-ico { color: var(--text-muted); }
 
@@ -2484,35 +2662,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #usersTable th.c-ct > *,
 #usersTable td.c-ct { visibility: hidden; }
 #usersColgroup col[data-u-col="ct"] { width: 0; }
-/* Rebalanced distribution (base widths total the reclaimed 65.49%):
-   rl 32% · st 8% · tm 13.50% · rg 11.99%. Tightens the empty space that
-   previously sat inside Role, pulls Status/Team slightly leftward, and
-   anchors Region more cleanly against the table's right edge — without
-   cramping any single column. Team/Region ratio is tuned to feel evenly
-   spaced.
+/* ─── Hide Email column (c-em) — same zero-width technique as c-ct.
+   The email now shows as secondary text inside the Name cell.
+   Keeping the th/td/col in the DOM prevents col-width mapping shifts. ── */
+#usersTable th.c-em,
+#usersTable td.c-em { padding: 0 !important; border: 0 !important; width: 0 !important; max-width: 0 !important; overflow: hidden !important; visibility: hidden; }
+#usersColgroup col[data-u-col="em"] { width: 0; }
 
-   Micro-alignment polish: a 0.50% slice is shifted from `tm` (Team)
-   → `st` (Status). Because Region's width is JS-locked at runtime
-   (`setupRightmostAlignment`) and the non-Region columns are
-   redistributed by the JS using their CSS ratios, growing `st` by
-   0.50% and shrinking `tm` by 0.50% has a predictable effect:
-     • Status's column gets slightly wider, but the pill is
-       left-aligned and content-sized, so it stays anchored at the
-       same on-screen x. The extra width shows up as empty space to
-       the *right* of the pill.
-     • Team's left edge shifts right by the same amount, moving
-       its left-aligned content ("Ad Solutions & Innovation", etc.)
-       a few px to the right.
-     • Net visual effect: a small, cleaner gap opens up between
-       Status and Team without touching Role, Region, the CTA, or
-       any other column. Team's content area is ~6 px narrower at
-       typical desktop widths; EDL truncation tooltips in app.js only
-       when a cell is clipped. */
-#usersColgroup col[data-u-col="rl"] { width: 32.00%; }
-#usersColgroup col[data-u-col="st"] { width:  8.00%; }
-#usersColgroup col[data-u-col="tm"] { width: 13.50%; }
-#usersColgroup col[data-u-col="rg"] { width: 11.99%; }
+/* ─── Figma-matched column widths (all non-hidden visible columns) ─────
+   Role is widened +0.60 % so Status's left edge and centre shift right
+   ~8 px. Team/Org is narrowed −0.60 % to absorb that space; this keeps
+   Last login's left edge exactly in place. Region is unaffected.
+   em and ct remain zero-width (hidden). */
+#usersColgroup col[data-u-col="nm"] { width: 22.00%; }
+#usersColgroup col[data-u-col="rl"] { width: 23.50%; }
+#usersColgroup col[data-u-col="st"] { width:  7.10%; }
+#usersColgroup col[data-u-col="tm"] { width: 16.40%; }
+#usersColgroup col[data-u-col="ll"] { width: 18.00%; }
+#usersColgroup col[data-u-col="rg"] { width: 13.00%; }
 #usersTable { min-width: 0; }
+/* Team/Organization and Last login: content nudged slightly right via
+   padding (boundary already shifted with the Status column above). */
+#usersTable th.c-tm,
+#usersTable td.c-tm { padding-left: 16px; }
+#usersTable th.c-ll,
+#usersTable td.c-ll { padding-left: 18px; white-space: nowrap; }
 
 /* ─── Rightmost column alignment (both tabs) ───────────────────────
    Users (Region) and R&P (Create Date) both lock their column's
@@ -3619,13 +3793,11 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   color: var(--text-muted);
 }
 
-/* ─── T3. Tabs — count de-emphasis ───
-   `.tab-btn.on` was pulled down from 800 → 600 in Pass 2. That's the
-   right weight for an active tab label, but the inline parenthetical
-   "(610 total)" rides the same weight. We can't split the span without
-   a markup change, so lean on tracking + kerning: Open Sans handles
-   parentheses at 600 cleanly, so no extra rule needed here. Leaving
-   this block as documentation of the intentional no-op. */
+/* ─── T3. Tabs — count removed ───
+   The "(610 total)" inline count has been moved to the pagination footer
+   as "Total users: 610" beside "Go to page". The `.tab-count` span no
+   longer exists in the Users tab markup. Rules below are kept for
+   compatibility with any other page that might still carry `.tab-count`. */
 
 /* ─── T4. Nav typography ───
    The brand-bar nav link (`.nav-a`) already reads `body/md/medium`
@@ -3816,14 +3988,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   border-radius: 2px 2px 0 0;
 }
 
-/* ─── P4-2. Tab count de-emphasis ───
-   The "(610 total)" secondary count sat at the same weight / colour as
-   the "Users" label, fighting the primary tab label for prominence. In
-   ADS Tabs, counts are rendered as a softer trailing meta label. The
-   HTML now carries `.tab-label` + `.tab-count` span children, so we
-   drop the count's weight and mute its colour. Active-tab count stays
-   slightly darker than inactive-tab count so the current tab still
-   reads as the current tab. */
+/* ─── P4-2. Tab count — removed from tab label ───
+   The "(610 total)" count has been removed from the Users tab label and
+   moved to the pagination footer. The `.tab-count` selector below is
+   retained for forward-compatibility but no longer matches the IAM tab. */
 [data-theme="ads-preview"] .tab-btn .tab-count {
   font-weight: 400;
   color: var(--text-muted);
