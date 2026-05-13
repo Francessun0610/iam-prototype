@@ -1539,9 +1539,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-collapse-all-link { margin-top: 14px; }
 /* Create Role Permissions only: `.cr-summary-cta` is not used on Add/Edit User. */
 #createRolePage .cr-access-summary-card .cr-summary-cta {
-  margin-top: auto;
-  /* Minimum gap above link; `margin-top: auto` still absorbs row stretch. */
-  padding-top: 24px;
+  margin-top: 24px;
+  padding-top: 0;
+  position: static;
+  align-self: center;
   flex-shrink: 0;
 }
 
@@ -2207,8 +2208,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 #addUsersPage .au-role-card {
   align-self: start;
-  height: auto;
-  min-height: 0;
+  height: fit-content;
+  min-height: unset;
 }
 #addUsersPage .au-role-card.expanded .au-role-expand {
   flex: 0 0 auto;
@@ -2227,6 +2228,11 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   min-height: 0;
   display: flex;
   flex-direction: column;
+}
+#addUsersPage .au-role-view-toggle {
+  margin-top: 24px;
+  position: static;
+  align-self: center;
 }
 
 /* Add/Edit User — permission apps: DOM is
