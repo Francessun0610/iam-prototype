@@ -1435,72 +1435,27 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .cr-check-label { font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); user-select: none; }
 .cr-access-level-row {
-  margin-top: 20px;
+  margin-top: 14px;
   flex-shrink: 0;
 }
 .cr-access-level-row .cr-label { margin-bottom: 8px; }
-/* EDL segmented control: one grid column per label, width = max-content
-   (not equal-width flex). Short “Custom” label stays inside the bordered shell. */
 .cr-access-level-wrap {
-  display: inline-flex;
-  align-items: stretch;
-  width: 100%;
-  max-width: 100%;
-}
-.cr-access-level-options {
-  display: inline-flex;
-  flex-direction: row;
-  align-items: stretch;
-  flex-wrap: nowrap;
-  width: max-content;
-  max-width: 100%;
-  box-sizing: border-box;
-  border: 1px solid var(--border-input);
-  border-radius: 8px;
-  background: var(--bg-surface);
-  overflow: hidden;
-}
-.cr-access-level-btn {
-  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
+  width: 100%;
+}
+.cr-access-level-dd {
+  width: 248px;
+  max-width: 100%;
+}
+.cr-access-level-trigger {
   height: 32px;
   min-height: 32px;
-  padding: 0 16px;
-  margin: 0;
-  border: 0;
-  border-right: 1px solid var(--border-input);
-  background: transparent;
-  color: var(--text-secondary);
-  font-family: var(--ff);
-  font-size: 14px;
-  line-height: normal;
+}
+.cr-access-level-value {
   font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-  flex: 0 0 auto;
-  align-self: stretch;
+  color: var(--text-primary);
 }
-.cr-access-level-btn:last-child {
-  border-right: 0;
-}
-.cr-access-level-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-.cr-access-level-btn.is-selected {
-  background: var(--brand-bg-selected);
-  color: var(--brand-text);
-  border: 0;
-  border-right: 1px solid var(--border-input);
-  padding: 0 16px;
-  margin: 0;
-  box-shadow: none;
-  transform: none;
-}
-.cr-access-level-btn.is-selected:last-child {
-  border-right: 0;
-}
-.cr-access-level-btn:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; }
 /* Summary body (filled by JS); visual card is .cr-access-summary-card */
 .cr-access-summary {
   flex: 0 1 auto;
@@ -1516,14 +1471,14 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-access-summary-top {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 6px;
+  margin-bottom: 14px;
   flex-shrink: 0;
 }
 .cr-access-level-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 26px;
+  line-height: 22px;
   color: var(--text-primary);
 }
 .cr-access-level-subtitle {
@@ -1536,9 +1491,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 /* Two-column summary: fixed-width label column so permission text aligns across rows. */
 .cr-access-summary-list {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  column-gap: 12px;
-  row-gap: 8px;
+  grid-template-columns: 132px 1fr;
+  column-gap: 10px;
+  row-gap: 6px;
   align-items: start;
   flex: 0 1 auto;
   min-height: 0;
@@ -1564,11 +1519,11 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   min-width: 0;
   font-weight: 500;
   line-height: 22px;
-  color: var(--gray-95);
+  color: var(--text-primary);
   white-space: normal;
   overflow-wrap: break-word;
 }
-.cr-access-summary-empty { margin-top: 4px; font-size: 14px; line-height: 22px; color: var(--text-muted); flex: 0 1 auto; }
+.cr-access-summary-empty { margin-top: 4px; font-size: 14px; line-height: 22px; color: var(--text-primary); flex: 0 1 auto; }
 /* Functions: text CTAs — no underline (Atlas / EDL link-button language) */
 .cr-customize-link {
   margin-top: 0;
@@ -1699,8 +1654,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-dd-option.is-disabled:hover { background: var(--bg-surface); }
 
 /* Add-application row (dropdown + Add button) */
-.cr-app-row { display: flex; align-items: flex-end; gap: 8px; }
-.cr-app-row-field { display: flex; flex-direction: column; }
+.cr-app-row { display: flex; align-items: flex-end; gap: 12px; }
+.cr-app-row-field { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; max-width: 320px; }
 
 .cr-btn-add {
   display: inline-flex;
@@ -1723,6 +1678,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   -webkit-font-smoothing: antialiased;
 }
 .cr-btn-add svg { flex-shrink: 0; }
+.cr-btn-add { align-self: flex-end; }
 .cr-btn-add:hover:not(:disabled) { background: var(--brand-bg-soft); }
 .cr-btn-add:active:not(:disabled) { background: var(--brand-bg-selected); }
 .cr-btn-add:disabled {
@@ -1737,10 +1693,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    Inner summary card flex-grows; CTA uses margin-top: auto + padding-top so short
    rows keep a minimum gap above the link and stretched rows keep the link low. */
 #createRolePage .cr-perms-content {
-  margin-top: 32px;
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
+  gap: 20px;
   align-items: stretch;
 }
 .cr-app-section {
@@ -1752,8 +1708,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   height: 100%;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
-  border-radius: 12px;
-  padding: 24px 24px 22px;
+  border-radius: 10px;
+  padding: 18px 18px 16px;
   box-sizing: border-box;
   overflow-x: visible;
   transition: border-color 0.18s ease, box-shadow 0.22s ease;
@@ -1761,10 +1717,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-app-section:hover { border-color: #d6d9df; box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06); }
 .cr-app-section-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   flex-shrink: 0;
 }
 .cr-app-section-head:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 4px; }
@@ -1788,17 +1744,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   border: none;
   border-radius: 2px;
   font-family: var(--ff);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  line-height: 22px;
+  line-height: 20px;
   color: var(--brand-text);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
-.cr-app-remove > svg { display: block; flex-shrink: 0; width: 16px; height: 16px; }
-.cr-app-remove:hover { color: var(--brand-text-hover); }
+.cr-app-remove > svg { display: block; flex-shrink: 0; width: 16px; height: 16px; color: currentColor; }
+.cr-app-remove:hover { color: var(--brand-text-hover); background: var(--brand-bg-soft); }
 .cr-app-remove:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
 
 .cr-app-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow-x: visible; }
@@ -1810,7 +1766,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  margin-top: 20px;
+  margin-top: 12px;
   min-height: 0;
 }
 .cr-access-summary-card {
@@ -1822,11 +1778,11 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   min-height: 0;
   /* Slightly tighter side padding so summary text has a bit more horizontal room
      without changing the outer app card shell. */
-  padding: 20px 16px 18px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(17, 24, 39, 0.06);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   box-sizing: border-box;
 }
 /* Preset access: detail panel hidden until expanded. Custom: show accordion panel, hide preset summary. */

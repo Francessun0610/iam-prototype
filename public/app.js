@@ -4100,7 +4100,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
     var crPage = document.getElementById("createRolePage");
-    /* Segmented control + data-access-level value (legacy persisted strings may still read "Custom Access"). */
+    /* Access-level dropdown + data-access-level value (legacy persisted strings may still read "Custom Access"). */
     function isCustomAccessLevel(level) {
       return level === "Custom" || level === "Custom Access";
     }
@@ -4254,9 +4254,16 @@ document.addEventListener("DOMContentLoaded", function () {
       var normalized = resolveAccessLevelForSection(appKey, level);
       var bundle = app.bundles[normalized] || {};
       section.setAttribute("data-access-level", normalized);
-      var opts = section.querySelectorAll(".cr-access-level-btn");
+      var opts = section.querySelectorAll("[data-access-level-option]");
       for (var i = 0; i < opts.length; i++) {
-        opts[i].classList.toggle("is-selected", opts[i].getAttribute("data-access-level") === normalized);
+        var selected = opts[i].getAttribute("data-access-level") === normalized;
+        opts[i].classList.toggle("is-selected", selected);
+        opts[i].setAttribute("aria-selected", selected ? "true" : "false");
+      }
+      var levelValue = section.querySelector(".cr-access-level-value");
+      if (levelValue) {
+        levelValue.textContent = normalized;
+        levelValue.classList.remove("is-placeholder");
       }
       if (!isCustomAccessLevel(normalized)) {
         var boxes = section.querySelectorAll(".cr-perm-check");
@@ -4331,6 +4338,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function resetCreateRole() {
+      closeAllAccessLevelDDs();
+      crCloseAppDD();
       crRoleName.value = "";
       var desc = document.getElementById("crDescription");
       if (desc) desc.value = "";
@@ -4510,6 +4519,45 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     crSetAppValue("");
 
+    function closeAccessLevelDD(dd) {
+      if (!dd) return;
+      detachCrDdLayeredMenu(dd);
+      dd.classList.remove("open");
+      var trigger = dd.querySelector(".cr-access-level-trigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    }
+    function closeAllAccessLevelDDs(exceptDd) {
+      var open = crPermsContent.querySelectorAll(".cr-access-level-dd.open");
+      for (var i = 0; i < open.length; i++) {
+        if (exceptDd && open[i] === exceptDd) continue;
+        closeAccessLevelDD(open[i]);
+      }
+    }
+    function openAccessLevelDD(dd) {
+      if (!dd) return;
+      closeAllAccessLevelDDs(dd);
+      dd.classList.add("open");
+      var trigger = dd.querySelector(".cr-access-level-trigger");
+      if (trigger) trigger.setAttribute("aria-expanded", "true");
+      attachCrDdLayeredMenu(dd);
+    }
+    function applyAccessLevelSelection(levelOption) {
+      if (!levelOption) return false;
+      var levelMenu = levelOption.closest(".cr-access-level-menu");
+      if (!levelMenu) return false;
+      var menuAppKey = levelMenu.getAttribute("data-app-key");
+      var sec = menuAppKey ? crPermsContent.querySelector('.cr-app-section[data-app-key="' + menuAppKey + '"]') : null;
+      if (!sec) return false;
+      var level = levelOption.getAttribute("data-access-level");
+      if (!level) return false;
+      setSectionAccessLevel(sec, level);
+      var secDd = sec.querySelector(".cr-access-level-dd");
+      if (secDd) closeAccessLevelDD(secDd);
+      updateFunctionsCount();
+      validateCreateRole();
+      return true;
+    }
+
     crAppTrigger.addEventListener("click", function (e) {
       e.stopPropagation();
       if (crAppDD.classList.contains("open")) crCloseAppDD(); else crOpenAppDD();
@@ -4524,10 +4572,24 @@ document.addEventListener("DOMContentLoaded", function () {
       if (crAppDD.contains(e.target)) return;
       var appMenu = getCrDdMenuForHost(crAppDD);
       if (appMenu && appMenu.contains(e.target)) return;
+      var openAccessDDs = crPermsContent.querySelectorAll(".cr-access-level-dd.open");
+      for (var i = 0; i < openAccessDDs.length; i++) {
+        if (openAccessDDs[i].contains(e.target)) return;
+        var accessMenu = getCrDdMenuForHost(openAccessDDs[i]);
+        if (accessMenu && accessMenu.contains(e.target)) return;
+      }
       crCloseAppDD();
+      closeAllAccessLevelDDs();
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && crAppDD.classList.contains("open")) crCloseAppDD();
+      if (e.key !== "Escape") return;
+      if (crAppDD.classList.contains("open")) crCloseAppDD();
+      closeAllAccessLevelDDs();
+    });
+    document.addEventListener("click", function (e) {
+      var levelOption = e.target.closest("[data-access-level-option]");
+      if (!levelOption) return;
+      applyAccessLevelSelection(levelOption);
     });
 
     /* ─── Permissions rendering ─── */
@@ -4594,6 +4656,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function buildAppSectionHtml(appKey) {
       var app = APP_PERMISSIONS[appKey];
       if (!app) return "";
+      var accessMenuId = "cr-access-menu-" + appKey;
+      var accessTriggerId = "cr-access-trigger-" + appKey;
       var html = '<div class="cr-app-section" data-app-key="' + esc(appKey) + '" data-expanded="false">';
       html += '<div class="cr-app-section-head">';
       html += '<div class="cr-app-head-left">';
@@ -4605,11 +4669,16 @@ document.addEventListener("DOMContentLoaded", function () {
       html += '</button>';
       html += '</div>';
       html += '<div class="cr-app-body" id="cr-app-body-' + esc(appKey) + '">';
-      html += '<div class="cr-access-level-row"><div class="cr-label">Access level</div><div class="cr-access-level-wrap"><div class="cr-access-level-options">';
+      html += '<div class="cr-access-level-row"><div class="cr-label">Access level</div><div class="cr-access-level-wrap"><div class="cr-dd cr-access-level-dd" data-access-dd data-app-key="' + esc(appKey) + '">';
+      html += '<button type="button" class="cr-dd-trigger cr-access-level-trigger" id="' + esc(accessTriggerId) + '" aria-haspopup="listbox" aria-expanded="false" aria-controls="' + esc(accessMenuId) + '">';
+      html += '<span class="cr-dd-value cr-access-level-value">' + esc(app.levels[0]) + '</span>';
+      html += '<svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      html += '</button>';
+      html += '<div class="cr-dd-menu cr-access-level-menu" id="' + esc(accessMenuId) + '" role="listbox" aria-labelledby="' + esc(accessTriggerId) + '" data-app-key="' + esc(appKey) + '">';
       for (var i = 0; i < app.levels.length; i++) {
-        html += '<button type="button" class="cr-access-level-btn' + (i === 0 ? ' is-selected' : '') + '" data-access-level="' + esc(app.levels[i]) + '">' + esc(app.levels[i]) + '</button>';
+        html += '<div class="cr-dd-option cr-access-level-option' + (i === 0 ? " is-selected" : "") + '" role="option" data-access-level-option="true" data-access-level="' + esc(app.levels[i]) + '" aria-selected="' + (i === 0 ? "true" : "false") + '">' + esc(app.levels[i]) + '</div>';
       }
-      html += "</div></div></div>";
+      html += "</div></div></div></div>";
       html += '<div class="cr-summary-stack">';
       html += '<div class="cr-access-summary-card">';
       html += '<div class="cr-access-summary"></div>';
@@ -4655,7 +4724,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (idx === -1) return;
       crAddedApps.splice(idx, 1);
       var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
-      if (section && section.parentNode) section.parentNode.removeChild(section);
+      if (section) {
+        var accessDd = section.querySelector(".cr-access-level-dd");
+        if (accessDd) closeAccessLevelDD(accessDd);
+        if (section.parentNode) section.parentNode.removeChild(section);
+      }
       if (crAddedApps.length === 0) crPermsContent.style.display = "none";
       crRefreshAppMenu();
       crUpdateAddBtnState();
@@ -4728,14 +4801,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return;
       }
-      var levelBtn = e.target.closest(".cr-access-level-btn");
-      if (levelBtn) {
-        var sec = levelBtn.closest(".cr-app-section");
-        if (!sec) return;
-        var level = levelBtn.getAttribute("data-access-level");
-        setSectionAccessLevel(sec, level);
-        updateFunctionsCount();
-        validateCreateRole();
+      var levelTrigger = e.target.closest(".cr-access-level-trigger");
+      if (levelTrigger) {
+        e.preventDefault();
+        e.stopPropagation();
+        var triggerDd = levelTrigger.closest(".cr-access-level-dd");
+        if (!triggerDd) return;
+        if (triggerDd.classList.contains("open")) closeAccessLevelDD(triggerDd);
+        else openAccessLevelDD(triggerDd);
+        return;
+      }
+      var levelOption = e.target.closest("[data-access-level-option]");
+      if (levelOption) {
+        applyAccessLevelSelection(levelOption);
         return;
       }
       var showBtn = e.target.closest("[data-show-all]");
