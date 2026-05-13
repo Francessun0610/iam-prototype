@@ -1545,6 +1545,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-self: center;
   flex-shrink: 0;
 }
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) {
+  min-height: 420px;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-summary-stack,
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-summary-card {
+  flex: 1 1 auto;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-summary-card .cr-summary-cta {
+  margin-top: auto;
+  padding-top: 24px;
+}
 
 /* ═══ EDL DROPDOWN ═══ Exact Figma fidelity (node 390:15700, 390:15519) */
 .cr-dd { position: relative; display: inline-block; width: 283px; }
