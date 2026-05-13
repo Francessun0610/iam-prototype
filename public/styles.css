@@ -1462,6 +1462,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
+  width: 100%;
   margin: 0;
   padding: 0;
   background: transparent;
@@ -1490,38 +1492,46 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 /* Two-column summary: fixed-width label column so permission text aligns across rows. */
 .cr-access-summary-list {
-  display: grid;
-  grid-template-columns: 132px 1fr;
-  column-gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   row-gap: 6px;
-  align-items: start;
   flex: 0 1 auto;
   min-height: 0;
   min-width: 0;
+  width: 100%;
   font-family: var(--ff);
   font-size: 14px;
   line-height: 22px;
 }
 .cr-access-summary-line {
-  display: contents;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
 }
 .cr-access-module-label {
+  flex: 0 0 132px;
   font-weight: 600;
   line-height: 22px;
   color: var(--text-primary);
   white-space: normal;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .cr-access-module-label::after {
   content: ":";
 }
 .cr-access-module-perms {
+  flex: 1 1 auto;
   min-width: 0;
   font-weight: 500;
   line-height: 22px;
   color: var(--text-primary);
   white-space: normal;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .cr-access-summary-empty { margin-top: 4px; font-size: 14px; line-height: 22px; color: var(--text-primary); flex: 0 1 auto; }
 /* Functions: text CTAs — no underline (Atlas / EDL link-button language) */
@@ -1757,7 +1767,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-app-remove:hover { color: var(--brand-text-hover); background: var(--brand-bg-soft); }
 .cr-app-remove:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
 
-.cr-app-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow-x: visible; }
+.cr-app-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; width: 100%; overflow-x: visible; }
 /* Fills remaining space below the access-level row so the inner summary card
    can stretch to match the sibling card in the same flex row. */
 .cr-summary-stack {
@@ -1768,6 +1778,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: stretch;
   margin-top: 12px;
   min-height: 0;
+  min-width: 0;
+  width: 100%;
 }
 .cr-access-summary-card {
   flex: 1 1 auto;
@@ -1776,6 +1788,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   justify-content: flex-start;
   align-items: stretch;
   min-height: 0;
+  min-width: 0;
+  width: 100%;
   /* Slightly tighter side padding so summary text has a bit more horizontal room
      without changing the outer app card shell. */
   padding: 0;
@@ -1792,6 +1806,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   padding-top: 0;
   max-height: 0;
   opacity: 0;
+  min-width: 0;
+  width: 100%;
   overflow: hidden;
   transition: max-height 320ms cubic-bezier(0.33, 1, 0.68, 1), opacity 240ms ease, margin-top 200ms ease, padding-top 200ms ease;
 }
@@ -1816,7 +1832,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-app-section[data-access-level="Custom Access"] [data-show-all] {
   display: none !important;
 }
-.cr-module { margin-top: 12px; }
+.cr-module { margin-top: 12px; min-width: 0; width: 100%; }
 .cr-module:first-child { margin-top: 0; }
 .cr-module-head {
   width: 100%;
@@ -1864,14 +1880,14 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   transform: rotate(-90deg);
 }
 .cr-module-head[aria-expanded="true"] .cr-module-chev { transform: rotate(0deg); }
-.cr-module-body { margin-top: 8px; }
+.cr-module-body { margin-top: 8px; min-width: 0; width: 100%; }
 .cr-perm-group { margin-bottom: 0; }
 .cr-perm-group-title { font-size: 13px; font-weight: 600; line-height: 18px; color: var(--text-secondary); margin-bottom: 8px; display: none; }
-.cr-perm-grid { display: block; }
-.cr-perm-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.cr-perm-grid { display: block; min-width: 0; width: 100%; }
+.cr-perm-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; width: 100%; }
 .cr-perm-item { display: flex; align-items: flex-start; gap: 8px; }
 .cr-perm-check { margin-top: 3px; }
-.cr-perm-label { font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-primary); cursor: pointer; user-select: none; }
+.cr-perm-label { min-width: 0; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-primary); cursor: pointer; user-select: none; white-space: normal; overflow-wrap: normal; word-break: normal; }
 
 /* ═══ ADD USERS PAGE ═══ */
 .au-page { position: fixed; inset: 0; top: 48px; background: var(--bg-app); z-index: 90; overflow-y: auto; }
@@ -2184,31 +2200,41 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   display: contents;
 }
 .au-role-perm-summary-list {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  column-gap: 8px;
-  row-gap: 8px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
   font-family: var(--ff);
   font-size: 14px;
   line-height: 22px;
 }
-.au-role-perm-line { display: contents; }
+.au-role-perm-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
 .au-role-perm-cat {
+  flex: 0 0 180px;
   font-weight: 600;
   line-height: 22px;
   color: var(--text-primary);
   white-space: normal;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .au-role-perm-cat::after { content: ":"; }
 .au-role-perm-actions {
+  flex: 1 1 auto;
   min-width: 0;
   font-weight: 500;
   line-height: 22px;
   color: var(--gray-95);
   white-space: normal;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 .au-role-list-fallback {
   list-style: none;
@@ -2317,6 +2343,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
+    min-width: 0;
+    width: 100%;
     box-sizing: border-box;
     padding: 20px 16px 18px;
     background: var(--bg-surface);
