@@ -1701,18 +1701,20 @@ document.addEventListener("DOMContentLoaded", function () {
     if (accessLevel === "Custom Access") accessLevel = "Custom";
     var detail = getRoleAppAccessDetails(roleId, app, accessLevel);
     var html = '<div class="func-pop-title">' + esc(appDisplay) + '</div>' +
-      '<div class="func-pop-access">Access level: ' + esc(detail.level) + '</div>';
+      '<div class="func-pop-access">Access level: ' + esc(detail.level) + '</div>' +
+      '<div class="permission-detail-list func-pop-permissions">';
     var model = APP_ACCESS_MODEL[app] || { groups: [] };
     for (var g = 0; g < model.groups.length; g++) {
       var group = model.groups[g];
       var actions = detail.groups[group] || [];
       if (!actions.length) continue;
-      html += '<div class="func-pop-group-title">' + esc(group) + '</div><ul class="func-pop-list">';
-      for (var i = 0; i < actions.length; i++) {
-        html += '<li>' + esc(actions[i]) + '</li>';
-      }
-      html += '</ul>';
+      html +=
+        '<div class="permission-row">' +
+          '<div class="permission-label">' + esc(group) + ':</div>' +
+          '<div class="permission-values">' + esc(actions.join(", ")) + '</div>' +
+        '</div>';
     }
+    html += '</div>';
     funcPop.innerHTML = html;
     funcPop.classList.add("visible");
 
@@ -3380,15 +3382,15 @@ document.addEventListener("DOMContentLoaded", function () {
             '<div class="au-role-app-section au-perm-card">' +
             '<div class="cr-label">' + esc(display) + " permissions</div>" +
             '<div class="au-role-app-detail">' +
-            '<div class="au-role-perm-summary-list">';
+            '<div class="permission-detail-list au-role-perm-summary-list">';
           for (var gi = 0; gi < model.groups.length; gi++) {
             var grp = model.groups[gi];
             var actions = detail.groups[grp] || [];
             if (!actions.length) continue;
             cardHtml +=
-              '<div class="au-role-perm-line">' +
-              '<span class="au-role-perm-cat">' + esc(grp) + "</span>" +
-              '<span class="au-role-perm-actions">' + esc(actions.join(", ")) + "</span>" +
+              '<div class="permission-row">' +
+              '<div class="permission-label">' + esc(grp) + ":</div>" +
+              '<div class="permission-values">' + esc(actions.join(", ")) + "</div>" +
               "</div>";
           }
           cardHtml += "</div></div></div>";
@@ -4639,10 +4641,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!actions.length) continue;
         count += actions.length;
         lines.push(
-          '<div class="cr-access-summary-line">' +
-            '<span class="cr-access-module-label">' + esc(resource) + "</span>" +
-            '<span class="cr-access-module-perms">' + esc(actions.join(", ")) + "</span>" +
-            "</div>"
+          '<div class="permission-row">' +
+            '<div class="permission-label">' + esc(resource) + ":</div>" +
+            '<div class="permission-values">' + esc(actions.join(", ")) + "</div>" +
+          "</div>"
         );
       }
       summaryNode.innerHTML =
@@ -4650,7 +4652,7 @@ document.addEventListener("DOMContentLoaded", function () {
           '<div class="cr-access-level-title">' + esc(accessTitle(level)) + '</div>' +
           '<div class="cr-access-level-subtitle">' + count + ' permissions included</div>' +
         '</div>' +
-        (lines.length ? ('<div class="cr-access-summary-list">' + lines.join("") + '</div>') : '<div class="cr-access-summary-empty">No permissions selected.</div>');
+        (lines.length ? ('<div class="permission-detail-list cr-access-summary-list">' + lines.join("") + '</div>') : '<div class="cr-access-summary-empty">No permissions selected.</div>');
     }
 
     function buildAppSectionHtml(appKey) {

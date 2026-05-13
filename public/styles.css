@@ -984,21 +984,10 @@ button.rp-func-link {
   line-height: 18px;
   color: var(--text-secondary);
 }
-.func-pop-group-title {
+.func-pop-permissions {
   margin-top: 10px;
   font-size: 13px;
-  font-weight: 600;
   line-height: 18px;
-  color: var(--text-primary);
-}
-.func-pop-list { list-style: disc; margin: 3px 0 0 18px; padding: 0; }
-.func-pop-list li {
-  margin: 0;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 18px;
-  color: var(--text-secondary);
 }
 
 /* ─── Filter input with clear button ─── */
@@ -1490,48 +1479,44 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   margin-top: 0;
   font-weight: 400;
 }
-/* Two-column summary: fixed-width label column so permission text aligns across rows. */
-.cr-access-summary-list {
+/* Permission details: fixed label column + one comma-separated values string. */
+.permission-detail-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  row-gap: 6px;
-  flex: 0 1 auto;
-  min-height: 0;
+  gap: 8px;
   min-width: 0;
   width: 100%;
   font-family: var(--ff);
   font-size: 14px;
   line-height: 22px;
 }
-.cr-access-summary-line {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  min-width: 0;
+.permission-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
   width: 100%;
-}
-.cr-access-module-label {
-  flex: 0 0 132px;
-  font-weight: 600;
-  line-height: 22px;
-  color: var(--text-primary);
-  white-space: normal;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-.cr-access-module-label::after {
-  content: ":";
-}
-.cr-access-module-perms {
-  flex: 1 1 auto;
   min-width: 0;
+}
+.permission-label {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+.permission-values {
+  width: 100%;
+  min-width: 0;
+  display: block;
   font-weight: 500;
-  line-height: 22px;
   color: var(--text-primary);
   white-space: normal;
-  overflow-wrap: normal;
   word-break: normal;
+  overflow-wrap: normal;
+  line-height: inherit;
+}
+.cr-access-summary-list {
+  flex: 0 1 auto;
+  min-height: 0;
 }
 .cr-access-summary-empty { margin-top: 4px; font-size: 14px; line-height: 22px; color: var(--text-primary); flex: 0 1 auto; }
 /* Functions: text CTAs — no underline (Atlas / EDL link-button language) */
@@ -1699,23 +1684,21 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .cr-btn-add:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
-/* Two application cards per row — equal width and equal row height (grid stretch).
-   Inner summary card flex-grows; CTA uses margin-top: auto + padding-top so short
-   rows keep a minimum gap above the link and stretched rows keep the link low. */
+/* Two application cards per row; each card keeps its own natural height when expanded. */
 #createRolePage .cr-perms-content {
   margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
-  align-items: stretch;
+  align-items: start;
 }
 .cr-app-section {
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  align-self: stretch;
-  height: 100%;
+  align-self: start;
+  height: auto;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: 10px;
@@ -1768,10 +1751,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-app-remove:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
 
 .cr-app-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; width: 100%; overflow-x: visible; }
-/* Fills remaining space below the access-level row so the inner summary card
-   can stretch to match the sibling card in the same flex row. */
 .cr-summary-stack {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -1782,7 +1763,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   width: 100%;
 }
 .cr-access-summary-card {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -2115,7 +2096,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-content: start;
 }
 .au-role-cards.has-roles { margin-top: 24px; }
-/* Role summary cards — structural rhythm aligned with Create Role `.cr-app-section` cards. */
+/* Role summary cards — natural height so expanded cards do not stretch their row mate. */
 .au-role-card {
   display: flex;
   flex-direction: column;
@@ -2179,14 +2160,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   opacity: 0;
   transition: max-height 220ms ease-in-out, opacity 180ms ease-in-out;
 }
-/* Cap permissions panel to mock height; short content stays natural, long lists scroll inside (no scrollbar until overflow). */
 .au-role-card.expanded .au-role-expand {
-  max-height: 520px;
+  max-height: none;
   opacity: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
+  overflow: visible;
 }
 .au-role-expand-inner { padding: 18px 24px 18px; }
 /* Expand panel: mirror Create Role `.cr-access-summary-list` two-column layout per app. */
@@ -2199,42 +2176,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .au-role-app-detail {
   display: contents;
 }
-.au-role-perm-summary-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  width: 100%;
-  font-family: var(--ff);
-  font-size: 14px;
-  line-height: 22px;
-}
-.au-role-perm-line {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  min-width: 0;
-  width: 100%;
-}
-.au-role-perm-cat {
-  flex: 0 0 180px;
-  font-weight: 600;
-  line-height: 22px;
-  color: var(--text-primary);
-  white-space: normal;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-.au-role-perm-cat::after { content: ":"; }
-.au-role-perm-actions {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-weight: 500;
-  line-height: 22px;
+.au-role-perm-summary-list .permission-values {
   color: var(--gray-95);
-  white-space: normal;
-  overflow-wrap: normal;
-  word-break: normal;
 }
 .au-role-list-fallback {
   list-style: none;
@@ -2251,31 +2194,24 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   color: var(--text-primary);
 }
 
-/* ─── Add/Edit User (#addUsersPage) — Roles & Permissions layout ───
-   Role cards: `.au-role-cards-row` pairs + stretch grid.
-   Permission apps: `.au-perm-card-list` stacks `.au-perm-card-row` (pairs of
-   `.au-perm-card` / `.au-role-app-section`) so each row is a real 2-col grid
-   with equal-height stretch; inner `.au-role-app-detail` flex-grows. */
+/* ─── Add/Edit User (#addUsersPage) — Roles & Permissions layout ─── */
 #addUsersPage .au-role-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-#addUsersPage .au-role-cards-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
-  align-items: stretch;
+  gap: 24px;
+  align-items: start;
+  align-content: start;
+}
+#addUsersPage .au-role-cards-row {
+  display: contents;
 }
 #addUsersPage .au-role-card {
-  align-self: stretch;
-  height: 100%;
+  align-self: start;
+  height: auto;
   min-height: 0;
 }
-/* Expanded role card: expand region participates in column flex so inner permission
-   rows can receive a definite height chain (scrollport ≤ max-height). */
 #addUsersPage .au-role-card.expanded .au-role-expand {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -2287,7 +2223,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   min-height: 0;
 }
 #addUsersPage .au-role-card-top {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -2308,22 +2244,33 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
-  align-items: stretch;
+  align-items: start;
 }
-/* Grid cell → stack fills row track → card fills stack (height chain). */
+#addUsersPage .au-role-card .permission-row {
+  grid-template-columns: 140px minmax(0, 1fr);
+  column-gap: 12px;
+}
+#addUsersPage .au-role-card .permission-values {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+}
 #addUsersPage .au-perm-card-row > .au-perm-card-stack {
   min-width: 0;
   min-height: 0;
-  height: 100%;
-  align-self: stretch;
+  height: auto;
+  align-self: start;
   display: flex;
   flex-direction: column;
 }
 #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   min-height: 0;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -2331,26 +2278,25 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 @media (min-width: 1024px) {
   #addUsersPage .au-perm-card-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px;
-    align-items: stretch;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
   }
   #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .cr-label {
     flex-shrink: 0;
   }
   #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
+    display: block;
+    flex: 0 1 auto;
     min-height: 0;
     min-width: 0;
     width: 100%;
     box-sizing: border-box;
-    padding: 20px 16px 18px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(17, 24, 39, 0.06);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
   #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail > .au-role-perm-summary-list {
     flex: 0 0 auto;
@@ -2411,8 +2357,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .au-card { padding: 12px 20px 15px; }
   .au-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .au-role-cards { gap: 20px; }
-  #addUsersPage .au-role-cards,
-  #addUsersPage .au-role-cards-row {
+  #addUsersPage .au-role-cards {
     gap: 20px;
   }
   #auRolesCard .au-role-row { max-width: min(100%, calc((100% - 20px) / 2)); }
@@ -2453,10 +2398,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   }
   .cr-app-section { flex: 0 0 auto; width: 100%; max-width: 100%; height: auto; }
   .au-role-cards { grid-template-columns: 1fr; gap: 16px; }
-  #addUsersPage .au-role-cards-row {
-    grid-template-columns: 1fr;
-  }
   #addUsersPage .au-role-cards {
+    grid-template-columns: 1fr;
     gap: 16px;
   }
 
@@ -2563,10 +2506,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 /* Required-asterisk tint */
 [data-theme="dark"] .cr-req { color: #FF8AA0; }
 
-[data-theme="dark"] .cr-access-module-label {
+[data-theme="dark"] .permission-label {
   color: var(--text-primary);
 }
-[data-theme="dark"] .cr-access-module-perms {
+[data-theme="dark"] .permission-values {
   color: var(--text-primary);
 }
 
