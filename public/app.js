@@ -4249,6 +4249,38 @@ document.addEventListener("DOMContentLoaded", function () {
       return app.levels[0];
     }
 
+    function accessPermissionCount(appKey, level, section) {
+      var app = APP_PERMISSIONS[appKey];
+      if (!app) return 0;
+      if (isCustomAccessLevel(level)) {
+        return section ? section.querySelectorAll(".cr-perm-check:checked").length : 0;
+      }
+      var bundle = app.bundles[level] || {};
+      var count = 0;
+      for (var i = 0; i < app.resources.length; i++) {
+        var resource = app.resources[i].title;
+        count += (bundle[resource] || []).length;
+      }
+      return count;
+    }
+
+    function accessLevelValueText(appKey, level, section) {
+      var count = accessPermissionCount(appKey, level, section);
+      return level + " | " + count + " " + (count === 1 ? "permission" : "permissions") + " selected";
+    }
+
+    function updateAccessLevelValue(section) {
+      if (!section) return;
+      var appKey = section.getAttribute("data-app-key");
+      var app = APP_PERMISSIONS[appKey];
+      if (!app) return;
+      var level = section.getAttribute("data-access-level") || app.levels[0];
+      var levelValue = section.querySelector(".cr-access-level-value");
+      if (!levelValue) return;
+      levelValue.textContent = accessLevelValueText(appKey, level, section);
+      levelValue.classList.remove("is-placeholder");
+    }
+
     function setSectionAccessLevel(section, level) {
       var appKey = section.getAttribute("data-app-key");
       var app = APP_PERMISSIONS[appKey];
@@ -4262,11 +4294,6 @@ document.addEventListener("DOMContentLoaded", function () {
         opts[i].classList.toggle("is-selected", selected);
         opts[i].setAttribute("aria-selected", selected ? "true" : "false");
       }
-      var levelValue = section.querySelector(".cr-access-level-value");
-      if (levelValue) {
-        levelValue.textContent = normalized;
-        levelValue.classList.remove("is-placeholder");
-      }
       if (!isCustomAccessLevel(normalized)) {
         var boxes = section.querySelectorAll(".cr-perm-check");
         for (var b = 0; b < boxes.length; b++) {
@@ -4275,6 +4302,7 @@ document.addEventListener("DOMContentLoaded", function () {
           boxes[b].checked = !!(bundle[resource] && bundle[resource].indexOf(action) !== -1);
         }
       }
+      updateAccessLevelValue(section);
       if (isCustomAccessLevel(normalized)) {
         collapseAllModules(section);
       } else {
@@ -4302,6 +4330,7 @@ document.addEventListener("DOMContentLoaded", function () {
       for (var j = 0; j < boxes.length && checked < count; j++) {
         if (!boxes[j].checked) { boxes[j].checked = true; checked++; }
       }
+      updateAccessLevelValue(section);
       renderAccessSummary(section);
       updateCrModuleSummaries(section);
       collapseAllModules(section);
@@ -4613,14 +4642,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return html;
     }
 
-    function accessTitle(level) {
-      if (!level) return "";
-      if (level === "View Only") return "View only";
-      if (level === "Full Access") return "Full access";
-      if (isCustomAccessLevel(level)) return "Custom";
-      return level.charAt(0).toUpperCase() + level.slice(1).toLowerCase();
-    }
-
     function renderAccessSummary(section) {
       var appKey = section.getAttribute("data-app-key");
       var app = APP_PERMISSIONS[appKey];
@@ -4634,12 +4655,10 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       var bundle = app.bundles[level] || {};
       var lines = [];
-      var count = 0;
       for (var r = 0; r < app.resources.length; r++) {
         var resource = app.resources[r].title;
         var actions = bundle[resource] || [];
         if (!actions.length) continue;
-        count += actions.length;
         lines.push(
           '<div class="permission-row">' +
             '<div class="permission-label">' + esc(resource) + ":</div>" +
@@ -4648,11 +4667,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       }
       summaryNode.innerHTML =
-        '<div class="cr-access-summary-top">' +
-          '<div class="cr-access-level-title">' + esc(accessTitle(level)) + '</div>' +
-          '<div class="cr-access-level-subtitle">' + count + ' permissions included</div>' +
-        '</div>' +
-        (lines.length ? ('<div class="permission-detail-list cr-access-summary-list">' + lines.join("") + '</div>') : '<div class="cr-access-summary-empty">No permissions selected.</div>');
+        lines.length ? ('<div class="permission-detail-list cr-access-summary-list">' + lines.join("") + '</div>') : '<div class="cr-access-summary-empty">No permissions selected.</div>';
     }
 
     function buildAppSectionHtml(appKey) {
@@ -4673,7 +4688,7 @@ document.addEventListener("DOMContentLoaded", function () {
       html += '<div class="cr-app-body" id="cr-app-body-' + esc(appKey) + '">';
       html += '<div class="cr-access-level-row"><div class="cr-label">Access level</div><div class="cr-access-level-wrap"><div class="cr-dd cr-access-level-dd" data-access-dd data-app-key="' + esc(appKey) + '">';
       html += '<button type="button" class="cr-dd-trigger cr-access-level-trigger" id="' + esc(accessTriggerId) + '" aria-haspopup="listbox" aria-expanded="false" aria-controls="' + esc(accessMenuId) + '">';
-      html += '<span class="cr-dd-value cr-access-level-value">' + esc(app.levels[0]) + '</span>';
+      html += '<span class="cr-dd-value cr-access-level-value">' + esc(accessLevelValueText(appKey, app.levels[0], null)) + '</span>';
       html += '<svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       html += '</button>';
       html += '<div class="cr-dd-menu cr-access-level-menu" id="' + esc(accessMenuId) + '" role="listbox" aria-labelledby="' + esc(accessTriggerId) + '" data-app-key="' + esc(appKey) + '">';
@@ -4865,6 +4880,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           updateCrModuleSummaries(sec);
         }
+        updateAccessLevelValue(sec);
         updateFunctionsCount();
         validateCreateRole();
       }

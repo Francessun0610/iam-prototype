@@ -1546,7 +1546,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   flex-shrink: 0;
 }
 #createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) {
-  min-height: 420px;
+  min-height: 388px;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-level-row {
+  margin-bottom: 10px;
 }
 #createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-summary-stack,
 #createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-summary-card {
@@ -1554,7 +1557,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 #createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-summary-card .cr-summary-cta {
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: 12px;
 }
 
 /* ═══ EDL DROPDOWN ═══ Exact Figma fidelity (node 390:15700, 390:15519) */
