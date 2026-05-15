@@ -290,35 +290,39 @@
 
       <div class="au-section-body">
       <div class="au-grid">
-        <div class="au-field">
+        <div class="au-field au-field-edit-only">
+          <label class="au-label" for="auFullName">Name</label>
+          <input class="au-input au-input-readonly" id="auFullName" type="text" value="Homer Simpson" readonly aria-readonly="true" tabindex="-1">
+        </div>
+        <div class="au-field au-field-first">
           <label class="au-label" for="auFirstName">First name<span class="au-req">*</span></label>
           <input class="au-input" id="auFirstName" type="text" placeholder="Enter first name" autocomplete="off">
         </div>
-        <div class="au-field">
+        <div class="au-field au-field-last">
           <label class="au-label" for="auLastName">Last name<span class="au-req">*</span></label>
           <input class="au-input" id="auLastName" type="text" placeholder="Enter last name" autocomplete="off">
         </div>
-        <div class="au-field">
+        <div class="au-field au-field-preferred">
           <label class="au-label" for="auPreferredName">Preferred name
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input class="au-input" id="auPreferredName" type="text" placeholder="Enter preferred name" autocomplete="off">
         </div>
 
-        <div class="au-field">
+        <div class="au-field au-field-email">
           <label class="au-label" for="auEmail">Email<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
         </div>
-        <div class="au-field">
+        <div class="au-field au-field-region">
           <label class="au-label" for="auRegionCombo-ctl">Region<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input type="hidden" id="auRegion" value="NA">
           <div class="edl-combo au-field-dd" id="auRegionCombo" aria-label="Region"></div>
         </div>
-        <div class="au-field">
+        <div class="au-field au-field-timezone">
           <label class="au-label" for="auTimezoneCombo-ctl">Timezone<span class="au-req">*</span>
             <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
@@ -326,7 +330,7 @@
           <div class="edl-combo au-field-dd" id="auTimezoneCombo" aria-label="Timezone"></div>
         </div>
 
-        <div class="au-field">
+        <div class="au-field au-field-team">
           <label class="au-label" for="auTeamCombo-ctl">Team</label>
           <input type="hidden" id="auTeam" value="">
           <div class="edl-combo au-field-dd" id="auTeamCombo" aria-label="Team"></div>
@@ -337,6 +341,7 @@
             <button type="button" class="au-status-opt is-selected" data-au-status="Active" aria-pressed="true">Active</button>
             <button type="button" class="au-status-opt" data-au-status="Inactive" aria-pressed="false">Inactive</button>
           </div>
+          <div class="au-status-readonly" id="auStatusReadonly" aria-labelledby="auStatusLabel" hidden></div>
           <input type="hidden" id="auStatusValue" value="Active" required>
         </div>
         <div class="au-field au-profile-field">

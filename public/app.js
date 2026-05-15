@@ -2641,6 +2641,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var auFirstName = document.getElementById("auFirstName");
     var auLastName = document.getElementById("auLastName");
+    var auFullName = document.getElementById("auFullName");
     var auPreferredName = document.getElementById("auPreferredName");
     var auEmail = document.getElementById("auEmail");
     var auRegion = document.getElementById("auRegion");
@@ -2648,6 +2649,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var auTeam = document.getElementById("auTeam");
     var auStatusValue = document.getElementById("auStatusValue");
     var auStatusSeg = document.getElementById("auStatusSeg");
+    var auStatusReadonly = document.getElementById("auStatusReadonly");
     var auBasicCard = document.getElementById("auBasicCard");
     var auRolesCard = document.getElementById("auRolesCard");
     var auBasicSummary = document.getElementById("auBasicSummary");
@@ -2871,6 +2873,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function setAUStatus(value) {
       var next = value === "Inactive" ? "Inactive" : "Active";
       if (auStatusValue) auStatusValue.value = next;
+      if (auStatusReadonly) {
+        var statusIcon = next === "Active" ? STATUS_ICON_ACTIVE : STATUS_ICON_INACTIVE;
+        auStatusReadonly.innerHTML = statusIcon + '<span class="au-status-readonly-text">' + esc(next) + '</span>';
+        auStatusReadonly.setAttribute("aria-label", next);
+      }
       if (!auStatusSeg) return;
       var btns = auStatusSeg.querySelectorAll("[data-au-status]");
       for (var i = 0; i < btns.length; i++) {
@@ -2947,6 +2954,7 @@ document.addEventListener("DOMContentLoaded", function () {
       auState.expandedRoleId = null;
       auFirstName.value = "";
       auLastName.value = "";
+      if (auFullName) auFullName.value = "";
       auPreferredName.value = "";
       auEmail.value = "";
       if (auRegion) auRegion.value = "NA";
@@ -3074,6 +3082,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function applyAuPageChrome() {
+      if (addUsersPage) addUsersPage.classList.toggle("is-edit-mode", auPageMode === "edit");
       if (auPageTitle) auPageTitle.textContent = auPageMode === "edit" ? "Edit User" : AU_PAGE_TITLE_ADD;
       if (auPageSubtitle) {
         auPageSubtitle.textContent = auPageMode === "edit"
@@ -3082,6 +3091,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (auRemoveUser) auRemoveUser.hidden = auPageMode !== "edit";
       if (auSave) auSave.textContent = auPageMode === "edit" ? "Save User" : "Add User";
+      if (auEmail) {
+        auEmail.readOnly = auPageMode === "edit";
+        auEmail.setAttribute("aria-readonly", auPageMode === "edit" ? "true" : "false");
+      }
+      if (auStatusReadonly) auStatusReadonly.hidden = auPageMode !== "edit";
     }
 
     function populateEditFormFromUser(user) {
@@ -3097,6 +3111,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (auFirstName) auFirstName.value = firstN;
       if (auLastName) auLastName.value = lastN;
+      if (auFullName) auFullName.value = user.name || ((firstN + " " + lastN).trim());
       if (auPreferredName) auPreferredName.value = preferredN;
       if (auEmail) auEmail.value = user.email || "";
       var reg = (user.region || "NA").trim() || "NA";

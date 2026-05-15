@@ -1927,6 +1927,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 .au-grid { margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .au-field { min-width: 0; }
+.au-field-edit-only { display: none; }
+#addUsersPage.is-edit-mode .au-field-edit-only { display: block; order: 1; }
+#addUsersPage.is-edit-mode .au-field-first,
+#addUsersPage.is-edit-mode .au-field-last { display: none; }
+#addUsersPage.is-edit-mode .au-field-email { order: 2; }
+#addUsersPage.is-edit-mode .au-field-preferred { order: 3; }
+#addUsersPage.is-edit-mode .au-field-region { order: 4; }
+#addUsersPage.is-edit-mode .au-field-timezone { order: 5; }
+#addUsersPage.is-edit-mode .au-field-team { order: 6; }
+#addUsersPage.is-edit-mode .au-field-status { order: 7; }
+#addUsersPage.is-edit-mode .au-profile-field { order: 8; }
 /* Status: label stacked above Active/Inactive toggle (same rhythm as other Basic fields). */
 .au-field-status {
   display: flex;
@@ -1969,6 +1980,23 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .au-input::placeholder { color: var(--text-placeholder); }
 .au-input:hover { border-color: var(--text-muted); }
 .au-input:focus { border-color: var(--brand-text); }
+.au-input-readonly,
+#addUsersPage.is-edit-mode #auEmail {
+  color: var(--text-secondary);
+  background: var(--bg-hover-soft);
+  border-color: var(--border-input);
+  cursor: default;
+}
+.au-input-readonly:hover,
+#addUsersPage.is-edit-mode #auEmail:hover {
+  border-color: var(--border-input);
+}
+.au-input-readonly:focus,
+#addUsersPage.is-edit-mode #auEmail:focus {
+  border-color: var(--border-input);
+}
+#addUsersPage.is-edit-mode .au-field-email .au-req { display: none; }
+#addUsersPage.is-edit-mode .au-field-status .au-req { display: none; }
 /* Add User selects: official EDL combo — full width, 32px trigger; chevron/clear stay vertically centered. */
 #addUsersPage .au-field-dd.edl-combo {
   display: block;
@@ -2052,6 +2080,20 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .au-status-opt:hover { background: var(--bg-hover); color: var(--text-primary); }
 .au-status-opt.is-selected { background: var(--brand-bg-selected); color: var(--brand-text); }
 .au-status-opt:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; }
+#addUsersPage.is-edit-mode .au-status-seg { display: none; }
+.au-status-readonly {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--text-primary);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.au-status-readonly[hidden] { display: none; }
+.au-status-readonly svg { flex-shrink: 0; }
 .au-profile-field { align-self: start; }
 .au-profile-field .au-label { margin-bottom: 4px; }
 .au-profile-sync-note { margin-top: 4px; font-size: 13px; font-weight: 400; line-height: 18px; color: var(--text-secondary); }
