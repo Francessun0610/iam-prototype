@@ -44,7 +44,7 @@
       <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
       <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
       <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-      <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+      <a href="#" class="nav-a on" id="navAdminLink" aria-haspopup="menu" aria-expanded="false">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
     </div>
   </div>
   <div class="nav-r">
@@ -76,6 +76,7 @@
             <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-theme="light" tabindex="-1">EDL Light</div>
             <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="dark" tabindex="-1">EDL Dark</div>
             <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="ads-preview" tabindex="-1">ADS Preview</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="july-release" tabindex="-1">July Release</div>
           </div>
         </div>
         <div class="user-menu-sep"></div>
@@ -86,6 +87,23 @@
     </div>
   </div>
 </nav>
+
+<!-- ═══ JULY RELEASE — Admin nav dropdown ═══
+     Visible only under [data-theme="july-release"]. Mirrors the Figma
+     node 723-1346 design: white panel, 8 px bottom radius, EDL shadow,
+     three product-area items (ICM chevron-right, TOM, IAM active). -->
+<div class="jr-admin-dropdown" id="jrAdminDropdown" role="menu" aria-label="Admin" hidden>
+  <div class="jr-admin-item" role="menuitem" tabindex="-1" data-jr-app="icm">
+    <span class="jr-admin-item-text">Inventory Catalog Manager</span>
+    <svg class="jr-admin-item-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </div>
+  <div class="jr-admin-item" role="menuitem" tabindex="-1" data-jr-app="tom">
+    <span class="jr-admin-item-text">Targeting Options Manager</span>
+  </div>
+  <div class="jr-admin-item jr-admin-item-active" role="menuitem" tabindex="-1" data-jr-app="iam">
+    <span class="jr-admin-item-text">Identity and Access Management</span>
+  </div>
+</div>
 
 <!-- ═══ PAGE ═══ -->
 <main class="page">

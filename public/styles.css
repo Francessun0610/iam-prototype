@@ -285,6 +285,17 @@ table { border-spacing: 0; border-collapse: collapse; }
 .user-menu-row.has-sub[aria-expanded="true"] > .user-menu-sub,
 .user-menu-sub:hover { display: flex; }
 
+/* Theme submenu items inherit surface/hover/text tokens from the page-level
+   theme (i.e. the <html> element), not from their own data-theme attributes.
+   Without this reset, an item like <div data-theme="dark"> would pick up
+   --bg-surface:#131E33 from the [data-theme="dark"] token block and appear
+   dark navy even while the page is in EDL Light mode. */
+.user-menu-sub .user-menu-sub-item {
+  --bg-surface:   inherit;
+  --bg-hover:     inherit;
+  --text-primary: inherit;
+}
+
 .user-menu-sub-item {
   display: flex;
   align-items: center;
@@ -303,6 +314,22 @@ table { border-spacing: 0; border-collapse: collapse; }
 .user-menu-sub-item:focus-visible { background: var(--bg-hover); }
 .user-menu-sub-item:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: -2px; }
 .user-menu-sub-item.is-selected { color: var(--brand-text); font-weight: 500; }
+
+/* EDL Indigo 70 selected state for dark and ADS Preview theme options.
+   Uses the absolute palette token #3611C8 so it is immune to any
+   per-element variable remapping above. */
+.user-menu-sub-item.is-selected[data-theme="dark"],
+.user-menu-sub-item.is-selected[data-theme="ads-preview"] {
+  background: #3611C8;
+  color: #FFFFFF;
+}
+.user-menu-sub-item.is-selected[data-theme="dark"]:hover,
+.user-menu-sub-item.is-selected[data-theme="ads-preview"]:hover,
+.user-menu-sub-item.is-selected[data-theme="dark"]:focus-visible,
+.user-menu-sub-item.is-selected[data-theme="ads-preview"]:focus-visible {
+  background: #2F139F;
+  color: #FFFFFF;
+}
 
 /* ─── PAGE SHELL ─── full-width with responsive padding, capped at ultra-wide ─── */
 .page { padding: 0 48px; max-width: 1440px; margin: 0 auto; }
@@ -4072,6 +4099,85 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 [data-theme="ads-preview"] button.rp-func-link:hover .rp-func-access {
   color: var(--brand-text-hover);
   text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   JULY RELEASE THEME
+   Additive, isolated layer on EDL Light. Only active under
+   [data-theme="july-release"]. Does NOT modify EDL Light, EDL Dark,
+   or ADS Preview. All rules are scoped to this attribute selector.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Theme menu: Indigo 70 selected state (matches dark/ads-preview fix) ── */
+.user-menu-sub-item.is-selected[data-theme="july-release"] {
+  background: #3611C8;
+  color: #FFFFFF;
+}
+.user-menu-sub-item.is-selected[data-theme="july-release"]:hover,
+.user-menu-sub-item.is-selected[data-theme="july-release"]:focus-visible {
+  background: #2F139F;
+  color: #FFFFFF;
+}
+
+/* ── Hide Internal / External segmented control ── */
+[data-theme="july-release"] #userViewToggle { display: none; }
+
+/* ── Admin nav dropdown panel (Figma node 723-1346) ─────────────── */
+.jr-admin-dropdown {
+  position: fixed;
+  top: 48px;           /* flush under the 48 px nav bar */
+  width: 253px;
+  background: #FFFFFF;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 0 4px rgba(23, 29, 35, 0.25);
+  padding: 4px 0;
+  z-index: 200;
+}
+/* default hidden state is managed via [hidden] attribute in HTML;
+   the dropdown is only ever rendered (opened) in July Release mode */
+
+.jr-admin-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  padding: 6px 16px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: #3A4652;
+  background: #FFFFFF;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  gap: 8px;
+}
+.jr-admin-item-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.jr-admin-item:hover { background: #F3F3FF; }
+.jr-admin-item:focus-visible {
+  outline: 2px solid #5432FB;
+  outline-offset: -2px;
+}
+/* Active / current page item — Indigo 5 tint (#F3F3FF) matching Figma */
+.jr-admin-item-active {
+  background: #F3F3FF;
+}
+.jr-admin-item-active:hover { background: #E6E6FF; }
+.jr-admin-item-chev {
+  flex-shrink: 0;
+  color: #3A4652;
+}
+
+/* ── Hide Create Role app options not in ICM/TOM/IAM scope ── */
+[data-theme="july-release"] .cr-dd-option[data-value="core_planning"],
+[data-theme="july-release"] .cr-dd-option[data-value="disney_ads_agent"] {
+  display: none;
 }
 
 /* ─── P4-7. Pagination current page — ADS Button-style pill ───

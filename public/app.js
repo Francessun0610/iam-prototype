@@ -981,6 +981,28 @@ function goToPage(pg) {
   document.querySelector(".tbl-wrap").scrollTop = 0;
 }
 
+/* ═══ JULY RELEASE HELPERS ═══
+   Module-scope so they are available anywhere in app.js regardless
+   of which IIFE they are called from. */
+
+/** Returns true when the July Release theme is currently active. */
+function isJulyRelease() {
+  return document.documentElement.getAttribute("data-theme") === "july-release";
+}
+
+/** Application keys that are in scope for July Release. */
+var JR_APP_KEYS = ["IAM", "ICM", "TOM"];
+
+/** Returns true when a role (by ID) has functions in at least one JR app. */
+function isJRRole(roleId) {
+  var fm = ROLE_FUNCTION_MAP[roleId];
+  if (!fm) return false;
+  for (var i = 0; i < JR_APP_KEYS.length; i++) {
+    if (fm[JR_APP_KEYS[i]] && fm[JR_APP_KEYS[i]].length) return true;
+  }
+  return false;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   renderTable();
   renderPagination();
@@ -1394,6 +1416,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function applyTheme(val) {
+      var prev = currentTheme();
       if (!val || val === "light") {
         document.documentElement.removeAttribute("data-theme");
       } else {
@@ -1401,6 +1424,25 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       try { localStorage.setItem(THEME_KEY, val || "light"); } catch (e) {}
       syncSelection();
+      /* When entering or leaving July Release, refresh tables that are
+         theme-aware (R&P role filter, Add User role picker). */
+      var next = currentTheme();
+      if (prev !== next && (prev === "july-release" || next === "july-release")) {
+        if (window.__rpRerender) window.__rpRerender();
+        if (window.__auReRenderRolePicker) window.__auReRenderRolePicker();
+        /* Reset Users tab to Internal view when entering July Release. */
+        if (next === "july-release") {
+          var intBtn = document.querySelector('#userViewToggle [data-view="internal"]');
+          if (intBtn && !intBtn.classList.contains("on")) intBtn.click();
+        }
+        /* Close July Release admin dropdown if theme is no longer july-release. */
+        var jrDd = document.getElementById("jrAdminDropdown");
+        if (jrDd && next !== "july-release") {
+          jrDd.setAttribute("hidden", "");
+          var adminLnk = document.getElementById("navAdminLink");
+          if (adminLnk) adminLnk.setAttribute("aria-expanded", "false");
+        }
+      }
     }
 
     function openMenu() {
@@ -1461,6 +1503,60 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         applyTheme(currentTheme() === "dark" ? "light" : "dark");
       }
+    });
+  })();
+
+  /* ─── July Release — Admin nav dropdown ───────────────────────────
+     Opens a product-area picker below the "Admin" nav item only when
+     [data-theme="july-release"] is active. No effect on any other theme.
+     The dropdown panel (#jrAdminDropdown) is rendered in the HTML but
+     kept hidden via the [hidden] attribute until this handler opens it. */
+  (function setupJRNavDropdown() {
+    var adminLink = document.getElementById("navAdminLink");
+    var dropdown  = document.getElementById("jrAdminDropdown");
+    if (!adminLink || !dropdown) return;
+
+    function positionDropdown() {
+      /* Align the left edge of the panel to the left edge of the Admin link. */
+      var rect = adminLink.getBoundingClientRect();
+      dropdown.style.left = rect.left + "px";
+    }
+
+    function openDropdown() {
+      positionDropdown();
+      dropdown.removeAttribute("hidden");
+      adminLink.setAttribute("aria-expanded", "true");
+    }
+
+    function closeDropdown() {
+      dropdown.setAttribute("hidden", "");
+      adminLink.setAttribute("aria-expanded", "false");
+    }
+
+    adminLink.addEventListener("click", function (e) {
+      /* Only intercept clicks when July Release is active; other themes
+         let the default link behaviour (href="#") stand. */
+      if (!isJulyRelease()) return;
+      e.preventDefault();
+      if (!dropdown.hasAttribute("hidden")) closeDropdown();
+      else openDropdown();
+    });
+
+    /* Close on outside click. */
+    document.addEventListener("click", function (e) {
+      if (dropdown.hasAttribute("hidden")) return;
+      if (adminLink.contains(e.target) || dropdown.contains(e.target)) return;
+      closeDropdown();
+    });
+
+    /* Close on Escape. */
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !dropdown.hasAttribute("hidden")) closeDropdown();
+    });
+
+    /* Re-position if window is resized while open. */
+    window.addEventListener("resize", function () {
+      if (!dropdown.hasAttribute("hidden")) positionDropdown();
     });
   })();
 
@@ -3012,7 +3108,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function getAURoleOptions() {
       var items = [];
       for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
-        items.push({ id: ROLES_PERMISSIONS_DATA[i].id, name: ROLES_PERMISSIONS_DATA[i].role });
+        var r = ROLES_PERMISSIONS_DATA[i];
+        /* July Release: only expose roles with ICM/TOM/IAM functions. */
+        if (isJulyRelease() && !isJRRole(r.id)) continue;
+        items.push({ id: r.id, name: r.role });
       }
       return items;
     }
@@ -3703,6 +3802,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (auBack) auBack.addEventListener("click", closeAddUsers);
     if (auCancel) auCancel.addEventListener("click", closeAddUsers);
     if (auSave) auSave.addEventListener("click", handleSaveUser);
+
+    /* Expose for theme-change callbacks (July Release mode toggle). */
+    window.__auReRenderRolePicker = renderAURolePicker;
   })();
 
   /* ═══ ROLES & PERMISSIONS TABLE RENDERING ═══ */
@@ -3745,6 +3847,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function getRPFilteredData() {
     var result = ROLES_PERMISSIONS_DATA;
+    /* July Release: restrict to roles that have ICM, TOM, or IAM functions. */
+    if (isJulyRelease()) {
+      result = result.filter(function (r) { return isJRRole(r.id); });
+    }
     if (rpSearchTerm) {
       /* Mirrors the Users tab search (see getFilteredData): iterate a
          flat field list for simple string columns, then scan the
@@ -3869,6 +3975,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var filteredCount = getRPFilteredData().length;
     document.getElementById("rpItemCount").textContent = "of " + filteredCount + " items";
 
+    /* Keep "Total roles: N" in sync with the current theme scope.
+       In July Release the base set is 4 (ICM/TOM/IAM roles only);
+       in all other themes it reflects the full ROLES_PERMISSIONS_DATA length. */
+    var rpTotalLbl = document.getElementById("rpTotalLabel");
+    if (rpTotalLbl) {
+      var baseCount = isJulyRelease()
+        ? ROLES_PERMISSIONS_DATA.filter(function (r) { return isJRRole(r.id); }).length
+        : ROLES_PERMISSIONS_DATA.length;
+      rpTotalLbl.textContent = "Total roles: " + baseCount;
+    }
+
     var rpJumpMenu = document.getElementById("rpJumpMenu");
     var rpJumpValue = document.getElementById("rpJumpValue");
     if (rpJumpMenu && rpJumpValue) {
@@ -3892,6 +4009,14 @@ document.addEventListener("DOMContentLoaded", function () {
       rpPageSizeValue.textContent = String(rpPageSize);
     }
   }
+
+  /* Expose a global re-render handle so theme-change callbacks can
+     refresh the R&P table without needing access to this closure. */
+  window.__rpRerender = function () {
+    rpCurrentPage = 1;
+    renderRPTable();
+    renderRPPagination();
+  };
 
   function rpGoToPage(pg) {
     var tp = rpTotalPages();
