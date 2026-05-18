@@ -40,23 +40,33 @@
         </a>
         <span class="nav-divider"></span>
       </div>
-      <a href="#" class="nav-a">Sales</a>
-      <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-      <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-      <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-      <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
     </div>
   </div>
+  <div class="nav-c">
+    <a href="#" class="nav-a">Sales</a>
+    <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+  </div>
   <div class="nav-r">
-    <!-- ADS-Preview-only search pill. Hidden via CSS under EDL Light/Dark
-         (`display:none`) so it never affects those themes. Non-functional
-         decoration (readonly + tabindex="-1") — this is a visual preview
-         of the ADS search field, not wired to any search behavior. -->
-    <div class="ads-nav-search" aria-hidden="true">
-      <svg class="ads-nav-search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" class="ads-nav-search-inp" placeholder="Search" readonly tabindex="-1" aria-label="Search (preview only)">
-    </div>
-    <button class="nav-r-btn" aria-label="Notifications"><img src="nav/bell.svg" alt="" width="24" height="24"></button>
+    <!-- Notification button. Two icon glyphs co-exist; CSS shows one per theme:
+         • `nav-bell-img` — legacy EDL Light/Dark asset (`nav/bell.svg`). Unchanged
+           from the original committed design. Hidden under ADS Preview.
+         • `nav-ico-bell` — Ads DS inline SVG, shown only in ADS Preview. -->
+    <button class="nav-r-btn" aria-label="Notifications">
+      <img class="nav-bell-img" src="nav/bell.svg" alt="" width="24" height="24">
+      <svg class="nav-ico nav-ico-bell" xmlns="http://www.w3.org/2000/svg" width="15" height="17" viewBox="0 0 15 17" fill="none" aria-hidden="true">
+        <path d="M14.8272 11.8703C14.3936 11.1234 13.7491 9.01016 13.7491 6.25C13.7491 4.5924 13.0906 3.00269 11.9185 1.83058C10.7464 0.65848 9.1567 0 7.49909 0C5.84149 0 4.25178 0.65848 3.07968 1.83058C1.90757 3.00269 1.24909 4.5924 1.24909 6.25C1.24909 9.01094 0.603782 11.1234 0.170188 11.8703C0.0594621 12.0602 0.000761949 12.2759 7.36794e-06 12.4957C-0.000747213 12.7155 0.0564706 12.9316 0.16589 13.1223C0.27531 13.3129 0.433063 13.4713 0.623239 13.5815C0.813416 13.6917 1.02929 13.7498 1.24909 13.75H4.43738C4.58157 14.4556 4.96505 15.0897 5.52295 15.5451C6.08085 16.0006 6.77892 16.2493 7.49909 16.2493C8.21927 16.2493 8.91734 16.0006 9.47524 15.5451C10.0331 15.0897 10.4166 14.4556 10.5608 13.75H13.7491C13.9688 13.7497 14.1846 13.6915 14.3747 13.5812C14.5647 13.471 14.7224 13.3125 14.8317 13.1219C14.941 12.9313 14.9982 12.7153 14.9974 12.4955C14.9966 12.2758 14.9379 12.0601 14.8272 11.8703ZM7.49909 15C7.11145 14.9999 6.73338 14.8796 6.41691 14.6558C6.10043 14.4319 5.86112 14.1155 5.73191 13.75H9.26628C9.13707 14.1155 8.89776 14.4319 8.58128 14.6558C8.26481 14.8796 7.88674 14.9999 7.49909 15ZM1.24909 12.5C1.85066 11.4656 2.49909 9.06875 2.49909 6.25C2.49909 4.92392 3.02588 3.65215 3.96356 2.71447C4.90124 1.77678 6.17301 1.25 7.49909 1.25C8.82518 1.25 10.0969 1.77678 11.0346 2.71447C11.9723 3.65215 12.4991 4.92392 12.4991 6.25C12.4991 9.06641 13.146 11.4633 13.7491 12.5H1.24909Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <!-- Three-dot "More" button — Ads DS only. Hidden under EDL Light/Dark so
+         their original utility cluster (bell + avatar) renders unchanged. -->
+    <button class="nav-r-btn nav-r-btn-dots" aria-label="More">
+      <svg class="nav-ico nav-ico-dots" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M10.9375 10C10.9375 10.1854 10.8825 10.3667 10.7795 10.5208C10.6765 10.675 10.5301 10.7952 10.3588 10.8661C10.1875 10.9371 9.99896 10.9557 9.8171 10.9195C9.63525 10.8833 9.4682 10.794 9.33709 10.6629C9.20598 10.5318 9.11669 10.3648 9.08051 10.1829C9.04434 10.001 9.06291 9.81254 9.13386 9.64123C9.20482 9.46993 9.32498 9.32351 9.47915 9.2205C9.63332 9.11748 9.81458 9.0625 10 9.0625C10.2486 9.0625 10.4871 9.16127 10.6629 9.33709C10.8387 9.5129 10.9375 9.75136 10.9375 10ZM15.3125 9.0625C15.1271 9.0625 14.9458 9.11748 14.7917 9.2205C14.6375 9.32351 14.5173 9.46993 14.4464 9.64123C14.3754 9.81254 14.3568 10.001 14.393 10.1829C14.4292 10.3648 14.5185 10.5318 14.6496 10.6629C14.7807 10.794 14.9477 10.8833 15.1296 10.9195C15.3115 10.9557 15.5 10.9371 15.6713 10.8661C15.8426 10.7952 15.989 10.675 16.092 10.5208C16.195 10.3667 16.25 10.1854 16.25 10C16.25 9.75136 16.1512 9.5129 15.9754 9.33709C15.7996 9.16127 15.5611 9.0625 15.3125 9.0625ZM4.6875 9.0625C4.50208 9.0625 4.32082 9.11748 4.16665 9.2205C4.01248 9.32351 3.89232 9.46993 3.82136 9.64123C3.75041 9.81254 3.73184 10.001 3.76801 10.1829C3.80419 10.3648 3.89348 10.5318 4.02459 10.6629C4.1557 10.794 4.32275 10.8833 4.5046 10.9195C4.68646 10.9557 4.87496 10.9371 5.04627 10.8661C5.21757 10.7952 5.36399 10.675 5.467 10.5208C5.57002 10.3667 5.625 10.1854 5.625 10C5.625 9.75136 5.52623 9.5129 5.35041 9.33709C5.1746 9.16127 4.93614 9.0625 4.6875 9.0625Z" fill="currentColor"/>
+      </svg>
+    </button>
     <div class="user-menu" id="userMenu">
       <button class="nav-r-btn" id="userMenuTrigger" aria-label="User menu" aria-haspopup="menu" aria-expanded="false"><img src="nav/avatar.png" alt="" class="nav-avatar-img"></button>
       <div class="user-menu-pop" id="userMenuPop" role="menu" aria-labelledby="userMenuTrigger">

@@ -206,6 +206,12 @@ table { border-spacing: 0; border-collapse: collapse; }
 .nav { display: flex; align-items: center; justify-content: space-between; height: 48px; background: var(--nav-bg); padding-right: 28px; position: sticky; top: 0; z-index: 100; }
 .nav-l { display: flex; align-items: center; height: 100%; overflow: hidden; }
 .nav-mod { display: flex; gap: 8px; height: 100%; align-items: center; padding: 10px 16px 10px 48px; }
+/* Center cluster holds the primary nav links. In EDL Light/Dark this sits
+   directly to the right of the logo group (legacy layout). ADS Preview
+   overrides this to center the cluster in the bar (see ADS Preview block).
+   `margin-right: auto` claims the slack so EDL's three-sibling flex
+   still pins utilities to the right edge without redistributing space. */
+.nav-c { display: flex; gap: 8px; height: 100%; align-items: center; margin-right: auto; }
 .nav-logo-group { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
 .nav-logo-link { display: flex; align-items: center; flex-shrink: 0; line-height: 0; border-radius: 4px; }
 .nav-logo-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 3px; }
@@ -216,8 +222,17 @@ table { border-spacing: 0; border-collapse: collapse; }
 .nav-a.on { color: var(--nav-link-active); font-weight: 800; }
 .nav-chev { flex-shrink: 0; width: 16px; height: 16px; }
 .nav-r { display: flex; align-items: center; height: 100%; }
-.nav-r-btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 12px; border: none; background: none; cursor: pointer; }
+.nav-r-btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 12px; border: none; background: none; cursor: pointer; color: var(--nav-link); }
 .nav-avatar-img { width: 24px; height: 24px; border-radius: 50%; display: block; }
+/* Ads DS-only icon glyphs.
+   `.nav-ico`     — inline SVG used by the Ads bell + three-dot icons; the
+                     legacy bell (`<img class="nav-bell-img">`) is the EDL
+                     Light/Dark glyph and is shown by default.
+   `.nav-r-btn-dots` — entire "More" button, ADS Preview only.
+   Both are hidden in EDL themes so EDL Light/Dark render with their
+   original bell + avatar pair only. ADS Preview override unhides them. */
+.nav-r-btn .nav-ico { display: none; }
+.nav-r-btn-dots { display: none; }
 
 /* ═══ User menu (top-right profile dropdown) ═══ */
 .user-menu { position: relative; display: inline-flex; height: 100%; }
@@ -3331,9 +3346,12 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    toolbar panel `.card`. The Figma Card publishes 6px radius for
    every elevation variant, so EDL's earlier 12px figure is replaced
    here. Card-on-card density on Create Role is unchanged. */
+/* Edit User containers (Basic Information, Roles & Permissions) — Ads DS elevation low.
+   Spec: Figma node 1995:18 — 0px 1px 4px 0px rgba(15,18,20,0.3) on a 6px radius white card.
+   Matches the .card override above so all primary content cards share one elevation. */
 [data-theme="ads-preview"] .cr-card {
   border-radius: var(--ads-radius-md);
-  box-shadow: 0 4px 12px rgba(15,18,20,0.3);
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
   border-color: transparent;
 }
 
@@ -3490,13 +3508,24 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   height: 100%;
   align-items: center;
 }
+/* Divider removed per Ads DS top bar (Figma 796:78): brand sits flush
+   against the spacer with no vertical rule. Hidden only in ADS Preview;
+   EDL Light/Dark keep the legacy rule. */
 [data-theme="ads-preview"] .nav-divider {
-  display: block;
-  width: 1px;
-  height: 32px;
-  background: var(--nav-divider);
-  flex-shrink: 0;
-  align-self: center;
+  display: none;
+}
+
+/* ─── Bar layout: brand · spacer · centered nav · spacer · utilities ───
+   Per Ads DS Top Bar (Figma 796:78): three groups separated by two
+   flex-grow spacers so the nav cluster sits in the geometric center of
+   the bar and the right-side utilities pin to the right edge.
+   We achieve this by overriding the base `.nav-c { margin-right: auto }`
+   (which only claims slack on the right for EDL) with `margin: 0 auto`
+   so slack distributes evenly on BOTH sides of the cluster. */
+[data-theme="ads-preview"] .nav-c {
+  margin-left: auto;
+  margin-right: auto;
+  gap: 4px;              /* spacing-02 between tabs per Figma 795:45 */
 }
 
 /* ─── Primary Nav Item — ADS inner-pill anatomy ───
@@ -3604,11 +3633,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    the earlier `flex-start + gap-48 + flex-grow` rewrite was a
    self-invented interpretation that diverged from the verified frame. */
 [data-theme="ads-preview"] .nav-r {
-  gap: 8px;              /* spacing-03 — matches 8 px between every child
-                            in the Account cluster per frame metadata */
+  gap: 16px;             /* utilities/gap per Ads DS Top Bar (Figma 795:56) */
   padding-right: 0;
   height: 100%;
   align-items: center;
+}
+
+/* Ads DS-only utility icons (bell, three-dot) — render as 20×20 in white per
+   Ads DS Top Bar (Figma 795:57 / 795:59). EDL Light/Dark keep their legacy
+   `<img src="nav/bell.svg">` bell and have no three-dot icon, so these
+   selectors are gated on `[data-theme="ads-preview"]` only.
+   `currentColor` on the path lets one rule paint both icons. */
+[data-theme="ads-preview"] .nav-r-btn .nav-ico {
+  width: 20px;
+  height: 20px;
+  display: block;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+[data-theme="ads-preview"] .nav-r-btn-dots {
+  display: inline-flex;
+}
+/* Hide the legacy bell img in ADS Preview so the inline Ads SVG is the
+   only glyph rendered inside the notification button. */
+[data-theme="ads-preview"] .nav-bell-img {
+  display: none;
 }
 
 /* Nav Icon container — Figma `aspect-[40/40] h-full p-[spacing-02,4px]`
@@ -3719,31 +3768,20 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: rgba(255,255,255,0.22);
 }
 
-/* Avatar — Figma ProfileAvatar (node 1392:5261) is a 30×30 container
-   with `rounded-[radius/md,3px]` holding a PRE-CIRCULAR image asset
-   (`imgEllipse493`). Because the image itself is circular, the 3 px
-   container corners never actually clip into a visible edge and the
-   component renders as a perfect circle.
-   Our product stores square portrait photos and relies on EDL's
-   `.nav-avatar-img { border-radius: 50% }` to crop them into circles.
-   Visually this produces the same circular output as the ADS spec; the
-   anatomical difference (image-level vs container-level rounding) is
-   therefore not a pixel divergence. We keep EDL's rule and only tweak
-   size (30 px, per ADS) and drop the white rim — ADS displays the bare
-   portrait on the brand bar, no ring. */
+/* Avatar — per the May 18 nav-correction the profile/avatar icon must NOT
+   be resized, recolored, or replaced under any theme. It now uses the
+   base `.nav-avatar-img { width:24px; height:24px; border-radius:50% }`
+   in every theme; the only ADS-scoped tweak is to drop any inherited
+   ring/shadow so the bare portrait reads cleanly on the brand bar. */
 [data-theme="ads-preview"] .nav-avatar-img {
-  width: 30px;
-  height: 30px;
   box-shadow: none;
 }
 
-/* Bell icon — rendered as pure white on the ADS bar.
-   EDL ships the PNG/SVG in its intended color; ADS's own `color/text/on-primary`
-   is always #FFFFFF on a brand surface. If the inherited asset already
-   paints white this is a no-op; otherwise the filter normalises it. */
-[data-theme="ads-preview"] .nav-r-btn img {
-  filter: brightness(1) saturate(0.9);
-}
+/* (Removed) The previous `.nav-r-btn img { filter: ... }` rule was added to
+   normalise the EDL bell PNG to white on the brand bar. In ADS Preview the
+   inline Ads bell SVG is now the only bell glyph (the legacy <img> is
+   hidden via `.nav-bell-img { display:none }`), and the avatar must not be
+   recolored, so no per-img filter is required. */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    ADS Preview — Pass-2 QA corrections (scoped).
