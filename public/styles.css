@@ -2788,91 +2788,121 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   /* Local ADS palette — scoped to this block, used only by the remaps below.
      Named `--ads-*` to make absolutely sure no EDL token is overwritten. */
 
-  /* Neutral ink ramp — cooler than EDL's --gray-* so surfaces and borders
-     feel characteristically ADS rather than EDL-recolored. */
-  --ads-ink-95:       #0F1722;    /* primary text, also nav bg */
-  --ads-ink-80:       #1C2733;
-  --ads-ink-70:       #394655;
-  --ads-ink-60:       #546271;
-  --ads-ink-50:       #6E7D8E;
-  --ads-ink-40:       #8A98A8;
-  --ads-ink-30:       #B0BCC8;
-  --ads-ink-20:       #D4DCE4;
-  --ads-ink-15:       #E2E8EE;
-  --ads-ink-10:       #EEF2F6;
-  --ads-ink-05:       #F6F8FB;
+  /* Neutral gray ramp — anchored to the Ads DS Gray hue
+     (file 2048:18, "Gray 50–900"). The published values feel
+     warmer / less blue than the prior cooler ink ramp; aligning
+     here means every surface, border, and hairline that consumes
+     an --ads-ink-* alias automatically picks up the Ads DS
+     palette without rewriting consumers.
+       --ads-ink-05  → Gray 50  #eceeee (page canvas, hover-soft)
+       --ads-ink-10  → ~Gray 50 #eceeee (hover wash; same step,
+                                          reserved for future)
+       --ads-ink-15  → Gray 50  #eceeee (subtle hairlines)
+       --ads-ink-20  → Gray 100 #51585b (deeper hairlines)
+       --ads-ink-30  → Gray 100 #51585b
+       --ads-ink-40  → Gray 100 #51585b
+       --ads-ink-50  → Gray 100 #51585b
+       --ads-ink-60  → Gray 200 #3b4347 (text/muted)
+       --ads-ink-70  → Gray 200 #3b4347 (text/secondary)
+       --ads-ink-80  → Gray 300 #30383c
+       --ads-ink-95  → Gray 600 #1e2528 (primary text). */
+  --ads-ink-95:       #1E2528;    /* primary text */
+  --ads-ink-80:       #30383C;
+  --ads-ink-70:       #3B4347;
+  --ads-ink-60:       #3B4347;
+  --ads-ink-50:       #51585B;
+  --ads-ink-40:       #51585B;
+  --ads-ink-30:       #51585B;
+  --ads-ink-20:       #51585B;
+  --ads-ink-15:       #ECEEEE;
+  --ads-ink-10:       #ECEEEE;
+  --ads-ink-05:       #ECEEEE;
 
-  /* ADS brand / indigo family.
-     These values are copied from the ADS Figma library (Global Navigation
-     Bar, Primary Nav Item, Submodule Chip — nodes 1037:59810 / 1037:59491
-     / 1037:59928). ADS does NOT define a separate "violet" palette; it
-     references `EDL Palette/Indigo/*` directly. We therefore mirror the
-     same hex values under scoped `--ads-indigo-*` names so that:
-       (a) we use the exact ADS values (no approximations), and
-       (b) we never reach out to EDL's own --indigo-* tokens and therefore
-           cannot accidentally mutate them.
-     Source mapping (Figma → local scoped token):
-       EDL Palette/Indigo/70 #3611C8  → --ads-indigo-70   (nav bg, brand)
-       EDL Palette/Indigo/40 #705CFF  → --ads-indigo-40   (item hover accent)
-       EDL Palette/Indigo/20 #B8B8FF  → --ads-indigo-20   (item selected accent)
-       EDL Palette/Indigo/10 #E6E6FF  → --ads-indigo-10   (soft tint) */
-  --ads-indigo-95:    #231267;
-  --ads-indigo-80:    #2F139F;
-  --ads-indigo-70:    #3611C8;    /* ← nav background per ADS Figma */
-  --ads-indigo-60:    #3B0DF2;
-  --ads-indigo-50:    #5432FB;    /* focus ring */
-  --ads-indigo-40:    #705CFF;
-  --ads-indigo-30:    #928AFF;
-  --ads-indigo-20:    #B8B8FF;
-  --ads-indigo-15:    #CFCFFF;
-  --ads-indigo-10:    #E6E6FF;
-  --ads-indigo-05:    #F3F3FF;
+  /* ADS Design System indigo ramp.
+     Source of truth: the canonical Ads Design System Figma file
+     (DJb3yM8aOQjIAbTQ9Cd8Mi/Ads-Design-System--5.13-, "Documentation /
+     Color" node 2048:18). Step 300 (#4045C2) is the published brand
+     anchor — used by color/surface/brand, color/text/brand,
+     color/border/brand, color/border/active, color/border/focus,
+     color/controls/primary/rest, and color/icons/brand/rest. Step 50
+     (#E2E3F2) is the brand-wash used for selected rows, active nav
+     fills, and other large-area brand affordances.
+     Naming uses ADS step numbers (50–700) under scoped `--ads-indigo-*`
+     so no EDL palette variable is ever overwritten. */
+  --ads-indigo-50:    #E2E3F2;    /* surface/brand-wash, selected row */
+  --ads-indigo-100:   #6567CE;    /* lighter accent */
+  --ads-indigo-200:   #5458C9;    /* legacy/header (kept for compat) */
+  --ads-indigo-300:   #4045C2;    /* ← BRAND anchor per ADS DS */
+  --ads-indigo-400:   #3B3FBA;    /* brand hover */
+  --ads-indigo-500:   #363AAB;    /* brand pressed */
+  --ads-indigo-600:   #32349B;
+  --ads-indigo-700:   #2D2F8C;
 
-  /* Backward-compatible aliases — several earlier ADS Preview refinements
-     (buttons, cards, inputs, focus rings) reference `--ads-violet-*`.
-     Re-point those names to the new indigo values so those rules keep
-     working without being rewritten. Keeping the aliases also means any
-     future refinement can pick either name without risk. */
-  --ads-violet-95:    var(--ads-indigo-95);
-  --ads-violet-90:    var(--ads-indigo-80);
-  --ads-violet-80:    var(--ads-indigo-80);
-  --ads-violet-70:    var(--ads-indigo-70);
-  --ads-violet-60:    var(--ads-indigo-60);
-  --ads-violet-50:    var(--ads-indigo-50);
-  --ads-violet-40:    var(--ads-indigo-40);
-  --ads-violet-30:    var(--ads-indigo-30);
-  --ads-violet-20:    var(--ads-indigo-20);
-  --ads-violet-15:    var(--ads-indigo-15);
-  --ads-violet-10:    var(--ads-indigo-10);
-  --ads-violet-05:    var(--ads-indigo-05);
+  /* Backward-compatible aliases — earlier ADS Preview refinements
+     (buttons, cards, inputs, focus rings) still reference `--ads-violet-*`
+     names. Re-point them to the new indigo step values so the rules
+     keep working without being rewritten. Mapping uses the ADS step
+     scale (50–700) so visual hierarchy is preserved:
+       violet-05 / violet-10 → indigo-50 (brand-wash)
+       violet-15 / violet-20 → indigo-100 (lighter accent)
+       violet-30 / violet-40 → indigo-200 (mid)
+       violet-50              → indigo-300 (brand)
+       violet-60 / violet-70 → indigo-400 (hover)
+       violet-80 / violet-90 → indigo-500 (pressed)
+       violet-95              → indigo-700 (deepest). */
+  --ads-violet-95:    var(--ads-indigo-700);
+  --ads-violet-90:    var(--ads-indigo-500);
+  --ads-violet-80:    var(--ads-indigo-500);
+  --ads-violet-70:    var(--ads-indigo-400);
+  --ads-violet-60:    var(--ads-indigo-400);
+  --ads-violet-50:    var(--ads-indigo-300);
+  --ads-violet-40:    var(--ads-indigo-200);
+  --ads-violet-30:    var(--ads-indigo-200);
+  --ads-violet-20:    var(--ads-indigo-100);
+  --ads-violet-15:    var(--ads-indigo-100);
+  --ads-violet-10:    var(--ads-indigo-50);
+  --ads-violet-05:    var(--ads-indigo-50);
 
-  /* Semantic greens / reds tuned to sit on the ADS light canvas. */
-  --ads-green-70:     #0B8A5A;
-  --ads-red-70:       #C01033;
+  /* Semantic greens / reds — Ads DS hue ramps (file 2048:18).
+     Per the published library, Red 300 (#AF434E) is the destructive
+     anchor and Green 300 (#568E6D) is the success anchor. The 400-step
+     of each hue serves as the field-validation text colour
+     (red-400 #993B44, green-400 #4C7D57). */
+  --ads-red-50:       #F8E0E2;
+  --ads-red-300:      #AF434E;    /* destructive surface */
+  --ads-red-400:      #993B44;    /* validation/error text */
+  --ads-green-50:     #E0EDE5;
+  --ads-green-300:    #568E6D;    /* success surface */
+  --ads-green-400:    #4C7D57;    /* validation/success text */
 
-  /* Local radius ramp — scoped; adopted by the ADS-only component
-     overrides further below. Never referenced from outside this theme.
-     Values tuned to the ADS primitives surfaced in the Global Header
-     context (file Qxc4zjM8mv1jJkzcWKAAAB, node 6426:54055):
-       `radius/md = 3px`, `radius/999 = 999px`, plus an inferred
-     `radius/lg` for card-scale surfaces. ADS form components (button,
-     input, select, checkbox, chip) all adopt `radius/md` — so our
-     "sm" slot is pinned at 3px and flows into every scoped override
-     that references it. */
-  --ads-radius-xs:    2px;    /* unused today, reserved */
-  --ads-radius-sm:    3px;    /* ADS radius/md — buttons, inputs, menus */
-  --ads-radius-md:    6px;    /* mid — larger surfaces if needed */
-  --ads-radius-lg:    12px;   /* cards, modals */
-  --ads-radius-full:  999px;  /* pills / chips / nav items */
+  /* Local radius ramp — scoped to ADS Preview.
+     Source of truth: the canonical Ads DS Figma library — Form, Input,
+     Dropdown, Card and Field components all publish `radius = 6px`
+     (e.g. card/size/radius, dropdown/size/default/radius,
+     form-layout/size/radius, input/size/default/radius). The pill
+     value 100px comes from the Search component (search/size/radius).
+     Cards use the same 6px as form controls per the Card spec — we
+     keep a 12px `lg` slot reserved for modal/sheet surfaces. */
+  --ads-radius-xs:    2px;    /* reserved */
+  --ads-radius-sm:    6px;    /* ADS radius — buttons, inputs, menus, cards */
+  --ads-radius-md:    6px;    /* alias; same as sm for ADS DS */
+  --ads-radius-lg:    12px;   /* modals, sheets */
+  --ads-radius-pill:  100px;  /* search, chips */
+  --ads-radius-full:  999px;  /* alias */
 
-  /* ADS component border — the 15 %-alpha ink rule used across form
-     components (text field, select, search, checkbox). Not in EDL; we
-     scope it here so button/input/select rules can consume it. */
-  --ads-border-component: rgba(15,18,20,0.15);
+  /* ADS component border — Figma `color/border/default` for control
+     surfaces is `rgba(15,18,20,0.2)` (search, dropdown, input). The
+     "bold" 0.5-alpha border is used for focus on neutral controls.
+     Both are scoped here so component rules can consume them. */
+  --ads-border-component: rgba(15,18,20,0.2);
+  --ads-border-bold:      rgba(15,18,20,0.5);
+  --ads-surface-recessed: rgba(15,18,20,0.05);
 
-  /* ADS ghost text — `color/text/ghost = #BEC0C1`, used for placeholders
-     and disabled-looking label text. */
-  --ads-text-ghost:   #BEC0C1;
+  /* ADS ghost / placeholder text — Figma `search/state/rest/text` is
+     `#51585b` (Gray 100); we keep `--ads-text-ghost` as a slightly
+     softer fallback for legacy refs but most consumers now point at
+     `--text-placeholder` below which reads `#51585b`. */
+  --ads-text-ghost:   #51585B;
 
   /* ─── Remap EDL semantic tokens to ADS values (scoped override only) ─── */
   /* Surfaces */
@@ -2882,72 +2912,87 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   --bg-hover:          var(--ads-ink-10);
   --bg-hover-soft:     var(--ads-ink-05);
 
-  /* Nav — value extracted from the ADS Global Header component (file
-     Qxc4zjM8mv1jJkzcWKAAAB, node 6426:54055). The bar surface token is
-     `color/surface/brand` = #5458C9, a softer desaturated indigo, NOT
-     the saturated `EDL Palette/Indigo/70 = #3611C8` we previously used.
-     We mirror that hex into a scoped `--ads-surface-brand` token so no
-     EDL palette variable is mutated.
-     Nav link text is pure white per `color/text/on-primary`. Link "ghost"
-     (rest state) is still white at weight 500 — the Figma doesn't dim
-     inactive items; they stay readable and the active state is conveyed
-     by a white pill + brand-colored text instead (see .nav-a.on below). */
-  --ads-surface-brand: #5458C9;
+  /* Nav — anchored to the canonical Ads DS Navigation component
+     (file DJb3yM8aOQjIAbTQ9Cd8Mi, node 796:78 "Navigation / Top Bar").
+     The bar surface token is `navigation/topbar/background = #4045C2`,
+     i.e. Indigo 300 — the same brand anchor used for surface/brand,
+     text/brand, and focus rings. We previously rendered the bar at
+     #5458C9 (Indigo 200, sourced from an earlier Global Header file);
+     this update aligns the bar with the published Ads DS brand.
+     Active tab is conveyed by a 2px white underline + bold white text;
+     inactive items use Open Sans Regular at full white. */
+  --ads-surface-brand: #4045C2;
   --nav-bg:            var(--ads-surface-brand);
   --nav-link:          #FFFFFF;
   --nav-link-active:   #FFFFFF;
   --nav-divider:       rgba(255,255,255,0.22);
 
-  /* Text — the placeholder / ghost slot is re-pointed to ADS
-     `color/text/ghost = #BEC0C1` rather than ink-40, matching the
-     Figma Search field and Text field specimens. */
-  --text-primary:      var(--ads-ink-95);
-  --text-secondary:    var(--ads-ink-70);
-  --text-muted:        var(--ads-ink-60);
+  /* Text — anchored to Ads DS Gray ramp (Figma file 2048:18):
+       text/primary   → Gray 600 #1E2528
+       text/secondary → Gray 200 #3B4347
+       text/muted     → Gray 100 #51585B
+     The placeholder/ghost slot reuses Gray 100 #51585B per the
+     Search component spec (search/state/rest/text). */
+  --text-primary:      #1E2528;
+  --text-secondary:    #3B4347;
+  --text-muted:        #51585B;
   --text-placeholder:  var(--ads-text-ghost);
   --text-on-brand:     #FFFFFF;
 
-  /* Borders — `--border-input` is re-pointed to the ADS component
-     border rule (15 %-alpha ink). The subtle / default slots keep
-     ADS ink-tinted hairlines for section rules. */
-  --border-subtle:     var(--ads-ink-15);
-  --border-default:    var(--ads-ink-20);
+  /* Borders — anchored to the Ads DS table & control specs.
+     `table/border/divider = rgba(15,18,20,0.1)` (row dividers),
+     `table/border/header = rgba(15,18,20,0.2)` (header underline),
+     control borders use `rgba(15,18,20,0.2)`. We keep `--border-input`
+     as a dedicated alias so the form-control rules consume the
+     component border explicitly. */
+  --border-subtle:     rgba(15,18,20,0.1);
+  --border-default:    rgba(15,18,20,0.2);
   --border-input:      var(--ads-border-component);
 
-  /* Brand / interactive — ADS `color/surface/brand` family.
-     Moving `--brand` off the saturated `EDL Palette/Indigo/60 = #3B0DF2`
-     (which buttons were previously painting) and onto the ADS softer
-     indigo `#5458C9` so the filled button, nav bar and brand-text
-     accents all read as the same system. Hover / pressed are darker
-     steps of the same hue derived to preserve contrast on white. */
-  --ads-brand-hover:   #4447A8;
-  --ads-brand-pressed: #383B8F;
-  --brand:             var(--ads-surface-brand);
+  /* Brand / interactive — anchored to the Ads DS indigo ramp.
+     Brand sits at Indigo 300 (#4045C2). Hover steps down one
+     step (Indigo 400 #3B3FBA) and pressed steps to Indigo 500
+     (#363AAB), preserving the published library's interaction
+     gradient. Brand-wash is Indigo 50 (#E2E3F2) — the published
+     `surface/brand-wash` token used for selected table rows and
+     active nav fills. */
+  --ads-brand-hover:   var(--ads-indigo-400);  /* #3B3FBA */
+  --ads-brand-pressed: var(--ads-indigo-500);  /* #363AAB */
+  --brand:             var(--ads-indigo-300);
   --brand-hover:       var(--ads-brand-hover);
-  --brand-text:        var(--ads-surface-brand);
+  --brand-text:        var(--ads-indigo-300);
   --brand-text-hover:  var(--ads-brand-hover);
-  --brand-bg-soft:     var(--ads-violet-05);
-  --brand-bg-selected: var(--ads-violet-10);
-  --brand-focus-ring:  var(--ads-surface-brand);
-  --brand-disabled-bg: #E1E4EA;   /* neutral, not brand-tinted */
-  --brand-disabled-fg: #8A98A8;
+  --brand-bg-soft:     var(--ads-indigo-50);
+  --brand-bg-selected: var(--ads-indigo-50);
+  --brand-focus-ring:  var(--ads-indigo-300);
+  --brand-disabled-bg: rgba(15,18,20,0.05);
+  --brand-disabled-fg: rgba(15,18,20,0.3);
 
-  /* Shadows — softer, more diffuse than EDL; real elevation rather than
-     the EDL 1px-ring pattern that masquerades as a border. Component
-     rules below layer a hairline over these so density still reads. */
-  --shadow-menu:   0 12px 32px rgba(15,23,34,0.12), 0 2px 6px rgba(15,23,34,0.08);
-  --shadow-pop:    0 10px 28px rgba(15,23,34,0.10);
-  --shadow-tip:    0 1px 3px rgba(15,23,34,0.18);
-  --shadow-drawer: 4px 0 24px rgba(15,23,34,0.10);
-  --overlay-scrim: rgba(15,23,34,0.38);
+  /* Shadows — Ads DS Card and elevation tokens
+     (file 1995:21 "Card", elevation/30). The system publishes a
+     single shadow colour `color/shadow/default = rgba(15,18,20,0.3)`
+     at three elevation depths:
+       low    = 0 1px 4px
+       medium = 0 4px 12px      (used by dropdown-menu / popover)
+       high   = 0 8px 24px + 0 1px 2px
+     We map the EDL semantic-shadow tokens onto those depths so
+     menus and popovers inherit the right elevation, and reserve the
+     drawer slot at the EDL diffusion since the Ads Sheet component
+     ships its own elevation. */
+  --shadow-menu:   0 4px 12px rgba(15,18,20,0.3);                  /* elevation/30 */
+  --shadow-pop:    0 8px 24px rgba(15,18,20,0.3), 0 1px 2px rgba(15,18,20,0.3); /* elevation/high */
+  --shadow-tip:    0 1px 4px rgba(15,18,20,0.3);                   /* elevation/low */
+  --shadow-drawer: 4px 0 24px rgba(15,18,20,0.18);
+  --overlay-scrim: rgba(15,18,20,0.4);
 }
 
 /* ─── ADS Preview — targeted component overrides ───
    Mirrors the pattern used for EDL Dark at the top of this file. Only
    scoped under [data-theme="ads-preview"]; no effect on other themes. */
 
-/* Required-asterisk tint */
-[data-theme="ads-preview"] .cr-req { color: #A60E2B; }
+/* Required-asterisk tint — handled centrally in the T6 Field Label
+   block below using the Ads DS Field Label required marker token
+   (Red 400, #993B44). This stub remains as a comment marker. */
 
 /* User-row avatar backdrop on the lighter ADS canvas. EDL leaves this as
    plain white; under ADS we lift it with a soft violet tint so the portrait
@@ -3014,15 +3059,19 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ─── 2. Card / panel surfaces ───
-   EDL uses `box-shadow: 0 0 0 1px var(--border-default)` as a ring-border
-   for `.card`. ADS reads more like a real elevated surface: layer a soft
-   drop shadow under a 1px hairline so the panel lifts off the canvas. */
+   Anchored to the Ads DS Card component (node 1995:21). Card pins
+   `card/size/radius = 6px` and three elevation depths:
+     low    = 0 1px 4px  rgba(15,18,20,0.3)
+     medium = 0 4px 12px rgba(15,18,20,0.3)
+     high   = 0 8px 24px rgba(15,18,20,0.3) + 0 1px 2px rgba(15,18,20,0.3)
+   We adopt `low` as the default for `.card` (page-level toolbar panels
+   on the User Mgmt page) so the panel reads as a real elevated surface
+   rather than the EDL 1px ring. Cards on the Create Role page step up
+   to `medium` so the larger surface lifts off more confidently. */
 [data-theme="ads-preview"] .card {
   border-radius: var(--ads-radius-md);
-  box-shadow:
-    0 0 0 1px var(--border-default),
-    0 1px 2px rgba(15,23,34,0.04),
-    0 8px 24px rgba(15,23,34,0.06);
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+  border: none;
 }
 
 /* ─── 3. Buttons ───
@@ -3079,28 +3128,45 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ─── 4. Inputs / search / dropdowns ───
-   Radius 8 → 6px. The ADS library inputs read tighter at the corner than
-   EDL's 8px. Border color/height stay token-driven (already done above),
-   so focus ring flips to ADS violet via the token, not any new declaration. */
-[data-theme="ads-preview"] .search input,
+   Anchored to the Ads DS:
+     • Search component (node 37:16) = `search/size/radius = 100px`
+       (full pill). Border `rgba(15,18,20,0.2)` at rest, `0.5` at focus.
+     • Dropdown / Input components = `radius = 6px`.
+   The toolbar search field is the Search component; combo inputs,
+   filter inputs, the pagination dropdown and Create Role inputs all
+   use the Dropdown/Input 6px radius. When the search/combo is open
+   we keep the top corners pill/rounded and the dropdown menu picks
+   up the matching radius on its own. */
+[data-theme="ads-preview"] .search input {
+  border-radius: var(--ads-radius-pill);
+}
 [data-theme="ads-preview"] .flt-input,
 [data-theme="ads-preview"] .edl-combo-input,
 [data-theme="ads-preview"] .flt-select,
 [data-theme="ads-preview"] .pgn-dd .cr-dd-trigger {
   border-radius: var(--ads-radius-sm);
 }
-[data-theme="ads-preview"] .search.open input,
+[data-theme="ads-preview"] .search.open input {
+  border-radius: 18px 18px 0 0;
+}
 [data-theme="ads-preview"] .edl-combo.open .edl-combo-input {
   border-radius: var(--ads-radius-sm) var(--ads-radius-sm) 0 0;
 }
-[data-theme="ads-preview"] .search-dropdown,
+[data-theme="ads-preview"] .search-dropdown {
+  border-radius: 0 0 18px 18px;
+}
 [data-theme="ads-preview"] .edl-combo-menu {
   border-radius: 0 0 var(--ads-radius-sm) var(--ads-radius-sm);
 }
 
-/* Input focus: replace the flat border-color shift with a clearer
-   2-layer "ring + border" that reads as the ADS focus pattern. */
-[data-theme="ads-preview"] .search input:focus,
+/* Input focus — Ads DS pattern.
+   The Dropdown / Input / Combo components use a brand-border focus
+   with a soft brand-wash halo. The Search component uses a different
+   focus pattern per `search/border/bold = rgba(15,18,20,0.5)` (darker
+   neutral, not brand) — Search lives in toolbar contexts where a
+   brand ring would compete with adjacent brand CTAs.
+   We layer both correctly: inputs/combos/select keep the brand ring;
+   search adopts the bold-border pattern. */
 [data-theme="ads-preview"] .flt-input:focus,
 [data-theme="ads-preview"] .edl-combo-input:focus,
 [data-theme="ads-preview"] .flt-select:focus,
@@ -3108,6 +3174,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 [data-theme="ads-preview"] .pgn-dd .cr-dd-trigger:focus-visible {
   border-color: var(--brand);
   box-shadow: 0 0 0 3px var(--brand-bg-soft);
+}
+[data-theme="ads-preview"] .search input:focus {
+  border-color: var(--ads-border-bold);
+  box-shadow: none;
 }
 
 /* ─── 5. Menus / popovers / user menu ───
@@ -3121,23 +3191,29 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    semantic-token remap above. That is the extent of ADS Preview's effect
    on this surface and it must not grow. */
 
-/* ─── 6. Tables — ADS Data Table treatment ───
-   Reference: ADS Data Table / sortable header pattern. EDL's table is
-   purely structural (no row hover, no header hover surface, rows divided
-   by the full border-default weight). ADS reads with:
-     • softer row dividers (ink-15, not ink-20) so rows group rather than
-       fence off from each other,
-     • a subtle row-hover tint so focus on a record is legible,
-     • a subtle hover surface on sortable headers, beyond just color.
-   Everything else — row height, padding, column widths, resize handles,
-   sort glyphs — is untouched so column-resize and CTA alignment stay
-   pixel-identical to EDL. */
+/* ─── 6. Tables — Ads DS Data Table treatment ───
+   Anchored to the Ads DS Table Row component (node 1727:13223). Spec:
+     • header text  : `table/header/text = #51585b`, 13 / 18 Regular
+                      (NOT uppercase; the Ads DS header is a label, not
+                      a caps utility — this is the single biggest
+                      divergence from earlier Pass-3 styling)
+     • header pad   : 10y / 12x
+     • row body     : 14 / 20 Regular, primary ink
+     • cell pad     : 12y / 12x
+     • row divider  : `table/border/divider = rgba(15,18,20,0.1)`
+     • header rule  : `table/border/header  = rgba(15,18,20,0.2)`
+     • row hover    : `table/row/state/hover/background = rgba(15,18,20,0.05)`
+     • row selected : `table/row/state/selected/background = #E2E3F2`
+                      (Indigo 50, the published brand-wash)
+   We avoid changing column widths, resize handles, or sort glyphs so
+   the column-resize behaviour and CTA alignment stay pixel-identical
+   to EDL Light. */
 [data-theme="ads-preview"] .tbl th {
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-weight: 400;
+  color: var(--text-muted);
 }
 [data-theme="ads-preview"] .tbl th[data-sort]:hover {
-  background: var(--ads-ink-05);
+  background: var(--ads-surface-recessed);
   color: var(--text-primary);
 }
 [data-theme="ads-preview"] .tbl tbody tr {
@@ -3145,7 +3221,11 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   transition: background-color 0.12s ease;
 }
 [data-theme="ads-preview"] .tbl tbody tr:hover {
-  background: var(--ads-ink-05);
+  background: var(--ads-surface-recessed);
+}
+[data-theme="ads-preview"] .tbl tbody tr.is-selected,
+[data-theme="ads-preview"] .tbl tbody tr[aria-selected="true"] {
+  background: var(--brand-bg-selected);
 }
 
 /* ─── 7. Pagination footer ───
@@ -3179,15 +3259,55 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 [data-theme="ads-preview"] .edl-combo-menu {
   border-color: var(--border-subtle);
   border-top-color: var(--border-subtle);
-  box-shadow:
-    0 0 0 1px rgba(15,17,25,0.06),
-    0 6px 16px rgba(15,17,25,0.08),
-    0 16px 36px rgba(15,17,25,0.10);
+  box-shadow: var(--shadow-menu);
 }
 
 /* ─── 10. Tab underline ───
    `.tab-btn.on::after` already consumes var(--brand), so it flips to ADS
    violet automatically. No scoped override required. */
+
+/* ─── 10b. Tooltip — Ads DS Tooltip ───
+   Anchored to the canonical Ads DS Tooltip (node 73:234):
+     • background: `tooltip/background = #21292d` (Gray 500)
+     • radius:     `tooltip/size/container/radius = 6px`
+     • padding:    16x / 6y (small), 16x / 16y (large)
+     • label:      Open Sans SemiBold 12 / 18 white
+     • tip arrow:  8×4 (small) / 12×6 (large)
+   The existing `.edl-tooltip` ships at Gray 80 + 8px radius which is
+   close but not exact. Scoped overrides bring it to spec without
+   touching EDL Light / Dark. Padding stays anatomically unchanged so
+   the JS positioning code (caret offsets) keeps working. */
+[data-theme="ads-preview"] .edl-tooltip {
+  background: #21292D;
+  border-radius: var(--ads-radius-md);
+  padding: 6px 16px;
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+}
+[data-theme="ads-preview"] .edl-tooltip::after {
+  border-top-color: #21292D;
+}
+[data-theme="ads-preview"] .edl-tooltip.below::after {
+  border-bottom-color: #21292D;
+}
+[data-theme="ads-preview"] .edl-tooltip-line {
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+[data-theme="ads-preview"] .edl-status-tooltip {
+  background: #21292D;
+  border-radius: var(--ads-radius-md);
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  padding: 6px 16px;
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+}
+[data-theme="ads-preview"] .edl-status-tooltip::after {
+  background: #21292D;
+}
 
 /* ─── 11. Filter drawer — ADS Modal/Drawer surface ───
    EDL uses heavier 700 weight on the drawer title and 8px radius on the
@@ -3204,17 +3324,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ─── 12. Cards on the Create Role page ───
-   EDL `.cr-card` uses a 16px radius + flat 1px border which reads more
-   EDL-ish than ADS-native. ADS Card / Panel sits at radius/lg (~12px)
-   with a light stacked elevation. Mirror the `.card` pattern above so
-   both card variants feel consistent under ADS Preview. */
+   Anchored to the Ads DS Card component (node 1995:21). Use the
+   `card/size/radius = 6px` from the spec (one consistent card radius
+   across the system) and step up to the `medium` elevation so the
+   page-level cards lift off the surface more confidently than the
+   toolbar panel `.card`. The Figma Card publishes 6px radius for
+   every elevation variant, so EDL's earlier 12px figure is replaced
+   here. Card-on-card density on Create Role is unchanged. */
 [data-theme="ads-preview"] .cr-card {
-  border-radius: var(--ads-radius-lg);
-  box-shadow:
-    0 0 0 1px var(--border-default),
-    0 1px 2px rgba(15,23,34,0.04),
-    0 8px 24px rgba(15,23,34,0.06);
-  border-color: transparent; /* the 1px ring above takes over */
+  border-radius: var(--ads-radius-md);
+  box-shadow: 0 4px 12px rgba(15,18,20,0.3);
+  border-color: transparent;
 }
 
 /* ─── 13. Create Role inputs / textarea ───
@@ -3261,10 +3381,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: var(--overlay-scrim);
 }
 [data-theme="ads-preview"] .cr-confirm-dialog {
-  box-shadow:
-    0 0 0 1px var(--border-subtle),
-    0 1px 2px rgba(15,23,34,0.04),
-    0 24px 48px rgba(15,23,34,0.18);
+  border-radius: var(--ads-radius-lg);
+  box-shadow: var(--shadow-pop);
 }
 
 /* ─── 16. Role overflow chip ("+N role") ───
@@ -3275,15 +3393,21 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    under ADS Preview repaint it as a compact inline pill — radius/999,
    soft violet fill, brand text. Hover drops the underline in favor of a
    stronger fill, which is how ADS chips signal interactivity. */
+/* `+N role` overflow indicator — Ads DS Chip / Small / Indigo treatment.
+   The role-extra anchor is a non-dismissible indicator chip, not a
+   filter. We adopt the Ads Chip small-pill anatomy (100px radius,
+   SemiBold 12/18 label, 4y/8x padding) and a soft brand-wash fill
+   so the affordance reads as "show more brand items" rather than as
+   plain link text. */
 [data-theme="ads-preview"] .role-extra {
   display: inline-block;
-  padding: 0 8px;
-  border-radius: var(--ads-radius-full);
+  padding: 2px 8px;
+  border-radius: var(--ads-radius-pill);
   background: var(--brand-bg-soft);
   color: var(--brand-text);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
-  line-height: 20px;
+  line-height: 18px;
   vertical-align: baseline;
   transition: background-color 0.12s ease, color 0.12s ease;
 }
@@ -3420,25 +3544,33 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: rgba(255,255,255,0.22);
 }
 
-/* Active primary nav item — ADS header active pill.
-   Figma node I6426:54055;6335:25815;6280:6138 ("Plan" item) shows the
-   active label + icon block as:
-     • background `color/white = #FFFFFF`
-     • text `color/text/brand = #5458C9`
-     • weight `typography/body/weight/bold = 700`
-   This is the single biggest visual replacement vs EDL: instead of a
-   semi-opaque white overlay reading "current section darker," ADS uses
-   a FULL WHITE pill with brand-colored text — the pill looks like it's
-   sitting on top of the bar, not fading into it. */
+/* Active primary nav item — Ads DS Top Bar Tab.
+   Anchored to the canonical Ads DS Navigation / Top Bar (node 796:78):
+   the active tab is NOT a white pill — it is full-white SemiBold text
+   over the brand bar with a 2px white underline rendered as a tight
+   bottom rule. Inactive items use Open Sans Regular at full white.
+   This is the single biggest visual change vs the prior pass which
+   sourced from the older Global Header file. */
 [data-theme="ads-preview"] .nav-a.on {
-  background: #FFFFFF;
-  color: var(--ads-surface-brand);
-  font-weight: 700;
+  background: transparent;
+  color: var(--nav-link-active);
+  font-weight: 600;
   letter-spacing: 0;
+  position: relative;
+}
+[data-theme="ads-preview"] .nav-a.on::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -8px;            /* aligns underline to the bar's lower edge */
+  height: 2px;
+  background: #FFFFFF;
+  border-radius: 1px;
 }
 [data-theme="ads-preview"] .nav-a.on:hover {
-  background: #FFFFFF;        /* pill stays white; no flicker on hover */
-  color: var(--ads-surface-brand);
+  background: rgba(255,255,255,0.10);
+  color: var(--nav-link-active);
 }
 
 /* Chevron — 16×16 per Figma icon frame (node I6426:54055;6335:25817;6350:40158).
@@ -3550,13 +3682,13 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   border-color: rgba(15,18,20,0.28);
 }
 [data-theme="ads-preview"] .ads-nav-search:focus-within {
-  border-color: var(--ads-surface-brand);
-  box-shadow: 0 0 0 3px rgba(84,88,201,0.22);
+  border-color: var(--ads-border-bold);
+  box-shadow: none;
 }
 [data-theme="ads-preview"] .ads-nav-search-ico {
   width: 16px;
   height: 16px;
-  color: #BEC0C1;           /* color/text/ghost */
+  color: var(--text-muted);  /* Ads DS search/state/rest/text = #51585b */
   flex-shrink: 0;
 }
 [data-theme="ads-preview"] .ads-nav-search-inp {
@@ -3567,15 +3699,15 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: transparent;
   font-family: var(--ff);
   font-size: 14px;
-  font-weight: 500;         /* body/md/medium — Open Sans SemiBold */
+  font-weight: 400;         /* Ads DS search body = 14/20 Regular */
   line-height: 20px;
-  color: #171C20;
+  color: var(--text-primary);
   padding: 0;
   cursor: text;
 }
 [data-theme="ads-preview"] .ads-nav-search-inp::placeholder {
-  color: #BEC0C1;           /* color/text/ghost */
-  font-weight: 500;
+  color: var(--text-muted);  /* Ads DS search/state/rest/text = #51585B */
+  font-weight: 400;
 }
 
 /* Icon-only nav items — ADS uses a subtle white-alpha lift on the brand
@@ -3668,10 +3800,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    with the chevron (kept in `--brand-text`, already the case) carrying
    the interactive affordance. Size/line-height are preserved so grid
    wrap points are identical to EDL. */
-[data-theme="ads-preview"] .tab-btn,
-[data-theme="ads-preview"] .tab-btn.on {
-  font-weight: 600;
-}
+/* Tab weight handled by the Ads DS Primary Tab rules in section
+   P4-1 below (Regular rest, SemiBold active). */
 [data-theme="ads-preview"] .cr-section-title {
   font-weight: 600;
   color: var(--text-primary);
@@ -3718,10 +3848,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 [data-theme="ads-preview"] .cr-dd-menu {
   border-radius: var(--ads-radius-sm);
-  box-shadow:
-    0 0 0 1px rgba(15,17,25,0.06),
-    0 6px 16px rgba(15,17,25,0.08),
-    0 16px 36px rgba(15,17,25,0.10);
+  box-shadow: var(--shadow-menu);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -3784,19 +3911,24 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* ─── T2. Display / page-level titles ───
-   Both `.hdr h1` (User Management) and `.cr-title` (Create Role) are
-   painted in `MultiplaneTWDC Display` under EDL. Re-point to --ff (now
-   Open Sans) and move from 500 to 600 (ADS heading/xl uses SemiBold).
-   Size 28 and line-height 38 are preserved so the page grid and 8-px
-   top-spacing rhythm remain identical to EDL. Tracking -0.3 px matches
-   the ADS heading/xl spec on the 1440-vp Figma frame; the existing
-   section-18 rule's -0.2 was looser than the published token. */
+/* ─── T2. Display / page-level titles — Ads DS heading/xl ───
+   Anchored to the canonical Ads DS Typography Scale (node 1308:40):
+     • heading/xl = 30 / 36 / SemiBold (the published page-title slot)
+   `.hdr h1` (User Management) and `.cr-title` (Create Role) are the
+   product's page-level titles. Repoint to --ff (now Open Sans) and
+   land at 30/36 SemiBold per the Ads DS spec. The earlier pass kept
+   the EDL 28px size; that was the only published-typeface tell still
+   bleeding through. Tracking stays slightly negative (-0.2) since the
+   30px size on Open Sans benefits from a hair of tightening on a
+   light canvas. Page grid still aligns because the line-height step
+   (32 → 36) lands inside the section's flex padding budget. */
 [data-theme="ads-preview"] .hdr h1,
 [data-theme="ads-preview"] .cr-title {
   font-family: var(--ff);
+  font-size: 30px;
   font-weight: 600;
-  letter-spacing: -0.3px;
+  line-height: 36px;
+  letter-spacing: -0.2px;
 }
 
 /* Page subtitle — EDL ships `.hdr p` at weight 500 (medium) in secondary
@@ -3822,40 +3954,48 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    Header by construction — no additional scoped rule needed. Documented
    here so the audit trail is complete. */
 
-/* ─── T5. Table headers — ADS Data Table utility label ───
-   EDL `.tbl th` renders as `14 / 600 / primary` (upper-case not applied)
-   which reads like a body cell promoted to header via colour alone. ADS
-   Data Table header uses `label/sm` — 12 / 600 / upper-case / tracking
-   0.6 px on muted ink — to draw the utility/label distinction from row
-   data. The `.tbl th` selector already flipped to `500 / text-secondary`
-   in Pass 2 section 6; bump weight up to 600 to survive the upper-case
-   caps, drop size to 12, and add the tracking. Row height is driven by
-   padding so this does not change the header row height. Sort glyphs
-   inherit the new weight/colour. */
+/* ─── T5. Table headers — Ads DS Data Table header ───
+   Anchored to the Ads DS Table Header Cell (file 105:9): the header
+   label is body/normal/sm at `text/secondary` ink — 13 / 18 Regular,
+   colour `#51585b`. The canonical system does NOT use uppercase caps
+   for table headers; the earlier Pass-3 caps treatment was an EDL
+   convention. Drop the caps + tracking, restore Regular weight, and
+   keep sort-hover lifting the label into primary ink for a clear
+   interactive cue. Row / header height is driven by padding so this
+   does not move any column. */
 [data-theme="ads-preview"] .tbl th {
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--text-muted);
 }
-/* Keep the sort-hover colour shift from Pass 2 but scale to the new
-   muted base so the hover lifts into primary ink, not into white. */
 [data-theme="ads-preview"] .tbl th[data-sort]:hover,
 [data-theme="ads-preview"] .tbl th[data-rp-sort]:hover {
   color: var(--text-primary);
 }
 
-/* ─── T6. Form field labels ───
-   `.cr-label` ships at 14/400/muted and `.flt-label` at 14/500/secondary.
-   The two labels live side-by-side across the filter drawer and the
-   Create Role form; under ADS both should read as the same `label/md`
-   role — 14 / 500 / secondary. Bump `.cr-label` to match the filter
-   label. Margin-bottom / block display preserved. */
-[data-theme="ads-preview"] .cr-label {
-  font-weight: 500;
-  color: var(--text-secondary);
+/* ─── T6. Form field labels — Ads DS Field Label ───
+   Anchored to the canonical Ads DS Field Label component
+   (node 896:70). Spec:
+     • `field-label/state/default/text = #1E2528` (Gray 600, primary)
+     • Open Sans SemiBold (600)
+     • size matrix: sm 12/16, md 14/18, lg 18/20
+     • required marker `*` uses `#993B44` (Red 400)
+   Both `.cr-label` (Create Role) and `.flt-label` (filter drawer)
+   are page-level form labels rendering at 14px in EDL, so they map
+   to the md slot. The earlier Pass-3 styling at 500/secondary was
+   one weight light and one shade muted versus the published Ads DS
+   spec. Margin-bottom / block display are preserved so the form
+   grid is identical. */
+[data-theme="ads-preview"] .cr-label,
+[data-theme="ads-preview"] .flt-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] .cr-req {
+  color: var(--ads-red-400);
 }
 
 /* Role-overflow chip (already styled as a pill in section 17) — match
@@ -3983,20 +4123,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    EDL Light + EDL Dark + the avatar dropdown are not referenced below.
    ═══════════════════════════════════════════════════════════════════════════*/
 
-/* ─── P4-1. Tabs strip — ADS Tabs anatomy ───
-   EDL renders tabs at 18/600 with a 56px strip. ADS Tabs (page-level)
-   read 16/600 with tighter tracking so the two labels breathe but don't
-   dominate the card header. Height stays at 56 so the strip lines up
-   with the toolbar below; only the label block is compressed. The
-   active underline already consumes `--brand` so we just tighten its
-   position: 3px tall so it reads as an intentional indicator rather
-   than a hairline caught on the card's divider. */
+/* ─── P4-1. Tabs strip — Ads DS Primary Tab ───
+   Anchored to the canonical Ads DS Primary Tab (node 57:56). Spec:
+     • Default size: 18 / 24 Regular rest, 18 / 24 SemiBold active
+     • State colors: rest `#51585B`, hover `#3B4347`, active `#4045C2`
+     • Padding: 8y / 16x with a 3px-tall active underline at the bottom
+   The earlier Pass-4 styling compressed tabs to 16/600 with negative
+   tracking. The published Ads DS expects the larger 18px body so the
+   tab strip still reads as page-level navigation rather than a section
+   header. Strip height is driven by typography + padding so the row
+   doesn't shift when toggling themes. Rest-state colour is handled by
+   the `--text-muted` token. Active text colour is brand by token. */
 [data-theme="ads-preview"] .tab-btn {
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+  padding-bottom: 8px;
+  color: var(--text-muted);
+}
+[data-theme="ads-preview"] .tab-btn:hover {
+  color: var(--text-secondary);
+}
+[data-theme="ads-preview"] .tab-btn.on {
   font-weight: 600;
-  line-height: 20px;
-  letter-spacing: -0.1px;
-  padding-bottom: 10px;
+  color: var(--brand-text);
 }
 [data-theme="ads-preview"] .tab-btn.on::after {
   height: 3px;
