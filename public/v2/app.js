@@ -426,21 +426,28 @@ function appForFunctionKey(key) {
   return "Disney Ads Agent";
 }
 
-/* Type taxonomy for the Permission Management catalog.
-   Anchored to FUNCTION_LABEL_MAP verbs so the classification has a
-   single source. A function with FUNCTION_LABEL_MAP[key] = "Approve"
-   shows up as Type=Approval in this catalog — change it once, change
-   everywhere. */
+/* Type taxonomy for the Permission Management catalog (Figma 770:20039).
+   The Type column only supports two values:
+     • "Default" — system-shipped permission. Ships with the IAM platform
+       and cannot be modified or deleted by admins. The vast majority of
+       functions in any IAM catalog are Default.
+     • "Custom"  — customer-scoped or customer-authored. Either a base
+       function that has been re-scoped (e.g., to a region/team) or a
+       net-new function created by an admin.
+
+   In production this flag would come from the function's lifecycle
+   metadata (origin = "platform" vs origin = "tenant"). For the
+   prototype, we derive it deterministically from the function key so
+   renders are stable across reloads and QA snapshots are reproducible.
+
+   Distribution: ~20% of keys are tagged Custom (every 5th key by hash
+   bucket). This mirrors the realistic enterprise mix where most
+   permissions ship with the platform and a smaller set is authored or
+   re-scoped by the customer's IAM admins. */
 function permissionTypeForKey(key) {
-  var verb = FUNCTION_LABEL_MAP[key] || "View";
-  if (verb === "View") return "View";
-  if (verb === "Create" || verb === "Edit" || verb === "Delete") return "Edit";
-  if (verb === "Approve" || verb === "Reject") return "Approval";
-  if (verb === "Assign" || verb === "Assign permissions") return "Assignment";
-  if (verb === "Manage data access" || verb === "Manage configuration" || verb === "Manage settings") return "Admin";
-  if (verb === "Impersonate users") return "Admin";
-  if (verb === "Comment") return "Workflow";
-  return "View";
+  var hash = 0;
+  for (var i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  return (hash % 5 === 0) ? "Custom" : "Default";
 }
 
 /* Human-readable name for a function key, e.g.
@@ -545,20 +552,39 @@ var PERMISSION_DESCRIPTIONS = {
   "approval_io_comparisons":"Compare an IO against its approved version via Disney Ads Agent."
 };
 
-/* Deterministic, plausible Last Updated dates for the catalog.
-   Stamps cluster by app + type so admin/system functions skew older
-   (longer-lived) and edit/workflow functions skew fresher (more
-   iteration). Hash-based so re-renders produce stable QA snapshots. */
+/* Deterministic, plausible Last Updated timestamps for the catalog
+   (Figma 770:20039 — Last Updated column shows full datetime, e.g.
+   "1:30 pm, May 3 2026"). Hash-based so re-renders produce stable
+   QA snapshots; stamps spread across 2026 calendar so the column
+   never reads as a single repeated value.
+
+   Default-type permissions skew older (system-shipped, rarely touched
+   after release); Custom-type permissions skew fresher (admin-authored
+   or recently re-scoped). Within each bucket, day/time are derived
+   from the key's hash so the order is varied but reproducible. */
 function permissionLastUpdatedForKey(key) {
   var type = permissionTypeForKey(key);
-  /* Base months: older = more stable category */
-  var baseMonth = { "View": 2, "Admin": 2, "Approval": 3, "Assignment": 3, "Workflow": 4, "Edit": 4 }[type] || 4;
-  /* Stable string-hash → day offset 0-27 */
   var hash = 0;
   for (var i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
-  var day = 1 + (hash % 27);
-  var month = baseMonth + ((hash >>> 5) % 2); /* spread to 2-month band */
-  return String(month).padStart(2, "0") + "/" + String(day).padStart(2, "0") + "/2026";
+
+  /* Default skews older: Jan-Apr. Custom skews fresher: Mar-Jun. */
+  var monthOffset = type === "Custom" ? 2 : 0;
+  var monthIdx = monthOffset + (hash % 4); /* 0..5 across the year */
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+  var month = MONTHS[monthIdx];
+
+  /* Day 1-28 (avoid month-end edge cases in display) */
+  var day = 1 + ((hash >>> 3) % 28);
+
+  /* Hour 7-19 (business hours) and minute on 5-min boundary */
+  var hour24 = 7 + ((hash >>> 8) % 13);
+  var minute = ((hash >>> 13) % 12) * 5;
+  var ampm = hour24 < 12 ? "am" : "pm";
+  var hour12 = hour24 % 12;
+  if (hour12 === 0) hour12 = 12;
+  var mm = minute < 10 ? "0" + minute : String(minute);
+
+  return hour12 + ":" + mm + " " + ampm + ", " + month + " " + day + " 2026";
 }
 
 /* Count of roles in ROLE_FUNCTION_MAP that include this function key. */
@@ -4331,19 +4357,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* Map PM Type taxonomy → chip modifier class (Figma 770:20039 chips).
-     Six variants match permissionTypeForKey()'s output exactly. Unknown
-     types fall back to the neutral Workflow chip rather than raising,
-     keeping the table tolerant of future taxonomy additions. */
+     Only two variants exist per Figma:
+       • Default → light neutral background, brand-text
+       • Custom  → brand-tint background, brand-text
+     Unknown values fall back to Default so the table stays defensive
+     if the taxonomy is ever extended without a CSS pairing. */
   var PM_TYPE_CHIP_CLASS = {
-    "View":       "pm-chip--view",
-    "Edit":       "pm-chip--edit",
-    "Approval":   "pm-chip--approval",
-    "Assignment": "pm-chip--assignment",
-    "Admin":      "pm-chip--admin",
-    "Workflow":   "pm-chip--workflow"
+    "Default": "pm-chip--default",
+    "Custom":  "pm-chip--custom"
   };
   function pmTypeChipHtml(type) {
-    var cls = PM_TYPE_CHIP_CLASS[type] || "pm-chip--workflow";
+    var cls = PM_TYPE_CHIP_CLASS[type] || "pm-chip--default";
     return '<span class="pm-chip ' + cls + '">' + esc(type) + '</span>';
   }
 

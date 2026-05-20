@@ -1115,14 +1115,14 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .pm-name-link { color: var(--brand-text); cursor: pointer; text-decoration: none; }
 .pm-name-link:hover { color: var(--brand-text-hover); text-decoration: underline; }
 .pm-name-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 2px; }
-/* Used-in count column right-aligns numbers for scannability without
-   adding a chip — matches the Figma "5 roles" plain-text rendering. */
-.pm-tbl td.pm-used, .pm-tbl th.pm-used { color: var(--text-secondary); }
-.pm-tbl td.pm-date { color: var(--text-secondary); }
+/* Used-in count column header reads as table-header secondary; data
+   cell color is set in P4-15 below (EDL Gray 95 per Figma 770:20039). */
+.pm-tbl th.pm-used { color: var(--text-secondary); }
 /* .pm-tbl td.pm-type previously set color: var(--text-secondary) for
    the old plain-text rendering. With the chip taking over (Figma
-   770:20039 / P4-14), color is owned by the chip itself, so this
-   rule is removed. */
+   770:20039 / P4-14), color is owned by the chip itself, so that
+   rule is removed. Body cell colors for .pm-used and .pm-date are
+   driven by P4-15 below (EDL Gray 95). */
 
 .rp-func-text {
   font-size: 14px;
@@ -4458,32 +4458,20 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 /* ─── P4-14. Permission Management Type column chips (Figma 770:20039) ───
    The Figma Type column renders each value inside a chip (Cell Chip
-   component): pill shape, ~24px tall, ~58-67px wide with horizontal
-   padding, brand-tinted border + soft background. Our real data has
-   6 type variants (View / Edit / Approval / Assignment / Admin /
-   Workflow) — vs Figma's two placeholder chips (Default / Custom)
-   which don't extend to our taxonomy. We keep the chip *shape and
-   typography* identical to Figma and only vary the *color tint* by
-   type so a permissions admin can scan the column at a glance. This
-   is applying the Figma chip recipe to real data, not inventing UI.
+   component). Per the design system the Type column only supports
+   two variants:
+     • Default — light neutral background, subtle border, brand-text.
+                 Used for system-shipped permissions (majority of rows).
+     • Custom  — brand-tint background, brand border, brand-text.
+                 Used for customer-authored / re-scoped permissions.
+   No other type chips exist on this surface.
 
-   Base chip dimensions (from Figma chip frame y=12 inside 48px cell):
-     • height 24px, vertically centered → 12px breathing top/bottom
-     • horizontal padding ~10px (Figma text at x=10 inside chip)
+   Chip dimensions (from Figma chip frame y=12 inside 48px cell):
+     • height 24px, vertically centered (12px breathing top/bottom)
+     • horizontal padding 10px (Figma text x=10 inside chip)
      • border-radius full pill (12px)
      • font 12px / 18px / 500 weight (Figma chip text spec)
-     • 1px solid border colored to the chip text/family
-
-   Color mapping (using existing ADS Preview tokens to avoid net-new
-   palette entries; Edit uses an inlined amber tint since no ADS
-   amber token exists):
-     • View       → indigo soft (= Figma "Default" appearance)
-     • Edit       → amber soft (action-level mutation; warm warning hue)
-     • Approval   → green soft (governance/positive)
-     • Assignment → indigo deep (permission-granting, related to View
-                    but more privileged; tinted via solid background)
-     • Admin      → red soft (high-privilege ops, scarce)
-     • Workflow   → gray soft (lightweight collaboration, neutral)
+     • 1px solid border (color follows variant)
 
    Scoped to .pm-tbl so chips only appear on the Permission Management
    table; RA and Users tables are not affected. Theme-agnostic on chip
@@ -4502,45 +4490,38 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   border: 1px solid transparent;
   box-sizing: border-box;
 }
-.pm-chip--view {
+/* Default — system-shipped permission. Near-white surface with a
+   subtle border, brand text. Reads as "neutral / standard" so admins
+   recognise it as the platform's baseline. */
+.pm-chip--default {
+  background: var(--bg-surface);
+  color: var(--brand-text);
+  border-color: var(--border-input);
+}
+/* Custom — customer-scoped or customer-authored. Light brand-purple
+   wash (Indigo 05 / brand-bg-soft) with a brand border, brand text.
+   Visually warmer than Default so the eye picks out the few Custom
+   rows in a long catalog. */
+.pm-chip--custom {
   background: var(--brand-bg-soft);
   color: var(--brand-text);
   border-color: var(--brand-bg-soft);
-}
-.pm-chip--edit {
-  background: #FFF1E0;
-  color: #B05900;
-  border-color: #FFE0B8;
-}
-.pm-chip--approval {
-  background: var(--ads-green-50, #E0EDE5);
-  color: var(--ads-green-400, #4C7D57);
-  border-color: var(--ads-green-50, #E0EDE5);
-}
-.pm-chip--assignment {
-  background: var(--ads-indigo-100, #6567CE);
-  color: var(--white);
-  border-color: var(--ads-indigo-100, #6567CE);
-}
-.pm-chip--admin {
-  background: var(--ads-red-50, #F8E0E2);
-  color: var(--ads-red-400, #993B44);
-  border-color: var(--ads-red-50, #F8E0E2);
-}
-.pm-chip--workflow {
-  background: var(--gray-10, #F3F4F4);
-  color: var(--text-secondary);
-  border-color: var(--gray-10, #F3F4F4);
-}
-/* When ADS Preview is inactive (EDL Light / Dark), use slightly more
-   muted borders so chips don't stand out too aggressively against the
-   EDL flatter surface treatment. ADS Preview keeps the tighter look. */
-[data-theme="ads-preview"] .pm-chip {
-  font-weight: 500;
 }
 
 /* Base .tbl td already sets vertical-align: middle and the chip is
    inline-flex with align-items: center, so the chip centers naturally
    inside the 48px row without extra cell padding. The pm-type cell
    inherits cell padding from .tbl th, .tbl td { padding: 0 8px }. */
+
+/* ─── P4-15. Permission Management metadata colors (Figma 770:20039) ───
+   Used In and Last Updated columns are read as supporting metadata in
+   the Figma node — neither black nor muted gray, but EDL Gray 95
+   (#171C20). Gray 95 sits just below pure black, giving the metadata
+   enough weight to be legible while remaining secondary to the
+   Function Name link. Applied at the cell selector so chip-text inside
+   pm-type is not affected; .pm-name keeps the brand-link color. */
+.pm-tbl td.pm-used,
+.pm-tbl td.pm-date {
+  color: var(--gray-95);
+}
 
