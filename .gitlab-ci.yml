@@ -2,16 +2,20 @@
 # IAM prototype files stay at repo root under `public/` (not modified by DCM work).
 #
 # Published routes (relative to the Pages site origin):
-#   IAM prototype:  /           → public/index.html
-#   DCM prototype:  /dcm/       → public/dcm/index.html  (canonical DCM URL path)
-#   DCM shortcut:   /dcm.html   → public/dcm.html (meta refresh → /dcm/)
+#   IAM prototype (1.0):  /          → public/index.html
+#   IAM prototype (2.0):  /v2/       → public/v2/index.html
+#   DCM prototype:        /dcm/      → public/dcm/index.html  (canonical DCM URL path)
+#   DCM shortcut:         /dcm.html  → public/dcm.html (meta refresh → /dcm/)
 pages:
   stage: deploy
   script:
-    - echo "Verifying Pages artifact (IAM + DCM)"
+    - echo "Verifying Pages artifact (IAM 1.0 + IAM 2.0 + DCM)"
     - test -f public/index.html
     - test -f public/styles.css
     - test -f public/app.js
+    - test -f public/v2/index.html
+    - test -f public/v2/styles.css
+    - test -f public/v2/app.js
     - test -f public/dcm/index.html
     - test -f public/dcm/dcm.css
     - test -f public/dcm/app-dcm.js

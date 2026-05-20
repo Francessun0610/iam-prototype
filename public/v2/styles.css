@@ -1,0 +1,4546 @@
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/InspireTWDC-Roman.woff2') format('woff2'),
+       local('InspireTWDC Roman'), local('InspireTWDC-Roman'), local('Inspire TWDC Roman'), local('InspireTWDC');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/InspireTWDC-Medium.woff2') format('woff2'),
+       local('InspireTWDC Medium'), local('InspireTWDC-Medium'), local('Inspire TWDC Medium');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
+       local('InspireTWDC Bold'), local('InspireTWDC-Bold'), local('Inspire TWDC Bold');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
+       local('InspireTWDC Heavy'), local('InspireTWDC-Heavy'), local('Inspire TWDC Heavy');
+}
+@font-face {
+  font-family: 'InspireTWDC';
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/InspireTWDC-Black.woff2') format('woff2'),
+       local('InspireTWDC Black'), local('InspireTWDC-Black'), local('Inspire TWDC Black');
+}
+@font-face {
+  font-family: 'MultiplaneTWDC Display';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/MultiplaneTWDC-Display-Medium.woff2') format('woff2'),
+       local('MultiplaneTWDC Display Medium'), local('MultiplaneTWDC_Display-Medium'), local('MultiplaneTWDC Display');
+}
+
+:root {
+  /* EDL Primary — Gray */
+  --gray-95:  #171C20;
+  --gray-90:  #222A30;
+  --gray-80:  #3A4652;
+  --gray-70:  #526374;
+  --gray-60:  #6A8095;
+  --gray-50:  #8498A9;
+  --gray-40:  #9EB0BD;
+  --gray-30:  #B8C7D0;
+  --gray-20:  #D4DEE3;
+  --gray-15:  #E2E9EC;
+  --gray-10:  #EFF3F5;
+  --gray-05:  #F7F9FA;
+
+  /* EDL Primary — Indigo */
+  --indigo-95: #231267;
+  --indigo-80: #2F139F;
+  --indigo-70: #3611C8;
+  --indigo-60: #3B0DF2;
+  --indigo-50: #5432FB;
+  --indigo-40: #705CFF;
+  --indigo-30: #928AFF;
+  --indigo-20: #B8B8FF;
+  --indigo-15: #CFCFFF;
+  --indigo-10: #E6E6FF;
+  --indigo-05: #F3F3FF;
+
+  /* EDL Extended — 50 level */
+  --blue-50:   #1570C8;
+  --teal-50:   #00838F;
+  --green-50:  #178255;
+  --purple-50: #7B2CB8;
+  --cyan-50:   #0B6E7A;
+  --slate-50:  #5B6F80;
+
+  /* EDL Semantic */
+  --green-70:  #059D6D;
+  --red-70:    #A00032;
+
+  /* EDL Toast palette (from EDL Toast Figma spec, node 15094:75972) */
+  --green-60:  #00C274;
+  --red-60:    #C20031;
+  --orange-70: #D26700;
+  --gray-95:   #171C20;
+
+  /* Aliases */
+  --white:    #FFFFFF;
+  --black:    #000000;
+  --input-border: var(--border-input);
+  --ff: 'InspireTWDC', 'Inspire TWDC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* ─── EDL Semantic theme tokens (Light defaults) ───
+     Dark overrides live in [data-theme="dark"] below. Palette tokens above
+     remain absolute colors; semantic tokens below remap to theme meaning. */
+
+  /* Surfaces */
+  --bg-app:            var(--gray-10);      /* page background behind cards */
+  --bg-surface:        var(--white);        /* cards, tables, popovers, inputs */
+  --bg-surface-raised: var(--white);        /* elevated dropdowns/menus */
+  --bg-hover:          var(--gray-10);      /* row/button hover */
+  --bg-hover-soft:     var(--gray-05);      /* softer hover */
+
+  /* Nav */
+  --nav-bg:            var(--indigo-70);
+  --nav-link:          var(--indigo-10);
+  --nav-link-active:   var(--white);
+  --nav-divider:       var(--indigo-30);
+
+  /* Text */
+  --text-primary:      var(--gray-95);
+  --text-secondary:    var(--gray-70);
+  --text-muted:        var(--gray-60);
+  --text-placeholder:  var(--gray-40);
+  --text-on-brand:     var(--white);
+
+  /* Borders */
+  --border-subtle:     var(--gray-15);      /* hairline dividers */
+  --border-default:    var(--gray-20);      /* card outline, table rows */
+  --border-input:      var(--gray-30);      /* form controls */
+
+  /* Brand / interactive */
+  --brand:             var(--indigo-70);    /* solid button bg, checked checkbox */
+  --brand-hover:       var(--indigo-80);
+  --brand-text:        var(--indigo-70);    /* link text, outline button text */
+  --brand-text-hover:  var(--indigo-80);
+  --brand-bg-soft:     var(--indigo-05);    /* ghost hover bg */
+  --brand-bg-selected: var(--indigo-10);    /* selected option bg */
+  --brand-focus-ring:  var(--indigo-50);
+  --brand-disabled-bg: #D9D9E8;
+  --brand-disabled-fg: #9B9BB3;
+
+  /* Shadows */
+  --shadow-menu:  0 6px 24px rgba(16,17,19,0.14), 0 1px 3px rgba(16,17,19,0.10);
+  --shadow-pop:   0 6px 20px rgba(0,0,0,0.10);
+  --shadow-tip:   0 1px 3px rgba(16,17,19,0.24);
+  --shadow-drawer: 4px 0 16px rgba(0,0,0,0.08);
+  --overlay-scrim: rgba(23,28,32,0.40);
+}
+
+/* ─── EDL Dark Theme ───
+   Blue-toned dark surfaces (EDL dark navy family) for cards, tables, nav,
+   popovers. Borders/dividers carry the same blue undertone. Interactive
+   text uses EDL Indigo/20 for readable contrast on navy surfaces. */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-app:            #0B1220;                         /* deep navy app bg */
+  --bg-surface:        #131E33;                         /* navy card / table */
+  --bg-surface-raised: #1E2B44;                         /* elevated menus/popovers */
+  --bg-hover:          rgba(255,255,255,0.06);
+  --bg-hover-soft:     rgba(255,255,255,0.04);
+
+  --nav-bg:            #0B1424;                         /* deepest navy, top nav */
+  --nav-link:          #D4DEE3;
+  --nav-link-active:   #FFFFFF;
+  --nav-divider:       #263654;
+
+  --text-primary:      #FFFFFF;
+  --text-secondary:    #A5B6CC;                         /* blue-tinted secondary */
+  --text-muted:        #A5B6CC;
+  --text-placeholder:  #8B9CB3;
+  --text-on-brand:     #FFFFFF;
+
+  --border-subtle:     #1F2C47;                         /* hairline row rule */
+  --border-default:    #263654;                         /* card outline / table rows */
+  --border-input:      #34466A;
+
+  --brand:             var(--indigo-50);
+  --brand-hover:       var(--indigo-40);
+  --brand-text:        var(--indigo-20);
+  --brand-text-hover:  var(--indigo-15);
+  --brand-bg-soft:     rgba(184,184,255,0.10);
+  --brand-bg-selected: rgba(184,184,255,0.16);
+  --brand-focus-ring:  var(--indigo-30);
+  --brand-disabled-bg: #1A2540;
+  --brand-disabled-fg: #5A6C85;
+
+  --shadow-menu:  0 8px 28px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.45);
+  --shadow-pop:   0 6px 20px rgba(0,0,0,0.55);
+  --shadow-tip:   0 1px 3px rgba(0,0,0,0.45);
+  --shadow-drawer: 4px 0 16px rgba(0,0,0,0.50);
+  --overlay-scrim: rgba(0,0,0,0.60);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family: var(--ff); color: var(--text-primary); background: var(--bg-app); line-height: 1; }
+a { text-decoration: none; color: inherit; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; font-size: inherit; color: inherit; line-height: 1; transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease; }
+:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
+select:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 0; }
+input, select { font-family: inherit; }
+table { border-spacing: 0; border-collapse: collapse; }
+
+/* ─── NAV ─── 48px, bg indigo-70, pr-28 (Figma 368:57130) ─── */
+.nav { display: flex; align-items: center; justify-content: space-between; height: 48px; background: var(--nav-bg); padding-right: 28px; position: sticky; top: 0; z-index: 100; }
+.nav-l { display: flex; align-items: center; height: 100%; overflow: hidden; }
+.nav-mod { display: flex; gap: 8px; height: 100%; align-items: center; padding: 10px 16px 10px 48px; }
+/* Center cluster holds the primary nav links. In EDL Light/Dark this sits
+   directly to the right of the logo group (legacy layout). ADS Preview
+   overrides this to center the cluster in the bar (see ADS Preview block).
+   `margin-right: auto` claims the slack so EDL's three-sibling flex
+   still pins utilities to the right edge without redistributing space. */
+.nav-c { display: flex; gap: 8px; height: 100%; align-items: center; margin-right: auto; }
+.nav-logo-group { display: flex; gap: 12px; align-items: center; flex-shrink: 0; }
+.nav-logo-link { display: flex; align-items: center; flex-shrink: 0; line-height: 0; border-radius: 4px; }
+.nav-logo-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 3px; }
+.nav-logo-img { width: 145px; height: 26px; display: block; }
+.nav-divider { width: 1px; height: 30px; background: var(--nav-divider); flex-shrink: 0; }
+.nav-a { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 48px; padding: 0 12px; font-size: 16px; font-weight: 400; line-height: 21px; color: var(--nav-link); white-space: nowrap; }
+.nav-a:hover { color: var(--nav-link-active); }
+.nav-a.on { color: var(--nav-link-active); font-weight: 800; }
+.nav-chev { flex-shrink: 0; width: 16px; height: 16px; }
+.nav-r { display: flex; align-items: center; height: 100%; }
+.nav-r-btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 12px; border: none; background: none; cursor: pointer; color: var(--nav-link); }
+.nav-avatar-img { width: 24px; height: 24px; border-radius: 50%; display: block; }
+/* Ads DS-only icon glyphs.
+   `.nav-ico`     — inline SVG used by the Ads bell + three-dot icons; the
+                     legacy bell (`<img class="nav-bell-img">`) is the EDL
+                     Light/Dark glyph and is shown by default.
+   `.nav-r-btn-dots` — entire "More" button, ADS Preview only.
+   Both are hidden in EDL themes so EDL Light/Dark render with their
+   original bell + avatar pair only. ADS Preview override unhides them. */
+.nav-r-btn .nav-ico { display: none; }
+.nav-r-btn-dots { display: none; }
+
+/* ═══ User menu (top-right profile dropdown) ═══ */
+.user-menu { position: relative; display: inline-flex; height: 100%; }
+.user-menu-pop {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 240px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-menu);
+  padding: 4px 0;
+  z-index: 200;
+  font-family: var(--ff);
+  display: none;
+}
+.user-menu.open .user-menu-pop { display: block; }
+
+.user-menu-hdr { padding: 10px 16px 12px; }
+.user-menu-name { font-size: 14px; font-weight: 700; line-height: 20px; color: var(--text-primary); letter-spacing: 0; }
+.user-menu-email { margin-top: 2px; font-size: 13px; font-weight: 400; line-height: 18px; color: var(--text-muted); letter-spacing: 0; }
+
+.user-menu-sep { height: 1px; background: var(--border-subtle); margin: 4px 0; }
+
+.user-menu-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+.user-menu-row:hover,
+.user-menu-row:focus-visible { background: var(--bg-hover); }
+.user-menu-row:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: -2px; }
+.user-menu-label { flex: 1 1 auto; min-width: 0; }
+.user-menu-value { color: var(--text-muted); font-size: 14px; font-weight: 400; line-height: 20px; }
+.user-menu-chev { flex-shrink: 0; color: var(--text-muted); }
+
+/* Theme submenu — anchored to the left of the parent row.
+   Column flex guarantees both options (EDL Light + EDL Dark) stack fully,
+   and the elevated z-index / isolation keep the popup on top of any
+   sibling stacking contexts (search, table cells, etc.). */
+.user-menu-sub {
+  position: absolute;
+  top: -4px;
+  right: calc(100% + 4px);
+  min-width: 140px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-menu);
+  padding: 4px 0;
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+  isolation: isolate;
+}
+.user-menu-row.has-sub:hover > .user-menu-sub,
+.user-menu-row.has-sub[aria-expanded="true"] > .user-menu-sub,
+.user-menu-sub:hover { display: flex; }
+
+/* Theme submenu items inherit surface/hover/text tokens from the page-level
+   theme (i.e. the <html> element), not from their own data-theme attributes.
+   Without this reset, an item like <div data-theme="dark"> would pick up
+   --bg-surface:#131E33 from the [data-theme="dark"] token block and appear
+   dark navy even while the page is in EDL Light mode. */
+.user-menu-sub .user-menu-sub-item {
+  --bg-surface:   inherit;
+  --bg-hover:     inherit;
+  --text-primary: inherit;
+}
+
+.user-menu-sub-item {
+  display: flex;
+  align-items: center;
+  flex: 0 0 36px;
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.user-menu-sub-item:hover,
+.user-menu-sub-item:focus-visible { background: var(--bg-hover); }
+.user-menu-sub-item:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: -2px; }
+.user-menu-sub-item.is-selected { color: var(--brand-text); font-weight: 500; }
+
+/* EDL Indigo 70 selected state for dark and ADS Preview theme options.
+   Uses the absolute palette token #3611C8 so it is immune to any
+   per-element variable remapping above. */
+.user-menu-sub-item.is-selected[data-theme="dark"],
+.user-menu-sub-item.is-selected[data-theme="ads-preview"] {
+  background: #3611C8;
+  color: #FFFFFF;
+}
+.user-menu-sub-item.is-selected[data-theme="dark"]:hover,
+.user-menu-sub-item.is-selected[data-theme="ads-preview"]:hover,
+.user-menu-sub-item.is-selected[data-theme="dark"]:focus-visible,
+.user-menu-sub-item.is-selected[data-theme="ads-preview"]:focus-visible {
+  background: #2F139F;
+  color: #FFFFFF;
+}
+
+/* ─── PAGE SHELL ─── full-width with responsive padding, capped at ultra-wide ─── */
+.page { padding: 0 48px; max-width: 1440px; margin: 0 auto; }
+
+/* ─── PAGE HEADER ─── Figma: title at y=77 (29px below nav), card at y=170 (33px below header) ─── */
+.hdr { padding: 29px 0 33px; }
+.hdr h1 { font-family: 'MultiplaneTWDC Display', var(--ff); font-size: 28px; font-weight: 500; line-height: 38px; color: var(--text-primary); letter-spacing: 0; margin-bottom: 8px; }
+.hdr p { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); }
+
+/* ─── CARD ─── white, radius 8, outline border ─── */
+.card { background: var(--bg-surface); border-radius: 8px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 0 0 1px var(--border-default); }
+
+/* ─── TABS ─── Figma 362:55886: h-56, pt-16 pb-8 px-16, items-center ─── */
+.tabs-row { display: flex; align-items: center; height: 56px; padding: 16px 16px 8px; border-bottom: 1px solid var(--border-subtle); }
+
+/* Extra breathing room below the tab underline before the toolbar.
+   Applied to both panels (Users + Roles & Permissions) so the whole
+   block — toolbar row (Filter / Search / CTA), column header row, and
+   everything below — shifts down together by the same amount. Puts
+   the padding on the panel (not `.tbar`) to avoid margin-collapsing
+   through the un-styled panel wrappers. Internal spacing between
+   toolbar → column headers → body → pagination is untouched. */
+#usersPanel, #rolesPanel { padding-top: 12px; }
+.tabs-row nav { display: flex; gap: 24px; align-items: flex-start; }
+.tab-btn { display: inline-flex; align-items: flex-start; padding-bottom: 8px; font-size: 18px; font-weight: 800; line-height: 21px; color: var(--text-muted); position: relative; white-space: nowrap; }
+.tab-btn.on { color: var(--brand-text); }
+.tab-btn.on::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--brand); border-radius: 1px; }
+.tab-btn:hover:not(.on) { color: var(--text-secondary); }
+/* Inert third tab (Permission Management) — visually identical to other
+   inactive tabs per Figma 770:19301; no .on toggle, no panel wired. The
+   click is a no-op (handler-free), so the tab appears reachable but
+   doesn't deceive users with empty content. aria-disabled in markup
+   communicates the unavailable state to assistive tech. */
+.tab-btn[aria-disabled="true"] { cursor: default; }
+.tab-btn[aria-disabled="true"]:hover { color: var(--text-muted); }
+
+/* ─── TOOLBAR ─── h-48 px-16 py-8 (Figma 362:55889) ─── */
+/* Vertical rhythm: tabs → toolbar is ~16px via .tabs-row/.tbar padding;
+   toolbar → table uses margin-bottom here so the table reads as a new section. */
+/* Toolbar uses the shared 56px right-gutter rail (see .tbl-wrap above),
+   so "+ Add Users" and "+ Create Role" — right-anchored by flex — land
+   on the exact same vertical line as the Region / Create Date column's
+   right edge and the pagination controls. Both panels use identical
+   values; no per-panel override is needed.
+
+   Vertical alignment contract: .tbar is a single horizontal flex row
+   with align-items: center. Filter + Search (wrapped in .tbar-l — also
+   align-items: center) and the CTA (.btn-ghost, direct child) all
+   share the same center baseline. All three controls are 32px tall,
+   centered in the 48px tbar (8px top / 8px bottom). Every control's
+   `align-self` falls back to the container's `center`; we set it
+   explicitly on the CTA to immunize against any future override. */
+.tbar { display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 8px 56px 8px 16px; margin-bottom: 16px; }
+/* Users only: slightly less air between toolbar row and column headers (Roles unchanged). */
+#usersPanel .tbar { margin-bottom: 10px; }
+#rolesPanel .tbar { padding-right: 56px; }
+.tbar-l { display: flex; align-items: center; gap: 16px; }
+.tbar > .btn-ghost { align-self: center; margin-top: 0; margin-bottom: 0; }
+
+/* EDL Standard button — secondary outline, 32px */
+.btn-std { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--brand-text); border-radius: 8px; background: var(--bg-surface); font-size: 14px; font-weight: 500; line-height: 16px; color: var(--brand-text); white-space: nowrap; transition: background-color 0.15s ease; }
+.btn-std:hover { background: var(--brand-bg-soft); }
+.btn-std:active { background: var(--brand-bg-selected); }
+.btn-std:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-std:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+.btn-std svg { flex-shrink: 0; }
+
+/* EDL Search — 32px input with dropdown panel */
+.search { position: relative; width: 310px; z-index: 10; }
+.search input { width: 100%; height: 32px; padding: 0 32px 0 12px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 14px; line-height: 21px; color: var(--text-primary); background: var(--bg-surface); outline: none; transition: border-color 0.15s ease, border-radius 0.1s ease; }
+.search input::placeholder { color: var(--text-placeholder); font-weight: 400; }
+.search input:focus { border-color: var(--brand-text); }
+.search-ico { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; transition: opacity 0.1s ease; }
+
+.search.open { z-index: 50; }
+.search.open input { border-radius: 8px 8px 0 0; border-color: var(--brand-text); border-bottom-color: var(--border-default); }
+.search.has-value .search-ico { opacity: 0; pointer-events: none; }
+
+.search-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; z-index: 2; }
+.search-clear:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.search-clear.hidden { display: none; }
+
+.search-dropdown { display: none; position: fixed; background: var(--bg-surface); border: 1px solid var(--brand-text); border-top: 1px solid var(--border-default); border-radius: 0 0 8px 8px; box-shadow: var(--shadow-pop); padding: 16px; z-index: 9999; }
+.search-dropdown.open { display: block; }
+
+.search-dd-label { font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-muted); margin-bottom: 6px; }
+.search-dd-item { display: flex; align-items: center; gap: 8px; padding: 5px 4px; cursor: pointer; border-radius: 4px; transition: background-color 0.1s ease; }
+.search-dd-item:hover { background: var(--bg-hover-soft); }
+.search-dd-item svg { flex-shrink: 0; color: var(--text-muted); }
+.search-dd-item span { font-size: 14px; font-weight: 500; line-height: 21px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search-dd-info { font-size: 14px; font-weight: 500; line-height: 21px; color: var(--text-secondary); padding: 4px 0; }
+.search-dd-info strong { color: var(--text-primary); font-weight: 700; }
+.search-dd-divider { height: 1px; background: var(--border-subtle); margin: 10px 0; }
+.search-dd-empty { font-size: 13px; line-height: 21px; color: var(--text-muted); padding: 4px 0; }
+
+/* EDL toolbar primary CTA treatment for "+ Add Users" / "+ Create Role". */
+/* CTA action buttons sit in .tbar which
+   already anchors the right edge at 32px from the card (matching .pgn and
+   .rp-act). Zero horizontal padding on the button keeps the icon+text
+   optically aligned to that same right-side system instead of being inset
+   by the button's own padding. Only the 6px icon→text gap is preserved.
+
+   Line-height 16 matches .btn-std (Filter) exactly so the two buttons'
+   internal text struts resolve to the same y-center. Without this, the
+   native <button> UA layout resolves a taller strut (line-height: 20)
+   differently from .btn-std's 16px strut and the glyphs can read as
+   sitting ~1–2 px higher than Filter/Search on the same flex row. */
+/* EDL Ghost button — text-only, transparent background */
+.btn-ghost { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; line-height: 16px; color: var(--brand-text); white-space: nowrap; overflow: visible; cursor: pointer; vertical-align: middle; transition: background-color 0.15s ease, color 0.15s ease; }
+.btn-ghost svg { flex-shrink: 0; display: block; }
+.btn-ghost:hover { background: var(--brand-bg-soft); color: var(--brand-text-hover); }
+.btn-ghost:active { background: var(--brand-bg-selected); color: var(--brand-text-hover); }
+.btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* EDL Primary CTA — toolbar "Add Users" / "Create Role" promoted to filled primary */
+.tbar > .btn-ghost {
+  padding: 0 12px;
+  background: var(--brand);
+  color: var(--text-on-brand);
+  border-radius: 8px;
+}
+.tbar > .btn-ghost:hover {
+  background: var(--brand-hover);
+  color: var(--text-on-brand);
+}
+.tbar > .btn-ghost:active {
+  background: var(--indigo-95);
+  color: var(--text-on-brand);
+}
+.tbar > .btn-ghost:disabled {
+  background: var(--brand-disabled-bg);
+  color: var(--brand-disabled-fg);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* ─── EDL Multi-Segment Control ─── 32px, Gray/30 stroke, Indigo/10 selected ─── */
+.seg-ctrl {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  margin-left: 8px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+.seg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 96px;
+  padding: 0 16px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--brand-text);
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.seg-btn + .seg-btn { border-left: 1px solid var(--border-input); }
+.seg-btn.on { background: var(--brand-bg-selected); color: var(--brand-text); }
+.seg-btn:not(.on):hover { background: var(--brand-bg-soft); }
+.seg-btn.on:hover { background: var(--brand-bg-selected); }
+.seg-btn:active { opacity: 0.85; }
+.seg-btn:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; z-index: 1; }
+/* The table itself spans the full card width so the row-divider borders
+   (.tbl tbody tr { border-bottom }) draw cleanly from edge to edge with
+   no gap on the right. The 56px right-gutter rail that aligns the CTA
+   with the rightmost column's visible content is implemented on those
+   elements individually (see .tbar below and the per-column padding on
+   the rightmost cell in each table — .c-rg for Users, .rp-date for
+   R&P). The pagination row intentionally uses a symmetric 16px
+   horizontal padding (see .pgn below) so the left and right ends of
+   the row feel visually balanced against each other; it does not
+   share the CTA rail. Doing the rail via cell padding instead of
+   wrap padding keeps the tr's border-bottom running all the way
+   across the table. */
+.tbl-wrap { overflow-x: auto; }
+.tbl { width: 100%; table-layout: fixed; }
+.tbl th, .tbl td { text-align: left; vertical-align: middle; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Compact row density per Figma 770:17428 (header 32px, body 48px).
+   Body row of 48px fits the 40px avatar + name/email stack (21 + 16 line
+   heights ≈ 37px) with comfortable breathing room top/bottom. */
+.tbl th { height: 32px; }
+.tbl td { height: 48px; }
+
+/* Role assignment table: leading checkbox column per Figma 770:19301.
+   Fixed-width 44px column (28px control + 16px ambient padding) so
+   .alignRP() can keep the four content columns proportional. Only
+   visual selection state is wired — there is no bulk-action toolbar
+   in this prototype build, matching the Figma which shows checkboxes
+   without surrounding multi-select chrome. */
+.rp-tbl col.rp-col-sel { width: 44px; }
+.tbl th.rp-sel, .tbl td.rp-sel { padding: 0; text-align: center; }
+.rp-check { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--brand); }
+.rp-check:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
+
+/* ─── Column widths — proportional percentages, all columns participate ─── */
+/* Column base widths are now set in the Figma-matched block below (after the c-ct/c-em hidden section). */
+
+/* Checkbox column removed — its 3.86% returns to Role. The original
+   28px left gutter (which previously came from the checkbox cell's padding)
+   is re-applied to the new first column (rp-role) below so the table's left
+   edge alignment is preserved and no empty gap is introduced. */
+/* R&P table: four columns (Description removed per Figma, space given to
+   Functions). Create Date is JS-aligned to the Create Role CTA; Role and
+   Created By widths held stable in the column-resize handler. */
+#rpColgroup col[data-rp-col="role"] { width: 15.00%; }
+#rpColgroup col[data-rp-col="func"] { width: 58.00%; }
+#rpColgroup col[data-rp-col="by"]   { width: 13.00%; }
+#rpColgroup col[data-rp-col="date"] { width: 14.00%; }
+
+.tbl thead tr { background: var(--bg-surface); border-bottom: 1px solid var(--border-default); }
+.tbl th { font-size: 12px; font-weight: 400; line-height: 18px; color: var(--text-secondary); position: relative; }
+th.c-nm { overflow: visible; text-overflow: clip; padding-left: 32px; }
+.tbl th[data-sort] { cursor: pointer; user-select: none; }
+.tbl th[data-sort]:hover { color: var(--text-primary); }
+.th-inner { display: flex; align-items: center; gap: 4px; }
+.sort-ico { display: flex; width: 12px; height: 12px; justify-content: center; align-items: center; flex-shrink: 0; }
+.sort-dn, .sort-up { fill: var(--text-placeholder); transition: fill 0.15s ease; }
+.tbl th.sort-asc .sort-up { fill: var(--text-secondary); }
+.tbl th.sort-desc .sort-dn { fill: var(--text-secondary); }
+
+.tbl tbody tr { border-bottom: 1px solid var(--border-default); background: var(--bg-surface); }
+.tbl td { font-size: 14px; line-height: 21px; color: var(--text-primary); }
+
+/* ─── Name cell with avatar ─── */
+td.c-nm { padding: 0 !important; overflow: visible !important; white-space: normal !important; }
+.name-cell { display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 0 0 32px; }
+.name-cell-text { display: flex; flex-direction: column; justify-content: center; gap: 2px; min-width: 0; overflow: hidden; }
+.name-cell-email { font-size: 12px; font-weight: 400; line-height: 16px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Status column — icon only, centered. Tooltip is rendered at body level
+   by app.js so table/card overflow cannot clip it. */
+td.c-st { text-align: center; padding: 0 !important; }
+th.c-st { text-align: center; }
+th.c-st .th-inner { justify-content: center; }
+.status-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  border-radius: 4px;
+}
+.status-icon-wrap:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+.edl-status-tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10000;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  padding: 8px;
+  border-radius: 8px;
+  background: #3A4652;
+  color: #FFFFFF;
+  box-shadow: 0 1px 1.5px rgba(16, 17, 19, 0.24);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+  transform: translateY(2px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.edl-status-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  background: #3A4652;
+  transform: translateX(-50%) rotate(45deg);
+}
+.edl-status-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Compact row density (Figma 770:17428): avatar is 40px so the 48px row
+   leaves 4px top/bottom breathing room and no clipping at the divider. */
+.name-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FFF; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.name-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.avatar-initials { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 50%; background: rgb(78, 136, 210); color: #FFFFFF; font-size: 16px; font-weight: 700; line-height: 1; letter-spacing: 0.5px; }
+/* Users table — name link is the only row affordance; each name opens Edit User for that row.
+   EDL Light: `--brand-text` is Indigo 70; Dark / ADS Preview remap for contrast. */
+#usersPanel #usersTable tbody .name-link {
+  display: block;
+  min-width: 0;
+  flex: none;
+  align-self: auto;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--brand-text);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+#usersPanel #usersTable tbody .name-link:hover {
+  color: var(--brand-text-hover);
+  text-decoration: underline;
+}
+#usersPanel #usersTable tbody .name-link:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Role cell ─── */
+.role-txt { font-size: 14px; line-height: 21px; color: var(--text-primary); }
+.role-extra { color: var(--brand-text); cursor: pointer; text-decoration: none; }
+.role-extra:hover { text-decoration: underline; }
+
+/* ─── PAGINATION ─── compact EDL control bar (matches 32px inputs / `.cr-dd-trigger`) ─── */
+/* Symmetric 16px horizontal padding (EDL spec). The right side
+   previously used 56px so the "Go to page" select's right edge would
+   share a rail with the "+ Add Users" / "+ Create Role" CTA above,
+   but that made the right end feel ~40px wider than the left end
+   and unbalanced the row. Using the left value on both ends ties
+   the two ends to the same visual rhythm; the centered page-number
+   group shifts by ~20px (half of the reclaimed 40px) because the
+   row uses justify-content: space-between, which is the subtle
+   center nudge called out as acceptable in the brief. */
+.pgn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  background: transparent;
+}
+.pgn-show, .pgn-jump { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+.pgn-lbl {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Pagination: same EDL `.cr-dd` pattern as forms (no native <select>). */
+.pgn-sel-wrap { position: relative; display: inline-flex; align-items: center; }
+.pgn-dd.cr-dd {
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  min-width: 56px;
+}
+/* Lock to standard EDL field height (32px); same radius/border as `.cr-dd-trigger`. */
+.pgn-dd .cr-dd-trigger {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+.pgn-dd .cr-dd-menu {
+  width: 100%;
+  min-width: 100%;
+}
+
+.pgn-pages { display: flex; align-items: center; gap: 10px; }
+.pg-nav { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; color: var(--text-secondary); }
+.pg-nav:hover:not(.off) { color: var(--brand-text); }
+.pg-nav.off { opacity: 0.4; cursor: default; pointer-events: none; }
+.pg-nums { display: flex; align-items: center; gap: 4px; }
+.pg-n { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 12px; line-height: 18px; color: var(--text-primary); border-radius: 2px; position: relative; }
+.pg-n.on::after { content: ''; position: absolute; bottom: 0; left: 25%; right: 25%; height: 2px; background: var(--brand); border-radius: 1px; }
+.pg-n:hover:not(.on) { background: var(--bg-hover); }
+.pg-dots { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; font-size: 12px; color: var(--text-primary); }
+
+/* Users pagination total count: lives where the old "Go to page" control was. */
+#usersTotalLabel { color: var(--text-primary); font-weight: 400; }
+
+/* ─── FILTER DRAWER ─── left-side HARPS panel ─── */
+.flt-overlay { position: fixed; inset: 0; background: var(--overlay-scrim); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+.flt-overlay.open { opacity: 1; pointer-events: auto; }
+
+.flt-drawer { position: fixed; top: 0; left: 0; width: 400px; height: 100vh; background: var(--bg-surface); z-index: 201; display: flex; flex-direction: column; box-shadow: var(--shadow-drawer); transform: translateX(-100%); transition: transform 0.25s ease; }
+.flt-drawer.open { transform: translateX(0); }
+
+/* EDL dense drawer: header, body and footer tightened onto the 4px spacing
+   grid. Heights, paddings and gaps use EDL tokens (20 / 16 / 6 / 36 / 56 / 64)
+   — no new visual style, just a compact rhythm. */
+.flt-header { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 20px; border-bottom: 1px solid var(--border-default); flex-shrink: 0; }
+.flt-title { font-size: 20px; font-weight: 700; line-height: 26px; color: var(--text-primary); }
+.flt-close { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; color: var(--text-muted); }
+.flt-close:hover { background: var(--bg-hover); color: var(--text-secondary); }
+
+.flt-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.flt-field { display: flex; flex-direction: column; gap: 6px; }
+.flt-label { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); }
+.flt-input { width: 100%; height: 36px; padding: 0 12px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 14px; line-height: 20px; color: var(--text-primary); background: var(--bg-surface); outline: none; transition: border-color 0.15s ease; }
+.flt-input::placeholder { color: var(--text-placeholder); font-weight: 400; }
+.flt-input:hover { border-color: var(--text-muted); }
+.flt-input:focus { border-color: var(--brand-text); }
+
+.flt-sel-wrap { position: relative; }
+.flt-select { appearance: none; -webkit-appearance: none; width: 100%; height: 40px; padding: 0 36px 0 16px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 14px; line-height: 21px; color: var(--text-placeholder); background: var(--bg-surface); cursor: pointer; outline: none; transition: border-color 0.15s ease; }
+.flt-select:hover { border-color: var(--text-muted); }
+.flt-select:focus { border-color: var(--brand-text); }
+.flt-select:not(:invalid) { color: var(--text-primary); }
+.flt-sel-chev { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+
+.flt-footer { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 20px; border-top: 1px solid var(--border-default); flex-shrink: 0; }
+.flt-footer-r { display: flex; align-items: center; gap: 12px; }
+.flt-btn-reset { display: inline-flex; align-items: center; border-radius: 8px; padding: 0 8px; height: 36px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: none; transition: background-color 0.15s ease, color 0.15s ease; }
+.flt-btn-reset:hover { background: var(--brand-bg-soft); color: var(--brand-text-hover); }
+.flt-btn-reset:active { background: var(--brand-bg-selected); }
+.flt-btn-reset:disabled { opacity: 0.5; cursor: not-allowed; }
+.flt-btn-reset:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+.flt-btn-cancel { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: 1px solid var(--brand-text); border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); background: var(--bg-surface); transition: background-color 0.15s ease; }
+.flt-btn-cancel:hover { background: var(--brand-bg-soft); }
+.flt-btn-cancel:active { background: var(--brand-bg-selected); }
+.flt-btn-cancel:disabled { opacity: 0.5; cursor: not-allowed; }
+.flt-btn-cancel:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+.flt-btn-apply { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-on-brand); background: var(--brand); transition: background-color 0.15s ease; }
+.flt-btn-apply:hover { background: var(--brand-hover); }
+.flt-btn-apply:active { background: var(--indigo-95); }
+.flt-btn-apply:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); opacity: 1; cursor: not-allowed; }
+.flt-btn-apply:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* Dense variant of the EDL combo input when it lives inside the filter drawer
+   — keeps the standard EDL combo component intact elsewhere (menu is portaled
+   to <body> and untouched). Drawer controls share a single 36px baseline. */
+.flt-drawer .edl-combo-input {
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding-right: 52px;
+  padding-left: 12px;
+  line-height: 36px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Filter drawer: trailing control slot is 8px from the edge. Clear (×) and
+   chevron share the exact slot — mutual-exclusion rule above hides the
+   chevron when a value is selected. */
+.flt-drawer .edl-combo-clear { right: 8px; width: 18px; height: 18px; }
+.flt-drawer .edl-combo-toggle { right: 8px; }
+
+/* ─── EDL COMBO BOX ─── searchable dropdown, matches EDL select + list pattern ─── */
+.edl-combo { position: relative; }
+
+.edl-combo-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+/* Trigger: same fixed height as EDL text fields — single line, icons absolutely positioned (no height growth). */
+.edl-combo-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  margin: 0;
+  padding: 0 60px 0 16px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 40px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease, border-radius 0.1s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.edl-combo-input::placeholder { color: var(--text-placeholder); font-weight: 400; }
+.edl-combo-input:hover { border-color: var(--text-muted); }
+.edl-combo-input:focus { border-color: var(--brand-text); }
+.edl-combo.open .edl-combo-input { border-color: var(--brand-text); border-radius: 8px 8px 0 0; border-bottom-color: var(--border-default); }
+
+.edl-combo-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; z-index: 2; }
+.edl-combo-clear:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.edl-combo-clear.hidden { display: none; }
+
+.edl-combo-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; color: var(--text-placeholder); background: none; border: none; cursor: pointer; padding: 0; z-index: 2; }
+.edl-combo-toggle:hover { color: var(--text-secondary); }
+.edl-combo-toggle svg { transition: transform 0.2s ease; }
+.edl-combo.open .edl-combo-toggle svg { transform: rotate(180deg); }
+
+/* Mutual-exclusion rule: empty field shows the chevron only; selected field
+   shows the EDL clear (×) only. Never both at once. Applies to every EDL
+   combo instance globally (filter drawers, Add/Edit User, R&P filter, etc.). */
+.edl-combo-input-wrap:has(.edl-combo-clear:not(.hidden)) .edl-combo-toggle {
+  display: none;
+}
+
+.edl-combo-menu {
+  display: none;
+  position: fixed;
+  background: var(--bg-surface);
+  border: 1px solid var(--brand-text);
+  border-top: 1px solid var(--border-default);
+  border-radius: 0 0 8px 8px;
+  box-shadow: var(--shadow-pop);
+  z-index: 9998;
+  padding: 4px 0;
+  max-height: 260px;
+  overflow-y: auto;
+  /* Subtle EDL scrollbar: Gray 40 @ ~80% opacity, minimal 6px, no heavy track */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(158, 176, 189, 0.8) transparent;
+}
+.edl-combo-menu.open { display: block; }
+.edl-combo-menu::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.edl-combo-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.edl-combo-menu::-webkit-scrollbar-thumb {
+  background: rgba(158, 176, 189, 0.8);
+  border-radius: 999px;
+  border: none;
+}
+.edl-combo-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-50);
+}
+
+.edl-combo-item { display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 16px; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); cursor: pointer; white-space: nowrap; transition: background-color 0.1s ease; }
+/* IAM filter menus — comfortable row height. Add User uses `--add-user` with compact rows below. */
+.edl-combo-menu--iam-roles {
+  padding: 6px 0;
+  max-height: min(50vh, 320px);
+}
+.edl-combo-menu--add-user {
+  padding: 4px 0;
+  max-height: min(50vh, 320px);
+}
+.edl-combo-menu--iam-roles .edl-combo-item {
+  height: auto;
+  min-height: 44px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+}
+/* Add User field menus — compact row height (filters keep --iam-roles density above). */
+.edl-combo-menu--add-user .edl-combo-item {
+  height: auto;
+  min-height: 40px;
+  padding: 8px 16px;
+  box-sizing: border-box;
+}
+.edl-combo-item.is-disabled {
+  color: var(--text-placeholder);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.edl-combo-item:hover, .edl-combo-item.kb-highlight { background: var(--bg-hover-soft); }
+.edl-combo-item.selected { background: var(--brand-bg-soft); font-weight: 500; }
+.edl-combo-item.selected:hover, .edl-combo-item.selected.kb-highlight { background: var(--brand-bg-selected); }
+.edl-combo-item:focus-visible { outline: 2px solid var(--brand-text); outline-offset: -2px; }
+
+.edl-combo-check { flex-shrink: 0; width: 16px; height: 16px; color: var(--brand-text); display: none; }
+.edl-combo-item.selected .edl-combo-check { display: block; }
+
+.edl-combo-empty { padding: 10px 16px; font-size: 14px; line-height: 21px; color: var(--text-muted); }
+
+/* ═══ EDL TOOLTIP / POPOVER — single dark family ═══
+   Source of truth: Figma EDL Component Library
+   https://www.figma.com/design/w16COHKBA2KtYTCPFEAQPp/EDL-Component-Library?node-id=4722-54080
+   Tokens used:
+     surface        EDL Gray/80   #3A4652   (var --gray-80)
+     data-row rule  EDL Gray/70   #3E4D5B   (hardcoded, no matching token)
+     meta / subheader EDL Gray/40 #9EB0BD   (var --gray-40)
+     title / body / label  white            (var --white)
+     shadow        0 1px 3px rgba(16,17,19,0.24)
+     radius        8px
+     tooth         8×4 triangle
+     type          Icon/Definition  14px Medium / 16–20px line
+     type          Data rows        12px Roman / 18px line (explicit Figma exception)
+   Both surfaces share the same tokens so they read as one family. */
+
+/* Icon/Definition tooltip (role hover on Users table) */
+.edl-tooltip {
+  position: fixed; z-index: 300;
+  background: var(--gray-80);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(16,17,19,0.24);
+  font-family: var(--ff);
+}
+.edl-tooltip.visible { opacity: 1; }
+.edl-tooltip::after {
+  content: ''; position: absolute;
+  bottom: -4px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid var(--gray-80);
+}
+.edl-tooltip.below::after {
+  bottom: auto; top: -4px;
+  border-top: none;
+  border-bottom: 4px solid var(--gray-80);
+}
+.edl-tooltip-line {
+  font-family: var(--ff);
+  font-size: 14px; font-weight: 500; line-height: 20px;
+  color: var(--white);
+  letter-spacing: 0;
+}
+.edl-tooltip-line + .edl-tooltip-line { margin-top: 2px; }
+
+/* Functions cell follows the default .tbl td truncation (overflow:hidden +
+   text-overflow:ellipsis). The permission popover is position:fixed and lives
+   on document.body, so it doesn't need the cell to have visible overflow. */
+.rp-func-group { display: inline; color: var(--text-primary); }
+.rp-func-app {
+  color: var(--text-primary);
+  font-weight: 400;
+}
+button.rp-func-link {
+  all: unset;
+  display: inline;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-decoration: none;
+}
+.rp-func-link:hover .rp-func-access { text-decoration: underline; color: var(--brand-text-hover); }
+.rp-func-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 2px; }
+.rp-func-link[aria-expanded="true"] .rp-func-access { color: var(--brand-text-hover); }
+.rp-func-access { color: var(--brand-text); font-weight: 500; }
+
+/* Permission details popover */
+.func-popover {
+  position: fixed; z-index: 400;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(16,17,19,0.14);
+  min-width: 300px;
+  max-width: 360px;
+  display: none;
+  font-family: var(--ff);
+  padding: 12px 14px 10px;
+}
+.func-popover.visible { display: block; }
+
+/* Tooth — anchored via --caret-left set in JS; mirrors Icon tooltip tooth. */
+.func-popover::before {
+  content: ''; position: absolute;
+  top: -4px; left: var(--caret-left, 16px); transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid var(--bg-surface);
+}
+.func-popover.above::before {
+  top: auto; bottom: -4px;
+  border-bottom: none;
+  border-top: 4px solid var(--bg-surface);
+}
+
+.func-pop-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+.func-pop-access {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--text-secondary);
+}
+.func-pop-permissions {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* ─── Filter input with clear button ─── */
+.flt-input-wrap { position: relative; }
+.flt-input-wrap .flt-input { padding-right: 32px; }
+.flt-input-clear { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; }
+.flt-input-clear:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.flt-input-clear.hidden { display: none; }
+
+.tbl td.empty-state { text-align: center; padding: 48px 24px; height: auto; white-space: normal; overflow: visible; text-overflow: clip; font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-muted); }
+
+.tbl th[data-rp-sort] { cursor: pointer; user-select: none; }
+.tbl th[data-rp-sort]:hover { color: var(--text-primary); }
+
+/* ─── ROLES & PERMISSIONS TABLE ─── */
+/* `min-width: 0` so the table always fits the card (never horizontally
+   overflows `.tbl-wrap`). Previously this was `min-width: 1244px`,
+   which forced the table wider than the card on sub-1340px viewports
+   and caused the rightmost column (Create Date) to be visually clipped
+   by the card's right edge — which broke the Create-Date → Create-Role
+   CTA left-edge alignment even when the page-coordinate math was
+   correct. Matches the Users table (`#usersTable { min-width: 0 }`)
+   so both tabs behave identically at every viewport. */
+.rp-tbl { min-width: 0; table-layout: fixed; }
+/* Left-edge gutter for the first column (Role) — carries over the 28px
+   content-start position previously provided by the removed checkbox cell. */
+.rp-tbl th.rp-role,
+.rp-tbl td.rp-role { padding-left: 28px !important; }
+.rp-act  { text-align: right !important; padding-right: 32px !important; }
+.rp-act .th-inner { justify-content: flex-end; }
+
+/* Column resize handles */
+.col-resize-handle { position: absolute; right: -1px; top: 25%; width: 3px; height: 50%; cursor: col-resize; z-index: 10; background: transparent; border-radius: 1.5px; transition: background 0.15s ease, opacity 0.15s ease; }
+.col-resize-handle:hover { background: var(--border-input); opacity: 0.6; }
+.col-resize-handle.active { background: var(--text-muted); opacity: 0.7; }
+body.col-resizing { cursor: col-resize !important; user-select: none !important; }
+body.col-resizing * { cursor: col-resize !important; user-select: none !important; }
+
+.rp-check-input { width: 12px; height: 12px; accent-color: var(--brand-text); cursor: pointer; vertical-align: middle; }
+
+td.rp-cb { text-align: left !important; padding-left: 28px !important; padding-right: 8px !important; }
+td.rp-act { text-align: right !important; overflow: visible !important; }
+
+/* EDL link treatment for clickable role name — brand color, underline on hover.
+   Applied only to rows that opt-in via `.rp-role-link` (currently Core Planning
+   Admin); other rows remain plain text. */
+.rp-role-link { color: var(--brand-text); cursor: pointer; text-decoration: none; }
+.rp-role-link:hover { color: var(--brand-text-hover); text-decoration: underline; }
+.rp-role-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 2px; }
+
+/* Permission Management table (Figma 770:20032). Mirrors .rp-tbl's
+   layout contract (fixed table-layout, min-width:0) so it scales the
+   same way the R&P table does at every viewport. Column widths are
+   tuned to the Figma proportions: name 216, description 320, type 176,
+   used 144, date 144 — proportionally rendered via the .rp-col-sel
+   sibling + percentage fallback when table-layout: fixed redistributes. */
+.pm-tbl { min-width: 0; table-layout: fixed; }
+.pm-tbl col.rp-col-sel { width: 44px; }
+.pm-tbl th.pm-name, .pm-tbl td.pm-name { padding-left: 28px !important; }
+.pm-name-link { color: var(--brand-text); cursor: pointer; text-decoration: none; }
+.pm-name-link:hover { color: var(--brand-text-hover); text-decoration: underline; }
+.pm-name-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 2px; }
+/* Used-in count column right-aligns numbers for scannability without
+   adding a chip — matches the Figma "5 roles" plain-text rendering. */
+.pm-tbl td.pm-used, .pm-tbl th.pm-used { color: var(--text-secondary); }
+.pm-tbl td.pm-date { color: var(--text-secondary); }
+/* .pm-tbl td.pm-type previously set color: var(--text-secondary) for
+   the old plain-text rendering. With the chip taking over (Figma
+   770:20039 / P4-14), color is owned by the chip itself, so this
+   rule is removed. */
+
+.rp-func-text {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--text-primary);
+  cursor: default;
+  outline: none;
+}
+.rp-func-text:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Action buttons */
+.rp-action-wrap { display: inline-flex; align-items: center; gap: 0; }
+.rp-action-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; border: none; background: none; cursor: pointer; padding: 0; transition: background-color 0.15s ease; }
+.rp-action-btn:hover { background: var(--bg-hover); }
+.rp-action-btn-edit { color: var(--brand-text); }
+.rp-action-btn-delete { color: var(--brand-text); }
+
+/* ═══ CREATE ROLE PAGE ═══ */
+.cr-page { position: fixed; inset: 0; top: 48px; background: var(--bg-app); z-index: 90; overflow-y: auto; }
+.cr-shell { max-width: 1130px; margin: 0 auto; padding: 24px 48px 64px; }
+
+.cr-back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--brand-text); padding: 0; margin-bottom: 16px; }
+.cr-back:hover { color: var(--brand-text-hover); }
+.cr-back svg { flex-shrink: 0; }
+
+.cr-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.cr-header-left { flex: 1; min-width: 0; }
+.cr-title { font-family: 'MultiplaneTWDC Display', var(--ff); font-size: 28px; font-weight: 500; line-height: 38px; color: var(--text-primary); letter-spacing: 0; margin-bottom: 8px; }
+.cr-subtitle { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); }
+
+.cr-header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: 4px; }
+
+/* Save Role button — Inspire TWDC 14/16, EDL Promoted 32px.
+   Optical centering: InspireTWDC glyphs sit slightly above the line-box
+   center, so mathematical centering (flex + equal padding) leaves the
+   label visually high. Asymmetric padding (2px top / 0 bottom) with
+   box-sizing: border-box nudges the text ~1px down without changing
+   the 32px button height or the 16px horizontal padding. Same treatment
+   is applied to every 32px label button in the action group and modal
+   so centering stays consistent across them. */
+.cr-btn-save { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; border: none; border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; letter-spacing: 0; color: var(--text-on-brand); background: var(--brand); white-space: nowrap; cursor: pointer; transition: background-color 0.15s ease, opacity 0.15s ease; -webkit-font-smoothing: antialiased; }
+.cr-btn-save:hover:not(:disabled) { background: var(--brand-hover); }
+.cr-btn-save:active:not(:disabled) { background: var(--indigo-95); }
+.cr-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: not-allowed; opacity: 1; }
+.cr-btn-save:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* Cancel button scoped override — matches Save Role dimensions and the
+   same optical-centering padding so the two buttons feel balanced. */
+#crCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
+
+/* ─── Remove Role — EDL text action, Indigo 70 ───
+   Text-only 32px action (no icon, no fill, no border) matching the EDL
+   inline text-action spec. Color uses the Indigo 70 brand text token,
+   consistent with other EDL text actions on the page. Optical centering
+   uses the same 2px-top / 0-bottom padding as the Cancel / Save Role
+   buttons. Visible only in Edit Role mode. */
+.cr-btn-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 2px 12px 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0;
+  color: var(--brand-text);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  -webkit-font-smoothing: antialiased;
+}
+.cr-btn-remove[hidden] { display: none !important; }
+.cr-btn-remove:hover { background: var(--brand-bg-soft); }
+.cr-btn-remove:active { background: var(--brand-bg-selected); }
+.cr-btn-remove:disabled { opacity: 0.5; cursor: not-allowed; }
+.cr-btn-remove:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* ─── Remove Role confirmation dialog ─── */
+.cr-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 24px;
+}
+.cr-confirm-backdrop[hidden] { display: none !important; }
+.cr-confirm-dialog {
+  background: var(--bg-surface);
+  border-radius: 12px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.24);
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: var(--ff);
+}
+.cr-confirm-title {
+  margin: 0 0 8px 0;
+  font-family: var(--ff);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--text-primary);
+}
+.cr-confirm-body {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  word-wrap: break-word;
+}
+.cr-confirm-body strong { color: var(--text-primary); font-weight: 600; }
+.cr-confirm-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+/* Modal confirm Remove Role — EDL Promoted button, Indigo 70 solid.
+   Uses the same visual language as .cr-btn-save so the modal action
+   stays consistent with the rest of the EDL system. Same 2px-top / 0
+   bottom optical-centering padding as the other 32px label buttons. */
+.cr-btn-danger-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 2px 16px 0;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--text-on-brand);
+  background: var(--brand);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  -webkit-font-smoothing: antialiased;
+}
+.cr-btn-danger-solid:hover { background: var(--brand-hover); }
+.cr-btn-danger-solid:active { background: var(--indigo-95); }
+.cr-btn-danger-solid:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); opacity: 1; cursor: not-allowed; }
+.cr-btn-danger-solid:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* Modal Cancel scoped override — matches the modal confirm button's
+   optical-centering so both labels look balanced inside 32px. */
+#crConfirmCancel.btn-std,
+#crAppRemoveCancel.btn-std,
+#auInactiveConfirmCancel.btn-std,
+#auRemoveUserCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 12px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
+
+/* ─── EDL Toast — matches EDL Toast Figma spec (node 15094:75972) ───
+   Container: fixed bottom-right stack. Each toast is 287px wide with
+   12px/16px padding, 8px corner radius, and a 32px drop shadow. Title
+   color varies by type (informative/success/warning/error); body text
+   is always gray-95. Light-mode tokens only — dark mode not needed in
+   this app today. Types: success (check-circle + green-60) and error
+   (alert-circle + red-60) are used here; the informative/warning styles
+   are included for completeness and parity with the EDL component. */
+/* Toast stack — anchored to the top-right corner across the entire IAM
+   experience. All toast variants (success, error, warning, informative)
+   share this one container, so every toast originates from the same
+   position. 24px offsets from the top and right follow EDL spacing.
+   New toasts are appended, so with flex-direction: column the newest
+   toast stacks below the previous ones — reading naturally downward
+   from the top-right anchor. */
+.edl-toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10001;
+  pointer-events: none;
+  max-width: calc(100vw - 48px);
+}
+.edl-toast {
+  pointer-events: auto;
+  width: 287px;
+  box-sizing: border-box;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 0 32px 0 rgba(23, 29, 35, 0.25);
+  font-family: var(--ff);
+  animation: edl-toast-in 180ms ease-out;
+}
+.edl-toast.is-leaving {
+  animation: edl-toast-out 160ms ease-in forwards;
+}
+/* Entrance/exit motion origin matches the top-right anchor:
+   slide in from -8px above, slide out back up on dismiss. */
+@keyframes edl-toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes edl-toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+.edl-toast-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.edl-toast-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: block;
+}
+.edl-toast-title {
+  flex: 1 0 0;
+  min-width: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: -0.1px;
+  color: var(--brand-text);
+}
+.edl-toast-close {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  color: var(--gray-95);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.edl-toast-close svg { width: 16px; height: 16px; display: block; }
+.edl-toast-close:hover { opacity: 0.75; }
+.edl-toast-close:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+.edl-toast-body {
+  padding-left: 32px;
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--gray-95);
+  word-wrap: break-word;
+}
+.edl-toast-body strong { font-weight: 600; }
+
+/* Type variants — icon + title color per EDL spec */
+.edl-toast--informative .edl-toast-title { color: var(--indigo-70); }
+.edl-toast--informative .edl-toast-icon  { color: var(--indigo-70); }
+.edl-toast--success .edl-toast-title     { color: var(--green-60); }
+.edl-toast--success .edl-toast-icon      { color: var(--green-60); }
+.edl-toast--warning .edl-toast-title     { color: var(--orange-70); }
+.edl-toast--warning .edl-toast-icon      { color: var(--orange-70); }
+.edl-toast--error .edl-toast-title       { color: var(--red-60); }
+.edl-toast--error .edl-toast-icon        { color: var(--red-60); }
+
+.cr-card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 16px; padding: 16px 24px 24px; margin-bottom: 24px; }
+
+/* Tightened section header spacing — pulled closer to the first field */
+.cr-section-header { display: flex; align-items: center; gap: 8px; padding: 8px 0 4px 0; }
+.cr-section-header[data-cr-toggle],
+.cr-section-header[data-au-toggle] { cursor: pointer; user-select: none; }
+.cr-section-header[data-cr-toggle]:focus-visible,
+.cr-section-header[data-au-toggle]:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 4px; }
+.cr-section-chev { flex-shrink: 0; color: var(--brand-text); transition: transform 0.15s ease; }
+.cr-card.collapsed .cr-section-chev { transform: rotate(-90deg); }
+.cr-card.collapsed > :not(.cr-section-header) { display: none !important; }
+.cr-section-title { font-size: 18px; font-weight: 800; line-height: 22px; color: var(--brand-text); }
+.cr-section-summary { display: none; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 22px; color: var(--text-muted); letter-spacing: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 auto; }
+.cr-card.collapsed .cr-section-summary { display: inline-block; }
+.cr-card.collapsed .cr-section-summary:not(:empty)::before { content: "·"; margin-right: 8px; color: var(--text-placeholder); }
+
+/* Create Role Basic: compact collapsed row with optional inline summary */
+#crBasicCard.cr-card.collapsed {
+  padding: 10px 24px 12px;
+}
+#crBasicCard.cr-card.collapsed > .cr-section-header {
+  padding: 2px 0;
+  gap: 5px;
+  align-items: center;
+}
+#crBasicCard.cr-card.collapsed .cr-section-summary:not(:empty)::before {
+  margin-right: 5px;
+}
+
+/* Add User — Basic + Roles: collapsed shows chevron + title only; matched row height and vertical centering */
+#auBasicCard.cr-card.collapsed,
+#auRolesCard.cr-card.collapsed {
+  padding: 10px 24px;
+}
+#auBasicCard.cr-card.collapsed > .cr-section-header,
+#auRolesCard.cr-card.collapsed > .cr-section-header {
+  padding: 0;
+  min-height: 44px;
+  gap: 8px;
+  align-items: center;
+}
+#auBasicCard.cr-card.collapsed .cr-section-summary,
+#auRolesCard.cr-card.collapsed .cr-section-summary {
+  display: none !important;
+}
+#auBasicCard.cr-card.collapsed .cr-section-chev,
+#auRolesCard.cr-card.collapsed .cr-section-chev {
+  display: block;
+  flex-shrink: 0;
+}
+
+.cr-field { margin-top: 16px; }
+.cr-field:first-of-type { margin-top: 12px; }
+.cr-label { display: block; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-muted); margin-bottom: 4px; }
+.cr-req { color: #E52F52; }
+
+.cr-input { width: 320px; height: 32px; padding: 0 12px; border: 1px solid var(--border-input); border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); background: var(--bg-surface); outline: none; transition: border-color 0.15s ease; }
+.cr-input::placeholder { color: var(--text-placeholder); }
+.cr-input:hover { border-color: var(--text-muted); }
+.cr-input:focus { border-color: var(--brand-text); }
+
+.cr-textarea { width: 100%; height: 112px; padding: 8px 16px; border: 1px solid var(--border-input); border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); background: var(--bg-surface); outline: none; resize: vertical; transition: border-color 0.15s ease; }
+.cr-textarea::placeholder { color: var(--text-placeholder); }
+.cr-textarea:hover { border-color: var(--text-muted); }
+.cr-textarea:focus { border-color: var(--brand-text); }
+
+/* ═══ EDL CHECKBOX ═══ 16px, white→indigo-70 with white check */
+.cr-checkbox-row { display: flex; align-items: center; gap: 24px; margin-top: 4px; }
+.cr-checkbox-item { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--ff); font-size: 14px; line-height: 21px; color: var(--text-primary); user-select: none; }
+.cr-help-text { margin-top: 6px; font-size: 12px; font-weight: 400; line-height: 18px; color: var(--text-secondary); }
+
+.cr-check,
+.cr-perm-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-input);
+  border-radius: 2px;
+  background: var(--bg-surface);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+  position: relative;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+.cr-check:hover:not(:checked):not(:disabled),
+.cr-perm-check:hover:not(:checked):not(:disabled) { border-color: var(--text-muted); }
+.cr-check:focus-visible,
+.cr-perm-check:focus-visible { outline: 2px solid var(--indigo-70); outline-offset: 2px; }
+.cr-check:checked,
+.cr-perm-check:checked {
+  background: var(--brand);
+  border-color: var(--brand-text);
+}
+.cr-check:checked::after,
+.cr-perm-check:checked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M3.5 8.2 L6.6 11.3 L12.5 5.2' stroke='white' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.cr-check-label { font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 21px; color: var(--text-primary); user-select: none; }
+.cr-access-level-row {
+  margin-top: 14px;
+  flex-shrink: 0;
+}
+.cr-access-level-row .cr-label { margin-bottom: 8px; }
+.cr-access-level-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.cr-access-level-dd {
+  width: 248px;
+  max-width: 100%;
+}
+.cr-access-level-trigger {
+  height: 32px;
+  min-height: 32px;
+}
+.cr-access-level-value {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+/* Summary body (filled by JS); visual card is .cr-access-summary-card */
+.cr-access-summary {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.cr-access-summary-top {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+.cr-access-level-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary);
+}
+.cr-access-level-subtitle {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-muted);
+  margin-top: 0;
+  font-weight: 400;
+}
+/* Permission details: fixed label column + one comma-separated values string. */
+.permission-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  font-family: var(--ff);
+  font-size: 14px;
+  line-height: 22px;
+}
+.permission-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+.permission-label {
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+.permission-values {
+  width: 100%;
+  min-width: 0;
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-height: inherit;
+}
+.cr-access-summary-list {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.cr-access-summary-empty { margin-top: 4px; font-size: 14px; line-height: 22px; color: var(--text-primary); flex: 0 1 auto; }
+/* Functions: text CTAs — no underline (Atlas / EDL link-button language) */
+.cr-customize-link {
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand-text);
+  font-family: var(--ff);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+.cr-customize-link:hover { color: var(--brand-text-hover); }
+.cr-customize-link:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 2px; }
+.cr-collapse-all-link { margin-top: 14px; }
+/* Create Role Permissions only: `.cr-summary-cta` is not used on Add/Edit User. */
+#createRolePage .cr-access-summary-card .cr-summary-cta {
+  margin-top: 24px;
+  padding-top: 0;
+  position: static;
+  align-self: center;
+  flex-shrink: 0;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) {
+  min-height: 388px;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-level-row {
+  margin-bottom: 10px;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-summary-stack,
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-summary-card {
+  flex: 1 1 auto;
+}
+#createRolePage .cr-app-section:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) .cr-access-summary-card .cr-summary-cta {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+/* ═══ EDL DROPDOWN ═══ Exact Figma fidelity (node 390:15700, 390:15519) */
+.cr-dd { position: relative; display: inline-block; width: 283px; }
+.cr-dd-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  cursor: pointer;
+  outline: none;
+  text-align: left;
+  transition: border-color 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.cr-dd-trigger:hover { border-color: var(--text-muted); }
+.cr-dd.open .cr-dd-trigger,
+.cr-dd-trigger:focus-visible { border-color: var(--brand-text); }
+/* Open: connected list surface (matches search dropdown seam, not a floating popover). */
+.cr-dd.open .cr-dd-trigger {
+  border-radius: 8px 8px 0 0;
+  border-bottom-color: var(--border-default);
+}
+.cr-dd-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary);
+}
+.cr-dd-value.is-placeholder { color: var(--text-placeholder); }
+.cr-dd-chev { flex-shrink: 0; color: var(--text-muted); margin-left: 10px; transition: transform 0.15s ease; }
+.cr-dd.open .cr-dd-chev { transform: rotate(180deg); }
+
+.cr-dd-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 283px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-pop);
+  padding: 0;
+  z-index: 1000;
+  overflow: hidden;
+  display: none;
+}
+.cr-dd.open .cr-dd-menu { display: flex; flex-direction: column; }
+/* Portaled under trigger: fixed layer, same width, seam to field — no layout reflow in page. */
+.cr-dd-menu.is-layered {
+  display: flex !important;
+  flex-direction: column;
+  position: fixed;
+  margin: 0;
+  left: 0;
+  top: 0;
+  width: auto;
+  min-width: 0;
+  border-radius: 0 0 8px 8px;
+  border: 1px solid var(--brand-text);
+  border-top: 1px solid var(--border-default);
+  box-shadow: var(--shadow-pop);
+  max-height: min(50vh, 320px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.cr-dd-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.1s ease;
+  box-sizing: border-box;
+}
+.cr-dd-option:hover:not(.is-disabled) { background: var(--bg-hover); }
+.cr-dd-option.is-selected,
+.cr-dd-option.is-selected:hover { background: var(--brand-bg-selected); color: var(--text-primary); }
+.cr-dd-option.is-disabled { color: var(--text-placeholder); cursor: not-allowed; }
+.cr-dd-option.is-disabled:hover { background: var(--bg-surface); }
+
+/* Add-application row (dropdown + Add button) */
+.cr-app-row { display: flex; align-items: flex-end; gap: 12px; }
+.cr-app-row-field { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; max-width: 320px; }
+
+.cr-btn-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid var(--brand-text);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--brand-text);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  -webkit-font-smoothing: antialiased;
+}
+.cr-btn-add svg { flex-shrink: 0; }
+.cr-btn-add { align-self: flex-end; }
+.cr-btn-add:hover:not(:disabled) { background: var(--brand-bg-soft); }
+.cr-btn-add:active:not(:disabled) { background: var(--brand-bg-selected); }
+.cr-btn-add:disabled {
+  border-color: var(--border-input);
+  color: var(--text-placeholder);
+  cursor: not-allowed;
+  background: var(--bg-surface);
+}
+.cr-btn-add:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* Two application cards per row; each card keeps its own natural height when expanded. */
+#createRolePage .cr-perms-content {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+.cr-app-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  align-self: start;
+  height: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 18px 18px 16px;
+  box-sizing: border-box;
+  overflow-x: visible;
+  transition: border-color 0.18s ease, box-shadow 0.22s ease;
+}
+.cr-app-section:hover { border-color: #d6d9df; box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06); }
+.cr-app-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+.cr-app-section-head:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 4px; }
+.cr-app-head-left { display: flex; flex-direction: row; align-items: center; gap: 8px; min-width: 0; }
+.cr-app-title {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--text-primary);
+  letter-spacing: 0;
+}
+.cr-app-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 2px;
+  font-family: var(--ff);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--brand-text);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.cr-app-remove > svg { display: block; flex-shrink: 0; width: 16px; height: 16px; color: currentColor; }
+.cr-app-remove:hover { color: var(--brand-text-hover); background: var(--brand-bg-soft); }
+.cr-app-remove:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
+
+.cr-app-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; width: 100%; overflow-x: visible; }
+.cr-summary-stack {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin-top: 12px;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+.cr-access-summary-card {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  /* Slightly tighter side padding so summary text has a bit more horizontal room
+     without changing the outer app card shell. */
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+/* Preset access: detail panel hidden until expanded. Custom: show accordion panel, hide preset summary. */
+.cr-custom-area {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+  max-height: 0;
+  opacity: 0;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  transition: max-height 320ms cubic-bezier(0.33, 1, 0.68, 1), opacity 240ms ease, margin-top 200ms ease, padding-top 200ms ease;
+}
+.cr-app-section[data-expanded="true"] .cr-custom-area,
+.cr-app-section[data-access-level="Custom"] .cr-custom-area,
+.cr-app-section[data-access-level="Custom Access"] .cr-custom-area {
+  margin-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 18px;
+  max-height: min(72vh, 640px);
+  opacity: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.cr-app-section[data-access-level="Custom"] .cr-summary-stack,
+.cr-app-section[data-access-level="Custom Access"] .cr-summary-stack {
+  display: none !important;
+}
+.cr-app-section[data-expanded="true"] [data-show-all],
+.cr-app-section[data-access-level="Custom"] [data-show-all],
+.cr-app-section[data-access-level="Custom Access"] [data-show-all] {
+  display: none !important;
+}
+.cr-module { margin-top: 12px; min-width: 0; width: 100%; }
+.cr-module:first-child { margin-top: 0; }
+.cr-module-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 4px;
+  margin: 0 -4px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--indigo-70);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.12s ease;
+}
+.cr-module-head-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.cr-module-summary {
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.cr-module-head:hover { background: var(--bg-hover); }
+.cr-module-head:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; }
+/* Same language as page accordions: collapsed = chevron right, expanded = chevron down */
+.cr-module-chev {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--brand-text);
+  transition: transform 0.15s ease;
+  transform: rotate(-90deg);
+}
+.cr-module-head[aria-expanded="true"] .cr-module-chev { transform: rotate(0deg); }
+.cr-module-body { margin-top: 8px; min-width: 0; width: 100%; }
+.cr-perm-group { margin-bottom: 0; }
+.cr-perm-group-title { font-size: 13px; font-weight: 600; line-height: 18px; color: var(--text-secondary); margin-bottom: 8px; display: none; }
+.cr-perm-grid { display: block; min-width: 0; width: 100%; }
+.cr-perm-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; width: 100%; }
+.cr-perm-item { display: flex; align-items: flex-start; gap: 8px; }
+.cr-perm-check { margin-top: 3px; }
+.cr-perm-label { min-width: 0; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-primary); cursor: pointer; user-select: none; white-space: normal; overflow-wrap: normal; word-break: normal; }
+
+/* ═══ ADD USERS PAGE ═══ */
+.au-page { position: fixed; inset: 0; top: 48px; background: var(--bg-app); z-index: 90; overflow-y: auto; }
+.au-shell { width: min(1048px, calc(100% - 96px)); margin: 8px auto 56px; }
+.au-back { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 4px 0 0; color: var(--brand-text); font-size: 14px; font-weight: 500; line-height: 16px; }
+.au-back:hover { color: var(--brand-text-hover); }
+.au-back svg { width: 16px; height: 16px; }
+.au-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-top: 8px; }
+.au-header-left { min-width: 0; }
+.au-title { font-family: "MultiplaneTWDC Display", var(--ff); font-size: 28px; font-weight: 500; line-height: 38px; color: var(--text-primary); }
+.au-subtitle { margin-top: 11px; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text-secondary); }
+.au-header-actions { display: inline-flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 16px; margin-top: -2px; }
+.au-remove-user-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--brand-text);
+  cursor: pointer;
+  text-decoration: none;
+}
+.au-remove-user-link:hover { color: var(--brand-text-hover); text-decoration: underline; }
+.au-remove-user-link:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 2px; border-radius: 4px; }
+.au-remove-user-link[hidden] { display: none !important; }
+
+.au-btn-save { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; border: none; border-radius: 8px; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; color: var(--text-on-brand); background: var(--brand); white-space: nowrap; cursor: pointer; transition: background-color 0.15s ease; -webkit-font-smoothing: antialiased; }
+.au-btn-save:hover:not(:disabled) { background: var(--brand-hover); }
+.au-btn-save:active:not(:disabled) { background: var(--indigo-95); }
+.au-btn-save:disabled { background: var(--brand-disabled-bg); color: var(--brand-disabled-fg); cursor: not-allowed; opacity: 1; }
+.au-btn-save:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+.au-card { margin-top: 24px; background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 16px; padding: 12px 24px 18px; }
+/* Add User accordion bodies (Create Role uses `.cr-field` siblings; AU wraps grid + roles in one node). */
+#addUsersPage .au-section-body { min-width: 0; }
+#addUsersPage .cr-section-header[data-au-toggle] {
+  padding: 6px 0 4px;
+}
+
+.au-grid { margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.au-field { min-width: 0; }
+.au-field-edit-only { display: none; }
+#addUsersPage.is-edit-mode .au-field-edit-only { display: block; order: 1; }
+#addUsersPage.is-edit-mode .au-field-first,
+#addUsersPage.is-edit-mode .au-field-last { display: none; }
+#addUsersPage.is-edit-mode .au-field-email { order: 2; }
+#addUsersPage.is-edit-mode .au-field-preferred { order: 3; }
+#addUsersPage.is-edit-mode .au-field-region { order: 4; }
+#addUsersPage.is-edit-mode .au-field-timezone { order: 5; }
+#addUsersPage.is-edit-mode .au-field-team { order: 6; }
+#addUsersPage.is-edit-mode .au-field-status { order: 7; }
+#addUsersPage.is-edit-mode .au-profile-field { order: 8; }
+/* Status: label stacked above Active/Inactive toggle (same rhythm as other Basic fields). */
+.au-field-status {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.au-field-status .au-label {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+}
+.au-field-status .au-status-seg {
+  align-self: flex-start;
+}
+.au-label { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 4px; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-muted); }
+.au-req { color: #E52F52; }
+.au-info { width: 12px; height: 12px; color: var(--text-muted); }
+.au-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 0;
+  padding: 5px 12px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.au-input::placeholder { color: var(--text-placeholder); }
+.au-input:hover { border-color: var(--text-muted); }
+.au-input:focus { border-color: var(--brand-text); }
+.au-input-readonly,
+#addUsersPage.is-edit-mode #auEmail {
+  color: var(--text-secondary);
+  background: var(--bg-hover-soft);
+  border-color: var(--border-input);
+  cursor: default;
+}
+.au-input-readonly:hover,
+#addUsersPage.is-edit-mode #auEmail:hover {
+  border-color: var(--border-input);
+}
+.au-input-readonly:focus,
+#addUsersPage.is-edit-mode #auEmail:focus {
+  border-color: var(--border-input);
+}
+#addUsersPage.is-edit-mode .au-field-email .au-req { display: none; }
+#addUsersPage.is-edit-mode .au-field-status .au-req { display: none; }
+/* Add User selects: official EDL combo — full width, 32px trigger; chevron/clear stay vertically centered. */
+#addUsersPage .au-field-dd.edl-combo {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+#addUsersPage .au-field-dd.edl-combo .edl-combo-input-wrap {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  box-sizing: border-box;
+}
+#addUsersPage .au-field-dd.edl-combo .edl-combo-input {
+  box-sizing: border-box;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin: 0;
+  /* One trailing control (chevron OR clear), same slot as Figma IAM */
+  padding: 5px 36px 5px 12px;
+  line-height: 20px;
+}
+/* Chevron and clear: same 20×20 hit target, 12×12 glyph; vertically centered in 32px field.
+   Mutual-exclusion between the two trailing icons is enforced by the global rule
+   `.edl-combo-input-wrap:has(.edl-combo-clear:not(.hidden)) .edl-combo-toggle { display:none }`. */
+#addUsersPage .au-field-dd.edl-combo .edl-combo-clear,
+#addUsersPage .au-field-dd.edl-combo .edl-combo-toggle {
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+}
+#addUsersPage .au-field-dd.edl-combo .edl-combo-clear svg,
+#addUsersPage .au-field-dd.edl-combo .edl-combo-toggle svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+/* Assign Roles: same column shell as Region/Team (`.au-field` + `.cr-dd`) — flex sizing on wrapper, not on `.cr-dd`. */
+#addUsersPage .au-role-row > .au-role-dd-field {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.au-status-seg {
+  margin-top: 0;
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+  height: 32px;
+  box-sizing: border-box;
+  align-items: stretch;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+.au-status-opt {
+  flex: 0 0 92px;
+  min-width: 92px;
+  min-height: 0;
+  height: auto;
+  align-self: stretch;
+  padding: 0 12px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border-input);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.14s ease, color 0.14s ease;
+}
+.au-status-opt:last-child { border-right: 0; }
+.au-status-opt:hover { background: var(--bg-hover); color: var(--text-primary); }
+.au-status-opt.is-selected { background: var(--brand-bg-selected); color: var(--brand-text); }
+.au-status-opt:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: -2px; }
+#addUsersPage.is-edit-mode .au-status-seg { display: none; }
+.au-status-readonly {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--text-primary);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.au-status-readonly[hidden] { display: none; }
+.au-status-readonly svg { flex-shrink: 0; }
+.au-profile-field { align-self: start; }
+.au-profile-field .au-label { margin-bottom: 4px; }
+.au-profile-sync-note { margin-top: 4px; font-size: 13px; font-weight: 400; line-height: 18px; color: var(--text-secondary); }
+
+.au-access-card { margin-top: 12px; }
+.au-role-field { margin-top: 8px; }
+/* Cap row to one role-card column (matches `.au-role-cards` 2-col gap math). */
+#auRolesCard .au-role-row {
+  max-width: min(100%, calc((100% - 28px) / 2));
+}
+.au-role-row { margin-top: 0; display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
+.au-role-row .au-btn-add { flex-shrink: 0; }
+/* Add User: Inactive status — cannot assign roles (EDL disabled treatment) */
+#addUsersPage .au-role-row .edl-combo.is-au-roles-locked .edl-combo-input-wrap {
+  pointer-events: none;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+#addUsersPage .au-role-row .au-btn-add:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.au-btn-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--brand-text);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--brand-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.au-btn-add:hover:not(:disabled) { background: var(--brand-bg-soft); }
+.au-btn-add:active:not(:disabled) { background: var(--brand-bg-selected); }
+.au-btn-add:disabled { border-color: var(--border-input); color: var(--text-placeholder); cursor: not-allowed; background: var(--bg-surface); opacity: 1; }
+.au-btn-add:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
+
+/* Match Create Role `.cr-perms-content`: two-column grid when space allows, single column ≤1023px.
+   align-items: start — each role card keeps its own height; expanding one must not stretch siblings.
+   Add/Edit User (`#addUsersPage`) uses `.au-role-cards-row` + stretch grid (see after `.au-role-list-fallback li`).
+   Create Role app cards use `#createRolePage .cr-perms-content` grid + stretch. */
+.au-role-cards {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  align-items: start;
+  align-content: start;
+}
+.au-role-cards.has-roles { margin-top: 24px; }
+/* Role summary cards — natural height so expanded cards do not stretch their row mate. */
+.au-role-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 176px;
+  height: fit-content;
+  max-height: none;
+  align-self: start;
+  justify-content: flex-start;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--bg-surface);
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.22s ease;
+  box-sizing: border-box;
+}
+.au-role-card:hover { border-color: #d6d9df; box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06); }
+.au-role-card-top { padding: 24px 24px 22px; flex: 0 1 auto; min-height: 0; }
+.au-role-card .cr-app-title { min-width: 0; }
+.au-role-card .cr-app-body { margin-top: 20px; min-width: 0; flex: 0 1 auto; }
+.au-role-block { margin-top: 16px; }
+.au-role-block:first-child { margin-top: 0; }
+.au-role-section-text {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  color: var(--text-secondary);
+}
+.au-role-access-value {
+  margin: 0;
+}
+.au-role-view-toggle {
+  margin-top: 18px;
+  align-self: flex-start;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  text-align: left;
+  white-space: normal;
+}
+.au-role-toggle-label { min-width: 0; }
+.au-role-toggle-arr {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1em;
+  line-height: 1;
+}
+
+.au-role-expand {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--border-subtle);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 220ms ease-in-out, opacity 180ms ease-in-out;
+}
+.au-role-card.expanded .au-role-expand {
+  max-height: none;
+  opacity: 1;
+  overflow: visible;
+}
+.au-role-expand-inner { padding: 18px 24px 18px; }
+/* Expand panel: mirror Create Role `.cr-access-summary-list` two-column layout per app. */
+.au-role-app-section { margin-top: 20px; }
+.au-role-expand-inner > .au-role-app-section:first-child { margin-top: 0; }
+.au-role-expand-inner > .au-perm-card-list:first-child { margin-top: 0; }
+.au-role-app-section > .cr-label { margin-bottom: 8px; }
+/* Wrapper for Add/Edit User permission list: `display: contents` by default so
+   layout is unchanged; #addUsersPage ≥1024px overrides to a flex-growing inner panel. */
+.au-role-app-detail {
+  display: contents;
+}
+.au-role-perm-summary-list .permission-values {
+  color: var(--gray-95);
+}
+.au-role-list-fallback {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.au-role-list-fallback li {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary);
+}
+
+/* ─── Add/Edit User (#addUsersPage) — Roles & Permissions layout ─── */
+#addUsersPage .au-role-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+  align-content: start;
+}
+#addUsersPage .au-role-cards-row {
+  display: contents;
+}
+#addUsersPage .au-role-card {
+  align-self: start;
+  height: fit-content;
+  min-height: unset;
+}
+#addUsersPage .au-role-card.expanded .au-role-expand {
+  flex: 0 0 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#addUsersPage .au-role-card.expanded .au-role-expand-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 0;
+}
+#addUsersPage .au-role-card-top {
+  flex: 0 0 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#addUsersPage .au-role-view-toggle {
+  margin-top: 24px;
+  position: static;
+  align-self: center;
+}
+
+/* Add/Edit User — permission apps: DOM is
+   .au-role-expand-inner > .au-perm-card-list > .au-perm-card-row >
+     .au-perm-card-stack > .au-role-app-section.au-perm-card > (.cr-label + .au-role-app-detail > list) */
+#addUsersPage .au-perm-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+#addUsersPage .au-perm-card-list .au-role-app-section {
+  margin-top: 0;
+}
+#addUsersPage .au-perm-card-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+#addUsersPage .au-role-card .permission-row {
+  grid-template-columns: 140px minmax(0, 1fr);
+  column-gap: 12px;
+}
+#addUsersPage .au-role-card .permission-values {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+#addUsersPage .au-perm-card-row > .au-perm-card-stack {
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+}
+#addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card {
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+@media (min-width: 1024px) {
+  #addUsersPage .au-perm-card-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .cr-label {
+    flex-shrink: 0;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail {
+    display: block;
+    flex: 0 1 auto;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail > .au-role-perm-summary-list {
+    flex: 0 0 auto;
+    min-height: 0;
+    align-content: start;
+  }
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card > .au-role-app-detail > .au-role-list-fallback {
+    flex: 0 0 auto;
+    min-height: 0;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 1023px) {
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack,
+  #addUsersPage .au-perm-card-row > .au-perm-card-stack > .au-perm-card {
+    height: auto;
+  }
+}
+
+/* ═══ RESPONSIVE LAYOUT BREAKPOINTS ═══
+   Design anchor: 1440x1080 (desktop-ideal). */
+
+/* 1200–1439: desktop structure retained, slightly tighter spacing */
+@media (max-width: 1439px) {
+  .page { padding: 0 40px; max-width: 1360px; }
+  .cr-shell { max-width: 1080px; padding: 24px 40px 64px; }
+  .au-shell { width: min(1048px, calc(100% - 80px)); }
+  .tbar { padding: 8px 40px 8px 16px; }
+  #rolesPanel .tbar { padding-right: 40px; }
+}
+
+/* 1024–1199: 2-column grids for forms/cards */
+@media (max-width: 1199px) {
+  .page { padding: 0 32px; max-width: 1200px; }
+  .hdr { padding: 24px 0 28px; }
+  .tabs-row { padding: 14px 16px 8px; }
+  #usersPanel, #rolesPanel { padding-top: 10px; }
+  .tbar { height: auto; min-height: 48px; padding: 8px 32px 8px 16px; }
+  #rolesPanel .tbar { padding-right: 32px; }
+  .search { width: 280px; }
+
+  .cr-shell { max-width: 980px; padding: 20px 32px 56px; }
+  .cr-header { flex-wrap: wrap; }
+  .cr-header-actions { width: 100%; justify-content: flex-end; padding-top: 0; }
+  .cr-card { padding: 16px 20px 20px; }
+  #crBasicCard.cr-card.collapsed { padding: 10px 20px 12px; }
+  #auBasicCard.cr-card.collapsed,
+  #auRolesCard.cr-card.collapsed { padding: 10px 20px; }
+  .cr-input, .cr-dd { width: 100%; }
+  .cr-app-row { align-items: flex-end; }
+  .cr-app-row-field { flex: 1 1 auto; min-width: 0; }
+  .cr-dd, .cr-dd-menu { width: 100%; }
+  /* Pagination triggers stay compact; `.cr-dd { width:100% }` is for form rows. */
+  .pgn-dd.cr-dd { width: auto; min-width: 56px; }
+
+  .au-shell { width: min(1048px, calc(100% - 64px)); }
+  .au-card { padding: 12px 20px 15px; }
+  .au-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .au-role-cards { gap: 20px; }
+  #addUsersPage .au-role-cards {
+    gap: 20px;
+  }
+  #auRolesCard .au-role-row { max-width: min(100%, calc((100% - 20px) / 2)); }
+}
+
+/* 768–1023: prioritize vertical stability and readability */
+@media (max-width: 1023px) {
+  .page { padding: 0 24px; max-width: 100%; }
+  .nav { padding-right: 12px; }
+  .nav-mod { padding: 10px 12px 10px 16px; }
+  .nav-a { padding: 0 8px; font-size: 14px; }
+  .nav-logo-img { width: 128px; }
+
+  .tabs-row nav { gap: 18px; }
+  .tab-btn { font-size: 16px; }
+  .card { margin-bottom: 24px; }
+
+  .tbar { gap: 12px; flex-wrap: wrap; justify-content: space-between; padding: 8px 24px 8px 16px; margin-bottom: 12px; }
+  #usersPanel .tbar { margin-bottom: 8px; }
+  #rolesPanel .tbar { padding-right: 24px; }
+  .tbar-l { flex: 1 1 100%; flex-wrap: wrap; gap: 12px; }
+  .search { width: min(100%, 420px); }
+  .tbar > .btn-ghost { margin-left: auto; }
+
+  .tbl th, .tbl td { padding: 0 6px; }
+  /* Proportional to base 48px row at this breakpoint. */
+  .tbl td { height: 44px; }
+
+  .cr-shell { max-width: 100%; padding: 16px 24px 48px; }
+  .cr-title { font-size: 24px; line-height: 32px; }
+  .cr-subtitle { line-height: 20px; }
+  .cr-header-actions { justify-content: flex-start; flex-wrap: wrap; }
+  .cr-card { padding: 14px 16px 16px; margin-bottom: 16px; }
+  #crBasicCard.cr-card.collapsed { padding: 8px 16px 10px; }
+  #auBasicCard.cr-card.collapsed,
+  #auRolesCard.cr-card.collapsed { padding: 10px 16px; }
+  #createRolePage .cr-perms-content {
+    grid-template-columns: 1fr;
+  }
+  .cr-app-section { flex: 0 0 auto; width: 100%; max-width: 100%; height: auto; }
+  .au-role-cards { grid-template-columns: 1fr; gap: 16px; }
+  #addUsersPage .au-role-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .au-shell { width: min(1048px, calc(100% - 48px)); margin-bottom: 40px; }
+  .au-header { flex-wrap: wrap; gap: 14px; }
+  .au-header-actions { width: 100%; justify-content: flex-end; margin-top: 0; }
+  .au-grid { grid-template-columns: 1fr; gap: 14px; }
+  .au-status-seg { width: 100%; }
+  .au-status-opt { flex: 1 1 0; min-width: 0; }
+  /* Role cards single-column; Assign row spans card width but stays compact (no full-bleed stretch). */
+  #auRolesCard .au-role-row { max-width: 100%; }
+  .au-role-row { flex-wrap: nowrap; gap: 10px; }
+  #addUsersPage .au-role-row > .au-role-dd-field {
+    flex: 0 1 320px;
+    max-width: min(320px, calc(100% - 88px));
+  }
+  .au-btn-add { min-width: 72px; }
+  .au-role-cards.has-roles { margin-top: 16px; }
+  .au-role-card { min-height: 176px; }
+  #addUsersPage .au-role-card { min-height: 0; }
+}
+
+/* <768: single-column mobile layout with no clipping/overflow */
+@media (max-width: 767px) {
+  .page { padding: 0 16px; }
+  .nav { height: 44px; }
+  .nav-mod { gap: 4px; padding: 8px 8px 8px 12px; }
+  .nav-logo-group { gap: 8px; }
+  .nav-logo-img { width: 108px; height: 20px; }
+  .nav-a { font-size: 13px; padding: 0 6px; }
+  .nav-r-btn { padding: 0 8px; height: 44px; }
+  .ads-nav-search { display: none; }
+
+  .hdr { padding: 20px 0 24px; }
+  .hdr h1 { font-size: 24px; line-height: 32px; }
+  .hdr p { line-height: 20px; }
+  .tabs-row { height: auto; padding: 12px 12px 8px; }
+  .tabs-row nav { width: 100%; gap: 14px; flex-wrap: wrap; }
+  .tab-btn { font-size: 15px; padding-bottom: 6px; }
+  #usersPanel, #rolesPanel { padding-top: 8px; }
+
+  .tbar { padding: 8px 12px; margin-bottom: 10px; }
+  #usersPanel .tbar { margin-bottom: 6px; }
+  #rolesPanel .tbar { padding-right: 12px; }
+  .tbar-l { width: 100%; }
+  .btn-std, .btn-ghost { height: 32px; }
+  .search { width: 100%; }
+
+  .pgn {
+    flex-wrap: wrap;
+    gap: 8px;
+    height: auto;
+    min-height: 40px;
+    padding: 6px 12px;
+  }
+  .pgn-pages { order: 3; width: 100%; justify-content: flex-start; gap: 8px; }
+  .pgn-jump { margin-left: 0; }
+
+  .cr-shell { padding: 14px 16px 36px; }
+  .cr-back { margin-bottom: 10px; }
+  .cr-title { font-size: 22px; line-height: 30px; }
+  .cr-header { margin-bottom: 14px; }
+  .cr-header-actions { width: 100%; gap: 8px; }
+  .cr-btn-remove, #crCancel.btn-std, .cr-btn-save { padding-left: 12px; padding-right: 12px; }
+  .cr-app-row { flex-wrap: wrap; }
+  .cr-app-row-field { width: 100%; }
+  .cr-dd, .cr-dd-menu { width: 100%; }
+  .pgn-dd.cr-dd { width: auto; min-width: 56px; }
+  .cr-btn-add { width: 100%; }
+  #createRolePage .cr-perms-content {
+    grid-template-columns: 1fr;
+  }
+  .cr-app-section { flex: 0 0 auto; width: 100%; max-width: 100%; height: auto; }
+
+  .au-shell { width: calc(100% - 32px); margin: 8px auto 28px; }
+  .au-title { font-size: 26px; line-height: 34px; }
+  .au-subtitle { margin-top: 8px; }
+  .au-card { margin-top: 16px; padding: 11px 12px 11px; }
+  #addUsersPage .cr-section-title { font-size: 17px; }
+  .au-header-actions { justify-content: flex-start; }
+  #auRolesCard .au-role-row { align-items: center; flex-wrap: nowrap; }
+  #auRolesCard .au-role-row > .au-role-dd-field {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: min(280px, calc(100% - 84px));
+  }
+  #auRolesCard .au-role-row .au-btn-add { width: auto; }
+  .au-role-cards { grid-template-columns: 1fr; gap: 12px; }
+  #addUsersPage .au-role-cards-row {
+    grid-template-columns: 1fr;
+  }
+  #addUsersPage .au-role-cards,
+  #addUsersPage .au-role-cards-row {
+    gap: 12px;
+  }
+  .au-role-card-top { padding: 14px 14px 16px; }
+  .au-role-expand-inner { padding: 14px 14px 16px; }
+}
+
+/* ═══ EDL Dark theme — targeted component overrides ═══
+   Reach elements whose colors cannot be cleanly abstracted into a single
+   semantic token (fixed whites on avatars, scrollbars). */
+
+/* Required-asterisk tint */
+[data-theme="dark"] .cr-req { color: #FF8AA0; }
+
+[data-theme="dark"] .permission-label {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .permission-values {
+  color: var(--text-primary);
+}
+
+/* Avatar backdrop in dark navy — matches raised surface so the white rim
+   doesn't pop against the navy table surface. */
+[data-theme="dark"] .name-avatar { background: #1E2B44; }
+
+/* Segmented control dark-mode: tokens remap automatically via --brand-text
+   and --bg-surface, so only the divider between segments needs explicit
+   alignment with the dark border token. */
+[data-theme="dark"] .seg-btn + .seg-btn { border-left-color: var(--brand-text); }
+[data-theme="dark"] .seg-ctrl { border-color: var(--brand-text); }
+
+/* Search input icon contrast on dark */
+[data-theme="dark"] .search-ico { color: var(--text-muted); }
+
+/* Scrollbars */
+[data-theme="dark"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+[data-theme="dark"] ::-webkit-scrollbar-track { background: var(--bg-app); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #263654;
+  border-radius: 6px;
+  border: 2px solid var(--bg-app);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #34466A; }
+[data-theme="dark"] * { scrollbar-color: #263654 var(--bg-app); }
+
+/* Combo dropdown menus: recede vs global 12px dark scrollbars */
+[data-theme="dark"] .edl-combo-menu {
+  scrollbar-color: rgba(158, 176, 189, 0.42) transparent;
+}
+[data-theme="dark"] .edl-combo-menu::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="dark"] .edl-combo-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-theme="dark"] .edl-combo-menu::-webkit-scrollbar-thumb {
+  background: rgba(158, 176, 189, 0.42);
+  border-radius: 999px;
+  border: none;
+}
+[data-theme="dark"] .edl-combo-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-50);
+}
+
+/* Native select popup menus in dark user agent */
+[data-theme="dark"] select option { background: var(--bg-surface); color: var(--text-primary); }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TEMPORARY: Hide "Company Title / Role" column in the Users table.
+   This is a visibility-only override. All underlying structure is preserved:
+     • <col data-u-col="ct"> in #usersColgroup
+     • <th class="c-ct"> header with sort handler
+     • <td class="c-ct"> cell rendering in app.js
+     • user.title data on every record
+   Note: the "Company Title / Role" input has been removed from the
+   filter drawer. The underlying `filters.title` field still exists
+   but is no longer user-settable through the UI.
+   To restore the column later, simply DELETE this block. Nothing else needs
+   to change. The freed 17.28% width is reallocated to the Role column
+   (22.08% → 39.36%) so multi-role rows show more inline content without
+   truncation. Region column is intentionally NOT hidden and retains its
+   original 7.20% width.
+
+   IMPORTANT — do NOT use `display: none` on th.c-ct / td.c-ct. In a
+   table-layout: fixed layout, removing a cell from the layout flow causes
+   the <col>→cell width mapping for subsequent columns to shift, which
+   zero-widths the Region column (last column) on some browsers.
+   Instead we collapse the cells to zero width + hide their content via
+   visibility, which keeps all cells in the layout flow so every <col>
+   width is honored and Region renders at its declared 7.20%.
+   ───────────────────────────────────────────────────────────────────────── */
+#usersTable th.c-ct,
+#usersTable td.c-ct { padding: 0 !important; border: 0 !important; width: 0 !important; max-width: 0 !important; overflow: hidden !important; }
+#usersTable th.c-ct > *,
+#usersTable td.c-ct { visibility: hidden; }
+#usersColgroup col[data-u-col="ct"] { width: 0; }
+/* ─── Hide Email column (c-em) — same zero-width technique as c-ct.
+   The email now shows as secondary text inside the Name cell.
+   Keeping the th/td/col in the DOM prevents col-width mapping shifts. ── */
+#usersTable th.c-em,
+#usersTable td.c-em { padding: 0 !important; border: 0 !important; width: 0 !important; max-width: 0 !important; overflow: hidden !important; visibility: hidden; }
+#usersColgroup col[data-u-col="em"] { width: 0; }
+
+/* ─── Figma-matched column widths (all non-hidden visible columns) ─────
+   Role is widened +0.60 % so Status's left edge and centre shift right
+   ~8 px. Team/Org is narrowed −0.60 % to absorb that space; this keeps
+   Last login's left edge exactly in place. Region is unaffected.
+   em and ct remain zero-width (hidden). */
+#usersColgroup col[data-u-col="nm"] { width: 22.00%; }
+#usersColgroup col[data-u-col="rl"] { width: 23.50%; }
+#usersColgroup col[data-u-col="st"] { width:  7.10%; }
+#usersColgroup col[data-u-col="tm"] { width: 16.40%; }
+#usersColgroup col[data-u-col="ll"] { width: 18.00%; }
+#usersColgroup col[data-u-col="rg"] { width: 13.00%; }
+#usersTable { min-width: 0; }
+/* Team/Organization and Last login: content nudged slightly right via
+   padding (boundary already shifted with the Status column above). */
+#usersTable th.c-tm,
+#usersTable td.c-tm { padding-left: 16px; }
+#usersTable th.c-ll,
+#usersTable td.c-ll { padding-left: 18px; white-space: nowrap; }
+
+/* ─── Rightmost column alignment (both tabs) ───────────────────────
+   Users (Region) and R&P (Create Date) both lock their column's
+   VISIBLE content start to the CTA's "+" icon x-coordinate above.
+
+   A pure-CSS solution can only approximate this because the CTA's
+   left edge is `card_right − (56px rail + button_text_width)`, where
+   `button_text_width` depends on font rendering and therefore varies
+   between browsers/OSes. The column width, expressed as a % of the
+   card, only matches that fixed-px anchor at one specific card width.
+   So the precise alignment is set at runtime in JS
+   (`setupRightmostAlignment` in app.js), which measures the button's
+   bounding box and writes a pixel-exact width to the `<col>` element.
+   These CSS widths below are only the pre-JS fallback so the layout
+   doesn't flash a wrong width on first paint.
+
+   The JS then:
+     1. Sets the rightmost `<col>` to exactly `tableRight − ctaLeft` px.
+     2. Redistributes the other cols pro-rata so the table still fills
+        the card (no horizontal scrollbar appears).
+     3. Re-runs on window resize (the CTA's px-offset from the right
+        is viewport-invariant, but this keeps the proportional
+        redistribution honest).
+
+   For the content to start AT the column's left edge (= CTA left
+   edge) rather than 8px inside it, we zero `padding-left` on the
+   rightmost cells. The `<tr>` border still draws edge-to-edge because
+   the cell still spans to the table's right edge (no padding-right or
+   right-align override here). Row height, typography, sort, tooltip
+   truncation, search, filter, and pagination are untouched. */
+#usersTable th.c-rg,
+#usersTable td.c-rg { padding-left: 0; }
+#rpTable th.rp-date,
+#rpTable td.rp-date { padding-left: 0; }
+
+/* Micro-polish: nudge Created By content 4px to the left so the gap
+   before Create Date feels a touch more comfortable. The base rule
+   `.tbl th, .tbl td { padding: 0 8px; }` gives every cell an 8px
+   left inset; reducing just this column's left inset to 4px shifts
+   the "Created By" header label and every row's name value left by
+   exactly 4px. Column width is untouched, so:
+     • Create Date stays pinned to the "+ Create Role" CTA anchor
+       (set at runtime by setupRightmostAlignment in app.js).
+     • No other column moves or changes width.
+     • Created By's content area gains 4px of breathing room, which
+       actually helps longer names (e.g. "Timothy Lovejoy") fit
+       without additional truncation.
+   Padding-right stays at the default 8px so the right-side gap to
+   the date column grows by the same 4px. No typography, row height,
+   sort, resize, tooltip, search, filter, or pagination impact. */
+#rpTable th.rp-by,
+#rpTable td.rp-by { padding-left: 4px; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview theme — isolated, additive, non-destructive.
+
+   Purpose:
+   A third theme preview that re-skins the app with an ADS-flavored token
+   set while leaving EDL Light (:root) and EDL Dark ([data-theme="dark"])
+   completely untouched. Activated only when <html data-theme="ads-preview">.
+
+   Isolation contract:
+     • No EDL palette variable (--gray-*, --indigo-*, etc.) is overwritten.
+     • No EDL semantic token declared in :root is overwritten globally.
+     • All re-points live inside the scoped [data-theme="ads-preview"] block
+       below (or its targeted component overrides further down), so selector
+       specificity applies the new values only under this attribute.
+     • All component CSS above already consumes these semantic tokens via
+       var(--…), so swapping the token values automatically re-skins the UI
+       without touching any component rule.
+
+   Token values:
+   The ADS-facing palette below is scoped-local to this block (prefixed
+   --ads-*). It is never referenced from outside this block, so naming can
+   evolve without affecting anything else. Values approximate the Disney
+   Ads Design System library: cooler neutrals for surfaces, Disney blue
+   accent in place of EDL indigo, deeper ink for primary text, softer
+   shadows, larger radii if/when components opt in to --radius-* tokens.
+   ─────────────────────────────────────────────────────────────────────── */
+[data-theme="ads-preview"] {
+  color-scheme: light;
+
+  /* Local ADS palette — scoped to this block, used only by the remaps below.
+     Named `--ads-*` to make absolutely sure no EDL token is overwritten. */
+
+  /* Neutral gray ramp — anchored to the Ads DS Gray hue
+     (file 2048:18, "Gray 50–900"). The published values feel
+     warmer / less blue than the prior cooler ink ramp; aligning
+     here means every surface, border, and hairline that consumes
+     an --ads-ink-* alias automatically picks up the Ads DS
+     palette without rewriting consumers.
+       --ads-ink-05  → Gray 50  #eceeee (page canvas, hover-soft)
+       --ads-ink-10  → ~Gray 50 #eceeee (hover wash; same step,
+                                          reserved for future)
+       --ads-ink-15  → Gray 50  #eceeee (subtle hairlines)
+       --ads-ink-20  → Gray 100 #51585b (deeper hairlines)
+       --ads-ink-30  → Gray 100 #51585b
+       --ads-ink-40  → Gray 100 #51585b
+       --ads-ink-50  → Gray 100 #51585b
+       --ads-ink-60  → Gray 200 #3b4347 (text/muted)
+       --ads-ink-70  → Gray 200 #3b4347 (text/secondary)
+       --ads-ink-80  → Gray 300 #30383c
+       --ads-ink-95  → Gray 600 #1e2528 (primary text). */
+  --ads-ink-95:       #1E2528;    /* primary text */
+  --ads-ink-80:       #30383C;
+  --ads-ink-70:       #3B4347;
+  --ads-ink-60:       #3B4347;
+  --ads-ink-50:       #51585B;
+  --ads-ink-40:       #51585B;
+  --ads-ink-30:       #51585B;
+  --ads-ink-20:       #51585B;
+  --ads-ink-15:       #ECEEEE;
+  --ads-ink-10:       #ECEEEE;
+  --ads-ink-05:       #ECEEEE;
+
+  /* ADS Design System indigo ramp.
+     Source of truth: the canonical Ads Design System Figma file
+     (DJb3yM8aOQjIAbTQ9Cd8Mi/Ads-Design-System--5.13-, "Documentation /
+     Color" node 2048:18). Step 300 (#4045C2) is the published brand
+     anchor — used by color/surface/brand, color/text/brand,
+     color/border/brand, color/border/active, color/border/focus,
+     color/controls/primary/rest, and color/icons/brand/rest. Step 50
+     (#E2E3F2) is the brand-wash used for selected rows, active nav
+     fills, and other large-area brand affordances.
+     Naming uses ADS step numbers (50–700) under scoped `--ads-indigo-*`
+     so no EDL palette variable is ever overwritten. */
+  --ads-indigo-50:    #E2E3F2;    /* surface/brand-wash, selected row */
+  --ads-indigo-100:   #6567CE;    /* lighter accent */
+  --ads-indigo-200:   #5458C9;    /* legacy/header (kept for compat) */
+  --ads-indigo-300:   #4045C2;    /* ← BRAND anchor per ADS DS */
+  --ads-indigo-400:   #3B3FBA;    /* brand hover */
+  --ads-indigo-500:   #363AAB;    /* brand pressed */
+  --ads-indigo-600:   #32349B;
+  --ads-indigo-700:   #2D2F8C;
+
+  /* Backward-compatible aliases — earlier ADS Preview refinements
+     (buttons, cards, inputs, focus rings) still reference `--ads-violet-*`
+     names. Re-point them to the new indigo step values so the rules
+     keep working without being rewritten. Mapping uses the ADS step
+     scale (50–700) so visual hierarchy is preserved:
+       violet-05 / violet-10 → indigo-50 (brand-wash)
+       violet-15 / violet-20 → indigo-100 (lighter accent)
+       violet-30 / violet-40 → indigo-200 (mid)
+       violet-50              → indigo-300 (brand)
+       violet-60 / violet-70 → indigo-400 (hover)
+       violet-80 / violet-90 → indigo-500 (pressed)
+       violet-95              → indigo-700 (deepest). */
+  --ads-violet-95:    var(--ads-indigo-700);
+  --ads-violet-90:    var(--ads-indigo-500);
+  --ads-violet-80:    var(--ads-indigo-500);
+  --ads-violet-70:    var(--ads-indigo-400);
+  --ads-violet-60:    var(--ads-indigo-400);
+  --ads-violet-50:    var(--ads-indigo-300);
+  --ads-violet-40:    var(--ads-indigo-200);
+  --ads-violet-30:    var(--ads-indigo-200);
+  --ads-violet-20:    var(--ads-indigo-100);
+  --ads-violet-15:    var(--ads-indigo-100);
+  --ads-violet-10:    var(--ads-indigo-50);
+  --ads-violet-05:    var(--ads-indigo-50);
+
+  /* Semantic greens / reds — Ads DS hue ramps (file 2048:18).
+     Per the published library, Red 300 (#AF434E) is the destructive
+     anchor and Green 300 (#568E6D) is the success anchor. The 400-step
+     of each hue serves as the field-validation text colour
+     (red-400 #993B44, green-400 #4C7D57). */
+  --ads-red-50:       #F8E0E2;
+  --ads-red-300:      #AF434E;    /* destructive surface */
+  --ads-red-400:      #993B44;    /* validation/error text */
+  --ads-green-50:     #E0EDE5;
+  --ads-green-300:    #568E6D;    /* success surface */
+  --ads-green-400:    #4C7D57;    /* validation/success text */
+
+  /* Local radius ramp — scoped to ADS Preview.
+     Source of truth: the canonical Ads DS Figma library — Form, Input,
+     Dropdown, Card and Field components all publish `radius = 6px`
+     (e.g. card/size/radius, dropdown/size/default/radius,
+     form-layout/size/radius, input/size/default/radius). The pill
+     value 100px comes from the Search component (search/size/radius).
+     Cards use the same 6px as form controls per the Card spec — we
+     keep a 12px `lg` slot reserved for modal/sheet surfaces. */
+  --ads-radius-xs:    2px;    /* reserved */
+  --ads-radius-sm:    6px;    /* ADS radius — buttons, inputs, menus, cards */
+  --ads-radius-md:    6px;    /* alias; same as sm for ADS DS */
+  --ads-radius-lg:    12px;   /* modals, sheets */
+  --ads-radius-pill:  100px;  /* search, chips */
+  --ads-radius-full:  999px;  /* alias */
+
+  /* ADS component border — Figma `color/border/default` for control
+     surfaces is `rgba(15,18,20,0.2)` (search, dropdown, input). The
+     "bold" 0.5-alpha border is used for focus on neutral controls.
+     Both are scoped here so component rules can consume them. */
+  --ads-border-component: rgba(15,18,20,0.2);
+  --ads-border-bold:      rgba(15,18,20,0.5);
+  --ads-surface-recessed: rgba(15,18,20,0.05);
+
+  /* ADS ghost / placeholder text — Figma `search/state/rest/text` is
+     `#51585b` (Gray 100); we keep `--ads-text-ghost` as a slightly
+     softer fallback for legacy refs but most consumers now point at
+     `--text-placeholder` below which reads `#51585b`. */
+  --ads-text-ghost:   #51585B;
+
+  /* ─── Remap EDL semantic tokens to ADS values (scoped override only) ─── */
+  /* Surfaces */
+  --bg-app:            var(--ads-ink-05);
+  --bg-surface:        #FFFFFF;
+  --bg-surface-raised: #FFFFFF;
+  --bg-hover:          var(--ads-ink-10);
+  --bg-hover-soft:     var(--ads-ink-05);
+
+  /* Nav — anchored to the canonical Ads DS Navigation component
+     (file DJb3yM8aOQjIAbTQ9Cd8Mi, node 796:78 "Navigation / Top Bar").
+     The bar surface token is `navigation/topbar/background = #4045C2`,
+     i.e. Indigo 300 — the same brand anchor used for surface/brand,
+     text/brand, and focus rings. We previously rendered the bar at
+     #5458C9 (Indigo 200, sourced from an earlier Global Header file);
+     this update aligns the bar with the published Ads DS brand.
+     Active tab is conveyed by a 2px white underline + bold white text;
+     inactive items use Open Sans Regular at full white. */
+  --ads-surface-brand: #4045C2;
+  --nav-bg:            var(--ads-surface-brand);
+  --nav-link:          #FFFFFF;
+  --nav-link-active:   #FFFFFF;
+  --nav-divider:       rgba(255,255,255,0.22);
+
+  /* Text — anchored to Ads DS Gray ramp (Figma file 2048:18):
+       text/primary   → Gray 600 #1E2528
+       text/secondary → Gray 200 #3B4347
+       text/muted     → Gray 100 #51585B
+     The placeholder/ghost slot reuses Gray 100 #51585B per the
+     Search component spec (search/state/rest/text). */
+  --text-primary:      #1E2528;
+  --text-secondary:    #3B4347;
+  --text-muted:        #51585B;
+  --text-placeholder:  var(--ads-text-ghost);
+  --text-on-brand:     #FFFFFF;
+
+  /* Borders — anchored to the Ads DS table & control specs.
+     `table/border/divider = rgba(15,18,20,0.1)` (row dividers),
+     `table/border/header = rgba(15,18,20,0.2)` (header underline),
+     control borders use `rgba(15,18,20,0.2)`. We keep `--border-input`
+     as a dedicated alias so the form-control rules consume the
+     component border explicitly. */
+  --border-subtle:     rgba(15,18,20,0.1);
+  --border-default:    rgba(15,18,20,0.2);
+  --border-input:      var(--ads-border-component);
+
+  /* Brand / interactive — anchored to the Ads DS indigo ramp.
+     Brand sits at Indigo 300 (#4045C2). Hover steps down one
+     step (Indigo 400 #3B3FBA) and pressed steps to Indigo 500
+     (#363AAB), preserving the published library's interaction
+     gradient. Brand-wash is Indigo 50 (#E2E3F2) — the published
+     `surface/brand-wash` token used for selected table rows and
+     active nav fills. */
+  --ads-brand-hover:   var(--ads-indigo-400);  /* #3B3FBA */
+  --ads-brand-pressed: var(--ads-indigo-500);  /* #363AAB */
+  --brand:             var(--ads-indigo-300);
+  --brand-hover:       var(--ads-brand-hover);
+  --brand-text:        var(--ads-indigo-300);
+  --brand-text-hover:  var(--ads-brand-hover);
+  --brand-bg-soft:     var(--ads-indigo-50);
+  --brand-bg-selected: var(--ads-indigo-50);
+  --brand-focus-ring:  var(--ads-indigo-300);
+  --brand-disabled-bg: rgba(15,18,20,0.05);
+  --brand-disabled-fg: rgba(15,18,20,0.3);
+
+  /* Shadows — Ads DS Card and elevation tokens
+     (file 1995:21 "Card", elevation/30). The system publishes a
+     single shadow colour `color/shadow/default = rgba(15,18,20,0.3)`
+     at three elevation depths:
+       low    = 0 1px 4px
+       medium = 0 4px 12px      (used by dropdown-menu / popover)
+       high   = 0 8px 24px + 0 1px 2px
+     We map the EDL semantic-shadow tokens onto those depths so
+     menus and popovers inherit the right elevation, and reserve the
+     drawer slot at the EDL diffusion since the Ads Sheet component
+     ships its own elevation. */
+  --shadow-menu:   0 4px 12px rgba(15,18,20,0.3);                  /* elevation/30 */
+  --shadow-pop:    0 8px 24px rgba(15,18,20,0.3), 0 1px 2px rgba(15,18,20,0.3); /* elevation/high */
+  --shadow-tip:    0 1px 4px rgba(15,18,20,0.3);                   /* elevation/low */
+  --shadow-drawer: 4px 0 24px rgba(15,18,20,0.18);
+  --overlay-scrim: rgba(15,18,20,0.4);
+}
+
+/* ─── ADS Preview — targeted component overrides ───
+   Mirrors the pattern used for EDL Dark at the top of this file. Only
+   scoped under [data-theme="ads-preview"]; no effect on other themes. */
+
+/* Required-asterisk tint — handled centrally in the T6 Field Label
+   block below using the Ads DS Field Label required marker token
+   (Red 400, #993B44). This stub remains as a comment marker. */
+
+/* User-row avatar backdrop on the lighter ADS canvas. EDL leaves this as
+   plain white; under ADS we lift it with a soft violet tint so the portrait
+   reads against white rows. Uses the locally-scoped violet-10 alias so no
+   shared EDL token is touched. (This targets the table-cell avatar chip,
+   not the nav avatar, and not the protected profile dropdown.) */
+[data-theme="ads-preview"] .name-avatar { background: var(--ads-violet-10); }
+
+/* Search input icon contrast on ADS light surface */
+[data-theme="ads-preview"] .search-ico { color: var(--text-muted); }
+
+/* Scrollbars tuned to the ADS palette */
+[data-theme="ads-preview"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+[data-theme="ads-preview"] ::-webkit-scrollbar-track { background: var(--bg-app); }
+[data-theme="ads-preview"] ::-webkit-scrollbar-thumb {
+  background: #C3CFDB;
+  border-radius: 6px;
+  border: 2px solid var(--bg-app);
+}
+[data-theme="ads-preview"] ::-webkit-scrollbar-thumb:hover { background: #A5B4C2; }
+[data-theme="ads-preview"] * { scrollbar-color: #C3CFDB var(--bg-app); }
+
+/* Combo menus: subtle Gray 40 thumb (overrides global ADS scrollbar weight) */
+[data-theme="ads-preview"] .edl-combo-menu {
+  scrollbar-color: rgba(158, 176, 189, 0.78) transparent;
+}
+[data-theme="ads-preview"] .edl-combo-menu::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-theme="ads-preview"] .edl-combo-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-theme="ads-preview"] .edl-combo-menu::-webkit-scrollbar-thumb {
+  background: rgba(158, 176, 189, 0.78);
+  border-radius: 999px;
+  border: none;
+}
+[data-theme="ads-preview"] .edl-combo-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-50);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview — component shape / state refinements.
+   These overrides ONLY fire under [data-theme="ads-preview"] and never
+   reach EDL Light or EDL Dark. They target the specific properties that
+   cannot be expressed via semantic-token swaps alone: radius, elevation,
+   focus ring, and interaction states (hover / pressed / disabled).
+   Anatomy, layout, spacing structure, heights, and interactions are
+   intentionally untouched so the product still matches what's shipping.
+   ═══════════════════════════════════════════════════════════════════════════*/
+
+/* ─── 1. Global focus ring ───
+   The EDL rule `:focus-visible { outline: 2px solid var(--indigo-50); }`
+   hard-codes EDL's indigo and would otherwise leak into ADS Preview.
+   Scope a replacement that uses the ADS violet focus token. */
+[data-theme="ads-preview"] :focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+[data-theme="ads-preview"] select:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 0;
+}
+
+/* ─── 2. Card / panel surfaces ───
+   Anchored to the Ads DS Card component (node 1995:21). Card pins
+   `card/size/radius = 6px` and three elevation depths:
+     low    = 0 1px 4px  rgba(15,18,20,0.3)
+     medium = 0 4px 12px rgba(15,18,20,0.3)
+     high   = 0 8px 24px rgba(15,18,20,0.3) + 0 1px 2px rgba(15,18,20,0.3)
+   We adopt `low` as the default for `.card` (page-level toolbar panels
+   on the User Mgmt page) so the panel reads as a real elevated surface
+   rather than the EDL 1px ring. Cards on the Create Role page step up
+   to `medium` so the larger surface lifts off more confidently. */
+[data-theme="ads-preview"] .card {
+  border-radius: var(--ads-radius-md);
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+  border: none;
+}
+
+/* ─── 3. Buttons ───
+   Radius 8 → 6px, and add explicit hover / pressed / disabled treatments.
+   All properties kept to the theme scope — heights/padding unchanged so
+   toolbar rhythm and CTA alignment stay pixel-identical to EDL. */
+
+/* Primary (filled brand) — used by Apply, Add Users, Create Role, etc. */
+[data-theme="ads-preview"] .flt-btn-apply,
+[data-theme="ads-preview"] .btn-primary,
+[data-theme="ads-preview"] button.btn-primary {
+  border-radius: var(--ads-radius-sm);
+  background: var(--brand);
+  color: var(--text-on-brand);
+}
+[data-theme="ads-preview"] .flt-btn-apply:hover,
+[data-theme="ads-preview"] .btn-primary:hover {
+  background: var(--brand-hover);
+}
+[data-theme="ads-preview"] .flt-btn-apply:active,
+[data-theme="ads-preview"] .btn-primary:active {
+  background: var(--ads-brand-pressed);
+}
+[data-theme="ads-preview"] .flt-btn-apply:disabled,
+[data-theme="ads-preview"] .btn-primary:disabled {
+  background: var(--brand-disabled-bg);
+  color: var(--brand-disabled-fg);
+  cursor: not-allowed;
+}
+
+/* Secondary (outline brand) — used by Cancel, + Add Users, + Create Role. */
+[data-theme="ads-preview"] .btn-std,
+[data-theme="ads-preview"] .flt-btn-cancel {
+  border-radius: var(--ads-radius-sm);
+  border-color: var(--brand-text);
+}
+[data-theme="ads-preview"] .btn-std:hover,
+[data-theme="ads-preview"] .flt-btn-cancel:hover {
+  background: var(--brand-bg-soft);
+}
+[data-theme="ads-preview"] .btn-std:active,
+[data-theme="ads-preview"] .flt-btn-cancel:active {
+  background: var(--brand-bg-selected);
+}
+
+/* Tertiary / ghost — used by Reset, close, chevrons. */
+[data-theme="ads-preview"] .btn-ghost,
+[data-theme="ads-preview"] .flt-btn-reset {
+  border-radius: var(--ads-radius-sm);
+}
+[data-theme="ads-preview"] .btn-ghost:hover,
+[data-theme="ads-preview"] .flt-btn-reset:hover {
+  color: var(--brand-text-hover);
+}
+
+/* ─── 4. Inputs / search / dropdowns ───
+   Anchored to the Ads DS:
+     • Search component (node 37:16) = `search/size/radius = 100px`
+       (full pill). Border `rgba(15,18,20,0.2)` at rest, `0.5` at focus.
+     • Dropdown / Input components = `radius = 6px`.
+   The toolbar search field is the Search component; combo inputs,
+   filter inputs, the pagination dropdown and Create Role inputs all
+   use the Dropdown/Input 6px radius. When the search/combo is open
+   we keep the top corners pill/rounded and the dropdown menu picks
+   up the matching radius on its own. */
+[data-theme="ads-preview"] .search input {
+  border-radius: var(--ads-radius-pill);
+}
+[data-theme="ads-preview"] .flt-input,
+[data-theme="ads-preview"] .edl-combo-input,
+[data-theme="ads-preview"] .flt-select,
+[data-theme="ads-preview"] .pgn-dd .cr-dd-trigger {
+  border-radius: var(--ads-radius-sm);
+}
+[data-theme="ads-preview"] .search.open input {
+  border-radius: 18px 18px 0 0;
+}
+[data-theme="ads-preview"] .edl-combo.open .edl-combo-input {
+  border-radius: var(--ads-radius-sm) var(--ads-radius-sm) 0 0;
+}
+[data-theme="ads-preview"] .search-dropdown {
+  border-radius: 0 0 18px 18px;
+}
+[data-theme="ads-preview"] .edl-combo-menu {
+  border-radius: 0 0 var(--ads-radius-sm) var(--ads-radius-sm);
+}
+
+/* Input focus — Ads DS pattern.
+   The Dropdown / Input / Combo components use a brand-border focus
+   with a soft brand-wash halo. The Search component uses a different
+   focus pattern per `search/border/bold = rgba(15,18,20,0.5)` (darker
+   neutral, not brand) — Search lives in toolbar contexts where a
+   brand ring would compete with adjacent brand CTAs.
+   We layer both correctly: inputs/combos/select keep the brand ring;
+   search adopts the bold-border pattern. */
+[data-theme="ads-preview"] .flt-input:focus,
+[data-theme="ads-preview"] .edl-combo-input:focus,
+[data-theme="ads-preview"] .flt-select:focus,
+[data-theme="ads-preview"] .pgn-dd.open .cr-dd-trigger,
+[data-theme="ads-preview"] .pgn-dd .cr-dd-trigger:focus-visible {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-bg-soft);
+}
+[data-theme="ads-preview"] .search input:focus {
+  border-color: var(--ads-border-bold);
+  box-shadow: none;
+}
+
+/* ─── 5. Menus / popovers / user menu ───
+   PROTECTED ZONE: the avatar/profile dropdown menu and anything inside or
+   under it is frozen by product decision. Any ADS-Preview refinements to
+   .user-menu-pop / .user-menu-sub / .user-menu-row / .user-menu-sub-item /
+   .user-menu-hdr / .user-menu-name / .user-menu-sep are intentionally
+   absent here. The popup inherits EDL Light shape/shadow/density; only
+   the tokens it consumes (--bg-surface, --text-primary, --border-subtle,
+   --shadow-menu, --brand-text, --bg-hover) flip to ADS values via the
+   semantic-token remap above. That is the extent of ADS Preview's effect
+   on this surface and it must not grow. */
+
+/* ─── 6. Tables — Ads DS Data Table treatment ───
+   Anchored to the Ads DS Table Row component (node 1727:13223). Spec:
+     • header text  : `table/header/text = #51585b`, 13 / 18 Regular
+                      (NOT uppercase; the Ads DS header is a label, not
+                      a caps utility — this is the single biggest
+                      divergence from earlier Pass-3 styling)
+     • header pad   : 10y / 12x
+     • row body     : 14 / 20 Regular, primary ink
+     • cell pad     : 12y / 12x
+     • row divider  : `table/border/divider = rgba(15,18,20,0.1)`
+     • header rule  : `table/border/header  = rgba(15,18,20,0.2)`
+     • row hover    : `table/row/state/hover/background = rgba(15,18,20,0.05)`
+     • row selected : `table/row/state/selected/background = #E2E3F2`
+                      (Indigo 50, the published brand-wash)
+   We avoid changing column widths, resize handles, or sort glyphs so
+   the column-resize behaviour and CTA alignment stay pixel-identical
+   to EDL Light. */
+[data-theme="ads-preview"] .tbl th {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+[data-theme="ads-preview"] .tbl th[data-sort]:hover {
+  background: var(--ads-surface-recessed);
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] .tbl tbody tr {
+  border-bottom-color: var(--border-subtle);
+  transition: background-color 0.12s ease;
+}
+[data-theme="ads-preview"] .tbl tbody tr:hover {
+  background: var(--ads-surface-recessed);
+}
+[data-theme="ads-preview"] .tbl tbody tr.is-selected,
+[data-theme="ads-preview"] .tbl tbody tr[aria-selected="true"] {
+  background: var(--brand-bg-selected);
+}
+
+/* ─── 7. Pagination footer ───
+   ADS data tables separate the pagination footer from the body with a
+   hairline divider. EDL uses a transparent bar on the card surface. */
+[data-theme="ads-preview"] .pgn {
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ─── 8. Combo-box selected row — stronger ADS tint ───
+   EDL uses --brand-bg-soft (05-level) for the selected row which reads
+   washed-out under ADS's cooler surface. ADS Dropdown Menu marks the
+   selected row with --brand-bg-selected (10-level indigo) for a clearly
+   visible state. Weight change already present in EDL base rule. */
+[data-theme="ads-preview"] .edl-combo-item.selected {
+  background: var(--brand-bg-selected);
+  color: var(--brand-text);
+}
+[data-theme="ads-preview"] .edl-combo-menu--iam-roles .edl-combo-item.selected {
+  background: var(--brand-bg-selected);
+  color: var(--brand-text);
+}
+
+/* ─── 9. Search dropdown / combo-box menu — ADS elevation ───
+   EDL renders these as a 1px violet ring + flat pop-shadow. ADS Dropdown
+   surface reads as a layered drop shadow with a hairline, so the menu
+   floats off the input rather than feeling welded to it. Replace the
+   boxed ring with a stacked shadow + radius already handled (section 4
+   converts the bottom corners to radius/sm). */
+[data-theme="ads-preview"] .search-dropdown,
+[data-theme="ads-preview"] .edl-combo-menu {
+  border-color: var(--border-subtle);
+  border-top-color: var(--border-subtle);
+  box-shadow: var(--shadow-menu);
+}
+
+/* ─── 10. Tab underline ───
+   `.tab-btn.on::after` already consumes var(--brand), so it flips to ADS
+   violet automatically. No scoped override required. */
+
+/* ─── 10b. Tooltip — Ads DS Tooltip ───
+   Anchored to the canonical Ads DS Tooltip (node 73:234):
+     • background: `tooltip/background = #21292d` (Gray 500)
+     • radius:     `tooltip/size/container/radius = 6px`
+     • padding:    16x / 6y (small), 16x / 16y (large)
+     • label:      Open Sans SemiBold 12 / 18 white
+     • tip arrow:  8×4 (small) / 12×6 (large)
+   The existing `.edl-tooltip` ships at Gray 80 + 8px radius which is
+   close but not exact. Scoped overrides bring it to spec without
+   touching EDL Light / Dark. Padding stays anatomically unchanged so
+   the JS positioning code (caret offsets) keeps working. */
+[data-theme="ads-preview"] .edl-tooltip {
+  background: #21292D;
+  border-radius: var(--ads-radius-md);
+  padding: 6px 16px;
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+}
+[data-theme="ads-preview"] .edl-tooltip::after {
+  border-top-color: #21292D;
+}
+[data-theme="ads-preview"] .edl-tooltip.below::after {
+  border-bottom-color: #21292D;
+}
+[data-theme="ads-preview"] .edl-tooltip-line {
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+[data-theme="ads-preview"] .edl-status-tooltip {
+  background: #21292D;
+  border-radius: var(--ads-radius-md);
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  padding: 6px 16px;
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+}
+[data-theme="ads-preview"] .edl-status-tooltip::after {
+  background: #21292D;
+}
+
+/* ─── 11. Filter drawer — ADS Modal/Drawer surface ───
+   EDL uses heavier 700 weight on the drawer title and 8px radius on the
+   icon-button close affordance. ADS Modal / Side Panel uses 600/-0.1
+   tracking on the title (matches the T24 Alt pattern) and a 6px radius
+   on icon buttons (matches our `radius/sm`). Field gap stays at 16 so
+   layout rhythm inside the drawer is unchanged. */
+[data-theme="ads-preview"] .flt-title {
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+[data-theme="ads-preview"] .flt-close {
+  border-radius: var(--ads-radius-sm);
+}
+
+/* ─── 12. Cards on the Create Role page ───
+   Anchored to the Ads DS Card component (node 1995:21). Use the
+   `card/size/radius = 6px` from the spec (one consistent card radius
+   across the system) and step up to the `medium` elevation so the
+   page-level cards lift off the surface more confidently than the
+   toolbar panel `.card`. The Figma Card publishes 6px radius for
+   every elevation variant, so EDL's earlier 12px figure is replaced
+   here. Card-on-card density on Create Role is unchanged. */
+/* Edit User containers (Basic Information, Roles & Permissions) — Ads DS elevation low.
+   Spec: Figma node 1995:18 — 0px 1px 4px 0px rgba(15,18,20,0.3) on a 6px radius white card.
+   Matches the .card override above so all primary content cards share one elevation. */
+[data-theme="ads-preview"] .cr-card {
+  border-radius: var(--ads-radius-md);
+  box-shadow: 0 1px 4px rgba(15,18,20,0.3);
+  border-color: transparent;
+}
+
+/* ─── 13. Create Role inputs / textarea ───
+   These are the EDL text-field pair on the Create Role page. Align their
+   shape and focus behavior to the ADS Text Field used everywhere else in
+   ADS Preview: 6px radius, and the same 2-layer ring + border focus we
+   apply to the filter-drawer inputs. Height and width are untouched so
+   the form grid stays identical. */
+[data-theme="ads-preview"] .cr-input,
+[data-theme="ads-preview"] .cr-textarea {
+  border-radius: var(--ads-radius-sm);
+}
+[data-theme="ads-preview"] .cr-input:focus,
+[data-theme="ads-preview"] .cr-textarea:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-bg-soft);
+}
+
+/* ─── 14. Create Role / Modal primary buttons ───
+   `.cr-btn-save` and `.cr-btn-danger-solid` are the two EDL button
+   variants that sit outside the `.btn-primary` / `.flt-btn-apply` class
+   group and therefore don't receive the button overrides in section 3.
+   Re-apply the ADS Button anatomy (6px radius + explicit :active) to
+   both so every ADS-Preview CTA reads the same way. Background/height
+   stay token-driven. */
+[data-theme="ads-preview"] .cr-btn-save,
+[data-theme="ads-preview"] .au-btn-save,
+[data-theme="ads-preview"] .cr-btn-danger-solid {
+  border-radius: var(--ads-radius-sm);
+}
+[data-theme="ads-preview"] .cr-btn-save:active:not(:disabled),
+[data-theme="ads-preview"] .au-btn-save:active:not(:disabled),
+[data-theme="ads-preview"] .cr-btn-danger-solid:active {
+  background: var(--ads-brand-pressed);
+}
+
+/* ─── 15. Confirm / destructive modal surface ───
+   `.cr-confirm-dialog` ships with a heavy 0-24-px drop shadow that reads
+   as a legacy-EDL modal. ADS Modal uses a softer stacked elevation and
+   the brand backdrop scrim. Scope a replacement that matches the ADS
+   Card pattern above so filter-drawer, card, and modal share one
+   elevation language. Radius is already 12px so no change there. */
+[data-theme="ads-preview"] .cr-confirm-backdrop {
+  background: var(--overlay-scrim);
+}
+[data-theme="ads-preview"] .cr-confirm-dialog {
+  border-radius: var(--ads-radius-lg);
+  box-shadow: var(--shadow-pop);
+}
+
+/* ─── 16. Role overflow chip ("+N role") ───
+   EDL renders `.role-extra` as a plain underlined link. ADS's equivalent
+   overflow affordance in Data Table is a small, inline, neutral chip
+   that uses the softer brand tint, not a text link. We keep the anchor
+   markup and line-height so the row height stays pixel-identical, but
+   under ADS Preview repaint it as a compact inline pill — radius/999,
+   soft violet fill, brand text. Hover drops the underline in favor of a
+   stronger fill, which is how ADS chips signal interactivity. */
+/* `+N role` overflow indicator — Ads DS Chip / Small / Indigo treatment.
+   The role-extra anchor is a non-dismissible indicator chip, not a
+   filter. We adopt the Ads Chip small-pill anatomy (100px radius,
+   SemiBold 12/18 label, 4y/8x padding) and a soft brand-wash fill
+   so the affordance reads as "show more brand items" rather than as
+   plain link text. */
+[data-theme="ads-preview"] .role-extra {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--ads-radius-pill);
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  vertical-align: baseline;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+[data-theme="ads-preview"] .role-extra:hover {
+  background: var(--brand-bg-selected);
+  text-decoration: none;
+}
+
+/* ─── 17. Section / page title typography ───
+   The product's three H1-class labels — `.cr-title` on the Create Role
+   page, `.flt-title` on the filter drawer, and the Users/Roles page
+   headings rendered as `.tab-btn.on` — all inherit EDL's 28/32 display
+   weight. The ADS "heading/xl" pattern for page titles uses a slightly
+   tighter tracking (-0.2px) at 28/36 with weight 600. We've already
+   set `.flt-title` to 600/-0.1px in section 12; cascade the same rule
+   to `.cr-title` so both page-level titles share a single typographic
+   voice under ADS Preview. Size / family / line-height are preserved
+   so wrap points and page grid are identical to EDL. */
+[data-theme="ads-preview"] .cr-title {
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview — Global Navigation Bar rebuild.
+
+   Phase 1 of the "use EDL as scaffold, replace with ADS components" strategy.
+   The EDL .nav markup is treated as layout scaffolding; the rules below
+   restyle its parts to match the anatomy of the ADS Global Navigation Bar
+   component (Figma library id 043d32be…, node 1037:59810).
+
+   All selectors are prefixed with [data-theme="ads-preview"], so nothing
+   below affects EDL Light or EDL Dark. Reference: structure audit above
+   in the commit message / response — reused: HTML, flex skeleton, dropdown
+   JS, sticky/z-index, 48px bar height. Replaced: link anatomy (inner pill),
+   active state (submodule chip), hover / pressed / focus, icon hitboxes,
+   avatar ring, divider tone.
+   ═══════════════════════════════════════════════════════════════════════════*/
+
+/* ──────────────────────────────────────────────────────────────────────
+   ADS-Preview-only elements injected into the nav markup.
+   These are hidden by default so EDL Light and EDL Dark are unaffected;
+   they only become visible under [data-theme="ads-preview"]. */
+.ads-nav-search { display: none; }
+
+/* ─── Bar container ───
+   Figma Global Header (node 6426:54055) pins the bar at 48px with
+   `spacing-07 = 32px` horizontal padding on BOTH sides. EDL's base rule
+   already sets height:48px, so we only need to re-override the padding
+   (EDL's is `padding-right: 28px`, left indent lives inside `.nav-mod`).
+   Result: ADS Preview ends up with the same 48px height as EDL Light —
+   no vertical layout shift, no `.cr-page` offset needed, no scroll
+   jump when switching themes. */
+[data-theme="ads-preview"] .nav {
+  height: 48px;
+  padding: 0 32px;
+}
+
+/* ─── Tool module (logo + optional wordmark + divider) ───
+   Figma anatomy (node I6426:54055;6335:25784 "Tool"):
+     • `spacing-03 = 8px` gap between logo glyph and wordmark
+     • Tool module sits against the bar's left padding (no extra indent)
+     • Divider is a 1px × 32px vertical rule, centered between Tool and
+       the Primary Nav Tabs row
+     • `spacing-06 = 24px` gap from divider to the first nav tab
+   EDL buries the logo behind 48px of internal padding and hugs the
+   divider; ADS reads more like a thin 1px rule floating in whitespace.
+   We zero out `.nav-mod`'s padding (the bar itself now supplies the
+   32px), tighten `.nav-logo-group`'s gap to 8px, and keep the divider
+   visible with the exact 1×32 proportions. */
+[data-theme="ads-preview"] .nav-mod {
+  padding: 0;
+  gap: 24px;           /* spacing-06 between Tool and Primary Nav Tabs */
+  align-items: center;
+  height: 100%;
+}
+[data-theme="ads-preview"] .nav-logo-group {
+  gap: 8px;            /* spacing-03 between logo glyph and divider */
+  padding-right: 0;
+  height: 100%;
+  align-items: center;
+}
+/* Divider removed per Ads DS top bar (Figma 796:78): brand sits flush
+   against the spacer with no vertical rule. Hidden only in ADS Preview;
+   EDL Light/Dark keep the legacy rule. */
+[data-theme="ads-preview"] .nav-divider {
+  display: none;
+}
+
+/* ─── Bar layout: brand · spacer · centered nav · spacer · utilities ───
+   Per Ads DS Top Bar (Figma 796:78): three groups separated by two
+   flex-grow spacers so the nav cluster sits in the geometric center of
+   the bar and the right-side utilities pin to the right edge.
+   We achieve this by overriding the base `.nav-c { margin-right: auto }`
+   (which only claims slack on the right for EDL) with `margin: 0 auto`
+   so slack distributes evenly on BOTH sides of the cluster. */
+[data-theme="ads-preview"] .nav-c {
+  margin-left: auto;
+  margin-right: auto;
+  gap: 4px;              /* spacing-02 between tabs per Figma 795:45 */
+}
+
+/* ─── Primary Nav Item — ADS inner-pill anatomy ───
+   Figma "Global header items" (node I6426:54055;6335:25815/16/17/18/19)
+   is a nested two-layer block:
+     • Outer: full bar height, `px-spacing-03 = 8px`, `py-spacing-02 = 4px`,
+       `radius-md = 3px`, TRANSPARENT background — an invisible hit target.
+     • Inner ("label + icon"): `px-spacing-04 = 12px`, `py-spacing-02 = 4px`,
+       `radius-999 = 999px` (full pill), `gap-spacing-02 = 4px`, carrying
+       the visible fill when active/hovered.
+   Our EDL markup is a single `<a class="nav-a">` node. We collapse the
+   Figma two-layer anatomy onto that one element by letting the element
+   BE the inner pill and using horizontal margin to produce the outer
+   8px gutter. The pill vertically centers at 28px tall inside the 48px
+   bar (line-height 20 + py 4×2 = 28).
+   Typography per `body/md/medium`:
+     • Open Sans SemiBold (weight 500), size 14, line-height 20, tracking 0.
+   Rest state is FULL white — Figma does not dim inactive items on the
+   brand bar; active is conveyed by the white pill instead. */
+[data-theme="ads-preview"] .nav-a {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;       /* spacing-04 horizontal */
+  margin: 0 8px;         /* spacing-03 each side → 16px gap between pills */
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--nav-link);
+  background: transparent;
+  border-radius: 999px;
+  gap: 4px;              /* spacing-02 between label and chevron */
+  align-self: center;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+/* Hover (non-active): light white-alpha wash. The brand bar is already
+   a mid-tone indigo, so a darker overlay reads muddy; a subtle white
+   lift matches the ADS state matrix for on-brand surfaces. */
+[data-theme="ads-preview"] .nav-a:hover {
+  background: rgba(255,255,255,0.14);
+  color: var(--nav-link-active);
+}
+[data-theme="ads-preview"] .nav-a:active {
+  background: rgba(255,255,255,0.22);
+}
+
+/* Active primary nav item — Ads DS Top Bar Tab.
+   Anchored to the canonical Ads DS Navigation / Top Bar (node 796:78):
+   the active tab is NOT a white pill — it is full-white SemiBold text
+   over the brand bar with a 2px white underline rendered as a tight
+   bottom rule. Inactive items use Open Sans Regular at full white.
+   This is the single biggest visual change vs the prior pass which
+   sourced from the older Global Header file. */
+[data-theme="ads-preview"] .nav-a.on {
+  background: transparent;
+  color: var(--nav-link-active);
+  font-weight: 600;
+  letter-spacing: 0;
+  position: relative;
+}
+[data-theme="ads-preview"] .nav-a.on::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -8px;            /* aligns underline to the bar's lower edge */
+  height: 2px;
+  background: #FFFFFF;
+  border-radius: 1px;
+}
+[data-theme="ads-preview"] .nav-a.on:hover {
+  background: rgba(255,255,255,0.10);
+  color: var(--nav-link-active);
+}
+
+/* Chevron — 16×16 per Figma icon frame (node I6426:54055;6335:25817;6350:40158).
+   Use pure currentColor so the chevron matches the label's text color
+   (inherits brand `#5458C9` on the active pill, white on rest). */
+[data-theme="ads-preview"] .nav-chev {
+  width: 16px;
+  height: 16px;
+  opacity: 1;
+}
+
+/* Focus ring on links: solid white at 2px so it reads on the brand bar;
+   the default ADS violet ring would vanish into the surface. */
+[data-theme="ads-preview"] .nav-a:focus-visible,
+[data-theme="ads-preview"] .nav-r-btn:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
+
+/* ─── Bar flow: keep EDL's `space-between`, tune child gaps ───
+   Verification source: Figma frame `6335:25782` (Global Header assembled
+   example, 1440 viewport) — ABSOLUTE coordinates extracted via
+   `get_metadata`:
+     • Nav cluster  : x=32,  w=721 (ends at 753)
+     • Account      : x=801, w=607 (ends at 1408)
+     • Right padding: 1440 − 1408 = 32
+     • Gap Nav↔Acct : 801 − 753 = 48
+   EDL's default `.nav { justify-content: space-between }` already yields
+   an exact 48 px gap at 1440 (1440 − 32 − 32 − 721 − 607 = 48) and lets
+   that gap grow naturally on wider viewports. No layout override needed;
+   the earlier `flex-start + gap-48 + flex-grow` rewrite was a
+   self-invented interpretation that diverged from the verified frame. */
+[data-theme="ads-preview"] .nav-r {
+  gap: 16px;             /* utilities/gap per Ads DS Top Bar (Figma 795:56) */
+  padding-right: 0;
+  height: 100%;
+  align-items: center;
+}
+
+/* Ads DS-only utility icons (bell, three-dot) — render as 20×20 in white per
+   Ads DS Top Bar (Figma 795:57 / 795:59). EDL Light/Dark keep their legacy
+   `<img src="nav/bell.svg">` bell and have no three-dot icon, so these
+   selectors are gated on `[data-theme="ads-preview"]` only.
+   `currentColor` on the path lets one rule paint both icons. */
+[data-theme="ads-preview"] .nav-r-btn .nav-ico {
+  width: 20px;
+  height: 20px;
+  display: block;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+[data-theme="ads-preview"] .nav-r-btn-dots {
+  display: inline-flex;
+}
+/* Hide the legacy bell img in ADS Preview so the inline Ads SVG is the
+   only glyph rendered inside the notification button. */
+[data-theme="ads-preview"] .nav-bell-img {
+  display: none;
+}
+
+/* Nav Icon container — Figma `aspect-[40/40] h-full p-[spacing-02,4px]`
+   (node I6426:54055;6335:25823). `h-full` inside the 48 px bar makes
+   the container 48 px tall; aspect 1:1 makes it 48 wide. 24×24 icon
+   inside + 12 px visual breathing room all around.
+   My previous 40×40 figure shrank the hit box below both EDL's
+   intrinsic 48-px height AND the ADS spec. Restore 48×48 and keep the
+   3-px container radius (`radius/md`) for ADS identity. */
+[data-theme="ads-preview"] .nav-r-btn {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+  border-radius: 3px;    /* radius-md per Nav Icon container */
+  transition: background-color 0.15s ease;
+}
+
+/* ADS search pill (injected DOM, visible only in ADS Preview).
+   Verification source: Figma frame `6335:25782` → instance `6335:28633`
+   ("Search bar") inside the Account cluster — absolute coords at 1440 vp:
+     • x=0, y=8, width=345, height=32 (y=8 centers the 32 px pill in the
+       48 px bar)
+   Token values from the SearchBar component spec (node 5859:37219):
+     • color/surface/overlay  = #FFFFFF               (fill)
+     • color/border/default   = rgba(15,18,20,0.15)   (border — 15% alpha,
+                                                       the header-context
+                                                       value, NOT the 26%
+                                                       of the standalone
+                                                       search component)
+     • radius/full            = 999px                 (full pill)
+     • spacing-03 = 8px (icon gap)
+     • spacing-04 = 12px (horizontal padding)
+     • placeholder text colour `color/text/ghost = #BEC0C1`
+   Non-functional (readonly, tabindex="-1") — this is a preview widget
+   of the ADS search component. EDL themes never render it.
+
+   Earlier implementation used `flex: 1 1 0; max-width: 400 px` as a
+   "responsive ADS cap"; that was invented. The frame pins the search
+   bar to a fixed 345 px width at the 1440 design viewport.
+
+   For viewports narrower than 1440 (the IDE preview pane is ~1185 CSS
+   px, typical laptop displays are 1366–1536) ADS has no published
+   responsive rule, so we shrink stepwise: at 1440+ match the spec
+   exactly (345 px); between 1280 and 1439 use 280 px so the Admin tab
+   never overlaps; below 1280 use 200 px — still a usable search
+   affordance. The nav layout stays `space-between` so the slack
+   redistributes naturally. */
+[data-theme="ads-preview"] .ads-nav-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  width: 200px;
+  height: 32px;
+  padding: 0 12px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15,18,20,0.15);
+  border-radius: 999px;
+  margin: 0;
+  color: #526374;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+@media (min-width: 1280px) {
+  [data-theme="ads-preview"] .ads-nav-search { width: 280px; }
+}
+@media (min-width: 1440px) {
+  [data-theme="ads-preview"] .ads-nav-search { width: 345px; }
+}
+[data-theme="ads-preview"] .ads-nav-search:hover {
+  border-color: rgba(15,18,20,0.28);
+}
+[data-theme="ads-preview"] .ads-nav-search:focus-within {
+  border-color: var(--ads-border-bold);
+  box-shadow: none;
+}
+[data-theme="ads-preview"] .ads-nav-search-ico {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);  /* Ads DS search/state/rest/text = #51585b */
+  flex-shrink: 0;
+}
+[data-theme="ads-preview"] .ads-nav-search-inp {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;         /* Ads DS search body = 14/20 Regular */
+  line-height: 20px;
+  color: var(--text-primary);
+  padding: 0;
+  cursor: text;
+}
+[data-theme="ads-preview"] .ads-nav-search-inp::placeholder {
+  color: var(--text-muted);  /* Ads DS search/state/rest/text = #51585B */
+  font-weight: 400;
+}
+
+/* Icon-only nav items — ADS uses a subtle white-alpha lift on the brand
+   bar rather than the black overlay we tried earlier (that reads EDL). */
+[data-theme="ads-preview"] .nav-r-btn:hover {
+  background: rgba(255,255,255,0.14);
+}
+[data-theme="ads-preview"] .nav-r-btn:active {
+  background: rgba(255,255,255,0.22);
+}
+
+/* Avatar — per the May 18 nav-correction the profile/avatar icon must NOT
+   be resized, recolored, or replaced under any theme. It now uses the
+   base `.nav-avatar-img { width:24px; height:24px; border-radius:50% }`
+   in every theme; the only ADS-scoped tweak is to drop any inherited
+   ring/shadow so the bare portrait reads cleanly on the brand bar. */
+[data-theme="ads-preview"] .nav-avatar-img {
+  box-shadow: none;
+}
+
+/* (Removed) The previous `.nav-r-btn img { filter: ... }` rule was added to
+   normalise the EDL bell PNG to white on the brand bar. In ADS Preview the
+   inline Ads bell SVG is now the only bell glyph (the legacy <img> is
+   hidden via `.nav-bell-img { display:none }`), and the avatar must not be
+   recolored, so no per-img filter is required. */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview — Pass-2 QA corrections (scoped).
+   Identified by the self-audit loop after the Phase-1 nav rebuild:
+     • Focus rings on several EDL components still hard-code `var(--indigo-*)`
+       as an outline color, which bypasses the semantic-token remap and
+       leaves EDL indigo bleeding into ADS Preview. Re-scope each one to
+       `var(--brand-focus-ring)` (ADS `color/surface/brand` = #5458C9) so
+       focus behaves as a single unified ADS token everywhere.
+     • Several display-scale labels (page-level tab title, Create-Role
+       section titles, permission-group subtitles) still ship at EDL's
+       800 weight — an ADS heading at this size sits at 600/semibold with
+       a small tracking adjustment. The saturated brand fill on the
+       Create-Role section title also reads as "EDL indigo with ADS
+       background" rather than as an ADS section header. Neutralise the
+       color (keep the chevron in brand for the interactive affordance)
+       and drop the weight to 600.
+     • The Create-Role application dropdown (`.cr-dd-*`) and native
+       checkboxes (`.cr-check`, `.cr-perm-check`) are still at EDL's
+       8 px / 2 px corner scale. ADS form primitives sit at radius/sm
+       (3 px) consistently. Pin both to `--ads-radius-sm` and layer the
+       same focus "ring + border" pattern used by every other ADS-Preview
+       form control.
+
+   PROTECTED ZONE: none of these selectors match the avatar/profile
+   dropdown menu (`.user-menu-*`). Those rules remain untouched. */
+
+/* ─── Focus rings ───
+   EDL hard-codes `var(--indigo-50)` / `var(--indigo-70)` on these
+   selectors. The global `[data-theme="ads-preview"] :focus-visible`
+   override has lower specificity than the per-component rules below,
+   so we have to restate each one. */
+[data-theme="ads-preview"] .rp-role-link:focus-visible,
+[data-theme="ads-preview"] .rp-func-text:focus-visible,
+[data-theme="ads-preview"] button.rp-func-link:focus-visible,
+[data-theme="ads-preview"] .cr-section-header[data-cr-toggle]:focus-visible,
+[data-theme="ads-preview"] .cr-section-header[data-au-toggle]:focus-visible,
+[data-theme="ads-preview"] .cr-app-section-head:focus-visible,
+[data-theme="ads-preview"] .cr-app-remove:focus-visible,
+[data-theme="ads-preview"] .cr-customize-link:focus-visible,
+[data-theme="ads-preview"] .cr-module-head:focus-visible {
+  outline-color: var(--brand-focus-ring);
+}
+[data-theme="ads-preview"] .cr-check:focus-visible,
+[data-theme="ads-preview"] .cr-perm-check:focus-visible {
+  outline-color: var(--brand-focus-ring);
+}
+
+/* ─── Display typography neutralisation ───
+   Drop EDL's 800-weight display on page-level tabs and Create-Role
+   section/permission-group headers. ADS headings at 16–18 px sit at
+   weight 600 (`heading/sm-semibold`). Also stop painting the Create
+   Role section title in saturated brand: ADS uses neutral ink there,
+   with the chevron (kept in `--brand-text`, already the case) carrying
+   the interactive affordance. Size/line-height are preserved so grid
+   wrap points are identical to EDL. */
+/* Tab weight handled by the Ads DS Primary Tab rules in section
+   P4-1 below (Regular rest, SemiBold active). */
+[data-theme="ads-preview"] .cr-section-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+[data-theme="ads-preview"] .cr-perm-group-title {
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+
+/* ─── Native checkbox shape + focus (Create Role) ───
+   EDL ships `.cr-check` at radius 2 px with an EDL-indigo solid
+   outline on focus. ADS checkbox sits at radius/sm (3 px) and uses
+   the unified brand focus ring. Width/height/fill-on-check behavior
+   are preserved. */
+[data-theme="ads-preview"] .cr-check,
+[data-theme="ads-preview"] .cr-perm-check {
+  border-radius: var(--ads-radius-sm);
+}
+
+/* ─── Create-Role application dropdown ───
+   `.cr-dd-trigger` is an EDL text-field-shaped button at 8 px radius;
+   bring it in line with every other ADS-Preview form control (3 px
+   radius, 2-layer focus "ring + border"). The matching `.cr-dd-menu`
+   drops to the same radius and inherits the ADS menu elevation used
+   for `.search-dropdown` / `.edl-combo-menu`. */
+[data-theme="ads-preview"] .cr-dd-trigger {
+  border-radius: var(--ads-radius-sm);
+}
+[data-theme="ads-preview"] .cr-dd.open .cr-dd-trigger {
+  border-radius: var(--ads-radius-sm) var(--ads-radius-sm) 0 0;
+  border-color: var(--brand);
+  border-bottom-color: var(--border-default);
+  box-shadow: 0 0 0 3px var(--brand-bg-soft);
+  outline: none;
+}
+[data-theme="ads-preview"] .cr-dd-trigger:focus-visible {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-bg-soft);
+  outline: none;
+}
+[data-theme="ads-preview"] .cr-dd-menu.is-layered {
+  border-radius: 0 0 var(--ads-radius-sm) var(--ads-radius-sm);
+}
+[data-theme="ads-preview"] .cr-dd-menu {
+  border-radius: var(--ads-radius-sm);
+  box-shadow: var(--shadow-menu);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview — Pass-3 TYPOGRAPHY system replacement.
+
+   Why this block exists:
+   The prior passes flipped colours, shapes, elevation, focus, and radius
+   to ADS values but left the single biggest EDL tell in place — the
+   Disney brand TYPEFACES. EDL's `--ff` resolves to `InspireTWDC`
+   (a brand face licensed to Disney+ surfaces) and `.hdr h1` / `.cr-title`
+   use `MultiplaneTWDC Display`, another Disney brand face. No amount of
+   re-skinning can make a product look like ADS while those two fonts
+   render every label on the page. ADS publishes its typography voice as
+   Open Sans (body/* tokens in the Figma library reference "Open Sans
+   SemiBold", "Open Sans Regular", etc., see node I6426:54055; 6335:25815
+   ":root-level body/md/medium").
+
+   Strategy:
+   • Flip `--ff` to the Open Sans stack at THIS scope only. EDL Light and
+     EDL Dark continue to resolve `--ff` from :root (InspireTWDC) — they
+     are byte-identical. Any component that reads `var(--ff)` (body,
+     profile dropdown, modals, form controls, etc.) automatically picks
+     up Open Sans when the user switches to ADS Preview.
+   • Override the two display-face selectors (`.hdr h1`, `.cr-title`) to
+     also use `var(--ff)` so MultiplaneTWDC is never drawn under ADS
+     Preview. Weight + tracking tuned to ADS heading/xl spec.
+   • Add ink-agnostic antialiasing so Open Sans renders crisp on the
+     light ADS canvas the way it does in the Figma mocks.
+   • Refine role-level typography (page title/subtitle, table headers,
+     field labels, chips, pagination, tabs) to match ADS voice: hierarchy
+     via weight + tracking + colour, not via heavy 800 EDL weights.
+
+   Protection:
+   • No selector below targets `.user-menu-*`. The avatar/profile dropdown
+     still receives the `--ff` token flip only (token-level change, the
+     same pattern the dropdown already accepts for bg/text/border). Its
+     anatomy, spacing, weights, sizes, and colours are otherwise untouched.
+   • EDL Light (:root) and EDL Dark ([data-theme="dark"]) are unaffected:
+     no token declared there is overwritten, and every selector below is
+     prefixed with `[data-theme="ads-preview"]`.
+   ═══════════════════════════════════════════════════════════════════════════*/
+
+/* ─── T1. Body typeface override ───
+   Single point of entry for the entire app's voice under ADS Preview.
+   Keeps the same fallbacks as EDL's --ff so any environment that can't
+   load Open Sans (offline dev, CSP blocks) still gets a clean sans. */
+[data-theme="ads-preview"] {
+  --ff: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Antialiasing — Open Sans is designed for subpixel AA but the Disney
+   faces ship baked for aliased rendering. Switching fonts inside a
+   single theme requires restating the smoothing on the ADS Preview
+   body so labels, nav, and table text all hit the same renderer path. */
+[data-theme="ads-preview"] body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* ─── T2. Display / page-level titles — Ads DS heading/xl ───
+   Anchored to the canonical Ads DS Typography Scale (node 1308:40):
+     • heading/xl = 30 / 36 / SemiBold (the published page-title slot)
+   `.hdr h1` (User Management) and `.cr-title` (Create Role) are the
+   product's page-level titles. Repoint to --ff (now Open Sans) and
+   land at 30/36 SemiBold per the Ads DS spec. The earlier pass kept
+   the EDL 28px size; that was the only published-typeface tell still
+   bleeding through. Tracking stays slightly negative (-0.2) since the
+   30px size on Open Sans benefits from a hair of tightening on a
+   light canvas. Page grid still aligns because the line-height step
+   (32 → 36) lands inside the section's flex padding budget. */
+[data-theme="ads-preview"] .hdr h1,
+[data-theme="ads-preview"] .cr-title {
+  font-family: var(--ff);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: -0.2px;
+}
+
+/* Page subtitle — EDL ships `.hdr p` at weight 500 (medium) in secondary
+   ink. Reading against the bolder 600 ADS title, 500 feels competitive
+   rather than supporting; ADS supporting copy sits at 400 (regular) and
+   uses the muted-ink slot so the hierarchy reads title → subtitle →
+   body from dark to light. */
+[data-theme="ads-preview"] .hdr p {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* ─── T3. Tabs — count removed ───
+   The "(610 total)" inline count has been moved to the pagination footer
+   as "Total users: 610" beside "Go to page". The `.tab-count` span no
+   longer exists in the Users tab markup. Rules below are kept for
+   compatibility with any other page that might still carry `.tab-count`. */
+
+/* ─── T4. Nav typography ───
+   The brand-bar nav link (`.nav-a`) already reads `body/md/medium`
+   (14/500/20) from the Pass-1 rebuild and active is 14/700. With --ff
+   flipping to Open Sans, the nav voice now matches the Figma Global
+   Header by construction — no additional scoped rule needed. Documented
+   here so the audit trail is complete. */
+
+/* ─── T5. Table headers — Ads DS Data Table header ───
+   Anchored to the Ads DS Table Header Cell (file 105:9): the header
+   label is body/normal/sm at `text/secondary` ink — 13 / 18 Regular,
+   colour `#51585b`. The canonical system does NOT use uppercase caps
+   for table headers; the earlier Pass-3 caps treatment was an EDL
+   convention. Drop the caps + tracking, restore Regular weight, and
+   keep sort-hover lifting the label into primary ink for a clear
+   interactive cue. Row / header height is driven by padding so this
+   does not move any column. */
+[data-theme="ads-preview"] .tbl th {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
+}
+[data-theme="ads-preview"] .tbl th[data-sort]:hover,
+[data-theme="ads-preview"] .tbl th[data-rp-sort]:hover {
+  color: var(--text-primary);
+}
+
+/* ─── T6. Form field labels — Ads DS Field Label ───
+   Anchored to the canonical Ads DS Field Label component
+   (node 896:70). Spec:
+     • `field-label/state/default/text = #1E2528` (Gray 600, primary)
+     • Open Sans SemiBold (600)
+     • size matrix: sm 12/16, md 14/18, lg 18/20
+     • required marker `*` uses `#993B44` (Red 400)
+   Both `.cr-label` (Create Role) and `.flt-label` (filter drawer)
+   are page-level form labels rendering at 14px in EDL, so they map
+   to the md slot. The earlier Pass-3 styling at 500/secondary was
+   one weight light and one shade muted versus the published Ads DS
+   spec. Margin-bottom / block display are preserved so the form
+   grid is identical. */
+[data-theme="ads-preview"] .cr-label,
+[data-theme="ads-preview"] .flt-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] .cr-req {
+  color: var(--ads-red-400);
+}
+
+/* Role-overflow chip (already styled as a pill in section 17) — match
+   the same font-weight so both chip families share one label voice. */
+[data-theme="ads-preview"] .role-extra {
+  font-weight: 600;
+}
+
+/* "+1 role" mini-pill rendered in table cells */
+[data-theme="ads-preview"] .role-extra,
+[data-theme="ads-preview"] .role-more {
+  letter-spacing: 0.1px;
+}
+
+/* ─── T8. Pagination footer labels ───
+   `.pgn-lbl` currently paints at `12/primary`. The surrounding page
+   area is light canvas and the utility role is supporting metadata;
+   ADS treats footer utility labels as muted 12/500. Drop to muted ink
+   and keep 12 so the Show/Page-of controls don't fight the table body. */
+[data-theme="ads-preview"] .pgn-lbl {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* ─── T9. Permission / access group titles inside Create Role ───
+   `.cr-perm-group-title` was bumped to 600 in Pass 2. Cascade the same
+   tracking (-0.1 px) so its voice matches `.cr-section-title` and the
+   filter-drawer title. */
+[data-theme="ads-preview"] .cr-perm-group-title {
+  letter-spacing: -0.1px;
+}
+
+/* ─── T10. Button labels — tighten for Open Sans rendering ───
+   Open Sans at 14 px on the ADS indigo brand fill benefits from a
+   touch of positive tracking (0.1 px) to avoid letter-collision in
+   short CTA labels ("Apply", "Save"). Weight stays 500. Applied to
+   every primary / secondary / tertiary button variant so button voice
+   is unified under ADS Preview. */
+[data-theme="ads-preview"] .btn-primary,
+[data-theme="ads-preview"] .btn-std,
+[data-theme="ads-preview"] .btn-ghost,
+[data-theme="ads-preview"] .flt-btn-apply,
+[data-theme="ads-preview"] .flt-btn-cancel,
+[data-theme="ads-preview"] .flt-btn-reset,
+[data-theme="ads-preview"] .cr-btn-save,
+[data-theme="ads-preview"] .cr-btn-danger-solid,
+[data-theme="ads-preview"] #crCancel.btn-std,
+[data-theme="ads-preview"] #crConfirmCancel.btn-std,
+[data-theme="ads-preview"] #auInactiveConfirmCancel.btn-std,
+[data-theme="ads-preview"] #auRemoveUserCancel.btn-std {
+  font-family: var(--ff);
+  letter-spacing: 0.1px;
+}
+
+/* ─── T11. Input / search / textarea / select text voice ───
+   Redundant re-statements of `font-family: var(--ff)` for every form
+   control that had its own explicit declaration in the EDL base (which
+   pinned it to InspireTWDC). Without this, those selectors win on
+   specificity and keep rendering the Disney brand body font even
+   though the rest of the app has switched. */
+[data-theme="ads-preview"] .search input,
+[data-theme="ads-preview"] .flt-input,
+[data-theme="ads-preview"] .flt-select,
+[data-theme="ads-preview"] .edl-combo-input,
+[data-theme="ads-preview"] .cr-input,
+[data-theme="ads-preview"] .cr-textarea,
+[data-theme="ads-preview"] .pgn-dd .cr-dd-trigger,
+[data-theme="ads-preview"] input,
+[data-theme="ads-preview"] select,
+[data-theme="ads-preview"] textarea,
+[data-theme="ads-preview"] button {
+  font-family: var(--ff);
+}
+
+/* Placeholder weight — ADS placeholder is regular (not medium) so the
+   ghost ink reads soft, not competitive with the typed value. */
+[data-theme="ads-preview"] .search input::placeholder,
+[data-theme="ads-preview"] .flt-input::placeholder,
+[data-theme="ads-preview"] .edl-combo-input::placeholder,
+[data-theme="ads-preview"] .cr-input::placeholder,
+[data-theme="ads-preview"] .cr-textarea::placeholder {
+  font-weight: 400;
+  color: var(--text-placeholder);
+}
+
+/* ─── T12. Table cell primary text + role link ───
+   Row text is 14/primary; role links paint `--brand-text`. Under Open
+   Sans the role-link weight wants a nudge to 500 so the link reads as
+   an affordance rather than just coloured body text. Underline already
+   paints on hover. */
+[data-theme="ads-preview"] .rp-role-link {
+  font-weight: 500;
+}
+
+/* ─── T13. Empty-state text inside tables ───
+   Keep the copy size but bump tracking so Open Sans doesn't read too
+   tight when no rows are rendered. */
+[data-theme="ads-preview"] .tbl td.empty-state {
+  letter-spacing: 0.1px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview — Pass-4 PAGE-LEVEL visual alignment (User Management page).
+   Scope: User tab + Roles & Permissions tab only. Page-level selectors
+   (`.tabs-row`, `.tab-btn`, `.tbar > .btn-ghost`, `.search-ico`, `.tbl td`,
+   `.name-cell`, `.name-avatar`, `button.rp-func-count`, `.pg-n`) are only
+   rendered on this page, so every rule below naturally confines itself
+   to the two target tabs without affecting the Create Role page or the
+   protected avatar dropdown.
+
+   Strategy: the prior passes (P1 component shape, P2 states, P3 typography)
+   already tokenised colour, shape, elevation, focus, and type. What still
+   read as EDL were the four remaining anatomical tells that a design-
+   system-level recolour cannot fix:
+     1. Tab strip (too big, too bold, count competes with label).
+     2. The primary page CTA rendered as a text link rather than a Button.
+     3. Search magnifier pinned to the right of the input.
+     4. Table rows at 64px with 48×48 avatars — marketing density, not
+        ADS Data Table density.
+     5. R&P function counts rendered as `(8)` inline text instead of a
+        count pill — the hallmark of an EDL table.
+     6. Pagination current-page marked by a 2px underline tick instead of
+        a filled Button / Pagination chip.
+
+   EDL Light + EDL Dark + the avatar dropdown are not referenced below.
+   ═══════════════════════════════════════════════════════════════════════════*/
+
+/* ─── P4-1. Tabs strip — Ads DS Primary Tab ───
+   Anchored to the canonical Ads DS Primary Tab (node 57:56). Spec:
+     • Default size: 18 / 24 Regular rest, 18 / 24 SemiBold active
+     • State colors: rest `#51585B`, hover `#3B4347`, active `#4045C2`
+     • Padding: 8y / 16x with a 3px-tall active underline at the bottom
+   The earlier Pass-4 styling compressed tabs to 16/600 with negative
+   tracking. The published Ads DS expects the larger 18px body so the
+   tab strip still reads as page-level navigation rather than a section
+   header. Strip height is driven by typography + padding so the row
+   doesn't shift when toggling themes. Rest-state colour is handled by
+   the `--text-muted` token. Active text colour is brand by token. */
+[data-theme="ads-preview"] .tab-btn {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+  padding-bottom: 8px;
+  color: var(--text-muted);
+}
+[data-theme="ads-preview"] .tab-btn:hover {
+  color: var(--text-secondary);
+}
+[data-theme="ads-preview"] .tab-btn.on {
+  font-weight: 600;
+  color: var(--brand-text);
+}
+[data-theme="ads-preview"] .tab-btn.on::after {
+  height: 3px;
+  bottom: -1px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* ─── P4-2. Tab count — removed from tab label ───
+   The "(610 total)" count has been removed from the Users tab label and
+   moved to the pagination footer. The `.tab-count` selector below is
+   retained for forward-compatibility but no longer matches the IAM tab. */
+[data-theme="ads-preview"] .tab-btn .tab-count {
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+[data-theme="ads-preview"] .tab-btn.on .tab-count {
+  color: var(--text-secondary);
+}
+
+/* ─── P4-3. Toolbar primary CTA — filled Button, not a text link ───
+   "+ Add Users" / "+ Create Role" ship as `.btn-ghost` (transparent,
+   brand-text, no chrome). Under EDL that matches the original visual
+   contract. Under ADS the primary action on a Data Table toolbar is a
+   filled Button (see ADS Button / Primary), so we promote the same
+   anchor-style markup to a filled button while keeping the DOM, height
+   and gap identical so the toolbar rhythm does not shift. Scoped via
+   `.tbar > .btn-ghost` so any other `.btn-ghost` use (none on this
+   page today — but the Reset/Close affordances on filter panels use a
+   different class already) is not swept up. */
+[data-theme="ads-preview"] .tbar > .btn-ghost {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--ads-radius-sm);
+  background: var(--brand);
+  color: var(--text-on-brand);
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  transition: background-color 0.15s ease;
+}
+[data-theme="ads-preview"] .tbar > .btn-ghost:hover {
+  background: var(--brand-hover);
+  color: var(--text-on-brand);
+}
+[data-theme="ads-preview"] .tbar > .btn-ghost:active {
+  background: var(--ads-brand-pressed);
+  color: var(--text-on-brand);
+}
+[data-theme="ads-preview"] .tbar > .btn-ghost:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ─── P4-4. Search field — magnifier on the LEFT ───
+   EDL anchors the magnifier on the right (`.search-ico { right: 10px }`)
+   which was an EDL utility-input convention. ADS Search Field puts the
+   icon on the leading edge, before the placeholder text. Flip the icon
+   to `left: 12px` and swap the input padding so the placeholder starts
+   to the right of the icon. The clear-X affordance stays on the right
+   (already attached with `right: 8px`) so the trailing side reads as
+   the action rail. */
+[data-theme="ads-preview"] .search-ico {
+  left: 12px;
+  right: auto;
+}
+[data-theme="ads-preview"] .search input {
+  padding: 0 32px 0 36px;
+}
+
+/* ─── P4-5. Data Table row density (User tab) ───
+   Anchored to Figma 770:17443 (ADS Data Table reference).
+   Frame geometry for the Name cell:
+     • Cell width 296, avatar 40×40 anchored at cell-relative x=0
+     • Text block "Frame 2134099142" starts at cell-relative x=56
+       (Order Name frame x=48 + inner text-block x=8)
+     • Visual gap avatar→text   = 56 − 40 = 16px
+     • Avatar offset from row L = 32 (matches v2 base .name-cell pad-left)
+   Text block internals:
+     • Name (21 line-height, y=0)
+     • Email (16 line-height, y=25) → 4px visual gap between them
+     • Block total height 41px → fits 48px row with 3.5px top/bottom
+   Row + avatar dimensions match Figma exactly: 48px row, 40px avatar
+   (Ellipse 493). Earlier ADS-specific compaction (gap:12, pad:20) was
+   tighter than this Figma node specifies, so we restore Figma values. */
+[data-theme="ads-preview"] .tbl td {
+  height: 48px;
+}
+[data-theme="ads-preview"] .name-cell {
+  height: 48px;
+  gap: 16px;
+  padding: 0 0 0 32px;
+}
+[data-theme="ads-preview"] .name-cell-text {
+  gap: 4px;
+}
+[data-theme="ads-preview"] .name-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+/* ─── P4-6. R&P function semantic access links (ADS preview) ─── */
+[data-theme="ads-preview"] .rp-func-app {
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] button.rp-func-link .rp-func-access {
+  color: var(--brand-text);
+}
+[data-theme="ads-preview"] button.rp-func-link:hover .rp-func-access {
+  color: var(--brand-text-hover);
+  text-decoration: underline;
+}
+
+/* ─── P4-7. Pagination current page — ADS Button-style pill ───
+   EDL marks the active page with a 2px brand-coloured tick under the
+   number. ADS Pagination marks current page with a filled chip that
+   reads as a toggled Button. Preserve the 24×24 tap-target footprint
+   so navigation keyboard-arrow behaviour and hover-hit regions stay
+   unchanged; just repaint. Inactive numbers keep their hover tint. */
+[data-theme="ads-preview"] .pg-n.on {
+  background: var(--brand);
+  color: var(--text-on-brand);
+  border-radius: var(--ads-radius-sm);
+  font-weight: 600;
+}
+[data-theme="ads-preview"] .pg-n.on::after {
+  display: none;
+}
+[data-theme="ads-preview"] .pg-n:hover:not(.on) {
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+}
+
+/* ─── P4-8. Table header height ───
+   v2 base is already 32px (Figma Data Table / Example Row Header height).
+   The earlier 44px override was written against 1.0's 48px base to
+   reduce it. With v2 base at 32px the override is redundant; setting
+   it explicitly to 32px makes the intent clear and ensures the header
+   never drifts if the base ever changes. */
+[data-theme="ads-preview"] .tbl th {
+  height: 32px;
+}
+
+/* ─── P4-9. Role Assignment column proportions (Figma 770:19301) ───
+   The Figma RA frame (1343 wide) lays out columns at:
+     • Checkbox slot + leading gutter : 60px  (x=0  → x=60)
+     • Role          : 216px           (x=60 → x=276)
+     • Functions     : 752px           (x=276→ x=1028)
+     • Created By    : 176px           (x=1028→x=1204)
+     • Create Date   : 144px           (x=1204→x=1348)
+   Re-expressed as percentages of the four content columns (1283px
+   after the 60px lead), normalized to 100% so the colgroup adds up:
+     Role 16.84  | Functions 58.61  | Created By 13.72  | Create Date 10.83
+   We round to two decimals to absorb pixel rounding without drift.
+   Scoped to [data-theme="ads-preview"] #rolesPanel so:
+     • EDL Light/Dark in v2 keep their original proportions.
+     • Theme 1.0 is unaffected (rule does not appear in public/).
+     • Users tab is unaffected (no .rp-col selectors on Users table).
+   alignRP() still pins the Create Date right edge to the Create Role
+   CTA at runtime — these widths just set the proportional starting
+   point so the table reads closer to Figma before/after JS snap.
+   Spec: same data, better outfit. The Cursor RA content (Atlas Admin,
+   Core Planning Admin, Operations Admin, Planner, Planning Specialist,
+   Planning Manager, Campaign Planner, Ad Operations Specialist,
+   Read-Only Viewer, ICM Admin, with real Functions/Created By/Create
+   Date) is preserved — only column widths shift. */
+[data-theme="ads-preview"] #rpColgroup col[data-rp-col="role"] { width: 16.84%; }
+[data-theme="ads-preview"] #rpColgroup col[data-rp-col="func"] { width: 58.61%; }
+[data-theme="ads-preview"] #rpColgroup col[data-rp-col="by"]   { width: 13.72%; }
+[data-theme="ads-preview"] #rpColgroup col[data-rp-col="date"] { width: 10.83%; }
+
+/* ─── P4-10. Role Assignment pagination row height (Figma 770:19612) ───
+   Figma RA pagination band is 48px tall (frame 770:19612 h=48). The
+   current v2 base renders at 40px — 8px short, which makes the band
+   feel cramped relative to the 48px toolbar above it and the 48px
+   data rows. Bumping the band to 48px restores the consistent vertical
+   rhythm Figma calls for. Scoped to #rolesPanel so the Users tab
+   pagination stays at its current value; if/when the Users tab calls
+   for the same lift, that will be a separate intentional change. */
+[data-theme="ads-preview"] #rolesPanel .pgn {
+  min-height: 48px;
+}
+
+/* ─── P4-11. Role Assignment checkbox glyph size (Figma 770:19301) ───
+   ADS Data Table / Cell Checkbox uses an 18×18 control inside its 28×48
+   cell slot. v2 base ships a 16×16 control (matching the tighter EDL
+   density). Bumping the visible control to 18×18 in ADS Preview without
+   widening the 44px column keeps the layout intact while matching the
+   Figma checkbox glyph size. Applied only on RA + Permission Management
+   tables (both use .rp-check via the shared rp-sel column). */
+[data-theme="ads-preview"] .rp-check {
+  width: 18px;
+  height: 18px;
+}
+
+/* ─── P4-12. Permission Management column proportions (Figma 770:20039) ───
+   The PM Figma frame (1343 wide) lays out the 6 columns from x=0:
+     • Checkbox slot + leading gutter : 60px  (x=0 → x=60)
+     • Function Name : 320px           (x=60  → x=380)
+     • Description   : 320px           (x=380 → x=700)
+     • Type          : 180px           (x=700 → x=880, holds 1 chip)
+     • Used in       : 180px           (x=880 → x=1060)
+     • Last Updated  : 144px           (x=1060→ x=1204)
+   Re-expressed as percentages of the 5 content columns (1144px after
+   the 60px lead), normalized to 100%:
+     Name 27.97 | Desc 27.97 | Type 15.73 | Used 15.73 | Date 12.59
+   PM-only selectors (no theme scoping) so the proportions apply across
+   EDL Light, EDL Dark, and ADS Preview — column widths are layout, not
+   styling. Other panels (Users, Role assignment) are untouched because
+   they use different colgroup IDs (#usersColgroup, #rpColgroup). */
+#pmColgroup col[data-pm-col="name"] { width: 27.97%; }
+#pmColgroup col[data-pm-col="desc"] { width: 27.97%; }
+#pmColgroup col[data-pm-col="type"] { width: 15.73%; }
+#pmColgroup col[data-pm-col="used"] { width: 15.73%; }
+#pmColgroup col[data-pm-col="date"] { width: 12.59%; }
+
+/* ─── P4-13. Permission Management pagination height (Figma 770:20352) ───
+   PM Figma pagination band frame is 48px tall (Frame 770:20352 h=48),
+   matching the RA pagination band. v2 base ships .pgn at 40px which
+   reads cramped against the 48px row rhythm above. Bump to 48px,
+   scoped to #permsPanel so other panels aren't pulled into PM's
+   rhythm changes (RA's bump is in P4-10, also #rolesPanel-scoped). */
+[data-theme="ads-preview"] #permsPanel .pgn {
+  min-height: 48px;
+}
+
+/* ─── P4-14. Permission Management Type column chips (Figma 770:20039) ───
+   The Figma Type column renders each value inside a chip (Cell Chip
+   component): pill shape, ~24px tall, ~58-67px wide with horizontal
+   padding, brand-tinted border + soft background. Our real data has
+   6 type variants (View / Edit / Approval / Assignment / Admin /
+   Workflow) — vs Figma's two placeholder chips (Default / Custom)
+   which don't extend to our taxonomy. We keep the chip *shape and
+   typography* identical to Figma and only vary the *color tint* by
+   type so a permissions admin can scan the column at a glance. This
+   is applying the Figma chip recipe to real data, not inventing UI.
+
+   Base chip dimensions (from Figma chip frame y=12 inside 48px cell):
+     • height 24px, vertically centered → 12px breathing top/bottom
+     • horizontal padding ~10px (Figma text at x=10 inside chip)
+     • border-radius full pill (12px)
+     • font 12px / 18px / 500 weight (Figma chip text spec)
+     • 1px solid border colored to the chip text/family
+
+   Color mapping (using existing ADS Preview tokens to avoid net-new
+   palette entries; Edit uses an inlined amber tint since no ADS
+   amber token exists):
+     • View       → indigo soft (= Figma "Default" appearance)
+     • Edit       → amber soft (action-level mutation; warm warning hue)
+     • Approval   → green soft (governance/positive)
+     • Assignment → indigo deep (permission-granting, related to View
+                    but more privileged; tinted via solid background)
+     • Admin      → red soft (high-privilege ops, scarce)
+     • Workflow   → gray soft (lightweight collaboration, neutral)
+
+   Scoped to .pm-tbl so chips only appear on the Permission Management
+   table; RA and Users tables are not affected. Theme-agnostic on chip
+   structure; tokens resolve to theme-appropriate colors per existing
+   var() chains. */
+.pm-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+}
+.pm-chip--view {
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+  border-color: var(--brand-bg-soft);
+}
+.pm-chip--edit {
+  background: #FFF1E0;
+  color: #B05900;
+  border-color: #FFE0B8;
+}
+.pm-chip--approval {
+  background: var(--ads-green-50, #E0EDE5);
+  color: var(--ads-green-400, #4C7D57);
+  border-color: var(--ads-green-50, #E0EDE5);
+}
+.pm-chip--assignment {
+  background: var(--ads-indigo-100, #6567CE);
+  color: var(--white);
+  border-color: var(--ads-indigo-100, #6567CE);
+}
+.pm-chip--admin {
+  background: var(--ads-red-50, #F8E0E2);
+  color: var(--ads-red-400, #993B44);
+  border-color: var(--ads-red-50, #F8E0E2);
+}
+.pm-chip--workflow {
+  background: var(--gray-10, #F3F4F4);
+  color: var(--text-secondary);
+  border-color: var(--gray-10, #F3F4F4);
+}
+/* When ADS Preview is inactive (EDL Light / Dark), use slightly more
+   muted borders so chips don't stand out too aggressively against the
+   EDL flatter surface treatment. ADS Preview keeps the tighter look. */
+[data-theme="ads-preview"] .pm-chip {
+  font-weight: 500;
+}
+
+/* Base .tbl td already sets vertical-align: middle and the chip is
+   inline-flex with align-items: center, so the chip centers naturally
+   inside the 48px row without extra cell padding. The pm-type cell
+   inherits cell padding from .tbl th, .tbl td { padding: 0 8px }. */
+
