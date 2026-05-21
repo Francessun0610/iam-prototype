@@ -982,6 +982,43 @@ th.c-st .th-inner { justify-content: center; }
 }
 .edl-tooltip-line + .edl-tooltip-line { margin-top: 2px; }
 
+/* Tooltip caption ("Used in roles" on the PM table's Used-in cell).
+   Sits above the role-name lines, in the same gray-80 surface and
+   white text family, but at a slightly smaller weight + a divider
+   underneath so the eye separates the label from the items. Scoped
+   to .edl-tooltip-title so it only renders when the role-list
+   variant calls for it; the existing single/multi-line variants
+   keep their current visual untouched. */
+.edl-tooltip-title {
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.2px;
+  text-transform: none;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* Permission Management "Used in" hover affordance. The visible
+   text stays inline ("2 roles" / "1 role") so the column height
+   is unchanged; the span only adds a hover trigger + keyboard
+   focus ring. Inherits color from the parent .pm-used cell (which
+   P4-15 sets to gray-95). */
+.pm-tbl .pm-used-roles {
+  display: inline;
+  color: inherit;
+  cursor: default;
+  outline: none;
+}
+.pm-tbl .pm-used-roles:focus-visible {
+  outline: 2px solid var(--brand-text);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Functions cell follows the default .tbl td truncation (overflow:hidden +
    text-overflow:ellipsis). The permission popover is position:fixed and lives
    on document.body, so it doesn't need the cell to have visible overflow. */
@@ -1289,7 +1326,67 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #crConfirmCancel.btn-std,
 #crAppRemoveCancel.btn-std,
 #auInactiveConfirmCancel.btn-std,
-#auRemoveUserCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 12px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
+#auRemoveUserCancel.btn-std,
+#pcDeleteGroupCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 12px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
+
+/* Permission Capability — Delete permission group dialog. Wider than
+   the stock .cr-confirm-dialog so the impacted-roles list reads
+   comfortably without truncation, and the body line keeps its
+   24px bottom-margin (the original .cr-confirm-body rule applies
+   unchanged — only the new .pc-impacted-roles block adds layout). */
+.pc-delete-dialog { max-width: 520px; }
+.pc-delete-dialog .cr-confirm-body { margin-bottom: 16px; }
+.pc-impacted-roles {
+  margin: 0 0 24px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--bg-hover-soft);
+}
+.pc-impacted-roles-title {
+  font-family: var(--ff);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.pc-impacted-roles-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.pc-impacted-role-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.pc-impacted-role-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.pc-impacted-role-item:first-child { padding-top: 0; }
+.pc-impacted-role-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--text-primary);
+}
+.pc-impacted-role-meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-secondary);
+}
+.pc-impacted-roles-empty {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-secondary);
+}
 
 /* ─── EDL Toast — matches EDL Toast Figma spec (node 15094:75972) ───
    Container: fixed bottom-right stack. Each toast is 287px wide with
@@ -4524,4 +4621,193 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .pm-tbl td.pm-date {
   color: var(--gray-95);
 }
+
+/* ─── P4-16. Permission Capability detail page (Figma 788:4348) ───
+   Opens when a user clicks a permission function name on the
+   Permission Management tab. The page chrome (.cr-page shell, .cr-back,
+   .cr-header, .cr-card, .cr-section-header) is fully reused from
+   #createRolePage / #addUsersPage — only the body-level pieces unique
+   to this page are introduced here under the .pc- prefix:
+
+     • .pc-basic-grid — 3-column field grid (296/296/296 per Figma)
+       with Description spanning two columns on the second row and a
+       compact metadata cell (Status + Last Updated) in the third.
+     • .pc-status — green check + "Active" pill-style metadata block.
+     • .pc-meta-value — compact secondary-color label/value rendering.
+     • .pc-options-toolbar — Default Access + Add permission + Add CTA
+       row at the top of the Permission Options card.
+     • .pc-grp-card — one collapsible group card per option group
+       (Order, Media Plans, etc. in Figma; Roles, Users, Analytics etc.
+       in our real data). Re-uses brand chevron + a trash-affordance
+       Delete link on the right.
+     • .pc-chk-row — flex row of checkboxes, 80px-wide slots so 8
+       actions fit on a single row before wrapping.
+
+   Scoped to .pc-page so nothing here leaks to other detail pages. */
+
+.pc-page .pc-basic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 16px;
+  padding-top: 4px;
+}
+.pc-page .pc-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pc-page .pc-field .cr-input { width: 100%; }
+.pc-page .pc-field-name    { grid-column: 1 / 2; grid-row: 1 / 2; }
+.pc-page .pc-field-app     { grid-column: 2 / 3; grid-row: 1 / 2; }
+.pc-page .pc-field-created { grid-column: 3 / 4; grid-row: 1 / 2; }
+.pc-page .pc-field-desc    { grid-column: 1 / 3; grid-row: 2 / 3; }
+.pc-page .pc-field-meta    { grid-column: 3 / 4; grid-row: 2 / 3; display: flex; flex-direction: row; gap: 32px; align-items: flex-start; }
+.pc-page .pc-meta-cell     { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+/* Status pill — green Check Circle + "Active". Matches the Figma
+   compact metadata treatment (Status column on PM detail). */
+.pc-page .pc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;            /* match cr-input height so meta row baselines align */
+  padding: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+.pc-page .pc-status-label { font-weight: 400; }
+.pc-page .pc-meta-value {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gray-95);   /* matches the PM table Last Updated tone (P4-15) */
+}
+
+/* Permission Options card body */
+.pc-page .pc-section-help {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+}
+/* Toolbar layout: two 283px field columns + a natural-width Add button
+   slot. Using `max-content` for the button column instead of `auto`
+   prevents the button from stretching across leftover row width — the
+   button reads as a compact toolbar action sitting next to the
+   dropdown, not a primary page CTA. */
+.pc-page .pc-options-toolbar {
+  display: grid;
+  grid-template-columns: 283px 283px max-content;
+  column-gap: 16px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+/* The shared .cr-btn-add (used by Create Role) is natural-width
+   already; this rule just nails it to the bottom of the toolbar grid
+   row so it baseline-aligns with the dropdown triggers (32px tall). */
+.pc-page .pc-options-toolbar .cr-btn-add {
+  align-self: end;
+  height: 32px;
+  margin-bottom: 0;
+}
+
+/* Disabled-input styling for Created By + Default Access level. Native
+   :disabled gets a clearly muted treatment (gray surface, secondary
+   text) so the read-only metadata cannot be confused with an editable
+   input. The native cursor and pointer-events: none ensure it doesn't
+   participate as a click target either. Scoped to .pc-page so other
+   inputs that may use :disabled in confirm dialogs etc. are unaffected. */
+.pc-page .cr-input:disabled,
+.pc-page input.pc-input-disabled {
+  background: var(--gray-10, #F3F4F4);
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+  cursor: not-allowed;
+  -webkit-text-fill-color: var(--text-secondary); /* Safari override */
+  opacity: 1;                                     /* override UA dim */
+}
+
+/* The Choose Application + Add Permission Group dropdowns sit inside
+   .pc-field — give them 100% width so they expand to the field column
+   (283px) like other .cr-dd uses on Create Role. Default .cr-dd ships
+   with width: 283px which already matches, but inside flex-column
+   .pc-field we want it inherit the field's column width for safety. */
+.pc-page .pc-dd { width: 100%; max-width: 283px; }
+.pc-page .pc-dd .cr-dd-trigger { width: 100%; }
+
+/* Group cards */
+.pc-page .pc-groups { display: flex; flex-direction: column; gap: 16px; }
+.pc-page .pc-grp-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 12px 24px 16px;
+}
+.pc-page .pc-grp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0 12px 0;
+}
+.pc-page .pc-grp-header-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.pc-page .pc-grp-chev {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--brand-text);
+  transition: transform 0.15s ease;
+}
+.pc-page .pc-grp-card.collapsed .pc-grp-chev { transform: rotate(-90deg); }
+.pc-page .pc-grp-card.collapsed .pc-chk-row { display: none; }
+
+.pc-page .pc-grp-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: var(--brand-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+}
+.pc-page .pc-grp-delete:hover { color: var(--brand-text-hover, var(--brand-text)); }
+.pc-page .pc-grp-delete svg { flex-shrink: 0; }
+
+.pc-page .pc-chk-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding-top: 4px;
+}
+.pc-page .pc-chk-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;          /* Figma checkbox slot = 80px */
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+.pc-page .pc-chk {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--brand-text);
+  flex-shrink: 0;
+}
+[data-theme="ads-preview"] .pc-page .pc-chk { width: 18px; height: 18px; }
 

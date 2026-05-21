@@ -426,6 +426,444 @@ function appForFunctionKey(key) {
   return "Disney Ads Agent";
 }
 
+/* Full application display name for the Permission Capability detail
+   page (Figma 788:4348 "Choose Application*"). The PM table uses the
+   short app token ("IAM") so it scans quickly in a 180px column; the
+   detail page has space for the full product name and the user spec
+   calls for "Identity Access Management" specifically. */
+function appDisplayNameForKey(key) {
+  var token = appForFunctionKey(key);
+  if (token === "IAM") return "Identity Access Management";
+  if (token === "ICM") return "Inventory Catalog Manager";
+  if (token === "TOM") return "Target Options Manager";
+  return token;
+}
+
+/* Applications available in the Choose Application dropdown on the
+   Permission Capability detail page (Figma 788:4348). The first five
+   are the apps with capabilities already onboarded into the IAM
+   prototype (their function keys live in FUNCTION_REGISTRY and they
+   appear as rows in the Permission Management table). The last four
+   are Atlas admin applications onboarded for permission authoring —
+   their first capability is created right here on this page, so they
+   have permission groups + action pools defined below in
+   PC_GROUPS_BY_APP / PC_POOL_BY_GROUP but no FUNCTION_REGISTRY
+   capabilities yet. This is the "new application onboarding" path:
+   IAM admin defines the capability surface (groups + actions) before
+   the first capability instance is authored. */
+var PC_APPS = [
+  "Identity Access Management",
+  "Core Planning",
+  "Inventory Catalog Manager",
+  "Target Options Manager",
+  "Disney Ads Agent",
+  "Deal Configuration Manager",
+  "Unified Financial System",
+  "HARPS",
+  "PAID Invoice Centralization"
+];
+
+/* Permission Groups available per application. The first five rows
+   are sourced from the PC_GROUP_FOR_KEY catalog so the dropdown
+   lists exactly the groups that exist in the real permission data
+   (no invented groups for onboarded apps). The remaining four are
+   the spec'd group sets for the newly-onboarded admin applications;
+   each group's action pool is defined in PC_POOL_BY_GROUP below. */
+var PC_GROUPS_BY_APP = {
+  "Identity Access Management":   ["Analytics", "Data Access", "Roles", "Users"],
+  "Core Planning":                ["Order", "Media Plans", "Line Items"],
+  "Inventory Catalog Manager":    ["Offerings", "Sales Packages"],
+  "Target Options Manager":       ["Targeting Options", "Targeting Groups", "Targeting Templates"],
+  "Disney Ads Agent":             ["Disney Ads Agent"],
+  "Deal Configuration Manager":   ["Deal Types", "Package Rules", "Pricing Rules"],
+  "Unified Financial System":     ["Billing Periods", "Invoice Dashboard", "Revenue Summary"],
+  "HARPS":                        ["Revenue", "Adjustments", "Recognition Rules"],
+  "PAID Invoice Centralization":  ["Invoices", "Invoice Line Items", "Sales Line Items", "NCS Export"]
+};
+
+/* Per-app placeholder hints for Permission Name + Description. Used
+   on user-initiated app change to nudge the author toward names that
+   match the application's verb vocabulary. Names of already-saved
+   capabilities are preserved — placeholders only surface in empty
+   fields. */
+var PC_APP_HINTS = {
+  "Identity Access Management":   { name: "e.g. View IAM Analytics",          desc: "Read IAM usage analytics and access-pattern reports." },
+  "Core Planning":                { name: "e.g. Approve Media Plans",         desc: "Approve media plans submitted from the planning workspace." },
+  "Inventory Catalog Manager":    { name: "e.g. Manage Offerings",            desc: "Author and maintain inventory offerings and sales packages." },
+  "Target Options Manager":       { name: "e.g. Publish Targeting Templates", desc: "Curate and publish reusable targeting templates and groups." },
+  "Disney Ads Agent":             { name: "e.g. Run Forecasting Queries",     desc: "Query forecasting and planning summaries from Disney Ads Agent." },
+  "Deal Configuration Manager":   { name: "e.g. Activate Deal Types",         desc: "Configure deal types, package rules, and pricing rules for active deals." },
+  "Unified Financial System":     { name: "e.g. Lock Billing Period",         desc: "Lock billing periods and reconcile invoice dashboards and revenue summaries." },
+  "HARPS":                        { name: "e.g. Approve Revenue Adjustment",  desc: "Validate and approve revenue adjustments and recognition rules in HARPS." },
+  "PAID Invoice Centralization":  { name: "e.g. Release Invoice to NCS",      desc: "Manage invoice lifecycle and NCS export from PAID Invoice Centralization." }
+};
+
+/* ═══ PM IS THE SOURCE OF TRUTH FOR ROLE-ASSIGNMENT OPTIONS ═══
+   The Permission Management catalog (FUNCTION_REGISTRY,
+   PC_GROUP_FOR_KEY, PC_POOL_BY_GROUP) defines every group + action a
+   role can be granted. The Role Assignment surfaces (Create Role
+   permissions panel, R&P Functions popover) derive their option sets
+   from this catalog instead of maintaining parallel copies. That
+   means:
+     • Adding a function to FUNCTION_REGISTRY surfaces it for role
+       assignment automatically.
+     • Renaming/removing an action in PC_POOL_BY_GROUP propagates to
+       every Create Role checkbox row.
+     • A new group introduced via PC_GROUP_FOR_KEY appears as a new
+       module in Create Role with no extra wiring.
+     • Removing a function key (deletion / disable) removes it from
+       the catalog the Role Assignment options are derived from.
+   The legacy `APP_PERMISSIONS.resources`, `APP_ACCESS_MODEL`, and
+   `ROLE_ACCESS_DETAILS` arrays remain on disk only as Role-Assignment
+   metadata (labels, level lists, level → action recipes) — never as
+   their own permission catalog. */
+
+/* Snake_case Create-Role app key ↔ PM app token (FUNCTION_REGISTRY /
+   PC_GROUP_FOR_KEY use the PM token; Create Role and APP_PERMISSIONS
+   use the snake_case key). One-way map both ways for cheap lookups. */
+var CR_APP_TO_PM_TOKEN = {
+  identity_access_management: "IAM",
+  core_planning:               "Core Planning",
+  disney_ads_agent:            "Disney Ads Agent",
+  inventory_catalog_manager:   "ICM",
+  target_options_manager:      "TOM"
+};
+var PM_TOKEN_TO_CR_APP = (function () {
+  var out = {};
+  for (var k in CR_APP_TO_PM_TOKEN) {
+    if (Object.prototype.hasOwnProperty.call(CR_APP_TO_PM_TOKEN, k)) out[CR_APP_TO_PM_TOKEN[k]] = k;
+  }
+  return out;
+})();
+
+/* Walk the PM catalog for an app token and return the ordered list of
+   unique group names (preserves FUNCTION_REGISTRY ordering). Disney
+   Ads Agent has no FUNCTION_REGISTRY entry — its function keys live
+   only in PC_GROUP_FOR_KEY, so we derive its key list by filtering
+   PC_GROUP_FOR_KEY entries that resolve to "Disney Ads Agent". */
+function pmFunctionKeysForAppToken(token) {
+  if (FUNCTION_REGISTRY[token]) return FUNCTION_REGISTRY[token].slice();
+  var out = [];
+  for (var k in PC_GROUP_FOR_KEY) {
+    if (!Object.prototype.hasOwnProperty.call(PC_GROUP_FOR_KEY, k)) continue;
+    if (appForFunctionKey(k) === token) out.push(k);
+  }
+  return out;
+}
+function pmGroupsForAppToken(token) {
+  var keys = pmFunctionKeysForAppToken(token);
+  var seen = {};
+  var order = [];
+  for (var i = 0; i < keys.length; i++) {
+    var g = PC_GROUP_FOR_KEY[keys[i]];
+    if (g && !seen[g]) { seen[g] = true; order.push(g); }
+  }
+  return order;
+}
+/* Resource list ({title, actions}) for Create Role's permissions
+   panel — derived from PM. Group order matches PM; action order
+   matches PC_POOL_BY_GROUP. */
+function derivePMResourcesForApp(crAppKey) {
+  var token = CR_APP_TO_PM_TOKEN[crAppKey];
+  if (!token) return [];
+  var groups = pmGroupsForAppToken(token);
+  return groups.map(function (g) {
+    return { title: g, actions: (PC_POOL_BY_GROUP[g] || []).slice() };
+  });
+}
+
+/* Derive bundle (level → group → actions) entirely from the PM pool.
+   The level names are RA-owned ("View Only", "Edit", "Approve", "Full
+   Access", "User", "Role"), but the action subsets they map to are
+   intersections of the PM pool with action-class allowlists — so when
+   PM adds/removes an action from a pool, the bundle adjusts without
+   any hand-edit on the RA side. Levels with no applicable actions
+   for any group yield an empty bundle (i.e. nothing checked, which is
+   the correct degenerate signal that the level doesn't apply here). */
+var BUNDLE_RULES = {
+  "View Only":   { allow: ["View"] },
+  "Edit":        { allow: ["View", "Create", "Edit", "Comment"] },
+  "Approve":     { allow: ["View", "Approve", "Reject"] },
+  "Full Access": { allow: null /* = entire pool */ },
+  /* IAM-specific: User level grants everything in the Users group + read elsewhere */
+  "User":        { allow: ["View"], fullGroups: ["Users"] },
+  /* IAM-specific: Role level grants everything in the Roles group + read elsewhere */
+  "Role":        { allow: ["View"], fullGroups: ["Roles"] }
+};
+function deriveBundleForLevel(crAppKey, levelName) {
+  var rule = BUNDLE_RULES[levelName];
+  if (!rule) return {};
+  var resources = derivePMResourcesForApp(crAppKey);
+  var bundle = {};
+  for (var i = 0; i < resources.length; i++) {
+    var g = resources[i].title;
+    var pool = resources[i].actions;
+    var actions;
+    if (rule.fullGroups && rule.fullGroups.indexOf(g) !== -1) {
+      actions = pool.slice();
+    } else if (!rule.allow) {
+      actions = pool.slice();
+    } else {
+      actions = [];
+      for (var p = 0; p < pool.length; p++) {
+        if (rule.allow.indexOf(pool[p]) !== -1) actions.push(pool[p]);
+      }
+    }
+    bundle[g] = actions;
+  }
+  return bundle;
+}
+function deriveBundlesForApp(crAppKey, levels) {
+  var out = {};
+  for (var i = 0; i < levels.length; i++) {
+    if (levels[i] === "Custom") continue;
+    out[levels[i]] = deriveBundleForLevel(crAppKey, levels[i]);
+  }
+  return out;
+}
+
+/* Access-level vocabulary per app. Declared here (above all view-side
+   code) so the Functions popover (R&P) and the Create Role panel can
+   both pull from the same source — the vocabulary IS the contract
+   between the role record (e.g. ROLE_ACCESS_LEVELS["r001"].IAM ===
+   "Full Access") and the bundle derivation. "Custom" is included for
+   Create Role but excluded from APP_ACCESS_MODEL since the popover
+   never renders a Custom preset (it shows specific selected
+   actions instead). */
+var APP_LEVELS_BY_CR_KEY = {
+  identity_access_management: ["View Only", "User", "Role", "Full Access", "Custom"],
+  core_planning:               ["View Only", "Edit", "Approve", "Full Access", "Custom"],
+  disney_ads_agent:            ["View Only", "Full Access", "Custom"],
+  inventory_catalog_manager:   ["View Only", "Edit", "Full Access", "Custom"],
+  target_options_manager:      ["View Only", "Edit", "Full Access", "Custom"]
+};
+
+/* Permission Capability options model (Figma 788:4348).
+   Each row in the PM table maps to exactly one option-group card on
+   the detail page. The card shows the group's full action pool with
+   only the actions belonging to the clicked function pre-checked.
+
+   GROUP_FOR_KEY assigns every catalog key to a single group so the
+   detail page is deterministic and reproducible. POOL_BY_GROUP gives
+   each group the same set of available actions across all of its
+   keys (e.g., Roles can be View/Create/Edit/Delete/Assign permissions/
+   Manage role functions for any iam_role_* row). ON_FOR_KEY lists the
+   pre-checked actions for that specific key.
+
+   This is the data model behind Tatiana's note that a permission
+   capability is a reusable object: groups + actions are the system
+   contract, the table row is just one current configuration of it. */
+var PC_GROUP_FOR_KEY = {
+  /* IAM */
+  "iam_analytics_get":    "Analytics",
+  "iam_data_assign":      "Data Access",
+  "iam_function_assign":  "Roles",
+  "iam_role_list":        "Roles",
+  "iam_role_get":         "Roles",
+  "iam_role_create":      "Roles",
+  "iam_role_update":      "Roles",
+  "iam_role_delete":      "Roles",
+  "iam_user_list":        "Users",
+  "iam_user_get":         "Users",
+  "iam_user_create":      "Users",
+  "iam_user_update":      "Users",
+  "iam_user_deactivate":  "Users",
+  "iam_user_impersonate": "Users",
+  /* Core Planning */
+  "planning_order_list":      "Order",
+  "planning_order_get":       "Order",
+  "planning_order_create":    "Order",
+  "planning_order_update":    "Order",
+  "planning_order_delete":    "Order",
+  "planning_order_assign":    "Order",
+  "planning_order_comment":   "Order",
+  "planning_order_approve":   "Order",
+  "planning_order_reject":    "Order",
+  "planning_plan_list":       "Media Plans",
+  "planning_plan_get":        "Media Plans",
+  "planning_plan_create":     "Media Plans",
+  "planning_plan_update":     "Media Plans",
+  "planning_plan_delete":     "Media Plans",
+  "planning_lineitem_list":   "Line Items",
+  "planning_lineitem_get":    "Line Items",
+  "planning_lineitem_create": "Line Items",
+  "planning_lineitem_update": "Line Items",
+  "planning_lineitem_delete": "Line Items",
+  /* ICM */
+  "icm_offering_list":      "Offerings",
+  "icm_offering_get":       "Offerings",
+  "icm_offering_create":    "Offerings",
+  "icm_offering_update":    "Offerings",
+  "icm_offering_delete":    "Offerings",
+  "icm_salespackage_list":   "Sales Packages",
+  "icm_salespackage_get":    "Sales Packages",
+  "icm_salespackage_create": "Sales Packages",
+  "icm_salespackage_update": "Sales Packages",
+  "icm_salespackage_delete": "Sales Packages",
+  /* TOM */
+  "tom_option_list":   "Targeting Options",
+  "tom_option_get":    "Targeting Options",
+  "tom_option_update": "Targeting Options",
+  "tom_option_assign": "Targeting Options",
+  "tom_group_list":    "Targeting Groups",
+  "tom_group_get":     "Targeting Groups",
+  "tom_group_create":  "Targeting Groups",
+  "tom_group_update":  "Targeting Groups",
+  "tom_group_assign":  "Targeting Groups",
+  "tom_group_archive": "Targeting Groups",
+  "tom_template_list":   "Targeting Templates",
+  "tom_template_get":    "Targeting Templates",
+  "tom_template_create": "Targeting Templates",
+  "tom_template_update": "Targeting Templates",
+  "tom_template_assign": "Targeting Templates",
+  "tom_template_archive":"Targeting Templates",
+  /* Disney Ads Agent — keep all four functions in one group so the
+     detail page reads as "this capability lets the role query DAA". */
+  "media_plan_queries":          "Disney Ads Agent",
+  "forecasting_queries":         "Disney Ads Agent",
+  "planning_activity_summaries": "Disney Ads Agent",
+  "approval_io_comparisons":     "Disney Ads Agent"
+};
+
+var PC_POOL_BY_GROUP = {
+  /* IAM groups */
+  "Analytics":   ["View", "Export"],
+  "Data Access": ["Assign", "Manage", "Region scope", "Team scope", "Organization scope"],
+  "Roles":       ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage role functions"],
+  "Users":       ["View", "Create", "Edit", "Delete", "Deactivate", "Impersonate"],
+  /* Core Planning groups (the eight-checkbox Order row in Figma) */
+  "Order":       ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"],
+  "Media Plans": ["View", "Create", "Edit", "Delete", "Export"],
+  "Line Items":  ["View", "Create", "Edit", "Delete", "Export"],
+  /* ICM */
+  "Offerings":      ["View", "Create", "Edit", "Delete"],
+  "Sales Packages": ["View", "Create", "Edit", "Delete"],
+  /* TOM */
+  "Targeting Options":   ["View", "Edit", "Assign"],
+  "Targeting Groups":    ["View", "Create", "Edit", "Assign", "Archive"],
+  "Targeting Templates": ["View", "Create", "Edit", "Assign", "Archive"],
+  /* Disney Ads Agent */
+  "Disney Ads Agent": ["View", "Export"],
+  /* Deal Configuration Manager — admin app for deal/package/pricing
+     configuration. All three groups share the DCM verb vocabulary
+     since the resources are configurational siblings. */
+  "Deal Types":         ["View", "Create", "Edit", "Archive", "Activate", "Manage rules"],
+  "Package Rules":      ["View", "Create", "Edit", "Archive", "Activate", "Manage rules"],
+  "Pricing Rules":      ["View", "Create", "Edit", "Archive", "Activate", "Manage rules"],
+  /* Unified Financial System — period-locking + reconciliation
+     vocabulary; "Lock period" and "Reconcile" are UFS-specific
+     governance actions beyond the standard CRUD set. */
+  "Billing Periods":    ["View", "Edit", "Export", "Lock period", "Validate", "Reconcile"],
+  "Invoice Dashboard":  ["View", "Edit", "Export", "Lock period", "Validate", "Reconcile"],
+  "Revenue Summary":    ["View", "Edit", "Export", "Lock period", "Validate", "Reconcile"],
+  /* HARPS — revenue recognition + adjustment approval vocabulary;
+     "Approve adjustment" is HARPS' governance gate before posted
+     revenue. */
+  "Revenue":            ["View", "Edit", "Validate", "Approve adjustment", "Export", "Reconcile"],
+  "Adjustments":        ["View", "Edit", "Validate", "Approve adjustment", "Export", "Reconcile"],
+  "Recognition Rules":  ["View", "Edit", "Validate", "Approve adjustment", "Export", "Reconcile"],
+  /* PAID Invoice Centralization — invoice lifecycle + NCS export
+     vocabulary; "Hold invoice"/"Release invoice"/"Export to NCS"
+     reflect the PAID-specific operational verbs. */
+  "Invoices":           ["View", "Edit", "Validate", "Export to NCS", "Hold invoice", "Release invoice"],
+  "Invoice Line Items": ["View", "Edit", "Validate", "Export to NCS", "Hold invoice", "Release invoice"],
+  "Sales Line Items":   ["View", "Edit", "Validate", "Export to NCS", "Hold invoice", "Release invoice"],
+  "NCS Export":         ["View", "Edit", "Validate", "Export to NCS", "Hold invoice", "Release invoice"]
+};
+
+/* Pre-checked actions per function key. Most keys check a single
+   action that matches their verb; a handful of keys check multiple
+   actions where the function spans more than one capability:
+     • iam_data_assign       — Assign + Manage  (region/team/org scoping)
+     • iam_function_assign   — Assign permissions + Manage role functions
+   These align with the user-supplied examples in the 2026-05-20 spec. */
+var PC_ON_FOR_KEY = {
+  /* IAM */
+  "iam_analytics_get":    ["View"],
+  "iam_data_assign":      ["Assign", "Manage"],
+  "iam_function_assign":  ["Assign permissions", "Manage role functions"],
+  "iam_role_list":        ["View"],
+  "iam_role_get":         ["View"],
+  "iam_role_create":      ["Create"],
+  "iam_role_update":      ["Edit"],
+  "iam_role_delete":      ["Delete"],
+  "iam_user_list":        ["View"],
+  "iam_user_get":         ["View"],
+  "iam_user_create":      ["Create"],
+  "iam_user_update":      ["Edit"],
+  "iam_user_deactivate":  ["Deactivate"],
+  "iam_user_impersonate": ["Impersonate"],
+  /* Core Planning */
+  "planning_order_list":      ["View"],
+  "planning_order_get":       ["View"],
+  "planning_order_create":    ["Create"],
+  "planning_order_update":    ["Edit"],
+  "planning_order_delete":    ["Delete"],
+  "planning_order_assign":    ["Assign"],
+  "planning_order_comment":   ["Comment"],
+  "planning_order_approve":   ["Approve"],
+  "planning_order_reject":    ["Reject"],
+  "planning_plan_list":       ["View"],
+  "planning_plan_get":        ["View"],
+  "planning_plan_create":     ["Create"],
+  "planning_plan_update":     ["Edit"],
+  "planning_plan_delete":     ["Delete"],
+  "planning_lineitem_list":   ["View"],
+  "planning_lineitem_get":    ["View"],
+  "planning_lineitem_create": ["Create"],
+  "planning_lineitem_update": ["Edit"],
+  "planning_lineitem_delete": ["Delete"],
+  /* ICM */
+  "icm_offering_list":     ["View"],
+  "icm_offering_get":      ["View"],
+  "icm_offering_create":   ["Create"],
+  "icm_offering_update":   ["Edit"],
+  "icm_offering_delete":   ["Delete"],
+  "icm_salespackage_list":   ["View"],
+  "icm_salespackage_get":    ["View"],
+  "icm_salespackage_create": ["Create"],
+  "icm_salespackage_update": ["Edit"],
+  "icm_salespackage_delete": ["Delete"],
+  /* TOM */
+  "tom_option_list":   ["View"],
+  "tom_option_get":    ["View"],
+  "tom_option_update": ["Edit"],
+  "tom_option_assign": ["Assign"],
+  "tom_group_list":    ["View"],
+  "tom_group_get":     ["View"],
+  "tom_group_create":  ["Create"],
+  "tom_group_update":  ["Edit"],
+  "tom_group_assign":  ["Assign"],
+  "tom_group_archive": ["Archive"],
+  "tom_template_list":   ["View"],
+  "tom_template_get":    ["View"],
+  "tom_template_create": ["Create"],
+  "tom_template_update": ["Edit"],
+  "tom_template_assign": ["Assign"],
+  "tom_template_archive":["Archive"],
+  /* Disney Ads Agent */
+  "media_plan_queries":          ["View"],
+  "forecasting_queries":         ["View"],
+  "planning_activity_summaries": ["View"],
+  "approval_io_comparisons":     ["View"]
+};
+
+/* Compose the option-group model for a function key. Always returns
+   exactly one group (single permission = single capability surface).
+   The caller renders the group card with its full action pool and
+   the checked-state of each action driven by PC_ON_FOR_KEY. */
+function permissionOptionsForKey(key) {
+  var group = PC_GROUP_FOR_KEY[key] || "Capability";
+  var pool  = PC_POOL_BY_GROUP[group] || ["View"];
+  var on    = PC_ON_FOR_KEY[key] || [];
+  return {
+    group: group,
+    actions: pool.map(function (label) {
+      return { label: label, checked: on.indexOf(label) !== -1 };
+    })
+  };
+}
+
 /* Type taxonomy for the Permission Management catalog (Figma 770:20039).
    The Type column only supports two values:
      • "Default" — system-shipped permission. Ships with the IAM platform
@@ -585,6 +1023,62 @@ function permissionLastUpdatedForKey(key) {
   var mm = minute < 10 ? "0" + minute : String(minute);
 
   return hour12 + ":" + mm + " " + ampm + ", " + month + " " + day + " 2026";
+}
+
+/* Role names that include this function key, for the Permission
+   Management "Used in" hover tooltip (Figma 770:20039 + 2026-05-20 spec).
+
+   For the ten IAM keys explicitly enumerated in the spec, we use the
+   curated mapping below rather than deriving from ROLE_FUNCTION_MAP.
+   The curated mapping is what the user expects to see in the tooltip,
+   and the underlying role assignments are still consistent because
+   the COUNT (length of the array) matches permissionUsedInCount() for
+   each of those keys — that count is what the table cell reads.
+
+   For every other function key (Core Planning, ICM, TOM, Disney Ads
+   Agent), we derive role names directly from ROLE_FUNCTION_MAP so the
+   tooltip stays in lock-step with the rest of the prototype. No
+   invented names — the picker pulls real ROLES_PERMISSIONS_DATA. */
+var PERMISSION_USED_IN_OVERRIDES = {
+  "iam_analytics_get":    ["Atlas Admin", "Operations Admin"],
+  "iam_data_assign":      ["Atlas Admin"],
+  "iam_function_assign":  ["Atlas Admin"],
+  "iam_role_create":      ["Atlas Admin"],
+  "iam_role_delete":      ["Atlas Admin"],
+  "iam_role_get":         ["Planner"],
+  "iam_role_list":        ["Planner", "Planning Specialist"],
+  "iam_role_update":      ["Atlas Admin"],
+  "iam_user_create":      ["Operations Admin"],
+  "iam_user_deactivate":  ["Operations Admin"]
+};
+
+function permissionUsedInRoles(key) {
+  if (PERMISSION_USED_IN_OVERRIDES[key]) return PERMISSION_USED_IN_OVERRIDES[key].slice();
+  /* Walk ROLE_FUNCTION_MAP. Stop at the first hit per role so each
+     role appears at most once, even if a function key were duplicated
+     across an app's slice (it isn't today, but be defensive). */
+  var names = [];
+  for (var roleId in ROLE_FUNCTION_MAP) {
+    if (!Object.prototype.hasOwnProperty.call(ROLE_FUNCTION_MAP, roleId)) continue;
+    var apps = ROLE_FUNCTION_MAP[roleId];
+    var found = false;
+    for (var appName in apps) {
+      if (!Object.prototype.hasOwnProperty.call(apps, appName)) continue;
+      var keys = apps[appName] || [];
+      for (var i = 0; i < keys.length; i++) {
+        if (keys[i] === key) { found = true; break; }
+      }
+      if (found) break;
+    }
+    if (!found) continue;
+    for (var ri = 0; ri < ROLES_PERMISSIONS_DATA.length; ri++) {
+      if (ROLES_PERMISSIONS_DATA[ri].id === roleId) {
+        names.push(ROLES_PERMISSIONS_DATA[ri].role);
+        break;
+      }
+    }
+  }
+  return names;
 }
 
 /* Count of roles in ROLE_FUNCTION_MAP that include this function key. */
@@ -1789,6 +2283,26 @@ document.addEventListener("DOMContentLoaded", function () {
       tooltip.innerHTML = '<div class="edl-tooltip-line">' + esc(text) + '</div>';
     }
     tooltip.classList.add("visible");
+    positionTooltip(anchorEl);
+  }
+
+  /* Roles-list tooltip variant — adds a "Used in roles" caption above
+     the role-name lines. Reuses the same .edl-tooltip element, anchor
+     positioning, and below/above caret logic; only the body markup
+     gains the leading title row. Called from the Permission Management
+     "Used in" cell hover. */
+  function showRolesTooltipFor(anchorEl, titleText, roleNames) {
+    if (!roleNames || roleNames.length === 0) return;
+    var html = '<div class="edl-tooltip-title">' + esc(titleText) + '</div>';
+    for (var i = 0; i < roleNames.length; i++) {
+      html += '<div class="edl-tooltip-line">' + esc(roleNames[i]) + '</div>';
+    }
+    tooltip.innerHTML = html;
+    tooltip.classList.add("visible");
+    positionTooltip(anchorEl);
+  }
+
+  function positionTooltip(anchorEl) {
     var rect = anchorEl.getBoundingClientRect();
     var tw = tooltip.offsetWidth;
     var th = tooltip.offsetHeight;
@@ -1839,6 +2353,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function handleCellHover(e) {
+    /* Permission Management "Used in" cell — titled multi-line
+       roles tooltip. Checked before the generic .role-extra branch
+       so the .pm-used-roles span uses its own caption ("Used in
+       roles") instead of falling through to the +N role variant. */
+    var rolesTip = e.target.closest("[data-roles-tip]");
+    if (rolesTip) {
+      var rolesText = rolesTip.getAttribute("data-roles-tip");
+      if (rolesText) showRolesTooltipFor(rolesTip, "Used in roles", rolesText.split("\n"));
+      return;
+    }
     var extra = e.target.closest(".role-extra");
     if (extra) {
       var lines = extra.getAttribute("data-tooltip");
@@ -1860,6 +2384,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* Keyboard focus parity for actually-focusable truncatable elements. */
   document.addEventListener("focusin", function (e) {
+    var rolesTip = e.target.closest("[data-roles-tip]");
+    if (rolesTip) {
+      var rolesText = rolesTip.getAttribute("data-roles-tip");
+      if (rolesText) showRolesTooltipFor(rolesTip, "Used in roles", rolesText.split("\n"));
+      return;
+    }
     var extra = e.target.closest(".role-extra");
     if (extra) {
       var lines = extra.getAttribute("data-tooltip");
@@ -1874,16 +2404,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   document.addEventListener("focusout", function (e) {
-    if (e.target.closest(".role-extra, .rp-role-link")) hideTooltip();
+    if (e.target.closest(".role-extra, .rp-role-link, [data-roles-tip]")) hideTooltip();
   });
 
-  /* Per-role custom permission grids for Create Role / Edit Role prefill. */
+  /* Per-role custom permission grids for Create Role / Edit Role
+     prefill. Keys MUST match the canonical PM group names exposed by
+     PC_GROUP_FOR_KEY (e.g. "Order" not "Orders") because Create Role
+     resolves checkbox identity by `data-resource` which is set from
+     the derived `app.resources[].title`. Adding entries here that
+     reference groups PM does not define has no effect — the
+     pre-checking pass simply skips unmatched rows. */
   var ROLE_ACCESS_DETAILS = {
     r003: {
       "Core Planning": {
-        Orders: ["View", "Edit", "Assign", "Comment"],
-        "Media Plans": ["View", "Edit"],
-        "Line Items": ["View", "Edit"]
+        Order:          ["View", "Edit", "Assign", "Comment"],
+        "Media Plans":  ["View", "Edit"],
+        "Line Items":   ["View", "Edit"]
       }
     }
   };
@@ -1899,52 +2435,28 @@ document.addEventListener("DOMContentLoaded", function () {
   document.body.appendChild(funcPop);
 
   var funcPopTrigger = null;
-  var APP_ACCESS_MODEL = {
-    "Core Planning": {
-      groups: ["Orders", "Media Plans", "Line Items"],
-      presets: {
-        "View Only": { Orders: ["View"], "Media Plans": ["View"], "Line Items": ["View"] },
-        "Edit": { Orders: ["View", "Create", "Edit", "Comment"], "Media Plans": ["View", "Create", "Edit"], "Line Items": ["View", "Create", "Edit"] },
-        "Approve": { Orders: ["View", "Approve", "Reject"], "Media Plans": ["View"], "Line Items": ["View"] },
-        "Full Access": { Orders: ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"], "Media Plans": ["View", "Create", "Edit", "Delete"], "Line Items": ["View", "Create", "Edit", "Delete"] }
-      }
-    },
-    "IAM": {
-      groups: ["Roles", "Users", "Analytics", "Admin Actions"],
-      presets: {
-        "View Only": { Roles: ["View"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
-        "User": { Roles: ["View"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": [] },
-        "Role": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
-        "Full Access": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": ["Manage configuration", "Manage settings"] }
-      }
-    },
-    "ICM": {
-      groups: ["Inventory Items", "Offerings", "Sales Packages"],
-      presets: {
-        "View Only": { "Inventory Items": ["View"], Offerings: ["View"], "Sales Packages": ["View"] },
-        "Edit": { "Inventory Items": ["View", "Create", "Edit"], Offerings: ["View", "Create", "Edit"], "Sales Packages": ["View", "Create", "Edit"] },
-        "Approve": { "Inventory Items": ["View", "Approve", "Reject"], Offerings: ["View"], "Sales Packages": ["View"] },
-        "Full Access": { "Inventory Items": ["View", "Create", "Edit", "Delete"], Offerings: ["View", "Create", "Edit", "Delete"], "Sales Packages": ["View", "Create", "Edit", "Delete"] }
-      }
-    },
-    "TOM": {
-      groups: ["Targeting Categories", "Dimensions", "Values", "Groups", "Templates"],
-      presets: {
-        "View Only": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View"], Templates: ["View"] },
-        "Edit": { "Targeting Categories": ["View", "Edit"], Dimensions: ["View", "Edit"], Values: ["View", "Edit"], Groups: ["View", "Create", "Edit"], Templates: ["View", "Create", "Edit"] },
-        "Approve": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View", "Approve", "Reject"], Templates: ["View", "Approve", "Reject"] },
-        "Full Access": { "Targeting Categories": ["View", "Create", "Edit", "Delete"], Dimensions: ["View", "Create", "Edit", "Delete"], Values: ["View", "Create", "Edit", "Delete"], Groups: ["View", "Create", "Edit", "Delete", "Assign"], Templates: ["View", "Create", "Edit", "Delete", "Assign permissions"] }
-      }
-    },
-    "Disney Ads Agent": {
-      groups: ["Agent Workflows", "Forecasting", "Insights"],
-      presets: {
-        "View Only": { "Agent Workflows": ["View"], Forecasting: ["View"], Insights: ["View"] },
-        "Edit": { "Agent Workflows": ["View", "Create", "Edit"], Forecasting: ["View", "Edit"], Insights: ["View"] },
-        "Full Access": { "Agent Workflows": ["View", "Create", "Edit", "Delete"], Forecasting: ["View", "Create", "Edit", "Delete"], Insights: ["View"] }
-      }
+  /* APP_ACCESS_MODEL drives the R&P Functions popover (the
+     "groups + presets" view that shows when you click a function-
+     count link in the Role Assignment table). It is keyed by PM app
+     token (IAM / Core Planning / ICM / TOM / Disney Ads Agent) so
+     `accessActionsFor()` can look it up by the same token the role
+     records use. Groups + presets are derived from PM via the shared
+     helpers, so this view stays in lockstep with PM and with the
+     Create Role panel. */
+  var APP_ACCESS_MODEL = (function buildAppAccessModelFromPM() {
+    var out = {};
+    var tokens = Object.keys(PM_TOKEN_TO_CR_APP);
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      var crKey = PM_TOKEN_TO_CR_APP[token];
+      var levels = APP_LEVELS_BY_CR_KEY[crKey] || [];
+      out[token] = {
+        groups:  pmGroupsForAppToken(token),
+        presets: deriveBundlesForApp(crKey, levels)
+      };
     }
-  };
+    return out;
+  })();
 
   function accessActionsFor(appName, level) {
     var model = APP_ACCESS_MODEL[appName];
@@ -4387,12 +4899,24 @@ document.addEventListener("DOMContentLoaded", function () {
          not designed). Keeping the link affordance signals the row is
          the entry point for a future detail view. */
       var nameCell = '<a class="pm-name-link" href="#" data-pm-view="' + esc(r.id) + '">' + esc(r.name) + '</a>';
+      /* Used-in cell: visible text stays "N role(s)" (Figma + table
+         scannability). The role names that back that count are stamped
+         on a child span as data-roles-tip so the EDL hover tooltip can
+         reveal them on hover/focus without changing the cell layout. */
+      var usedLabel = String(r.usedIn) + ' ' + (r.usedIn === 1 ? 'role' : 'roles');
+      var usedRoles = permissionUsedInRoles(r.key);
+      var usedCell;
+      if (usedRoles.length > 0) {
+        usedCell = '<span class="pm-used-roles" data-roles-tip="' + esc(usedRoles.join("\n")) + '" tabindex="0" aria-label="' + esc(usedLabel + ': ' + usedRoles.join(", ")) + '">' + esc(usedLabel) + '</span>';
+      } else {
+        usedCell = esc(usedLabel);
+      }
       html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="pm-sel"><input type="checkbox" class="rp-check pm-row-check" aria-label="Select ' + esc(r.name) + '"></td>' +
         '<td class="pm-name" title="' + esc(r.key) + '">' + nameCell + '</td>' +
         '<td class="pm-desc" title="' + esc(r.description) + '">' + esc(r.description) + '</td>' +
         '<td class="pm-type">' + pmTypeChipHtml(r.type) + '</td>' +
-        '<td class="pm-used">' + esc(String(r.usedIn)) + ' ' + (r.usedIn === 1 ? 'role' : 'roles') + '</td>' +
+        '<td class="pm-used">' + usedCell + '</td>' +
         '<td class="pm-date">' + esc(r.lastUpdated) + '</td>' +
         '</tr>';
     }
@@ -4532,10 +5056,783 @@ document.addEventListener("DOMContentLoaded", function () {
         pmSyncSelectAllFromRows();
         return;
       }
-      /* Name-link click is a visual no-op in this build; prevent the
-         href="#" from scrolling the page to top. */
+      /* Name-link opens the Permission Capability detail page
+         (Figma 788:4348). The link still has href="#" so we cancel the
+         default scroll-to-top before navigating into the detail flow. */
       var nameLink = e.target.closest && e.target.closest(".pm-name-link");
-      if (nameLink) e.preventDefault();
+      if (nameLink) {
+        e.preventDefault();
+        var rowId = nameLink.getAttribute("data-pm-view");
+        if (rowId) openPermissionDetail(rowId);
+      }
+    });
+  }
+
+  /* ─── Permission Capability detail page (Figma 788:4348) ───
+     Renders the detail view for the permission function the user
+     clicked on the Permission Management table. Reuses the
+     .cr-page / .cr-card shell so chrome, spacing, and back-button
+     rhythm match #createRolePage / #addUsersPage.
+
+     This page is intentionally NOT a Role-assignment surface — see
+     Tatiana's note in the 2026-05-20 spec. It exposes only:
+       • Basic Information (identity + lightweight metadata)
+       • Permission Options (one group, its action pool, checked
+         actions for this specific function key)
+     No assigned-role chips, no capability-details panel, no registry
+     metadata section. Role assignment stays on its own tab. */
+  var pcDetailPage    = document.getElementById("pcDetailPage");
+  var pcBackBtn       = document.getElementById("pcBack");
+  var pcCancelBtn     = document.getElementById("pcCancel");
+  var pcPermNameInput = document.getElementById("pcPermName");
+  var pcCreatedByInput= document.getElementById("pcCreatedBy");
+  var pcDescInput     = document.getElementById("pcDesc");
+  var pcLastUpdatedEl = document.getElementById("pcLastUpdated");
+  var pcGroupsEl      = document.getElementById("pcGroups");
+  /* Choose Application dropdown (Figma 788:4348 dropdown control).
+     Reuses .cr-dd / .cr-dd-menu / .cr-dd-option from Create Role. */
+  var pcAppDD         = document.getElementById("pcAppDD");
+  var pcAppTrigger    = document.getElementById("pcAppTrigger");
+  var pcAppValueEl    = document.getElementById("pcAppValue");
+  /* Add Permission Group dropdown (renamed from "Add permission" per
+     2026-05-20 spec — it selects a group like Order / Roles / Users). */
+  var pcAddGroupDD      = document.getElementById("pcAddGroupDD");
+  var pcAddGroupTrigger = document.getElementById("pcAddGroupTrigger");
+  var pcAddGroupValueEl = document.getElementById("pcAddGroupValue");
+  var pcAddBtn          = document.getElementById("pcAddBtn");
+  /* Default Access level dropdown — was a disabled input until
+     2026-05-21; the Permission Capability authoring spec requires a
+     working preset picker (Full Access / Read Only / Standard Access
+     / Custom) that drives the action checkboxes below. */
+  var pcAccessLevelDD       = document.getElementById("pcAccessLevelDD");
+  var pcAccessLevelTrigger  = document.getElementById("pcAccessLevelTrigger");
+  var pcAccessLevelValueEl  = document.getElementById("pcAccessLevelValue");
+  var pcSaveBtn             = document.getElementById("pcSave");
+
+  /* Preset definitions for the access-level dropdown. `allow: null`
+     means "every action in the group's PC pool" (= Full Access).
+     `allow: [...]` filters the pool down to the listed action labels.
+     Custom is intentionally omitted from this map — it is the "do
+     not touch checkboxes" state and is handled as a no-op preset.
+
+     Alignment with existing IAM role patterns (see ROLE_FUNCTION_MAP):
+       • Full Access     — Atlas Admin / app-tier Admin roles (every
+         CRUD + governance verb on each group's pool).
+       • Read Only       — Read-Only Viewer / lurker roles, mirrors
+         the Role Assignment "View Only" bundle (View action only).
+       • Standard Access — Planner / Planning Specialist / Operations
+         Admin operational range (browse + author + edit). Matches
+         the verbs Tatiana's PRD highlights as the everyday operating
+         set: list/get/create/update. Maps cleanly to the Role
+         Assignment "Edit" bundle for non-IAM apps.
+       • Custom          — Planning Manager / hand-tuned roles where
+         the action grid does not fit a named bundle. */
+  var PC_LEVEL_OPTIONS = ["Full Access", "Read Only", "Standard Access", "Custom"];
+  var PC_PRESET_ALLOW = {
+    "Full Access":     null,
+    "Read Only":       ["View"],
+    "Standard Access": ["View", "Create", "Edit"]
+  };
+
+  /* Edits made before the page finishes seeding from a row click
+     should not flip the Save Permission button to enabled — set true
+     during openPermissionDetail() and cleared once seeding completes. */
+  var pcInitializing = false;
+
+  /* Build a .cr-dd menu inside `host` from a string[] of labels. The
+     selected label is matched by textContent (no hidden value attr
+     needed — the value === the label since both fields are display
+     names, not opaque ids).
+
+     `onSelect` is attached as a click handler on the menu element
+     itself (not on `host`) — because `attachCrDdLayeredMenu` portals
+     the menu to document.body when opened, after which clicks on
+     options no longer bubble through `host`. This mirrors Create
+     Role, which also binds its option click handler to `crAppMenu`. */
+  function pcBuildDDMenu(host, menuId, options, onSelect) {
+    if (!host) return null;
+    /* If host's menu lives in document.body (portaled), remove from
+       there too; otherwise remove from host. */
+    var existing = document.getElementById(menuId);
+    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    var menu = document.createElement("div");
+    menu.id = menuId;
+    menu.className = "cr-dd-menu";
+    menu.setAttribute("role", "listbox");
+    for (var i = 0; i < options.length; i++) {
+      var row = document.createElement("div");
+      row.className = "cr-dd-option";
+      row.setAttribute("role", "option");
+      row.setAttribute("data-value", options[i]);
+      row.textContent = options[i];
+      menu.appendChild(row);
+    }
+    host.appendChild(menu);
+    if (typeof onSelect === "function") {
+      menu.addEventListener("click", function (e) {
+        var opt = e.target.closest(".cr-dd-option");
+        if (!opt || opt.classList.contains("is-disabled")) return;
+        onSelect(opt.getAttribute("data-value"));
+      });
+    }
+    return menu;
+  }
+  var pcAppMenu = pcBuildDDMenu(pcAppDD, "pcAppMenu", PC_APPS, function (value) {
+    pcSetAppValue(value);
+    pcCloseDD(pcAppDD);
+    /* Changing the app rebinds which groups can be added going
+       forward — a user-initiated change is a real edit to the
+       capability's metadata, so flag the form dirty. Seeding paths
+       (openPermissionDetail) skip this via pcInitializing. */
+    pcMarkDirty();
+  });
+  var pcAddGroupMenu = null; /* built on first app-select via pcSetAppValue */
+  var pcSelectedApp = "";
+  var pcSelectedGroup = "";
+
+  function pcSetAppValue(value) {
+    var previousApp = pcSelectedApp;
+    pcSelectedApp = value || "";
+    var opts = pcAppMenu ? pcAppMenu.querySelectorAll(".cr-dd-option") : [];
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].getAttribute("data-value") === value) opts[i].classList.add("is-selected");
+      else opts[i].classList.remove("is-selected");
+    }
+    if (pcAppValueEl) {
+      if (value) {
+        pcAppValueEl.textContent = value;
+        pcAppValueEl.classList.remove("is-placeholder");
+      } else {
+        pcAppValueEl.textContent = "Select Application";
+        pcAppValueEl.classList.add("is-placeholder");
+      }
+    }
+    /* Refresh the Permission Group dropdown to match the selected app
+       (per spec: "selected application should drive available
+       permission groups where applicable"). Reset the group selection
+       because the previously-picked group may not belong to the new
+       app's catalog. */
+    var groups = (PC_GROUPS_BY_APP[value] || []).slice();
+    pcAddGroupMenu = pcBuildDDMenu(pcAddGroupDD, "pcAddGroupMenu", groups, function (groupValue) {
+      pcSetGroupValue(groupValue);
+      pcCloseDD(pcAddGroupDD);
+    });
+    pcSetGroupValue("");
+    /* Update placeholder hints to match the new application's verb
+       vocabulary. Only the placeholder changes; populated fields
+       keep their values so an existing capability's name/description
+       are never overwritten by an app switch. */
+    var hint = PC_APP_HINTS[value];
+    if (hint) {
+      if (pcPermNameInput) pcPermNameInput.setAttribute("placeholder", hint.name);
+      if (pcDescInput)     pcDescInput.setAttribute("placeholder",     hint.desc);
+    }
+    /* On a user-initiated app change (seeding from openPermissionDetail
+       is guarded by pcInitializing), the existing permission group
+       cards belong to the previous app's catalog and no longer apply.
+       Clear them so the capability starts fresh against the new app's
+       group/action vocabulary — the user can re-add groups from the
+       refreshed picker above. */
+    if (!pcInitializing && previousApp && previousApp !== pcSelectedApp && pcGroupsEl) {
+      pcGroupsEl.innerHTML = "";
+      /* No cards → access level reverts to the "Full Access" baseline
+         (vacuous-truth case in pcDetectLevel). */
+      pcSetAccessLevelValue("Full Access");
+    }
+  }
+
+  function pcSetGroupValue(value) {
+    pcSelectedGroup = value || "";
+    var opts = pcAddGroupMenu ? pcAddGroupMenu.querySelectorAll(".cr-dd-option") : [];
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].getAttribute("data-value") === value) opts[i].classList.add("is-selected");
+      else opts[i].classList.remove("is-selected");
+    }
+    if (pcAddGroupValueEl) {
+      if (value) {
+        pcAddGroupValueEl.textContent = value;
+        pcAddGroupValueEl.classList.remove("is-placeholder");
+      } else {
+        pcAddGroupValueEl.textContent = "Select a group";
+        pcAddGroupValueEl.classList.add("is-placeholder");
+      }
+    }
+    if (pcAddBtn) pcAddBtn.disabled = !pcSelectedGroup;
+  }
+
+  function pcCloseDD(dd) {
+    if (!dd) return;
+    if (typeof detachCrDdLayeredMenu === "function") detachCrDdLayeredMenu(dd);
+    dd.classList.remove("open");
+    var trigger = dd.querySelector(".cr-dd-trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+  }
+  function pcOpenDD(dd) {
+    if (!dd) return;
+    /* Close the other PC dropdown so they never overlap. */
+    if (dd === pcAppDD) pcCloseDD(pcAddGroupDD);
+    else if (dd === pcAddGroupDD) pcCloseDD(pcAppDD);
+    dd.classList.add("open");
+    var trigger = dd.querySelector(".cr-dd-trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "true");
+    if (typeof attachCrDdLayeredMenu === "function") attachCrDdLayeredMenu(dd);
+  }
+
+  if (pcAppTrigger) {
+    pcAppTrigger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (pcAppDD.classList.contains("open")) pcCloseDD(pcAppDD);
+      else pcOpenDD(pcAppDD);
+    });
+  }
+  if (pcAddGroupTrigger) {
+    pcAddGroupTrigger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (pcAddGroupDD.classList.contains("open")) pcCloseDD(pcAddGroupDD);
+      else pcOpenDD(pcAddGroupDD);
+    });
+  }
+  /* Outside click + Esc close both PC dropdowns. The portaled menu
+     lives outside `pcAppDD`/`pcAddGroupDD`, so check both the host
+     and the menu element via id lookup (menu can be in body). */
+  document.addEventListener("click", function (e) {
+    if (pcAppDD && !pcAppDD.contains(e.target)) {
+      var am = document.getElementById("pcAppMenu");
+      if (!am || !am.contains(e.target)) pcCloseDD(pcAppDD);
+    }
+    if (pcAddGroupDD && !pcAddGroupDD.contains(e.target)) {
+      var gm = document.getElementById("pcAddGroupMenu");
+      if (!gm || !gm.contains(e.target)) pcCloseDD(pcAddGroupDD);
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    pcCloseDD(pcAppDD);
+    pcCloseDD(pcAddGroupDD);
+  });
+
+  /* Append a new empty group card when Add is clicked. Uses the same
+     .pc-grp-card HTML shape as renderPCGroups so the chevron/Delete
+     handlers (already bound to #pcGroups) light up automatically. */
+  function pcAppendGroupCard(groupName) {
+    if (!pcGroupsEl) return;
+    var pool = PC_POOL_BY_GROUP[groupName] || ["View"];
+    var html = '<div class="pc-grp-card" data-pc-group="' + esc(groupName) + '">';
+    html +=   '<div class="pc-grp-header">';
+    html +=     '<button type="button" class="pc-grp-header-left" data-pc-grp-toggle aria-expanded="true">';
+    html +=       '<svg class="pc-grp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+    html +=       '<span>' + esc(groupName) + '</span>';
+    html +=     '</button>';
+    html +=     '<button type="button" class="pc-grp-delete" data-pc-grp-delete aria-label="Delete ' + esc(groupName) + ' group">';
+    html +=       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+    html +=       '<span>Delete</span>';
+    html +=     '</button>';
+    html +=   '</div>';
+    html +=   '<div class="pc-chk-row">';
+    for (var i = 0; i < pool.length; i++) {
+      html += '<label class="pc-chk-item">';
+      html +=   '<input type="checkbox" class="pc-chk" data-pc-action="' + esc(pool[i]) + '">';
+      html +=   '<span>' + esc(pool[i]) + '</span>';
+      html += '</label>';
+    }
+    html +=   '</div>';
+    html += '</div>';
+    pcGroupsEl.insertAdjacentHTML("beforeend", html);
+  }
+  if (pcAddBtn) {
+    pcAddBtn.addEventListener("click", function () {
+      if (!pcSelectedGroup) return;
+      pcAppendGroupCard(pcSelectedGroup);
+      pcSetGroupValue("");
+      /* New card starts with every action unchecked, so the current
+         level (which was likely a preset) no longer matches. Drop to
+         Custom and mark the capability dirty so Save Permission can
+         enable. */
+      pcSetAccessLevelValue("Custom");
+      pcMarkDirty();
+    });
+  }
+
+  /* ─── Dirty state + Default Access Level preset wiring ─── */
+
+  /* Enable / disable the Save Permission button. pcInitializing
+     guards openPermissionDetail() — programmatic seeding (setting
+     name / app / description / etc.) must never flip Save to enabled. */
+  function pcMarkDirty() {
+    if (pcInitializing) return;
+    if (pcSaveBtn) pcSaveBtn.disabled = false;
+  }
+  function pcMarkClean() {
+    if (pcSaveBtn) pcSaveBtn.disabled = true;
+  }
+
+  /* Update only the dropdown trigger label + selected option marker.
+     Does NOT touch checkboxes — separate from pcApplyAccessLevel
+     which does the bulk update. Use this when the checkboxes have
+     already been mutated independently and we just need the displayed
+     level to track. */
+  function pcSetAccessLevelValue(levelName) {
+    if (!pcAccessLevelValueEl) return;
+    pcAccessLevelValueEl.textContent = levelName || "Full Access";
+    var menu = document.getElementById("pcAccessLevelMenu");
+    if (!menu) return;
+    var opts = menu.querySelectorAll(".cr-dd-option");
+    for (var i = 0; i < opts.length; i++) {
+      var selected = opts[i].getAttribute("data-value") === levelName;
+      opts[i].classList.toggle("is-selected", selected);
+      opts[i].setAttribute("aria-selected", selected ? "true" : "false");
+    }
+  }
+
+  /* Inspect every group card's checkboxes and return the named level
+     that matches, or "Custom" if no preset fits. Order: Full Access
+     beats Read Only beats Standard Access (so an empty-pool group
+     can still resolve to a sensible preset). */
+  function pcDetectLevel() {
+    if (!pcGroupsEl) return "Custom";
+    var cards = pcGroupsEl.querySelectorAll(".pc-grp-card");
+    if (!cards.length) return "Full Access";
+    var levels = ["Full Access", "Read Only", "Standard Access"];
+    for (var l = 0; l < levels.length; l++) {
+      var rule = PC_PRESET_ALLOW[levels[l]];
+      var matchAll = true;
+      for (var c = 0; c < cards.length && matchAll; c++) {
+        var boxes = cards[c].querySelectorAll(".pc-chk");
+        var pool = [];
+        var checked = [];
+        for (var b = 0; b < boxes.length; b++) {
+          var a = boxes[b].getAttribute("data-pc-action");
+          pool.push(a);
+          if (boxes[b].checked) checked.push(a);
+        }
+        var expected;
+        if (rule === null) {
+          expected = pool.slice();
+        } else {
+          expected = [];
+          for (var p = 0; p < pool.length; p++) if (rule.indexOf(pool[p]) !== -1) expected.push(pool[p]);
+        }
+        if (checked.length !== expected.length) { matchAll = false; break; }
+        for (var x = 0; x < expected.length; x++) if (checked.indexOf(expected[x]) === -1) { matchAll = false; break; }
+      }
+      if (matchAll) return levels[l];
+    }
+    return "Custom";
+  }
+
+  /* Bulk-update every group card's checkboxes to match the preset,
+     then sync the dropdown label. Custom is a no-op for checkboxes
+     (preserves manual selection) — only the label updates. */
+  function pcApplyAccessLevel(levelName) {
+    if (levelName !== "Custom" && pcGroupsEl) {
+      var rule = PC_PRESET_ALLOW[levelName];
+      if (rule === undefined) return;
+      var cards = pcGroupsEl.querySelectorAll(".pc-grp-card");
+      for (var c = 0; c < cards.length; c++) {
+        var boxes = cards[c].querySelectorAll(".pc-chk");
+        for (var i = 0; i < boxes.length; i++) {
+          var a = boxes[i].getAttribute("data-pc-action");
+          boxes[i].checked = rule === null ? true : (rule.indexOf(a) !== -1);
+        }
+      }
+    }
+    pcSetAccessLevelValue(levelName);
+  }
+
+  /* Build the access-level dropdown menu, wired to apply preset +
+     mark dirty on user pick. */
+  pcBuildDDMenu(pcAccessLevelDD, "pcAccessLevelMenu", PC_LEVEL_OPTIONS, function (value) {
+    pcApplyAccessLevel(value);
+    pcCloseDD(pcAccessLevelDD);
+    pcMarkDirty();
+  });
+  if (pcAccessLevelTrigger) {
+    pcAccessLevelTrigger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (pcAccessLevelDD.classList.contains("open")) pcCloseDD(pcAccessLevelDD);
+      else pcOpenDD(pcAccessLevelDD);
+    });
+  }
+  /* Extend outside-click close + Esc close to include this dropdown. */
+  document.addEventListener("click", function (e) {
+    if (pcAccessLevelDD && !pcAccessLevelDD.contains(e.target)) {
+      var m = document.getElementById("pcAccessLevelMenu");
+      if (!m || !m.contains(e.target)) pcCloseDD(pcAccessLevelDD);
+    }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") pcCloseDD(pcAccessLevelDD);
+  });
+
+  /* Text-input edits (Permission Name, Description) mark dirty on
+     every keystroke. Created By is `disabled` so it never fires. */
+  if (pcPermNameInput) pcPermNameInput.addEventListener("input", pcMarkDirty);
+  if (pcDescInput)     pcDescInput.addEventListener("input", pcMarkDirty);
+
+  /* Checkbox edits inside the Permission Options card: auto-resolve
+     the displayed level (so a manual change "out of" Full Access
+     surfaces as Custom, and a manual change that happens to match a
+     preset shows that preset), and mark dirty. */
+  if (pcGroupsEl) {
+    pcGroupsEl.addEventListener("change", function (e) {
+      var t = e.target;
+      if (!t || !t.classList || !t.classList.contains("pc-chk")) return;
+      pcSetAccessLevelValue(pcDetectLevel());
+      pcMarkDirty();
+    });
+  }
+
+  /* Save Permission — prototype affordance. No persistence layer; the
+     click resets the form to clean so the button visibly reflects
+     the saved state. A real save would also POST the diff. */
+  if (pcSaveBtn) {
+    pcSaveBtn.addEventListener("click", function () {
+      if (pcSaveBtn.disabled) return;
+      pcMarkClean();
+    });
+  }
+
+  /* Find a row in the materialized catalog by its synthetic id (p001…).
+     Returns null if no match — caller treats that as a no-op so a stale
+     link cannot crash the page. */
+  function findPMRowById(rowId) {
+    for (var i = 0; i < PERMISSION_FUNCTIONS_DATA.length; i++) {
+      if (PERMISSION_FUNCTIONS_DATA[i].id === rowId) return PERMISSION_FUNCTIONS_DATA[i];
+    }
+    return null;
+  }
+
+  /* Render the option-group card(s) for the given permission row. The
+     model is one group per row (see permissionOptionsForKey), but the
+     container is built as a list so future capabilities that bundle
+     multiple groups slot in without changing the HTML shape. */
+  function renderPCGroups(row) {
+    if (!pcGroupsEl) return;
+    var model = permissionOptionsForKey(row.key);
+    var html = '';
+    html += '<div class="pc-grp-card" data-pc-group="' + esc(model.group) + '">';
+    html +=   '<div class="pc-grp-header">';
+    html +=     '<button type="button" class="pc-grp-header-left" data-pc-grp-toggle aria-expanded="true">';
+    html +=       '<svg class="pc-grp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+    html +=       '<span>' + esc(model.group) + '</span>';
+    html +=     '</button>';
+    html +=     '<button type="button" class="pc-grp-delete" data-pc-grp-delete aria-label="Delete ' + esc(model.group) + ' group">';
+    html +=       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+    html +=       '<span>Delete</span>';
+    html +=     '</button>';
+    html +=   '</div>';
+    html +=   '<div class="pc-chk-row">';
+    for (var i = 0; i < model.actions.length; i++) {
+      var a = model.actions[i];
+      html += '<label class="pc-chk-item">';
+      html +=   '<input type="checkbox" class="pc-chk"' + (a.checked ? ' checked' : '') + ' data-pc-action="' + esc(a.label) + '">';
+      html +=   '<span>' + esc(a.label) + '</span>';
+      html += '</label>';
+    }
+    html +=   '</div>';
+    html += '</div>';
+    pcGroupsEl.innerHTML = html;
+  }
+
+  function openPermissionDetail(rowId) {
+    var row = findPMRowById(rowId);
+    if (!row || !pcDetailPage) return;
+    /* Guard all seeding so input/dropdown/checkbox listeners do not
+       fire markDirty before the user has actually interacted. */
+    pcInitializing = true;
+    try {
+      /* Basic Information */
+      if (pcPermNameInput)  pcPermNameInput.value = row.name;
+      /* Choose Application is a dropdown — seed it with the row's app,
+         which will also refresh the Add Permission Group menu to that
+         app's groups via pcSetAppValue(). */
+      pcSetAppValue(appDisplayNameForKey(row.key));
+      /* Created By is a disabled input — value comes from the static
+         Figma placeholder; not derived from row data. */
+      if (pcCreatedByInput) pcCreatedByInput.value = "Marge Simpsons";
+      if (pcDescInput)      pcDescInput.value     = row.description;
+      if (pcLastUpdatedEl)  pcLastUpdatedEl.textContent = row.lastUpdated;
+      /* Reset the Add Permission Group selection on each open so the
+         picker starts empty for this capability. */
+      pcSetGroupValue("");
+      /* Permission Options */
+      renderPCGroups(row);
+      /* Auto-resolve the displayed access level from the checkboxes
+         renderPCGroups just wrote — e.g. "View IAM Analytics" with
+         only View checked surfaces as Read Only; "Assign Function to
+         Role" with two scoped actions surfaces as Custom. This is
+         how an existing capability's persisted state gets reflected
+         in the dropdown without storing a separate level field. */
+      pcSetAccessLevelValue(pcDetectLevel());
+    } finally {
+      pcInitializing = false;
+    }
+    /* Capability just loaded from source — nothing to save until the
+       user touches something. */
+    pcMarkClean();
+    /* Show the page (matches addUsersPage / createRolePage pattern) */
+    var mp = document.querySelector(".page");
+    if (mp) mp.style.display = "none";
+    var auPage = document.getElementById("addUsersPage");
+    var crPage = document.getElementById("createRolePage");
+    if (auPage) auPage.style.display = "none";
+    if (crPage) crPage.style.display = "none";
+    pcDetailPage.style.display = "";
+    window.scrollTo(0, 0);
+  }
+
+  function closePermissionDetail() {
+    if (!pcDetailPage) return;
+    pcDetailPage.style.display = "none";
+    var mp = document.querySelector(".page");
+    if (mp) mp.style.display = "";
+    /* Return to the Permission Management tab specifically. */
+    if (typeof switchTab === "function") switchTab("perms");
+  }
+
+  if (pcBackBtn)   pcBackBtn.addEventListener("click", closePermissionDetail);
+  if (pcCancelBtn) pcCancelBtn.addEventListener("click", closePermissionDetail);
+
+  /* Section header chevrons (Basic Information / Permission Options)
+     toggle the parent .cr-card collapsed class, matching the existing
+     pattern used by Create Role and Add Users. */
+  var pcSectionHeaders = pcDetailPage ? pcDetailPage.querySelectorAll(".cr-section-header[data-pc-toggle]") : [];
+  for (var pi = 0; pi < pcSectionHeaders.length; pi++) {
+    pcSectionHeaders[pi].addEventListener("click", function (e) {
+      var card = e.currentTarget.closest(".cr-card");
+      if (!card) return;
+      card.classList.toggle("collapsed");
+      var expanded = !card.classList.contains("collapsed");
+      e.currentTarget.setAttribute("aria-expanded", expanded ? "true" : "false");
+    });
+  }
+
+  /* ─── Impacted-roles data model for the Delete permission group dialog ───
+     Two sources, used in order:
+       1) PM-canonical: derive from ROLE_FUNCTION_MAP — any role that
+          has at least one function key in the deleted group will
+          break if the group disappears. Access level comes from
+          ROLE_ACCESS_LEVELS so the dialog matches Role Assignment's
+          "Edit" / "Full Access" / "View Only" / "Custom" vocabulary.
+       2) Seeded extras for newly-onboarded admin apps (DCM / UFS /
+          HARPS / PAID) — these have no FUNCTION_REGISTRY entries yet,
+          so the canonical join returns 0 roles. The seed roles
+          mirror the spec's example shape (Sales Planner / Billing
+          Operations Analyst / etc.) so the dialog reads as
+          enterprise-realistic regardless of which app the deleter
+          is on. */
+  var APP_DISPLAY_TO_TOKEN = {
+    "Identity Access Management":  "IAM",
+    "Core Planning":               "Core Planning",
+    "Inventory Catalog Manager":   "ICM",
+    "Target Options Manager":      "TOM",
+    "Disney Ads Agent":            "Disney Ads Agent"
+  };
+  /* Per-app, per-group impacted-role seed for the newly-onboarded
+     admin applications. Keyed by display name → group name → role
+     list. Status defaults to Active; access levels reuse the four
+     PC presets so the dialog and the Default Access Level dropdown
+     share vocabulary. Re-using realistic Disney Ads enterprise role
+     names (Sales Planner, Billing Operations Analyst, etc.) per the
+     spec example. */
+  var EXTRA_IMPACTED_ROLES = {
+    "Deal Configuration Manager": {
+      "Deal Types":     [
+        { name: "Deal Operations Manager", access: "Full Access",     status: "Active" },
+        { name: "Deal Pricing Analyst",    access: "Standard Access", status: "Active" }
+      ],
+      "Package Rules": [
+        { name: "Deal Operations Manager", access: "Full Access",     status: "Active" }
+      ],
+      "Pricing Rules": [
+        { name: "Deal Pricing Analyst",    access: "Standard Access", status: "Active" }
+      ]
+    },
+    "Unified Financial System": {
+      "Billing Periods":   [
+        { name: "Finance Controller",         access: "Full Access",     status: "Active" },
+        { name: "Billing Operations Analyst", access: "Read Only",       status: "Active" }
+      ],
+      "Invoice Dashboard": [
+        { name: "Billing Operations Analyst", access: "Standard Access", status: "Active" }
+      ],
+      "Revenue Summary":   [
+        { name: "Finance Controller",         access: "Full Access",     status: "Active" }
+      ]
+    },
+    "HARPS": {
+      "Revenue":           [
+        { name: "Revenue Recognition Analyst", access: "Standard Access", status: "Active" },
+        { name: "Finance Controller",          access: "Full Access",     status: "Active" }
+      ],
+      "Adjustments":       [
+        { name: "Revenue Recognition Analyst", access: "Custom",          status: "Active" }
+      ],
+      "Recognition Rules": [
+        { name: "Finance Controller",          access: "Full Access",     status: "Active" }
+      ]
+    },
+    "PAID Invoice Centralization": {
+      "Invoices":           [
+        { name: "Billing Operations Analyst",   access: "Read Only",       status: "Active" },
+        { name: "Invoice Operations Specialist",access: "Standard Access", status: "Active" }
+      ],
+      "Invoice Line Items": [
+        { name: "Invoice Operations Specialist",access: "Standard Access", status: "Active" }
+      ],
+      "Sales Line Items":   [
+        { name: "Billing Operations Analyst",   access: "Read Only",       status: "Active" }
+      ],
+      "NCS Export":         [
+        { name: "Invoice Operations Specialist",access: "Standard Access", status: "Active" }
+      ]
+    }
+  };
+
+  /* Resolve impacted roles for `appDisplay` + `groupName` against the
+     PM-canonical role data (ROLES_PERMISSIONS_DATA + ROLE_FUNCTION_MAP
+     + PC_GROUP_FOR_KEY + ROLE_ACCESS_LEVELS). Falls back to the seed
+     map for apps that have no FUNCTION_REGISTRY footprint. */
+  function pcImpactedRolesForGroup(appDisplay, groupName) {
+    var token = APP_DISPLAY_TO_TOKEN[appDisplay];
+    var out = [];
+    if (token && typeof ROLES_PERMISSIONS_DATA !== "undefined") {
+      for (var i = 0; i < ROLES_PERMISSIONS_DATA.length; i++) {
+        var role = ROLES_PERMISSIONS_DATA[i];
+        var keys = (ROLE_FUNCTION_MAP[role.id] && ROLE_FUNCTION_MAP[role.id][token]) || [];
+        var hit = false;
+        for (var k = 0; k < keys.length; k++) {
+          if (PC_GROUP_FOR_KEY[keys[k]] === groupName) { hit = true; break; }
+        }
+        if (hit) {
+          out.push({
+            name:   role.role,
+            app:    appDisplay,
+            access: roleAccessLevel(role.id, token),
+            status: "Active"
+          });
+        }
+      }
+    }
+    /* Layer in seeded extras (always — covers newly-onboarded apps
+       where ROLE_FUNCTION_MAP has no entries for the token). */
+    var seeded = (EXTRA_IMPACTED_ROLES[appDisplay] && EXTRA_IMPACTED_ROLES[appDisplay][groupName]) || [];
+    for (var s = 0; s < seeded.length; s++) {
+      out.push({
+        name:   seeded[s].name,
+        app:    appDisplay,
+        access: seeded[s].access,
+        status: seeded[s].status
+      });
+    }
+    return out;
+  }
+
+  /* ─── Delete permission group dialog ─── */
+  var pcDelBackdrop  = document.getElementById("pcDeleteGroupBackdrop");
+  var pcDelTitle     = document.getElementById("pcDeleteGroupTitle");
+  var pcDelCount     = document.getElementById("pcDeleteGroupCount");
+  var pcDelListEl    = document.getElementById("pcImpactedRolesList");
+  var pcDelEmptyEl   = document.getElementById("pcImpactedRolesEmpty");
+  var pcDelCancel    = document.getElementById("pcDeleteGroupCancel");
+  var pcDelConfirm   = document.getElementById("pcDeleteGroupConfirm");
+  var pcDelLastFocus = null;
+  var pcDelPendingCard = null; /* the .pc-grp-card the user clicked Delete on */
+
+  function pcOpenDeleteGroupDialog(card) {
+    if (!card || !pcDelBackdrop) return;
+    pcDelPendingCard = card;
+    pcDelLastFocus = document.activeElement;
+    var groupName = card.getAttribute("data-pc-group") || "this permission group";
+    var impacted = pcImpactedRolesForGroup(pcSelectedApp, groupName);
+    if (pcDelCount) pcDelCount.textContent = String(impacted.length);
+    if (pcDelListEl) {
+      pcDelListEl.innerHTML = "";
+      if (impacted.length === 0) {
+        pcDelListEl.hidden = true;
+        if (pcDelEmptyEl) pcDelEmptyEl.hidden = false;
+      } else {
+        pcDelListEl.hidden = false;
+        if (pcDelEmptyEl) pcDelEmptyEl.hidden = true;
+        for (var i = 0; i < impacted.length; i++) {
+          var r = impacted[i];
+          var li = document.createElement("li");
+          li.className = "pc-impacted-role-item";
+          var nameEl = document.createElement("span");
+          nameEl.className = "pc-impacted-role-name";
+          nameEl.textContent = r.name;
+          var metaEl = document.createElement("span");
+          metaEl.className = "pc-impacted-role-meta";
+          metaEl.textContent = r.app + " · " + r.access + " · " + r.status;
+          li.appendChild(nameEl);
+          li.appendChild(metaEl);
+          pcDelListEl.appendChild(li);
+        }
+      }
+    }
+    pcDelBackdrop.removeAttribute("hidden");
+    setTimeout(function () { if (pcDelCancel) pcDelCancel.focus(); }, 0);
+  }
+
+  function pcCloseDeleteGroupDialog() {
+    if (!pcDelBackdrop) return;
+    pcDelBackdrop.setAttribute("hidden", "");
+    pcDelPendingCard = null;
+    if (pcDelLastFocus && typeof pcDelLastFocus.focus === "function") pcDelLastFocus.focus();
+    pcDelLastFocus = null;
+  }
+
+  function pcPerformDeleteGroup() {
+    var card = pcDelPendingCard;
+    pcCloseDeleteGroupDialog();
+    if (!card || !card.parentNode) return;
+    card.parentNode.removeChild(card);
+    /* Removing a card can change which preset (if any) fits the
+       remaining cards. Re-detect so the label tracks reality, and
+       mark dirty because a save would persist the smaller group set. */
+    pcSetAccessLevelValue(pcDetectLevel());
+    pcMarkDirty();
+    if (typeof showEdlToast === "function") {
+      showEdlToast({
+        type:     "success",
+        title:    "Permission group deleted",
+        bodyHtml: "The permission group has been removed from this capability."
+      });
+    }
+  }
+
+  if (pcDelCancel)   pcDelCancel.addEventListener("click", pcCloseDeleteGroupDialog);
+  if (pcDelConfirm)  pcDelConfirm.addEventListener("click", pcPerformDeleteGroup);
+  if (pcDelBackdrop) {
+    pcDelBackdrop.addEventListener("click", function (e) {
+      if (e.target === pcDelBackdrop) pcCloseDeleteGroupDialog();
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pcDelBackdrop && !pcDelBackdrop.hasAttribute("hidden")) {
+      pcCloseDeleteGroupDialog();
+    }
+  });
+
+  /* Group-card chevron toggle + delete affordance. Delete now routes
+     through the EDL confirmation dialog above (was an immediate
+     remove until 2026-05-21). */
+  if (pcGroupsEl) {
+    pcGroupsEl.addEventListener("click", function (e) {
+      var toggle = e.target.closest && e.target.closest("[data-pc-grp-toggle]");
+      if (toggle) {
+        var card = toggle.closest(".pc-grp-card");
+        if (card) {
+          card.classList.toggle("collapsed");
+          toggle.setAttribute("aria-expanded", card.classList.contains("collapsed") ? "false" : "true");
+        }
+        return;
+      }
+      var del = e.target.closest && e.target.closest("[data-pc-grp-delete]");
+      if (del) {
+        var dcard = del.closest(".pc-grp-card");
+        if (dcard) pcOpenDeleteGroupDialog(dcard);
+      }
     });
   }
 
@@ -4691,85 +5988,56 @@ document.addEventListener("DOMContentLoaded", function () {
      Create Role form (markup in #createRolePage). Includes multi-app
      builder (Add application), permissions rendering, summary +
      collapsible cards, and validation for the Save button. */
+  /* APP_PERMISSIONS is the *Role Assignment* metadata catalog. It owns
+     only the role-side concepts that PM does not model:
+       • `label`  — display name for the picker / chips
+       • `levels` — access-level vocabulary (View Only / Edit / Full
+         Access / Custom / IAM-specific User & Role / etc.)
+     `resources` and `bundles` are NOT defined here. They are derived
+     from the Permission Management catalog at runtime via
+     `derivePMResourcesForApp()` + `deriveBundlesForApp()`, so a change
+     to PC_POOL_BY_GROUP, PC_GROUP_FOR_KEY, or FUNCTION_REGISTRY
+     propagates to every Create Role panel automatically (see the
+     "PM IS THE SOURCE OF TRUTH" comment block in the data layer). */
   var APP_PERMISSIONS = {
-    core_planning: {
-      label: "Core Planning",
-      resources: [
-        { title: "Orders", actions: ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"] },
-        { title: "Media Plans", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Line Items", actions: ["View", "Create", "Edit", "Delete"] }
-      ],
-      levels: ["View Only", "Edit", "Approve", "Full Access", "Custom"],
-      bundles: {
-        "View Only": { Orders: ["View"], "Media Plans": ["View"], "Line Items": ["View"] },
-        "Edit": { Orders: ["View", "Create", "Edit", "Comment"], "Media Plans": ["View", "Create", "Edit"], "Line Items": ["View", "Create", "Edit"] },
-        "Approve": { Orders: ["View", "Approve", "Reject"], "Media Plans": ["View"], "Line Items": ["View"] },
-        "Full Access": { Orders: ["View", "Create", "Edit", "Delete", "Assign", "Comment", "Approve", "Reject"], "Media Plans": ["View", "Create", "Edit", "Delete"], "Line Items": ["View", "Create", "Edit", "Delete"] }
-      }
-    },
-    identity_access_management: {
-      label: "Identity Access Management",
-      resources: [
-        { title: "Roles", actions: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"] },
-        { title: "Users", actions: ["View", "Create", "Edit", "Delete", "Impersonate users"] },
-        { title: "Analytics", actions: ["View"] },
-        { title: "Admin Actions", actions: ["Manage configuration", "Manage settings"] }
-      ],
-      levels: ["View Only", "User", "Role", "Full Access", "Custom"],
-      bundles: {
-        "View Only": { Roles: ["View"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
-        "User": { Roles: ["View"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": [] },
-        "Role": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View"], Analytics: ["View"], "Admin Actions": [] },
-        "Full Access": { Roles: ["View", "Create", "Edit", "Delete", "Assign permissions", "Manage data access"], Users: ["View", "Create", "Edit", "Delete", "Impersonate users"], Analytics: ["View"], "Admin Actions": ["Manage configuration", "Manage settings"] }
-      }
-    },
-    disney_ads_agent: {
-      label: "Disney Ads Agent",
-      resources: [
-        { title: "Agent Workflows", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Forecasting", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Insights", actions: ["View"] }
-      ],
-      levels: ["View Only", "Edit", "Full Access", "Custom"],
-      bundles: {
-        "View Only": { "Agent Workflows": ["View"], Forecasting: ["View"], Insights: ["View"] },
-        "Edit": { "Agent Workflows": ["View", "Create", "Edit"], Forecasting: ["View", "Edit"], Insights: ["View"] },
-        "Full Access": { "Agent Workflows": ["View", "Create", "Edit", "Delete"], Forecasting: ["View", "Create", "Edit", "Delete"], Insights: ["View"] }
-      }
-    },
-    inventory_catalog_manager: {
-      label: "Inventory Catalog Manager",
-      resources: [
-        { title: "Inventory Items", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Offerings", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Sales Packages", actions: ["View", "Create", "Edit", "Delete"] }
-      ],
-      levels: ["View Only", "Edit", "Approve", "Full Access", "Custom"],
-      bundles: {
-        "View Only": { "Inventory Items": ["View"], Offerings: ["View"], "Sales Packages": ["View"] },
-        "Edit": { "Inventory Items": ["View", "Create", "Edit"], Offerings: ["View", "Create", "Edit"], "Sales Packages": ["View", "Create", "Edit"] },
-        "Approve": { "Inventory Items": ["View", "Approve", "Reject"], Offerings: ["View"], "Sales Packages": ["View"] },
-        "Full Access": { "Inventory Items": ["View", "Create", "Edit", "Delete"], Offerings: ["View", "Create", "Edit", "Delete"], "Sales Packages": ["View", "Create", "Edit", "Delete"] }
-      }
-    },
-    target_options_manager: {
-      label: "Target Options Manager",
-      resources: [
-        { title: "Targeting Categories", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Dimensions", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Values", actions: ["View", "Create", "Edit", "Delete"] },
-        { title: "Groups", actions: ["View", "Create", "Edit", "Delete", "Assign"] },
-        { title: "Templates", actions: ["View", "Create", "Edit", "Delete", "Assign permissions"] }
-      ],
-      levels: ["View Only", "Edit", "Approve", "Full Access", "Custom"],
-      bundles: {
-        "View Only": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View"], Templates: ["View"] },
-        "Edit": { "Targeting Categories": ["View", "Edit"], Dimensions: ["View", "Edit"], Values: ["View", "Edit"], Groups: ["View", "Create", "Edit"], Templates: ["View", "Create", "Edit"] },
-        "Approve": { "Targeting Categories": ["View"], Dimensions: ["View"], Values: ["View"], Groups: ["View", "Approve", "Reject"], Templates: ["View", "Approve", "Reject"] },
-        "Full Access": { "Targeting Categories": ["View", "Create", "Edit", "Delete"], Dimensions: ["View", "Create", "Edit", "Delete"], Values: ["View", "Create", "Edit", "Delete"], Groups: ["View", "Create", "Edit", "Delete", "Assign"], Templates: ["View", "Create", "Edit", "Delete", "Assign permissions"] }
-      }
-    }
+    core_planning:              { label: "Core Planning",               levels: APP_LEVELS_BY_CR_KEY.core_planning.slice() },
+    identity_access_management: { label: "Identity Access Management",  levels: APP_LEVELS_BY_CR_KEY.identity_access_management.slice() },
+    disney_ads_agent:           { label: "Disney Ads Agent",            levels: APP_LEVELS_BY_CR_KEY.disney_ads_agent.slice() },
+    /* Approve dropped from ICM/TOM in favor of the lean vocabulary
+       declared in APP_LEVELS_BY_CR_KEY — no Approve actions exist in
+       PM's ICM/TOM pools, so the level would have resolved to an
+       empty bundle. */
+    inventory_catalog_manager:  { label: "Inventory Catalog Manager",   levels: APP_LEVELS_BY_CR_KEY.inventory_catalog_manager.slice() },
+    target_options_manager:     { label: "Target Options Manager",      levels: APP_LEVELS_BY_CR_KEY.target_options_manager.slice() }
   };
+  /* Populate `resources` + `bundles` from the PM catalog. Idempotent
+     so it can be called again whenever the PM data model mutates (the
+     Permission Management detail page saving a capability, a new
+     group added, an action pool edited). The Functions popover model
+     is refreshed in the same pass so both Role-Assignment surfaces
+     stay in lockstep with PM. */
+  function rehydrateRoleAssignmentFromPM() {
+    for (var appKey in APP_PERMISSIONS) {
+      if (!Object.prototype.hasOwnProperty.call(APP_PERMISSIONS, appKey)) continue;
+      var app = APP_PERMISSIONS[appKey];
+      app.resources = derivePMResourcesForApp(appKey);
+      app.bundles   = deriveBundlesForApp(appKey, app.levels);
+    }
+    var tokens = Object.keys(PM_TOKEN_TO_CR_APP);
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      var crKey = PM_TOKEN_TO_CR_APP[token];
+      var levels = APP_LEVELS_BY_CR_KEY[crKey] || [];
+      APP_ACCESS_MODEL[token] = {
+        groups:  pmGroupsForAppToken(token),
+        presets: deriveBundlesForApp(crKey, levels)
+      };
+    }
+  }
+  rehydrateRoleAssignmentFromPM();
+  /* Expose on window for any future PM-side mutation handler to call;
+     also makes the propagation testable from the console / QA tools. */
+  window.rehydrateRoleAssignmentFromPM = rehydrateRoleAssignmentFromPM;
 
     var crPage = document.getElementById("createRolePage");
     /* Access-level dropdown + data-access-level value (legacy persisted strings may still read "Custom Access"). */

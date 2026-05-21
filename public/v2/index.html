@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260520pmchips1">
+  <link rel="stylesheet" href="styles.css?v=20260521pcdelconfirm1">
 </head>
 <body>
 
@@ -556,6 +556,126 @@
   </div>
 </div>
 
+<!-- ═══ PERMISSION CAPABILITY DETAIL PAGE ═══
+     Opens when a user clicks a permission function name on the
+     Permission Management tab. Figma 788:4348 ("Create Permission
+     Capability"). Reuses the .cr-page shell + .cr-card section
+     pattern from #createRolePage / #addUsersPage so the chrome
+     (fixed overlay, back link, header rhythm, card padding) is
+     identical to the rest of the v2 detail flows. Only the
+     fields and option-group cards are unique to this page.
+
+     Scope (per Tatiana / user prompt 2026-05-20):
+       • Basic Information — permission identity + metadata
+       • Permission Options — actions available in this capability
+     Explicitly NOT included: Assigned Roles, Capability Details,
+     Registry Object Metadata. Role assignment lives on its own tab. -->
+<div id="pcDetailPage" class="cr-page pc-page" style="display:none">
+  <div class="cr-shell">
+    <button class="cr-back" id="pcBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Permission Management
+    </button>
+
+    <div class="cr-header">
+      <div class="cr-header-left">
+        <h1 class="cr-title">Create Permission Capability</h1>
+        <p class="cr-subtitle">Configure reusable permission groups and actions for role assignment.</p>
+      </div>
+      <div class="cr-header-actions">
+        <button class="btn-std" id="pcCancel" type="button">Cancel</button>
+        <button class="cr-btn-save" id="pcSave" type="button" disabled>Save Permission</button>
+      </div>
+    </div>
+
+    <!-- Basic Information -->
+    <div class="cr-card" id="pcBasicCard">
+      <div class="cr-section-header" data-pc-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title">Basic Information</span>
+      </div>
+
+      <div class="pc-basic-grid">
+        <div class="pc-field pc-field-name">
+          <label class="cr-label" for="pcPermName">Permission Name<span class="cr-req">*</span></label>
+          <input type="text" class="cr-input" id="pcPermName" autocomplete="off">
+        </div>
+        <div class="pc-field pc-field-app">
+          <label class="cr-label" for="pcAppTrigger">Choose Application<span class="cr-req">*</span></label>
+          <div class="cr-dd pc-dd" id="pcAppDD">
+            <button type="button" class="cr-dd-trigger" id="pcAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAppMenu">
+              <span class="cr-dd-value is-placeholder" id="pcAppValue">Select Application</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-field pc-field-created">
+          <label class="cr-label" for="pcCreatedBy">Created By</label>
+          <input type="text" class="cr-input pc-input-disabled" id="pcCreatedBy" value="Marge Simpsons" disabled aria-disabled="true">
+        </div>
+
+        <div class="pc-field pc-field-desc">
+          <label class="cr-label" for="pcDesc">Description</label>
+          <input type="text" class="cr-input" id="pcDesc" autocomplete="off">
+        </div>
+        <div class="pc-field pc-field-meta">
+          <div class="pc-meta-cell">
+            <label class="cr-label">Status</label>
+            <div class="pc-status" id="pcStatus">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="7" stroke="#056C07" stroke-width="1.5" fill="none"/>
+                <path d="M5 8.5l2 2 4-4.5" stroke="#056C07" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+              <span class="pc-status-label">Active</span>
+            </div>
+          </div>
+          <div class="pc-meta-cell">
+            <label class="cr-label">Last Updated</label>
+            <div class="pc-meta-value" id="pcLastUpdated">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permission Options -->
+    <div class="cr-card" id="pcOptionsCard">
+      <div class="cr-section-header" data-pc-toggle="options" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title">Permission Options</span>
+      </div>
+      <p class="pc-section-help">Configure the actions available in this permission capability.</p>
+
+      <div class="pc-options-toolbar">
+        <div class="pc-field pc-field-access">
+          <label class="cr-label" for="pcAccessLevelTrigger">Default Access level<span class="cr-req">*</span></label>
+          <div class="cr-dd pc-dd" id="pcAccessLevelDD">
+            <button type="button" class="cr-dd-trigger" id="pcAccessLevelTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAccessLevelMenu">
+              <span class="cr-dd-value" id="pcAccessLevelValue">Full Access</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-field pc-field-addperm">
+          <label class="cr-label" for="pcAddGroupTrigger">Add Permission Group<span class="cr-req">*</span></label>
+          <div class="cr-dd pc-dd" id="pcAddGroupDD">
+            <button type="button" class="cr-dd-trigger" id="pcAddGroupTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAddGroupMenu">
+              <span class="cr-dd-value is-placeholder" id="pcAddGroupValue">Select a group</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="cr-btn-add" id="pcAddBtn" disabled>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          Add
+        </button>
+      </div>
+
+      <!-- Group cards container (populated by JS) -->
+      <div class="pc-groups" id="pcGroups"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ FILTER DRAWER ═══ -->
 <div class="flt-overlay" id="fltOverlay"></div>
 <aside class="flt-drawer" id="fltDrawer">
@@ -702,6 +822,28 @@
   </div>
 </div>
 
+<!-- Permission Capability: Delete permission group confirmation. Reuses
+     the EDL .cr-confirm-* shell (Remove Role / Remove application / Set
+     user as inactive / Remove user) with an extra "Impacted roles"
+     block injected before the actions row, populated at open time. -->
+<div class="cr-confirm-backdrop" id="pcDeleteGroupBackdrop" hidden>
+  <div class="cr-confirm-dialog pc-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="pcDeleteGroupTitle" aria-describedby="pcDeleteGroupBody">
+    <h2 class="cr-confirm-title" id="pcDeleteGroupTitle">Delete permission group?</h2>
+    <p class="cr-confirm-body" id="pcDeleteGroupBody">
+      Are you sure you want to delete this permission group? This change will impact <strong id="pcDeleteGroupCount">0</strong> assigned roles.
+    </p>
+    <div class="pc-impacted-roles" id="pcImpactedRolesWrap">
+      <div class="pc-impacted-roles-title">Impacted roles</div>
+      <ul class="pc-impacted-roles-list" id="pcImpactedRolesList"></ul>
+      <p class="pc-impacted-roles-empty" id="pcImpactedRolesEmpty" hidden>This permission group is not currently assigned to any roles.</p>
+    </div>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="pcDeleteGroupCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="pcDeleteGroupConfirm" type="button">Delete Permission Group</button>
+    </div>
+  </div>
+</div>
+
 <!-- Edit User: remove confirmation (Homer prototype) -->
 <div class="cr-confirm-backdrop" id="auRemoveUserBackdrop" hidden>
   <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auRemoveUserTitle" aria-describedby="auRemoveUserBody">
@@ -714,6 +856,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260520pmchips1"></script>
+<script src="app.js?v=20260521pcdelconfirm1"></script>
 </body>
 </html>
