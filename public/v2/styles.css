@@ -2283,9 +2283,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 .au-access-card { margin-top: 12px; }
 .au-role-field { margin-top: 8px; }
-/* Cap row to one role-card column (matches `.au-role-cards` 2-col gap math). */
+/* Cap row to exactly one role-card column. The `.au-role-cards` grid
+   below uses `gap: 24px` at desktop widths (see `#addUsersPage
+   .au-role-cards`), so the column width is `(100% - 24px) / 2`. The
+   row's max-width formula must match the same 24px gap to guarantee
+   the row's right edge lands on the same x as the first card's right
+   edge — otherwise the input + Add button feel 2px narrower than the
+   card stacked below, which reads as a sub-pixel right-edge wobble
+   between the two stacked rectangles. Left edges already share x=0 of
+   the section body and are unaffected by this value. */
 #auRolesCard .au-role-row {
-  max-width: min(100%, calc((100% - 28px) / 2));
+  max-width: min(100%, calc((100% - 24px) / 2));
 }
 .au-role-row { margin-top: 0; display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
 .au-role-row .au-btn-add { flex-shrink: 0; }
@@ -3802,20 +3810,34 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   display: none;
 }
 
-/* Nav Icon container — Figma `aspect-[40/40] h-full p-[spacing-02,4px]`
-   (node I6426:54055;6335:25823). `h-full` inside the 48 px bar makes
-   the container 48 px tall; aspect 1:1 makes it 48 wide. 24×24 icon
-   inside + 12 px visual breathing room all around.
-   My previous 40×40 figure shrank the hit box below both EDL's
-   intrinsic 48-px height AND the ADS spec. Restore 48×48 and keep the
-   3-px container radius (`radius/md`) for ADS identity. */
+/* Nav Icon container — Pass-6 right-cluster correction.
+   Canonical reference is now the Ads DS Top Bar component itself
+   (Figma node 795:40 → utilities cluster 795:56), where the icons sit
+   as direct 20×20 children inside a 16px-gap row — there is no 48×48
+   "Nav Icon container" wrapper in the published component. Our HTML
+   needs button elements for hit area, so we keep a wrapper but pull
+   it down to 40×40 so the hover/active background reads as a tight
+   rounded square around the 20×20 icon instead of as a 48×48 block
+   that visually competes with the icon itself. 6px radius matches
+   every other ADS surface in this theme (dropdown menu, button,
+   card). Avatar trigger gets a circular wrapper override below so
+   its hover halo reads as a halo, not a square wash. */
 [data-theme="ads-preview"] .nav-r-btn {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   margin: 0;
-  border-radius: 3px;    /* radius-md per Nav Icon container */
+  border-radius: 6px;
   transition: background-color 0.15s ease;
+}
+
+/* Avatar trigger — wrapper hugs the round portrait so hover/focus
+   reads as a circular halo, not a 6px rounded square behind a round
+   image. The trigger is the *only* `.nav-r-btn` that holds a 32×32
+   round image (the bell and three-dot buttons hold 20×20 glyphs);
+   this is a one-button override, not a general pattern. */
+[data-theme="ads-preview"] #userMenuTrigger.nav-r-btn {
+  border-radius: 50%;
 }
 
 /* ADS search pill (injected DOM, visible only in ADS Preview).
@@ -3910,12 +3932,18 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: rgba(255,255,255,0.22);
 }
 
-/* Avatar — per the May 18 nav-correction the profile/avatar icon must NOT
-   be resized, recolored, or replaced under any theme. It now uses the
-   base `.nav-avatar-img { width:24px; height:24px; border-radius:50% }`
-   in every theme; the only ADS-scoped tweak is to drop any inherited
-   ring/shadow so the bare portrait reads cleanly on the brand bar. */
+/* Avatar — Pass-6 right-cluster correction.
+   The Ads DS Top Bar component (Figma node 795:61, "avatar") publishes
+   the profile image at 32×32 round. EDL Light/Dark continue to use the
+   base 24×24 (no override leaks across themes), so the cross-theme
+   no-recolour/no-replace rule from the prior May 18 nav-correction
+   still holds — the only ADS-scoped change is to grow the portrait to
+   the published ADS size. `box-shadow: none` keeps the bare portrait
+   on the brand bar without inheriting an EDL focus ring or border. */
 [data-theme="ads-preview"] .nav-avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   box-shadow: none;
 }
 
@@ -3992,43 +4020,327 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   letter-spacing: -0.1px;
 }
 
-/* ─── Native checkbox shape + focus (Create Role) ───
-   EDL ships `.cr-check` at radius 2 px with an EDL-indigo solid
-   outline on focus. ADS checkbox sits at radius/sm (3 px) and uses
-   the unified brand focus ring. Width/height/fill-on-check behavior
-   are preserved. */
+/* ─── P5b. Checkbox — full ADS Checkbox component alignment ─────────────────
+   Anchored to the canonical Ads DS Checkbox (Figma file DJb3yM8aOQjIAbTQ9Cd8Mi,
+   node 20:5 / 71:62) and to the table-cell + row-header-cell embedded
+   instances (nodes 1728:13164 leading-checkbox, 1730:13277 leading-checkbox).
+   Published spec:
+     • Box      : 16×16, 1.5px solid rgba(15,18,20,0.2), radius 2px,
+                  fill white (rest state)
+     • Frame    : 20×20 alignment slot around the box (not a visual element)
+     • Padding  : 4px outer wrapper, ~24×24 total click target
+     • Checked  : box-fill flips to brand (Indigo 300 = #4045C2),
+                  white check glyph drawn at center
+     • Indeterminate : same brand fill, single horizontal white bar
+     • Disabled : opacity 0.5, no pointer events
+     • Tokens   : --checkbox/size/box-radius=2px,
+                  --checkbox/box-border=rgba(15,18,20,0.2),
+                  --checkbox/box-fill=white,
+                  --checkbox/size/padding=4px
+
+   Earlier passes left two violations of this spec:
+     1. `.cr-check` / `.cr-perm-check` had `border-radius: var(--ads-radius-sm)`
+        (6px). The dropdown/button radius is 6px; the canonical checkbox
+        radius is 2px. The two are separate tokens in Figma; we were
+        conflating them.
+     2. `.rp-check` (the role-assignment / permission-management table
+        checkbox) shipped as a raw browser-native input with only
+        `accent-color: var(--brand)`. Under ADS Preview that paints the
+        platform's gradient checkbox (the macOS/WebKit native look),
+        which is the visual that read as "too large" and "floating"
+        against the 14/20 row content. The 18×18 width override that
+        was supposed to be a hot-fix only amplified the size mismatch
+        without addressing the rendering path.
+
+   This block converts all three table+form checkboxes (`.rp-check` for
+   tables, `.cr-check` / `.cr-perm-check` for Create-Role / Create-
+   Permission-Capability forms) to a single shared `appearance:none`
+   pipeline that paints the Figma 16×16 / 1.5px / 2-radius / white
+   anatomy with brand fill on checked, brand fill + white bar on
+   indeterminate, and an opacity-0.5 disabled state. EDL Light + EDL
+   Dark continue to use the base `.cr-check` / `.cr-perm-check` rules
+   (16×16 / 2px radius / EDL-indigo fill / EDL focus ring) and the
+   base `.rp-check { 16×16 + accent-color }` rule — none of which is
+   touched by the selectors below. */
+[data-theme="ads-preview"] .rp-check,
 [data-theme="ads-preview"] .cr-check,
-[data-theme="ads-preview"] .cr-perm-check {
-  border-radius: var(--ads-radius-sm);
+[data-theme="ads-preview"] .cr-perm-check,
+[data-theme="ads-preview"] .pc-page .pc-chk {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--ads-border-component);
+  border-radius: 2px;
+  background: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  vertical-align: middle;        /* aligns the inline-block control to the
+                                    text baseline center inside a 48px row */
+  transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 
-/* ─── Create-Role application dropdown ───
-   `.cr-dd-trigger` is an EDL text-field-shaped button at 8 px radius;
-   bring it in line with every other ADS-Preview form control (3 px
-   radius, 2-layer focus "ring + border"). The matching `.cr-dd-menu`
-   drops to the same radius and inherits the ADS menu elevation used
-   for `.search-dropdown` / `.edl-combo-menu`. */
+[data-theme="ads-preview"] .rp-check:hover:not(:checked):not(:indeterminate):not(:disabled),
+[data-theme="ads-preview"] .cr-check:hover:not(:checked):not(:indeterminate):not(:disabled),
+[data-theme="ads-preview"] .cr-perm-check:hover:not(:checked):not(:indeterminate):not(:disabled),
+[data-theme="ads-preview"] .pc-page .pc-chk:hover:not(:checked):not(:indeterminate):not(:disabled) {
+  border-color: var(--ads-border-bold);
+}
+
+[data-theme="ads-preview"] .rp-check:focus-visible,
+[data-theme="ads-preview"] .cr-check:focus-visible,
+[data-theme="ads-preview"] .cr-perm-check:focus-visible,
+[data-theme="ads-preview"] .pc-page .pc-chk:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-theme="ads-preview"] .rp-check:checked,
+[data-theme="ads-preview"] .cr-check:checked,
+[data-theme="ads-preview"] .cr-perm-check:checked,
+[data-theme="ads-preview"] .pc-page .pc-chk:checked,
+[data-theme="ads-preview"] .rp-check:indeterminate,
+[data-theme="ads-preview"] .cr-check:indeterminate,
+[data-theme="ads-preview"] .cr-perm-check:indeterminate,
+[data-theme="ads-preview"] .pc-page .pc-chk:indeterminate {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+/* Checkmark glyph — the SVG is sized to fill the 16×16 box at viewBox
+   16 16 with the check anchored from (3.5, 8.2) → (6.6, 11.3) → (12.5,
+   5.2). The path matches the EDL base check so the two themes are
+   silhouette-identical; only the surrounding box color differs. */
+[data-theme="ads-preview"] .rp-check:checked::after,
+[data-theme="ads-preview"] .cr-check:checked::after,
+[data-theme="ads-preview"] .cr-perm-check:checked::after,
+[data-theme="ads-preview"] .pc-page .pc-chk:checked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M3.5 8.2 L6.6 11.3 L12.5 5.2' stroke='%23ffffff' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+/* Indeterminate — single 8×1.5 white bar, centered. Reuses the brand
+   fill above. Used by `rpSelectAll` / `pmSelectAll` when some-but-not-
+   all rows are selected (see app.js: `selAll.indeterminate = on > 0
+   && on < total`). In IAM these flags are mutually exclusive
+   (`checked = on === total`, `indeterminate = on > 0 && on < total`),
+   but we explicitly null `background-image` and `bottom` here so that
+   any hypothetical "checked AND indeterminate" state still paints
+   only the bar — defensive against future code that toggles both. */
+[data-theme="ads-preview"] .rp-check:indeterminate::after,
+[data-theme="ads-preview"] .cr-check:indeterminate::after,
+[data-theme="ads-preview"] .cr-perm-check:indeterminate::after,
+[data-theme="ads-preview"] .pc-page .pc-chk:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 2.5px;
+  right: 2.5px;
+  top: 50%;
+  bottom: auto;
+  height: 1.5px;
+  background-color: #FFFFFF;
+  background-image: none;
+  transform: translateY(-50%);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+[data-theme="ads-preview"] .rp-check:disabled,
+[data-theme="ads-preview"] .cr-check:disabled,
+[data-theme="ads-preview"] .cr-perm-check:disabled,
+[data-theme="ads-preview"] .pc-page .pc-chk:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Pixel-perfect vertical centering for the leading-checkbox column.
+   Inline-block inputs with `vertical-align: middle` align to the cell's
+   text line-box mid, not to the cell's geometric center — for a 48px
+   body row with a 21px line-box the input lands ~1.75px below center,
+   producing the "floating" feel reported in QA. Collapsing the cell's
+   line-height to 0 removes the line-box, so `vertical-align: middle`
+   computes against the cell's actual height and the checkbox sits on
+   the row's geometric centerline. Scoped to ADS Preview so EDL Light
+   / EDL Dark retain their existing rendering. The Figma equivalent is
+   the Flex `items-center` on the row, which centers geometrically. */
+[data-theme="ads-preview"] .tbl th.rp-sel,
+[data-theme="ads-preview"] .tbl td.rp-sel,
+[data-theme="ads-preview"] .tbl th.pm-sel,
+[data-theme="ads-preview"] .tbl td.pm-sel {
+  line-height: 0;
+}
+
+/* ─── P5. Dropdown — full ADS Dropdown component alignment ─────────────────
+   Anchored to the canonical Ads DS Dropdown component (Figma file
+   DJb3yM8aOQjIAbTQ9Cd8Mi, node 36:56). The published spec is a
+   FLOATING menu, not a welded popover — trigger and menu are distinct
+   surfaces with a small gap and each has its own complete border /
+   shadow / radius. The earlier Pass-1 patch only converted radius and
+   added a brand focus ring; it kept the EDL "welded" pattern where
+   the trigger's bottom corners flatten on Open and the menu inherits
+   the trigger's bottom border. Two visual tells survived that pass:
+     1. `.cr-dd.open .cr-dd-trigger` flattened its bottom corners,
+        which only reads correctly when the menu is glued to the
+        field. The ADS pattern keeps the trigger as a stable rounded
+        rect through Open.
+     2. `.cr-dd-menu.is-layered` inherits `border: 1px var(--brand-text)`
+        from the EDL base rule (line ~1819). Under ADS Preview that
+        paints the menu with a violet ring — wrong per the ADS
+        Dropdown spec, which calls for the same neutral `color/border/
+        default` token (`rgba(15,18,20,0.2)`) on every side.
+
+   Spec we now match (Default size; --ads-radius-sm = 6px):
+     Trigger
+       • bg: white
+       • border: 1px `--ads-border-component` on ALL sides (rest)
+       • radius: 6px on all 4 corners (rest AND open)
+       • padding: 0 12px horizontal (vertical driven by 32px height)
+       • text: 14 / 20 Open Sans Regular (typography pass sets `--ff`)
+       • chevron: 16×16 inherits 32px-height trigger (Compact density);
+                  rotates 180° on Open via the base `.cr-dd.open
+                  .cr-dd-chev` rule which we do not touch.
+     Open / Focus
+       • border-color: var(--brand)
+       • halo: 3px var(--brand-bg-soft) (ADS focus pattern)
+       • radius: still 6px on all corners (no welding to menu)
+     Menu (Figma elevation/30 floating surface)
+       • bg: white (inherits)
+       • border: 1px `--ads-border-component` on ALL 4 sides
+       • radius: 6px on all 4 corners
+       • padding: 4px vertical
+       • shadow: 0 4px 12px rgba(15,18,20,0.3) (elevation/30 token)
+       • gap from trigger: ~4px visible separation
+     Options
+       • height: auto, min 36px (8y + 20 line + 8y)
+       • padding: 8px / 12px
+       • text: 14 / 20 primary ink
+       • hover bg: var(--ads-surface-recessed)
+       • selected bg: var(--brand-bg-selected) (preserved — Figma
+         component snapshot does not depict a Selected option but the
+         Ads DS Dropdown Menu node uses the same brand-wash for
+         Selected, see the `.edl-combo-item.selected` override at
+         section 8 which uses the identical token)
+
+   Protection: `.user-menu-pop` / `.user-menu-sub` are NOT in this
+   selector list — they are frozen by the section-5 PROTECTED ZONE
+   rule. The Search component (`.search input` + `.search-dropdown`)
+   and the Combobox (`.edl-combo-input` + `.edl-combo-menu`) follow
+   the ADS Search anatomy (welded results panel under a pill input,
+   per ADS Search component node 37:16) and are governed by sections
+   4 and 9 above — they are intentionally NOT routed through this
+   floating-dropdown pattern. */
+
+/* Trigger — rest */
 [data-theme="ads-preview"] .cr-dd-trigger {
   border-radius: var(--ads-radius-sm);
+  padding: 0 12px;
+  line-height: 20px;
+  border-color: var(--ads-border-component);
 }
-[data-theme="ads-preview"] .cr-dd.open .cr-dd-trigger {
-  border-radius: var(--ads-radius-sm) var(--ads-radius-sm) 0 0;
-  border-color: var(--brand);
-  border-bottom-color: var(--border-default);
-  box-shadow: 0 0 0 3px var(--brand-bg-soft);
-  outline: none;
-}
+
+/* Trigger — open / focus. Keep ALL 4 corners at 6px (no welding) so
+   the trigger reads as a stable rounded rect; the menu floats below
+   with its own complete border and shadow. */
+[data-theme="ads-preview"] .cr-dd.open .cr-dd-trigger,
 [data-theme="ads-preview"] .cr-dd-trigger:focus-visible {
+  border-radius: var(--ads-radius-sm);
   border-color: var(--brand);
+  border-bottom-color: var(--brand);
   box-shadow: 0 0 0 3px var(--brand-bg-soft);
   outline: none;
 }
+
+/* Menu — both inline and portaled. The base `.cr-dd-menu.is-layered`
+   rule (line ~1819) sets `border: 1px var(--brand-text)` plus
+   `border-top: 1px var(--border-default)` to weld it to the trigger;
+   we restate every side here with the neutral component token AND
+   full 6px radius so the violet ring + bottom-only rounding both go
+   away. The base `.cr-dd-menu` (non-portaled) has no border at all,
+   so the same rules give it its first border under ADS Preview. */
+[data-theme="ads-preview"] .cr-dd-menu,
 [data-theme="ads-preview"] .cr-dd-menu.is-layered {
-  border-radius: 0 0 var(--ads-radius-sm) var(--ads-radius-sm);
-}
-[data-theme="ads-preview"] .cr-dd-menu {
+  border: 1px solid var(--ads-border-component);
+  border-top: 1px solid var(--ads-border-component);
   border-radius: var(--ads-radius-sm);
-  box-shadow: var(--shadow-menu);
+  padding: 4px 0;
+  box-shadow: 0 4px 12px rgba(15, 18, 20, 0.3);
+}
+
+/* Layered menu offset — `attachCrDdLayeredMenu` (app.js) sets
+   `top: r.bottom - 1` so the menu visually overlaps the trigger's
+   bottom border by 1px (the welded seam). Shift it 5px down so the
+   gap reads ~4px per Figma, matching the inline-menu offset below. */
+[data-theme="ads-preview"] .cr-dd-menu.is-layered {
+  margin-top: 5px;
+}
+
+/* Non-layered menu — already at `top: calc(100% + 4px)`; keep that
+   gap. (No override needed; rule preserved as a comment marker.) */
+
+/* Options — ADS dropdown row density (14/20 with 8y/12x padding) */
+[data-theme="ads-preview"] .cr-dd-option {
+  height: auto;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+[data-theme="ads-preview"] .cr-dd-option:hover:not(.is-disabled) {
+  background: var(--ads-surface-recessed);
+}
+[data-theme="ads-preview"] .cr-dd-option.is-selected,
+[data-theme="ads-preview"] .cr-dd-option.is-selected:hover {
+  background: var(--brand-bg-selected);
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] .cr-dd-option.is-disabled:hover {
+  background: transparent;
+}
+
+/* Pagination dropdown — ADS Small size (13/18, 6y/10x). The trigger
+   is already constrained to compact width by the base `.pgn-dd`
+   rules; only the option density needs tightening here. NOTE: option
+   rules are keyed off the menu IDs (not `.pgn-dd .cr-dd-option`)
+   because `attachCrDdLayeredMenu` portals the menu to `document.body`
+   when open, so the parent `.pgn-dd` ancestor selector no longer
+   matches at the option level. */
+[data-theme="ads-preview"] .pgn-dd .cr-dd-trigger {
+  padding: 0 10px;
+  font-size: 13px;
+  line-height: 18px;
+}
+[data-theme="ads-preview"] #usersPageSizeMenu .cr-dd-option,
+[data-theme="ads-preview"] #rpPageSizeMenu .cr-dd-option,
+[data-theme="ads-preview"] #pmPageSizeMenu .cr-dd-option {
+  min-height: 32px;
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* Combobox option — same ADS dropdown row density. The combo input
+   stays welded per ADS Search anatomy (section 9), but the options
+   themselves should match the floating-dropdown rhythm so the two
+   menu families read consistently inside the same product. */
+[data-theme="ads-preview"] .edl-combo-item {
+  height: auto;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+[data-theme="ads-preview"] .edl-combo-item:hover,
+[data-theme="ads-preview"] .edl-combo-item.kb-highlight {
+  background: var(--ads-surface-recessed);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -4511,16 +4823,14 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ─── P4-11. Role Assignment checkbox glyph size (Figma 770:19301) ───
-   ADS Data Table / Cell Checkbox uses an 18×18 control inside its 28×48
-   cell slot. v2 base ships a 16×16 control (matching the tighter EDL
-   density). Bumping the visible control to 18×18 in ADS Preview without
-   widening the 44px column keeps the layout intact while matching the
-   Figma checkbox glyph size. Applied only on RA + Permission Management
-   tables (both use .rp-check via the shared rp-sel column). */
-[data-theme="ads-preview"] .rp-check {
-  width: 18px;
-  height: 18px;
-}
+   Superseded by Pass-5b "Checkbox — full ADS Checkbox component
+   alignment" above. The earlier 18×18 figure came from the
+   Figma 770:19301 product frame (which is a styled tile inside the
+   IAM role-assignment design); the canonical ADS Checkbox component
+   (node 20:5 / 71:62) pins the visible box at 16×16 with a 1.5px
+   stroke (Pass-5b restates the full anatomy). The 44px column width
+   in `.rp-tbl col.rp-col-sel` is unchanged — the 16×16 control sits
+   centered in the same slot. */
 
 /* ─── P4-12. Permission Management column proportions (Figma 770:20039) ───
    The PM Figma frame (1343 wide) lays out the 6 columns from x=0:
@@ -4809,5 +5119,358 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   accent-color: var(--brand-text);
   flex-shrink: 0;
 }
-[data-theme="ads-preview"] .pc-page .pc-chk { width: 18px; height: 18px; }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS Preview — P6. Audit polish pass (May 22, 2026).
+   Resolves a small set of "close but inconsistent" findings from a full
+   ADS/Yeti component audit across the IAM v2 prototype. The audit walked
+   the 12 component families called out in the design-system reference
+   (Navbar, Table, Checkbox, Dropdown, Toggle, Buttons, Search, Filter,
+   Tabs, Pagination, Chips, Tooltip) and confirmed that prior passes
+   (Pass-3 Buttons, Pass-4 Inputs, Pass-5 Dropdown, Pass-5b Checkbox,
+   Pass-6 Navbar, P4-1 Tabs, P4-7/10/13 Pagination, P4-14 Chips, 10b
+   Tooltip, etc.) have already aligned the bulk of the surface area.
+   This block addresses the three remaining Medium findings.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── P6-M1. Segmented control radius — `.seg-ctrl` (Internal/External) ──
+   Base ships with `border-radius: 8px` (EDL Light convention). Every
+   other ADS Preview form primitive — input, dropdown, button, filter,
+   pagination pill — has been pinned to `--ads-radius-sm` (6px). Pin
+   the segmented control container the same way so the toolbar reads
+   as a single coherent radius family. EDL Light keeps its 8px. */
+[data-theme="ads-preview"] .seg-ctrl {
+  border-radius: var(--ads-radius-sm);
+}
+
+/* ─── P6-M2. Dialog cancel-button radii — ID-scoped `.btn-std` instances ──
+   Pass-3 pins `[data-theme="ads-preview"] .btn-std { border-radius:
+   var(--ads-radius-sm) }`, but several modal-footer Cancel buttons
+   declare an ID-scoped 8px radius (e.g. `#crCancel.btn-std`,
+   `#crConfirmCancel.btn-std`, …) that wins on specificity (1,1,0 vs
+   0,2,0). The Cancel buttons in Create Role / Remove App / Inactive
+   Confirm / Remove User / Delete Permission Group dialogs therefore
+   still render at 8px while the rest of the form sits at 6px. Pin
+   them explicitly under ADS Preview only; EDL Light keeps the 8px
+   contract. The selectors mirror the ones already used in Pass-T10
+   for typography unification so the responsibility list is in one
+   place when a future Cancel button is added. */
+[data-theme="ads-preview"] #crCancel.btn-std,
+[data-theme="ads-preview"] #crConfirmCancel.btn-std,
+[data-theme="ads-preview"] #crAppRemoveCancel.btn-std,
+[data-theme="ads-preview"] #auInactiveConfirmCancel.btn-std,
+[data-theme="ads-preview"] #auRemoveUserCancel.btn-std,
+[data-theme="ads-preview"] #pcDeleteGroupCancel.btn-std {
+  border-radius: var(--ads-radius-sm);
+}
+
+/* ─── P6-M3. Table header sort-icon gap ────────────────────────────────
+   Base `.th-inner { gap: 4px }`. Canonical Ads DS Table Header Cell
+   (Figma node 1728:13313) publishes `--table/size/header/gap = 6px`
+   for the label-to-sort-icon spacing. The 2px difference is small
+   but cumulative across an 8-column header row, and breaks the
+   "every label rests on a 6px rhythm" pattern used by the body
+   cells and pagination footer. Pin to 6px under ADS Preview only. */
+[data-theme="ads-preview"] .th-inner {
+  gap: 6px;
+}
+
+/* ─── P6-M6. Pagination — full ADS Pagination component ────────────────
+   Canonical reference: Ads DS Pagination (Figma node 35:36). Spec:
+     • Item size      : 36 × 36 (min-width 36, height 36)
+     • Item padding   : 8px (centers the 16×16 chevron icon)
+     • Item radius    : `8px` (literal; pagination is the only ADS form
+                        family that uses 8px instead of the 6px radius-sm)
+     • Item gap       : `--pagination/size/gap = 4px`
+     • Rest bg        : `--pagination/page/rest/background = #FFFFFF`
+     • Rest border    : `--pagination/page/rest/border = rgba(15,18,20,0.2)`
+     • Rest text      : `--pagination/page/rest/text = #1E2528`, 14/normal
+                        Open Sans Regular
+     • Active bg      : `--pagination/page/active/background = #4045C2`
+     • Active text    : `--pagination/page/active/text = #FFFFFF`
+     • Active border  : `--pagination/page/active/border = rgba(15,18,20,0.5)`
+     • Ellipsis       : same 36×36 slot, plain text, NO border, NO bg
+     • Chevron prev/next: same 36×36 bordered button with 16×16 caret
+
+   Current v2 base renders `.pg-n` at 24×24 / 12px / 2px radius and
+   `.pg-nav` as a bare 16×16 icon with no chrome — both compress the
+   pagination strip to a fraction of the ADS footprint, exactly the
+   "too small" feedback raised in this pass. The earlier P4-7 covered
+   the active-page color flip but left button geometry and the
+   prev/next anatomy untouched. This block supplies the full ADS spec
+   and supersedes P4-7's geometry while inheriting its concept.
+
+   Row height: keep the band at 48px (already in place for RA + PM via
+   P4-10/P4-13; lift Users panel here too so all three pagination rows
+   share the same vertical rhythm with 36px buttons plus 6px breathing
+   room top/bottom). EDL Light / Dark continue to render at 40px /
+   24px buttons — they consume `--pgn-*` selectors that are untouched
+   outside the `[data-theme="ads-preview"]` scope.
+
+   Scope: every selector below is `[data-theme="ads-preview"]`-prefixed.
+   No HTML, no JS, no Theme 1.0 changes — pure CSS lift of the existing
+   `.pgn / .pg-nav / .pg-nums / .pg-n / .pg-dots` skeleton. Pagination
+   page-size dropdown (`.pgn-dd`) and metadata labels (`.pgn-lbl`,
+   `.pgn-show`) keep their existing ADS treatment. */
+
+/* Row container — give the band enough vertical space for 36×36 buttons. */
+[data-theme="ads-preview"] .pgn {
+  min-height: 48px;
+}
+/* Page-numbers + nav-arrows cluster — uniform 4px gap per ADS spec.
+   Base `.pgn-pages` uses 10px so the prev arrow sits further from the
+   numbers; ADS treats all items as a single equal-gap row. */
+[data-theme="ads-preview"] .pgn-pages {
+  gap: 4px;
+}
+
+/* Prev / Next / First / Last arrow buttons — promote from bare 16×16
+   icons to 36×36 bordered buttons with the 16×16 caret centered. The
+   First/Last variants (»« glyphs) reuse the same chrome. */
+[data-theme="ads-preview"] .pg-nav {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 18, 20, 0.2);
+  border-radius: 8px;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+[data-theme="ads-preview"] .pg-nav svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+[data-theme="ads-preview"] .pg-nav:hover:not(.off) {
+  background: var(--ads-surface-recessed);
+  color: var(--text-primary);
+  border-color: var(--ads-border-bold);
+}
+[data-theme="ads-preview"] .pg-nav:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+[data-theme="ads-preview"] .pg-nav.off {
+  /* Base already sets opacity:0.4 + pointer-events:none; chrome stays the
+     same shape, the reduced opacity carries the disabled signal. */
+  background: #FFFFFF;
+  color: var(--text-muted);
+  border-color: rgba(15, 18, 20, 0.15);
+}
+
+/* Page-number buttons — 36×36, 14px Open Sans, 8px radius, white bg
+   with neutral 1px border. The active state lifts the brand fill +
+   white text + slightly darker brand-tinted border per ADS spec. */
+[data-theme="ads-preview"] .pg-n {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 18, 20, 0.2);
+  border-radius: 8px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+[data-theme="ads-preview"] .pg-n:hover:not(.on) {
+  background: var(--ads-surface-recessed);
+  color: var(--text-primary);
+  border-color: var(--ads-border-bold);
+}
+[data-theme="ads-preview"] .pg-n.on {
+  background: var(--brand);
+  color: var(--text-on-brand);
+  border-color: rgba(15, 18, 20, 0.5);
+  font-weight: 400;          /* ADS active text stays Regular — the
+                                fill carries the emphasis, not weight */
+  border-radius: 8px;        /* override P4-7's 6px to match canonical
+                                Pagination spec exactly */
+}
+[data-theme="ads-preview"] .pg-n.on::after {
+  display: none;             /* explicit kill of the EDL 2px tick mark */
+}
+[data-theme="ads-preview"] .pg-n:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Ellipsis — same 36×36 slot but no border, no background. Acts as a
+   visual spacer that preserves the 4px gap rhythm without reading as
+   an interactive button. */
+[data-theme="ads-preview"] .pg-dots {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+/* ─── P6-M5. Combo-box selected row — ADS recessed gray, not brand ─────
+   Canonical reference: Ads DS Dropdown / Select component (Figma node
+   36:56, "dropdown-menu / option-2" highlight state). The published
+   ADS Select paints the highlighted/selected option with the recessed
+   surface token:
+     • `--dropdown/surface/recessed = rgba(15,18,20,0.05)`
+       (equivalent to our `--ads-surface-recessed`, already defined).
+     • Text color stays neutral `--field-label/state/default/text = #1E2528`.
+     • There is NO brand-color fill, border, or text tint on the row.
+
+   Section 8 above paints `.edl-combo-item.selected` with
+   `var(--brand-bg-selected)` + `var(--brand-text)` — that read as a
+   full purple/lavender row, the exact mismatch raised by product. The
+   Pass-5 hover override (`--ads-surface-recessed`) at line ~4326 is
+   correct; the SELECTED state was the only family member still using
+   the brand fill. Repoint both selected variants (default + IAM roles
+   menu) to the recessed gray and drop the brand text tint.
+
+   Checkmark behavior: kept as-is on the trailing edge of the selected
+   row (per product UX — the checkmark is a useful "currently selected"
+   affordance the ADS Figma reference omits but our IAM forms benefit
+   from). Its color stays `--brand-text` so it reads as a subtle brand
+   accent against the recessed gray, providing the selection signal
+   without coloring the whole row.
+
+   EDL Light / Dark continue to use the original brand-bg-soft tint
+   (the base rules at lines 925-926); only `[data-theme="ads-preview"]`
+   is touched here.                                                    */
+[data-theme="ads-preview"] .edl-combo-item.selected,
+[data-theme="ads-preview"] .edl-combo-menu--iam-roles .edl-combo-item.selected,
+[data-theme="ads-preview"] .edl-combo-menu--add-user .edl-combo-item.selected {
+  background: var(--ads-surface-recessed);
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] .edl-combo-item.selected:hover,
+[data-theme="ads-preview"] .edl-combo-item.selected.kb-highlight,
+[data-theme="ads-preview"] .edl-combo-menu--iam-roles .edl-combo-item.selected:hover,
+[data-theme="ads-preview"] .edl-combo-menu--iam-roles .edl-combo-item.selected.kb-highlight,
+[data-theme="ads-preview"] .edl-combo-menu--add-user .edl-combo-item.selected:hover,
+[data-theme="ads-preview"] .edl-combo-menu--add-user .edl-combo-item.selected.kb-highlight {
+  background: var(--ads-surface-recessed);
+  color: var(--text-primary);
+}
+
+/* ─── P6-M8. Role cards — equal height per row + bottom-centered toggle ──
+   Role cards in `#addUsersPage` Roles & Permissions normally take their
+   natural content height (the base rule sets `align-self: start;
+   height: fit-content;`). When two cards in the same grid row have
+   different description / access-level text wrap counts, the row's
+   bottom edge ends up jagged and the "Show all permissions" toggle
+   lands at different vertical positions across siblings. Per ADS,
+   stacked cards in a row should share the same height and primary
+   actions should pin to a consistent vertical position.
+
+   Fix (ADS Preview only):
+   • Override grid `align-items: start` → `stretch` so cards inherit
+     the row's tallest natural height.
+   • Override card `align-self: start; height: fit-content;` →
+     `align-self: stretch; height: auto;` so the card actually stretches.
+   • Promote `.au-role-card-top` and `.cr-app-body` to flex columns
+     with `flex: 1 1 auto` so the inner stack fills the card.
+   • Pin `.au-role-view-toggle` to the bottom-center via
+     `margin-top: auto; align-self: center` — pushes the toggle past
+     description / access-level content to the bottom of the card body
+     and centers it on the card's horizontal axis.
+
+   The expand panel (`.au-role-expand`) is a sibling of
+   `.au-role-card-top` in the card column; its collapsed `max-height: 0`
+   keeps it out of the layout when not active, so the bottom of
+   `.au-role-card-top` coincides with the bottom of the card chrome at
+   rest — the toggle pin lands on the inner chrome edge.
+
+   Scope: ADS Preview + `#addUsersPage` only. EDL Light / Dark and
+   other surfaces using `.au-role-card` keep the existing natural-height
+   behavior. The Planner card (lone card on row 2) is unaffected because
+   it has no row mate to stretch against. The Remove action stays in
+   `.cr-app-section-head` (the first child of `.au-role-card-top`) and
+   continues to render flush to the top-right, untouched by this rule. */
+[data-theme="ads-preview"] #addUsersPage .au-role-cards {
+  align-items: stretch;
+  align-content: stretch;
+}
+[data-theme="ads-preview"] #addUsersPage .au-role-card {
+  align-self: stretch;
+  height: auto;
+}
+[data-theme="ads-preview"] #addUsersPage .au-role-card-top {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+[data-theme="ads-preview"] #addUsersPage .au-role-card-top > .cr-app-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+[data-theme="ads-preview"] #addUsersPage .au-role-card .au-role-view-toggle {
+  margin-top: auto;
+  align-self: center;
+}
+
+/* ─── P6-M7. Combo-box selected row — remove trailing checkmark ────────
+   Canonical reference: Ads DS Dropdown / Select (Figma node 36:56). The
+   ADS Select option states (Rest / Hover / Selected) do NOT render a
+   trailing checkmark glyph on the selected row — selection is conveyed
+   entirely by the recessed-gray row fill set in P6-M5. The leading
+   left-aligned label is the only mark inside the row.
+
+   This supersedes the "checkmark kept as-is" decision in P6-M5's
+   header comment. Earlier product UX argued for keeping the brand-blue
+   tick as a "currently selected" affordance, but the canonical ADS
+   Select component does not include it, and product reviewed the open
+   menu against the Figma reference and asked to drop the glyph so the
+   selected row matches ADS 1:1.
+
+   Implementation: the base SVG (`.edl-combo-check`, app.js line 2907)
+   is still emitted in the DOM — we hide it via CSS rather than touching
+   the JS so EDL Light / Dark keep the existing affordance. `display:none`
+   removes the icon from the flex layout entirely; because the row uses
+   `justify-content: space-between` with only the label remaining, the
+   label stays left-aligned at the existing 16px padding (no shift).
+
+   Scope: ADS Preview only; all combo menu variants (default, IAM roles,
+   add-user). Selecting an option still updates the hidden field and
+   visible input — only the in-menu glyph is suppressed.            */
+[data-theme="ads-preview"] .edl-combo-item.selected .edl-combo-check,
+[data-theme="ads-preview"] .edl-combo-menu--iam-roles .edl-combo-item.selected .edl-combo-check,
+[data-theme="ads-preview"] .edl-combo-menu--add-user .edl-combo-item.selected .edl-combo-check {
+  display: none;
+}
+
+/* ─── P6-M4. Timezone combo focus — neutralise the brand halo ──────────
+   Pass-4 above applies the canonical ADS Dropdown/Input focus pattern
+   to every `.edl-combo-input:focus` (brand border + 3px soft halo).
+   On the Add-User form the Timezone field sits inline with adjacent
+   plain inputs (Display Name, Email) that have no equivalent focus
+   ring, so the brand halo reads as a heavy double-border anomaly
+   relative to its neighbours. Per product feedback, neutralise the
+   ring on this one field only — keep the resting neutral border on
+   focus AND while the menu is open. The activation affordance is
+   carried by the menu opening itself (the combo opens on focus/click
+   and on Enter/Space from keyboard), so keyboard a11y remains intact:
+   tab traversal, arrow-key option navigation, Esc-to-close, and
+   screen-reader announcement of the trigger and listbox are all
+   unchanged. Scoped strictly to `#auTimezoneCombo` so the rest of the
+   combo family (Region, Team, application pickers, page-size, etc.)
+   keep the ADS focus pattern; EDL Light is untouched. */
+[data-theme="ads-preview"] #auTimezoneCombo .edl-combo-input:focus,
+[data-theme="ads-preview"] #auTimezoneCombo .edl-combo-input:focus-visible,
+[data-theme="ads-preview"] #auTimezoneCombo.open .edl-combo-input {
+  border-color: var(--border-input);
+  box-shadow: none;
+  outline: none;
+}
