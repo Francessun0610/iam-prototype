@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Cache hygiene for the GitLab Pages deploy: V2 ships changes on most
+       pushes, but the HTML itself has no query-string cache-buster (only
+       the CSS/JS asset URLs do). Without these meta tags, a browser that
+       cached an older HTML keeps loading the OLD asset version stamps and
+       never sees the new CSS/JS. `no-cache` forces revalidation each
+       visit, so the freshly deployed HTML is fetched and the up-to-date
+       `?v=` busters on `styles.css` / `app.js` take effect.
+
+       Scope: V2 only. Theme 1.0 (`public/index.html`) is untouched. -->
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
   <title>Atlas — Access Management</title>
   <script>
     (function () {
@@ -26,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260522cardheight1">
+  <link rel="stylesheet" href="styles.css?v=20260522pagesdeploy1">
 </head>
 <body>
 
@@ -856,6 +867,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260522cardheight1"></script>
+<script src="app.js?v=20260522pagesdeploy1"></script>
 </body>
 </html>
