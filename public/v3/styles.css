@@ -5590,10 +5590,17 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
-  /* Hint the renderer to keep the 72-px circle crisp even if the
-     source asset is slightly larger or smaller than 144 px @2x. */
-  image-rendering: -webkit-optimize-contrast;
+  /* Photo clarity (Frances QA 2026-05-29):
+     Source assets are 1536x1024 PNGs being painted into the 72-px
+     identity circle (~21x downscale). `image-rendering: auto` lets
+     Chrome/Safari use their default bicubic-style downscale, which
+     is correct for photographs. The previous
+     `-webkit-optimize-contrast` hint is intended for line art /
+     screenshots and made photo edges look blocky at this ratio.
+     Matches the Users-table avatar rendering path. */
+  image-rendering: auto;
 }
 /* Figma 847:16174 placeholder SVG — rendered inline at native 72x72
    so vector strokes stay sharp at every DPI. `display: block` kills

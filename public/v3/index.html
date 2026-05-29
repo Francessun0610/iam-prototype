@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260529pmclean4">
+  <link rel="stylesheet" href="styles.css?v=20260529avclarity1">
 </head>
 <body>
 
@@ -532,8 +532,13 @@
               <!-- Read-only status icon. Active = filled green check
                    (Figma 847:16185 — EDL Green 70 #056C07). Inactive
                    = neutral gray dot. Replaces the Add-mode Active /
-                   Inactive segmented control. -->
-              <span class="au-id-status" id="auIdStatus" role="img" aria-label="Active">
+                   Inactive segmented control.
+                   Wired into the shared EDL tooltip system via
+                   `.status-icon-wrap` + `data-status-tooltip` — same
+                   hover/focus behavior used by the Users table status
+                   icon. JS keeps `aria-label` and `data-status-tooltip`
+                   in sync per selected user (Active vs Inactive). -->
+              <span class="au-id-status status-icon-wrap" id="auIdStatus" role="img" aria-label="Active" data-status-tooltip="Active" tabindex="0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
               </span>
             </div>
@@ -1060,6 +1065,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260529pmclean4"></script>
+<script src="app.js?v=20260529avclarity1"></script>
 </body>
 </html>

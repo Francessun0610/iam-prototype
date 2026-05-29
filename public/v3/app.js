@@ -4143,11 +4143,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       /* Status icon: green check for Active, neutral gray dot for
-         Inactive. Always read-only; never a toggle on Edit User. */
+         Inactive. Always read-only; never a toggle on Edit User.
+         Shared EDL tooltip system (setupStatusTooltip) reads
+         `data-status-tooltip`, so we keep it in sync with the
+         aria-label for every selected user, internal or external. */
       if (auIdStatus) {
         var active = user.status !== "Inactive";
         var statusLabel = active ? "Active" : "Inactive";
         auIdStatus.setAttribute("aria-label", statusLabel);
+        auIdStatus.setAttribute("data-status-tooltip", statusLabel);
         auIdStatus.innerHTML = active
           ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>'
           : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="9" y1="12" x2="15" y2="12"/></svg>';
