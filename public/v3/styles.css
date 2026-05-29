@@ -5769,10 +5769,18 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 /* ─── Permission Options card (Figma 847:16138) ─────────────────────
    Single helper paragraph above the Assigned Applications field.
    Per Figma 847:16145 — 14 px Source Sans Pro Regular, leading 20,
-   EDL Gray 95 (#171C20). The V3 helper also carries the future-state
-   custom-actions sentence after a period (no separate UI control). */
+   EDL Gray 95 (#171C20).
+
+   Vertical rhythm (Figma 847:16139 / 847:16140 — Frances QA 2026-05-29):
+   • header row .cr-section-header has padding 6/0/4 (~4px bottom)
+   • helper margin-top 16px gives the 8px Figma gap PLUS recovers
+     the ~12px breathing room the header's py-[16px] supplies in
+     Figma but our compact .cr-section-header does not — net effect
+     visually matches Figma's title→helper spacing
+   • helper margin-bottom 16px keeps the Figma 16px gap to the
+     Assigned Applications row */
 #auPermsCard .au-perms-helper {
-  margin: 0 0 16px 0;
+  margin: 16px 0 16px 0;
   font-size: 14px;
   line-height: 20px;
   color: var(--text-primary, #171C20);
