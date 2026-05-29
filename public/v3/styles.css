@@ -5474,3 +5474,334 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   box-shadow: none;
   outline: none;
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   V3 ONLY · Edit User page (Figma node 847:16112)
+   ────────────────────────────────────────────────────────────────────
+   Edit User reuses the existing `#addUsersPage` HTML chrome; this block
+   layers the Figma-aligned edit-mode treatments on top via the
+   `#addUsersPage.is-edit-mode` modifier so Add mode is byte-identical
+   to the V2 fork. Three concerns are scoped here:
+     1. Roster-style identity block (.au-id-block) inside the Basic
+        Information card.
+     2. Edit-mode grid that puts identity on the left and fields on the
+        right (Figma 2-column split).
+     3. Permission Options card (.au-perms-* / .au-id-* selectors).
+   Add-mode CSS continues to drive everything not under .is-edit-mode.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Hide the new edit-only DOM whenever we're not in edit mode. The
+   `hidden` attribute on the elements handles initial paint; once
+   .is-edit-mode toggles, JS clears `hidden`. The CSS rule below is
+   the belt-and-suspenders to ensure no stray paint in Add mode. */
+#addUsersPage:not(.is-edit-mode) .au-edit-only { display: none !important; }
+
+/* ─── Identity block (avatar + name + email + status icon) ─────────── */
+#addUsersPage.is-edit-mode .au-id-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  /* Left column of the Figma 2-col grid lives outside .au-grid so we
+     can rely on flex centering without hijacking the existing grid
+     row/order rules. */
+  padding: 0 0 8px 0;
+  min-width: 0;
+}
+#addUsersPage.is-edit-mode .au-id-avatar {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-bg-soft, #E6E6FF);
+  color: var(--brand, #3611C8);
+  overflow: hidden;
+}
+#addUsersPage.is-edit-mode .au-id-avatar--external {
+  /* External users always use the neutral placeholder treatment —
+     subtle gray ring + neutral icon, no photo affordance. */
+  background: var(--neutral-bg, #EFF3F5);
+  color: var(--text-muted, #6A8095);
+}
+#addUsersPage.is-edit-mode .au-id-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+#addUsersPage.is-edit-mode .au-id-avatar-icon {
+  width: 32px;
+  height: 32px;
+}
+#addUsersPage.is-edit-mode .au-id-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+#addUsersPage.is-edit-mode .au-id-name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary, #171C20);
+}
+#addUsersPage.is-edit-mode .au-id-email-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+#addUsersPage.is-edit-mode .au-id-email {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-muted, #6A8095);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+#addUsersPage.is-edit-mode .au-id-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 14px;
+}
+
+/* ─── Basic Information grid in edit mode ─────────────────────────────
+   The Figma node lays Basic Information as: identity column (left) +
+   2x2 fields (right). The existing Add-mode grid is a 3-column flex
+   layout reordered by `.au-field-*` order classes. We don't rewrite
+   the grid; instead, we host the identity block above the grid and
+   collapse the 3rd column placeholders that are not part of the Figma
+   spec (Name / Email / Status / Profile picture) so the remaining
+   fields (Preferred name, Region, Team, Timezone) flow into a 2-col
+   subgrid. */
+#addUsersPage.is-edit-mode .au-field-edit-only { display: none !important; } /* drop the read-only "Name" row */
+#addUsersPage.is-edit-mode .au-field-email     { display: none !important; }
+#addUsersPage.is-edit-mode .au-field-status    { display: none !important; }
+#addUsersPage.is-edit-mode .au-profile-field   { display: none !important; }
+#addUsersPage.is-edit-mode .au-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 16px;
+}
+#addUsersPage.is-edit-mode .au-grid > .au-field { min-width: 0; }
+/* Figma node 847:16112 field order: row 1 = Preferred name | Region,
+   row 2 = Team | Timezone. The existing Add-mode `.au-field-*` order
+   classes lay these out as Preferred / Region / Timezone / Team, which
+   puts Timezone on row 2 left instead of right. Pin grid-row + 
+   grid-column explicitly here to land on the Figma order without
+   disturbing Add-mode order. */
+#addUsersPage.is-edit-mode .au-field-preferred { grid-row: 1; grid-column: 1; order: 0; }
+#addUsersPage.is-edit-mode .au-field-region    { grid-row: 1; grid-column: 2; order: 0; }
+#addUsersPage.is-edit-mode .au-field-team      { grid-row: 2; grid-column: 1; order: 0; }
+#addUsersPage.is-edit-mode .au-field-timezone  { grid-row: 2; grid-column: 2; order: 0; }
+@media (max-width: 720px) {
+  #addUsersPage.is-edit-mode .au-grid { grid-template-columns: 1fr; }
+  #addUsersPage.is-edit-mode .au-field-preferred,
+  #addUsersPage.is-edit-mode .au-field-region,
+  #addUsersPage.is-edit-mode .au-field-team,
+  #addUsersPage.is-edit-mode .au-field-timezone {
+    grid-row: auto; grid-column: auto;
+  }
+}
+
+/* Figma top-right action cluster is just Cancel + Save Permission.
+   The Remove User link (an existing V2 utility) is hidden in V3 edit
+   mode to match the Figma 1:1. The flow itself is preserved — Remove
+   User can be re-surfaced from a future moremenu or page-level
+   actions area in a follow-up. */
+#addUsersPage.is-edit-mode #auRemoveUser { display: none !important; }
+
+/* ─── Permission Options card ─────────────────────────────────────── */
+#auPermsCard .au-perms-helper {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-secondary, #48494A);
+}
+#auPermsCard .au-perms-helper-future {
+  color: var(--text-muted, #6A8095);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+#auPermsCard .au-perms-app-field { margin-top: 0; margin-bottom: 16px; }
+
+#auPermsCard .au-perms-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  #auPermsCard .au-perms-cards { grid-template-columns: 1fr; }
+}
+#auPermsCard .au-perms-card {
+  border: 1px solid var(--border-card, #E2E9EC);
+  border-radius: 8px;
+  background: #FFFFFF;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+#auPermsCard .au-perms-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+#auPermsCard .au-perms-card-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-primary, #171C20);
+}
+#auPermsCard .au-perms-card-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: var(--text-muted, #6A8095);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+#auPermsCard .au-perms-card-remove:hover {
+  background: var(--neutral-hover, #EFF3F5);
+  color: var(--text-primary, #171C20);
+}
+#auPermsCard .au-perms-card-remove:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, #928AFF);
+  outline-offset: 1px;
+}
+
+/* Access Level field inside an application card */
+#auPermsCard .au-perms-access-field { margin-bottom: 12px; }
+#auPermsCard .au-perms-access-wrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+#auPermsCard .au-perms-access-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 36px;
+  padding: 0 36px 0 12px;
+  border: 1px solid var(--border-input, #D4DEE3);
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236A8095' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  color: var(--text-primary, #171C20);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+#auPermsCard .au-perms-access-select:focus { outline: none; border-color: var(--brand, #3611C8); }
+#auPermsCard .au-perms-access-coverage {
+  /* Coverage label is purely informational — sits to the right of the
+     dropdown on wide cards, wraps below on narrow widths. Hidden by
+     default to keep the dropdown as the visual anchor; the coverage
+     text already reads inside the selected option label. */
+  display: none;
+}
+
+/* Read-only permission coverage rows */
+#auPermsCard .au-perms-rows {
+  list-style: none;
+  margin: 0 0 12px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#auPermsCard .au-perms-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-primary, #171C20);
+}
+#auPermsCard .au-perms-row-label {
+  font-weight: 600;
+  color: var(--text-primary, #171C20);
+}
+#auPermsCard .au-perms-row-actions {
+  color: var(--text-muted, #6A8095);
+  text-align: right;
+}
+
+/* Show all permissions toggle */
+#auPermsCard .au-perms-show-all {
+  align-self: center;
+  background: transparent;
+  border: 0;
+  padding: 8px 12px;
+  color: var(--brand, #3611C8);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+}
+#auPermsCard .au-perms-show-all:hover { background: var(--brand-bg-soft, #E6E6FF); }
+#auPermsCard .au-perms-show-all:focus-visible { outline: 2px solid var(--brand-focus-ring, #928AFF); outline-offset: 1px; }
+#auPermsCard .au-perms-show-all-arr { font-size: 12px; }
+
+/* Expanded read-only details — same row shape, with a subtle note */
+#auPermsCard .au-perms-card-expand {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-card, #E2E9EC);
+}
+#auPermsCard .au-perms-card-expand-note {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: var(--text-muted, #6A8095);
+  font-style: italic;
+}
+
+/* Future-state affordance: "+ Add custom action".
+   Disabled by design — the visual treatment is intentionally secondary
+   (ghost button, muted color, dashed outline) so it never reads as a
+   current-state CTA. Tooltip-only feedback explains the future state. */
+#auPermsCard .au-perms-card-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-start;
+}
+#auPermsCard .au-perms-add-action {
+  background: transparent;
+  border: 1px dashed var(--border-input, #D4DEE3);
+  color: var(--text-muted, #6A8095);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+#auPermsCard .au-perms-add-action:hover { background: transparent; color: var(--text-muted, #6A8095); }
+#auPermsCard .au-perms-add-action[disabled] { pointer-events: auto; } /* allow native tooltip on hover */
+
+/* Save Permission disabled tint in edit mode — leans on the existing
+   `.au-btn-save:disabled` rule but tightens contrast so the Figma
+   "muted indigo" look matches. */
+#addUsersPage.is-edit-mode .au-btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

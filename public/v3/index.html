@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260529v3fork1">
+  <link rel="stylesheet" href="styles.css?v=20260529edituser2">
 </head>
 <body>
 
@@ -373,7 +373,7 @@
   <div class="au-shell">
     <button class="au-back" id="auBack">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to users
+      <span class="au-back-label" id="auBackLabel">Back to users</span>
     </button>
 
     <div class="au-header">
@@ -396,6 +396,38 @@
       </div>
 
       <div class="au-section-body">
+      <!-- ═ Edit-mode identity block (V3 only) ═
+           Roster-style identity (Figma node 847:16112) — avatar, name,
+           email + status check-circle — rendered only when the Add/Edit
+           page is in edit mode. Hidden in Add mode via the existing
+           `#addUsersPage.is-edit-mode` toggle. Populated by
+           `populateEditFormFromUser` in app.js.
+
+           Internal users get a photo when their record has `avatar`,
+           otherwise the EDL neutral user-circle placeholder. External
+           users always use the neutral placeholder (per Tatiana — no
+           personal photo treatment for external identities). -->
+      <div class="au-id-block au-edit-only" id="auIdBlock" hidden>
+        <div class="au-id-avatar" id="auIdAvatar" aria-hidden="true">
+          <!-- Neutral placeholder is rendered by default; the photo
+               variant is swapped in by JS for internal users with an
+               avatar field. -->
+          <svg class="au-id-avatar-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 19.5c1.4-3 4-4.5 6.5-4.5s5.1 1.5 6.5 4.5"/></svg>
+        </div>
+        <div class="au-id-meta">
+          <div class="au-id-name" id="auIdName">Marge Simpson</div>
+          <div class="au-id-email-row">
+            <span class="au-id-email" id="auIdEmail">marge.simpson@disney.com</span>
+            <!-- Read-only status icon. Active = filled green check;
+                 Inactive = neutral gray dot. Replaces the Add-mode
+                 Active/Inactive segmented control in edit mode. -->
+            <span class="au-id-status" id="auIdStatus" role="img" aria-label="Active">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div class="au-grid">
         <div class="au-field au-field-edit-only">
           <label class="au-label" for="auFullName">Name</label>
@@ -456,6 +488,48 @@
           <p class="au-profile-sync-note">Synced from Disney Rostr when available.</p>
         </div>
       </div>
+      </div>
+    </section>
+
+    <!-- ═ Permission Options card (V3 Edit User only) ═
+         Figma node 847:16112 — replaces the Add-mode Roles & Permissions
+         section when the page is in edit mode. The Roles & Permissions
+         section below (`#auRolesCard`) is preserved untouched for Add mode
+         and hidden by CSS when `.is-edit-mode` is set.
+
+         Section content:
+           • Helper line + future-state line.
+           • Assigned Applications combo (predefined access groups only —
+             no custom function builder).
+           • Two application cards rendered by JS into `#auPermsCards`.
+
+         Permission rows in each application card are READ-ONLY; the only
+         current-state edits are: pick a predefined access level from the
+         allow-list, add a predefined application, remove an assigned
+         application. The "+ Add custom action" affordance inside each card
+         is a future-state hint and does not open a builder. -->
+    <section class="au-card cr-card au-access-card au-edit-only" id="auPermsCard" aria-labelledby="auPermsTitle" hidden>
+      <div class="cr-section-header" data-au-toggle="perms" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auPermsTitle">Permission Options</span>
+        <span class="cr-section-summary" id="auPermsSummary" aria-hidden="true"></span>
+      </div>
+      <div class="au-section-body">
+        <p class="au-perms-helper">Review predefined access levels and permission coverage.</p>
+        <p class="au-perms-helper au-perms-helper-future">Custom actions will be supported in a future phase.</p>
+
+        <div class="au-field au-perms-app-field">
+          <label class="au-label" for="auPermsAppCombo-ctl">Assigned Applications</label>
+          <div class="au-role-row">
+            <div class="au-role-dd-field">
+              <input type="hidden" id="auPermsApp" value="">
+              <div class="edl-combo au-field-dd" id="auPermsAppCombo" aria-label="Assigned Applications"></div>
+            </div>
+            <button class="au-btn-add" id="auPermsAppAdd" type="button">Add</button>
+          </div>
+        </div>
+
+        <div class="au-perms-cards" id="auPermsCards" aria-live="polite"></div>
       </div>
     </section>
 
@@ -623,7 +697,7 @@
         </div>
         <div class="pc-field pc-field-created">
           <label class="cr-label" for="pcCreatedBy">Created By</label>
-          <input type="text" class="cr-input pc-input-disabled" id="pcCreatedBy" value="Marge Simpsons" disabled aria-disabled="true">
+          <input type="text" class="cr-input pc-input-disabled" id="pcCreatedBy" value="Marge Simpson" disabled aria-disabled="true">
         </div>
 
         <div class="pc-field pc-field-desc">
@@ -868,6 +942,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260529v3fork1"></script>
+<script src="app.js?v=20260529edituser2"></script>
 </body>
 </html>

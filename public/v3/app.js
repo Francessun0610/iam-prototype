@@ -1,7 +1,7 @@
 var DATA = [
   /* ── Page 1 ── */
   { id: "u001", avatar: "../avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["Core Planning Admin", "Planning Manager", "Planner"],              status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
-  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "Marge.Simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
+  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "marge.simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
   { id: "u003", avatar: "../avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
   { id: "u004", avatar: "../avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Streaming Revenue",          title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
   { id: "u005", avatar: "../avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation",  title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
@@ -3445,6 +3445,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     var auBack = document.getElementById("auBack");
+    var auBackLabel = document.getElementById("auBackLabel");
     var auCancel = document.getElementById("auCancel");
     var auSave = document.getElementById("auSave");
     var auPageTitle = document.getElementById("auPageTitle");
@@ -3453,6 +3454,22 @@ document.addEventListener("DOMContentLoaded", function () {
     var auRoleComboEl = document.getElementById("auRoleCombo");
     var auRoleAdd = document.getElementById("auRoleAdd");
     var auRoleCards = document.getElementById("auRoleCards");
+
+    /* Edit-mode identity block + Permission Options card refs (V3 only).
+       These DOM nodes only render when the page is in edit mode
+       (`#addUsersPage.is-edit-mode`); in Add mode they stay hidden and
+       the existing Add User flow is untouched. */
+    var auIdBlock   = document.getElementById("auIdBlock");
+    var auIdAvatar  = document.getElementById("auIdAvatar");
+    var auIdName    = document.getElementById("auIdName");
+    var auIdEmail   = document.getElementById("auIdEmail");
+    var auIdStatus  = document.getElementById("auIdStatus");
+    var auPermsCard      = document.getElementById("auPermsCard");
+    var auPermsCardsEl   = document.getElementById("auPermsCards");
+    var auPermsAppCombo  = document.getElementById("auPermsAppCombo");
+    var auPermsAppHidden = document.getElementById("auPermsApp");
+    var auPermsAppAdd    = document.getElementById("auPermsAppAdd");
+    var setAuPermsAppCombo = null;
 
     var auFirstName = document.getElementById("auFirstName");
     var auLastName = document.getElementById("auLastName");
@@ -3490,7 +3507,11 @@ document.addEventListener("DOMContentLoaded", function () {
       addUserRegion: (auRegion && auRegion.value) || "NA",
       addUserTimezone: (auTimezone && auTimezone.value) || "America/New_York",
       addUserTeam: (auTeam && auTeam.value) || "",
-      addUserRolePick: ""
+      addUserRolePick: "",
+      /* Edit-mode Permission Options: which assigned-application is
+         currently selected in the Assigned Applications combo. Drives
+         the enabled state of the Add button. */
+      editPermsAppPick: ""
     };
     var setAuRegionCombo = null;
     var setAuTimezoneCombo = null;
@@ -3549,6 +3570,48 @@ document.addEventListener("DOMContentLoaded", function () {
       ANZ: "ANZ"
     };
 
+    /* ─── V3 Edit User → Permission Options data ─────────────────────────
+       Predefined catalog used by the Permission Options card (Figma node
+       847:16112) on the Edit User page. The current-state model only
+       lets users pick from these allow-lists — no custom action builder,
+       no custom access level. Custom function/action editing is a
+       future-state concept surfaced as a disabled secondary affordance
+       inside each application card (per Tatiana). */
+    var AU_PERM_APPS = [
+      "Core Planning",
+      "Disney Ads Agent",
+      "Inventory Catalog Manager",
+      "Targeting Option Manager",
+      "Deal Configuration Manager",
+      "Unified Financial System"
+    ];
+    /* Access Level allow-list. "Custom" is intentionally absent — see
+       Tatiana's clarification: customization lives at the function/action
+       level, not at the access level. Do not add Custom back. */
+    var AU_PERM_ACCESS_LEVELS = ["View Only", "Edit", "Approve", "Full Access"];
+    /* Permission row coverage shown inside each application card. These
+       are READ-ONLY display rows — no checkboxes, no edits, no reorder. */
+    var AU_PERM_ROWS = [
+      { label: "Inventory Items", actions: "View, Create, Edit, Delete" },
+      { label: "Offerings",       actions: "View, Create, Edit, Delete" },
+      { label: "Sales Packages",  actions: "View, Create, Edit, Delete" }
+    ];
+    /* Default assigned applications when opening Edit User. Matches the
+       Figma node 847:16112 reference content. Per-user assignment data
+       is not persisted in this static prototype — every Edit User open
+       starts from this Figma-aligned seed for the IAM walkthrough. */
+    var AU_PERM_DEFAULT_ASSIGNMENTS = [
+      { app: "Core Planning",    access: "Full Access", coverage: "12 permissions" },
+      { app: "Disney Ads Agent", access: "Full Access", coverage: "12 permissions" }
+    ];
+
+    /* Edit-mode in-memory state. Reset on every openEditUserForId so
+       Edit ↔ Add transitions never leak state. */
+    var auPermsState = {
+      assignments: [],   // [{app, access, coverage, expanded}]
+      addPick: ""        // current value of the Assigned Applications combo
+    };
+
     /* Add User → Team list: AU_TEAM_NAMES (EDL combo options). */
     var AU_TEAM_NAMES = [
       "National Sales",
@@ -3581,6 +3644,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function closeAllAddUserCombos() {
+      if (setAuPermsAppCombo && setAuPermsAppCombo.close) setAuPermsAppCombo.close();
       if (setAuRegionCombo && setAuRegionCombo.close) setAuRegionCombo.close();
       if (setAuTimezoneCombo && setAuTimezoneCombo.close) setAuTimezoneCombo.close();
       if (setAuTeamCombo && setAuTeamCombo.close) setAuTeamCombo.close();
@@ -3680,6 +3744,25 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       "edl-combo-menu--add-user"
     );
+
+    /* V3 Edit User — Assigned Applications combo (Permission Options card).
+       Same EDL combo factory as the other Add-User combos so visual +
+       interaction parity is automatic. */
+    if (auPermsAppCombo) {
+      setAuPermsAppCombo = initCombo(
+        "auPermsAppCombo",
+        [],
+        "editPermsAppPick",
+        "Select an application",
+        auComboState,
+        function () {
+          auPermsState.addPick = auComboState.editPermsAppPick || "";
+          if (auPermsAppHidden) auPermsAppHidden.value = auPermsState.addPick;
+          if (auPermsAppAdd) auPermsAppAdd.disabled = !auPermsState.addPick;
+        },
+        "edl-combo-menu--add-user"
+      );
+    }
 
     window.__closeAllAddUserCombos = closeAllAddUserCombos;
 
@@ -3897,20 +3980,98 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function applyAuPageChrome() {
-      if (addUsersPage) addUsersPage.classList.toggle("is-edit-mode", auPageMode === "edit");
-      if (auPageTitle) auPageTitle.textContent = auPageMode === "edit" ? "Edit User" : AU_PAGE_TITLE_ADD;
+      var isEdit = auPageMode === "edit";
+      if (addUsersPage) addUsersPage.classList.toggle("is-edit-mode", isEdit);
+      if (auPageTitle) auPageTitle.textContent = isEdit ? "Edit User" : AU_PAGE_TITLE_ADD;
       if (auPageSubtitle) {
-        auPageSubtitle.textContent = auPageMode === "edit"
-          ? ("Manage user details and access for " + (auEditingDisplayName || "this user"))
-          : AU_PAGE_SUB_ADD;
+        /* Figma node 847:16112 sets the Edit User subtitle to
+           "Permission management" (per the latest Tatiana copy).
+           Add mode keeps the original capture-style helper. */
+        auPageSubtitle.textContent = isEdit ? "Permission management" : AU_PAGE_SUB_ADD;
       }
-      if (auRemoveUser) auRemoveUser.hidden = auPageMode !== "edit";
-      if (auSave) auSave.textContent = auPageMode === "edit" ? "Save User" : "Add User";
+      if (auBackLabel) {
+        auBackLabel.textContent = isEdit ? "Back to Roles and Permissions" : "Back to users";
+      }
+      if (auRemoveUser) auRemoveUser.hidden = !isEdit;
+      /* In edit mode the primary action is "Save Permission" (matches
+         Figma). It stays disabled unless legitimate current-state edits
+         exist (access level change, app added/removed, profile field
+         change). The dirty tracking already drives `auSave.disabled` via
+         `refreshAuSaveDirty`. */
+      if (auSave) auSave.textContent = isEdit ? "Save Permission" : "Add User";
       if (auEmail) {
-        auEmail.readOnly = auPageMode === "edit";
-        auEmail.setAttribute("aria-readonly", auPageMode === "edit" ? "true" : "false");
+        auEmail.readOnly = isEdit;
+        auEmail.setAttribute("aria-readonly", isEdit ? "true" : "false");
       }
-      if (auStatusReadonly) auStatusReadonly.hidden = auPageMode !== "edit";
+      if (auStatusReadonly) auStatusReadonly.hidden = !isEdit;
+      /* Show identity block + Permission Options card in edit mode;
+         hide Roles & Permissions card in edit mode. Add mode keeps
+         the original Roles & Permissions section intact. */
+      if (auIdBlock)   auIdBlock.hidden   = !isEdit;
+      if (auPermsCard) auPermsCard.hidden = !isEdit;
+      if (auRolesCard) auRolesCard.hidden = isEdit;
+    }
+
+    /* V3 Edit User — Internal/External classification. External users
+       (no Disney profile photo) always use the neutral placeholder.
+       Internal users with a record-level `avatar` field use that
+       photo; otherwise also fall back to the placeholder. The neutral
+       SVG is pre-rendered in `#auIdAvatar` so the placeholder cost is
+       a single innerHTML swap when an avatar is provided. */
+    var AU_ID_AVATAR_PLACEHOLDER_SVG =
+      '<svg class="au-id-avatar-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<circle cx="12" cy="8" r="3.5"/>' +
+      '<path d="M5.5 19.5c1.4-3 4-4.5 6.5-4.5s5.1 1.5 6.5 4.5"/>' +
+      '</svg>';
+    function isAuUserExternal(user) {
+      if (!user) return false;
+      if (user.id && /^e/i.test(String(user.id))) return true;
+      if (user.organization) return true;
+      return false;
+    }
+    function populateAuIdentityBlock(user) {
+      if (!auIdBlock || !user) return;
+      var displayName = user.name || "";
+      var displayEmail = (user.email || "").toLowerCase();
+      if (auIdName) auIdName.textContent = displayName;
+      if (auIdEmail) auIdEmail.textContent = displayEmail;
+      /* Avatar: photo for internal users with an avatar field; neutral
+         placeholder otherwise (and always for external users — Tatiana
+         specifically said external should not imply a photo exists). */
+      if (auIdAvatar) {
+        var external = isAuUserExternal(user);
+        auIdAvatar.classList.toggle("au-id-avatar--external", external);
+        if (!external && user.avatar) {
+          auIdAvatar.innerHTML = '<img class="au-id-avatar-img" src="' + esc(user.avatar) + '" alt="" aria-hidden="true">';
+        } else {
+          auIdAvatar.innerHTML = AU_ID_AVATAR_PLACEHOLDER_SVG;
+        }
+      }
+      /* Status icon: green check for Active, neutral gray dot for
+         Inactive. Always read-only; never a toggle on Edit User. */
+      if (auIdStatus) {
+        var active = user.status !== "Inactive";
+        var statusLabel = active ? "Active" : "Inactive";
+        auIdStatus.setAttribute("aria-label", statusLabel);
+        auIdStatus.innerHTML = active
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="9" y1="12" x2="15" y2="12"/></svg>';
+      }
+    }
+    function seedAuPermsAssignments() {
+      /* Static seed: every Edit User open starts from the Figma-aligned
+         default set (Core Planning + Disney Ads Agent, both Full Access
+         / 12 permissions). Per-user persistence is out of scope for
+         this static prototype. */
+      auPermsState.assignments = [];
+      for (var i = 0; i < AU_PERM_DEFAULT_ASSIGNMENTS.length; i++) {
+        var d = AU_PERM_DEFAULT_ASSIGNMENTS[i];
+        auPermsState.assignments.push({ app: d.app, access: d.access, coverage: d.coverage, expanded: false });
+      }
+      auPermsState.addPick = "";
+      auComboState.editPermsAppPick = "";
+      if (auPermsAppHidden) auPermsAppHidden.value = "";
+      if (setAuPermsAppCombo) setAuPermsAppCombo("");
     }
 
     function populateEditFormFromUser(user) {
@@ -3954,6 +4115,15 @@ document.addEventListener("DOMContentLoaded", function () {
       if (setAuRoleCombo) setAuRoleCombo("");
       renderAURolePicker();
       renderAURoleCards();
+      /* V3 Edit User — drive the identity block and Permission Options
+         card from the same user record. Roles & Permissions data above
+         is preserved for the prototype Save flow, but the visible
+         layout in edit mode is the Figma-aligned identity + Permission
+         Options shell. */
+      populateAuIdentityBlock(user);
+      seedAuPermsAssignments();
+      renderAUPermsAppPicker();
+      renderAUPermsCards();
       updateAuSummaries();
     }
 
@@ -4298,6 +4468,96 @@ document.addEventListener("DOMContentLoaded", function () {
       updateAuSummaries();
     }
 
+    /* ─── V3 Edit User → Permission Options card renderers ─────────────── */
+
+    /* Build one application card. All controls are display-only or
+       allow-listed:
+         • Card title + Remove button (removes ONLY this assigned app).
+         • Access Level dropdown with the 4 predefined values.
+         • Three read-only permission rows (Inventory Items, Offerings,
+           Sales Packages → View, Create, Edit, Delete).
+         • "Show all permissions" toggle reveals more read-only rows.
+         • "+ Add custom action" — future-state secondary affordance,
+           disabled, surfaces a tooltip explaining future support.
+       The card markup intentionally avoids any editable function/action
+       widgets (no checkboxes, no inline editors, no action-row delete).  */
+    function buildAUPermsAccessLevelOptionsHtml(selected) {
+      var html = "";
+      for (var i = 0; i < AU_PERM_ACCESS_LEVELS.length; i++) {
+        var v = AU_PERM_ACCESS_LEVELS[i];
+        html += '<option value="' + esc(v) + '"' + (v === selected ? ' selected' : '') + '>' + esc(v) + '</option>';
+      }
+      return html;
+    }
+    function buildAUPermsRowsHtml() {
+      var html = '<ul class="au-perms-rows" aria-label="Permission coverage">';
+      for (var i = 0; i < AU_PERM_ROWS.length; i++) {
+        html += '<li class="au-perms-row">' +
+          '<span class="au-perms-row-label">' + esc(AU_PERM_ROWS[i].label) + ':</span>' +
+          '<span class="au-perms-row-actions">' + esc(AU_PERM_ROWS[i].actions) + '</span>' +
+        '</li>';
+      }
+      html += '</ul>';
+      return html;
+    }
+    function buildAUPermsCardHtml(assignment, idx) {
+      var expanded = !!assignment.expanded;
+      var coverage = "Full Access | " + (assignment.coverage || "12 permissions");
+      return '<article class="au-perms-card" data-au-perms-idx="' + idx + '">' +
+        '<header class="au-perms-card-head">' +
+          '<h3 class="au-perms-card-title">' + esc(assignment.app) + '</h3>' +
+          '<button type="button" class="au-perms-card-remove" data-au-perms-remove="' + idx + '" title="Remove assigned application" aria-label="Remove assigned application ' + esc(assignment.app) + '">' +
+            TRASH_SVG + '<span>Remove</span>' +
+          '</button>' +
+        '</header>' +
+        '<div class="au-perms-card-body">' +
+          '<div class="au-perms-access-field">' +
+            '<label class="au-label" for="auPermsAccess-' + idx + '">Access Level<span class="au-req">*</span></label>' +
+            '<div class="au-perms-access-wrap">' +
+              '<select class="au-perms-access-select" id="auPermsAccess-' + idx + '" data-au-perms-access="' + idx + '" aria-label="Access Level for ' + esc(assignment.app) + '">' +
+                buildAUPermsAccessLevelOptionsHtml(assignment.access || "Full Access") +
+              '</select>' +
+              '<span class="au-perms-access-coverage" aria-hidden="true">' + esc(coverage) + '</span>' +
+            '</div>' +
+          '</div>' +
+          buildAUPermsRowsHtml() +
+          '<button type="button" class="au-perms-show-all" data-au-perms-toggle="' + idx + '" aria-expanded="' + (expanded ? 'true' : 'false') + '">' +
+            '<span>' + (expanded ? 'Hide all permissions' : 'Show all permissions') + '</span>' +
+            '<span class="au-perms-show-all-arr" aria-hidden="true">' + (expanded ? "\u2191" : "\u2193") + '</span>' +
+          '</button>' +
+          (expanded
+            ? ('<div class="au-perms-card-expand"><p class="au-perms-card-expand-note">Read-only view. Editing function/action lists is not available in the current state.</p>' + buildAUPermsRowsHtml() + '</div>')
+            : '') +
+          '<div class="au-perms-card-footer">' +
+            /* Future-state affordance: NOT a CTA. Disabled button with
+               an EDL-style hint tooltip. Does not open a builder, does
+               not create actions, does not change Access Level. */
+            '<button type="button" class="au-perms-add-action" data-au-perms-future="' + idx + '" disabled aria-disabled="true" title="Custom actions will be available in a future phase.">+ Add custom action</button>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    }
+    function renderAUPermsCards() {
+      if (!auPermsCardsEl) return;
+      var cards = "";
+      for (var i = 0; i < auPermsState.assignments.length; i++) {
+        cards += buildAUPermsCardHtml(auPermsState.assignments[i], i);
+      }
+      auPermsCardsEl.innerHTML = cards;
+    }
+    function renderAUPermsAppPicker() {
+      if (!setAuPermsAppCombo || !setAuPermsAppCombo.setOptions) return;
+      var assigned = {};
+      for (var i = 0; i < auPermsState.assignments.length; i++) assigned[auPermsState.assignments[i].app] = true;
+      var opts = [];
+      for (var j = 0; j < AU_PERM_APPS.length; j++) {
+        opts.push({ value: AU_PERM_APPS[j], label: AU_PERM_APPS[j], disabled: !!assigned[AU_PERM_APPS[j]] });
+      }
+      setAuPermsAppCombo.setOptions(opts);
+      if (auPermsState.addPick && assigned[auPermsState.addPick]) auPermsState.addPick = "";
+      if (auPermsAppAdd) auPermsAppAdd.disabled = !auPermsState.addPick;
+    }
+
     function renderAURolePicker() {
       var options = getAURoleOptions();
       var opts = [];
@@ -4418,6 +4678,65 @@ document.addEventListener("DOMContentLoaded", function () {
       renderAURolePicker();
       renderAURoleCards();
     });
+
+    /* V3 Edit User — Permission Options interactions. The Add button
+       inserts the picked predefined application as a new assigned-app
+       card (no custom function builder). Within each app card we
+       delegate clicks for Remove, Show all permissions, and Access
+       Level change. All other widgets inside the card are display-only
+       per Tatiana's current-state guardrails. */
+    if (auPermsAppAdd) {
+      auPermsAppAdd.addEventListener("click", function () {
+        if (auPermsAppAdd.disabled) return;
+        var pick = auPermsState.addPick;
+        if (!pick) return;
+        for (var i = 0; i < auPermsState.assignments.length; i++) {
+          if (auPermsState.assignments[i].app === pick) return; // already assigned
+        }
+        auPermsState.assignments.push({
+          app: pick,
+          access: "Full Access",
+          coverage: "12 permissions",
+          expanded: false
+        });
+        auPermsState.addPick = "";
+        auComboState.editPermsAppPick = "";
+        if (auPermsAppHidden) auPermsAppHidden.value = "";
+        if (setAuPermsAppCombo) setAuPermsAppCombo("");
+        renderAUPermsAppPicker();
+        renderAUPermsCards();
+      });
+    }
+    if (auPermsCardsEl) {
+      auPermsCardsEl.addEventListener("click", function (e) {
+        var removeBtn = e.target.closest("[data-au-perms-remove]");
+        if (removeBtn) {
+          var ri = parseInt(removeBtn.getAttribute("data-au-perms-remove"), 10);
+          if (!isNaN(ri) && ri >= 0 && ri < auPermsState.assignments.length) {
+            auPermsState.assignments.splice(ri, 1);
+            renderAUPermsAppPicker();
+            renderAUPermsCards();
+          }
+          return;
+        }
+        var toggleBtn = e.target.closest("[data-au-perms-toggle]");
+        if (toggleBtn) {
+          var ti = parseInt(toggleBtn.getAttribute("data-au-perms-toggle"), 10);
+          if (!isNaN(ti) && auPermsState.assignments[ti]) {
+            auPermsState.assignments[ti].expanded = !auPermsState.assignments[ti].expanded;
+            renderAUPermsCards();
+          }
+        }
+      });
+      auPermsCardsEl.addEventListener("change", function (e) {
+        var sel = e.target.closest("[data-au-perms-access]");
+        if (!sel) return;
+        var ai = parseInt(sel.getAttribute("data-au-perms-access"), 10);
+        if (!isNaN(ai) && auPermsState.assignments[ai]) {
+          auPermsState.assignments[ai].access = sel.value;
+        }
+      });
+    }
 
     if (auStatusSeg) {
       auStatusSeg.addEventListener("click", function (e) {
@@ -5550,7 +5869,7 @@ document.addEventListener("DOMContentLoaded", function () {
       pcSetAppValue(appDisplayNameForKey(row.key));
       /* Created By is a disabled input — value comes from the static
          Figma placeholder; not derived from row data. */
-      if (pcCreatedByInput) pcCreatedByInput.value = "Marge Simpsons";
+      if (pcCreatedByInput) pcCreatedByInput.value = "Marge Simpson";
       if (pcDescInput)      pcDescInput.value     = row.description;
       if (pcLastUpdatedEl)  pcLastUpdatedEl.textContent = row.lastUpdated;
       /* Reset the Add Permission Group selection on each open so the
