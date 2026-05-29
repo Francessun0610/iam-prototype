@@ -5476,136 +5476,262 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   V3 ONLY · Edit User page (Figma node 847:16112)
+   V3 ONLY · Edit User page (Figma node 847:16112 / 847:16172)
    ────────────────────────────────────────────────────────────────────
-   Edit User reuses the existing `#addUsersPage` HTML chrome; this block
-   layers the Figma-aligned edit-mode treatments on top via the
-   `#addUsersPage.is-edit-mode` modifier so Add mode is byte-identical
-   to the V2 fork. Three concerns are scoped here:
-     1. Roster-style identity block (.au-id-block) inside the Basic
-        Information card.
-     2. Edit-mode grid that puts identity on the left and fields on the
-        right (Figma 2-column split).
-     3. Permission Options card (.au-perms-* / .au-id-* selectors).
-   Add-mode CSS continues to drive everything not under .is-edit-mode.
+   Layout rewrite (FigmaSpec):
+     • Basic Information card hosts ONE horizontal row (.au-edit-row)
+       holding three 296-px columns:
+         col 1 = identity block (72-px avatar + name + email + active
+                 check-circle), Figma node 847:16173.
+         col 2 = Preferred name (top) + Team (bottom),     Figma 847:16186.
+         col 3 = Region        (top) + Timezone (bottom),  Figma 847:16189.
+       Column gap = 39 px, row gap inside cols 2/3 = 24 px.
+     • Add-mode .au-grid is untouched; edit-mode neutralizes its grid
+       layout and places the four real form fields into cols 2 and 3
+       via direct flex children with explicit width: 296px.
+     • Identity block uses the EDL neutral placeholder by default to
+       match Figma 847:16174; photo path is opt-in per user record.
+
+   All selectors are scoped to `#addUsersPage.is-edit-mode` so Add
+   mode is byte-identical to the V2 fork.
    ════════════════════════════════════════════════════════════════════ */
 
-/* Hide the new edit-only DOM whenever we're not in edit mode. The
-   `hidden` attribute on the elements handles initial paint; once
-   .is-edit-mode toggles, JS clears `hidden`. The CSS rule below is
-   the belt-and-suspenders to ensure no stray paint in Add mode. */
+/* Hide all edit-only DOM in Add mode. The `hidden` attribute on the
+   elements handles initial paint; once .is-edit-mode toggles, JS
+   clears `hidden`. The CSS rule below is belt-and-suspenders. */
 #addUsersPage:not(.is-edit-mode) .au-edit-only { display: none !important; }
 
-/* ─── Identity block (avatar + name + email + status icon) ─────────── */
-#addUsersPage.is-edit-mode .au-id-block {
+/* ─── Basic Information edit row (Figma 847:16172) ──────────────────
+   Single horizontal row: identity col + 2 field cols. Aligned items
+   center per Figma, gap 39 px. The three children are explicitly
+   sized to 296 px so the row matches the Figma frame at the canonical
+   1048-px card width. Wraps on narrower viewports. */
+#addUsersPage.is-edit-mode .au-edit-row {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  /* Left column of the Figma 2-col grid lives outside .au-grid so we
-     can rely on flex centering without hijacking the existing grid
-     row/order rules. */
-  padding: 0 0 8px 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 39px;
+  padding: 16px 0 8px 0;
   min-width: 0;
 }
+
+/* ─── Identity column (Figma 847:16173) ────────────────────────────
+   72 px avatar + 16 px gap + name/email stack. Total column width
+   = 296 px (Figma). */
+#addUsersPage.is-edit-mode .au-id-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 296px;
+  flex: 0 0 296px;
+  min-width: 0;
+  /* The identity block is non-interactive (no role, no tabindex). Kill
+     any inherited outline/border/box-shadow so the block never paints
+     a stray blue selection/focus rectangle around the avatar + name +
+     email cluster (Frances QA, 2026-05-29). Real interactive
+     descendants (none today) would still receive their own
+     :focus-visible treatment via their own selectors. */
+  outline: none;
+  border: 0;
+  box-shadow: none;
+}
+#addUsersPage.is-edit-mode .au-id-block:focus,
+#addUsersPage.is-edit-mode .au-id-block:focus-visible,
+#addUsersPage.is-edit-mode .au-id-block:focus-within,
+#addUsersPage.is-edit-mode .au-edit-row:focus,
+#addUsersPage.is-edit-mode .au-edit-row:focus-visible,
+#addUsersPage.is-edit-mode .au-id-avatar,
+#addUsersPage.is-edit-mode .au-id-avatar:focus,
+#addUsersPage.is-edit-mode .au-id-avatar:focus-visible,
+#addUsersPage.is-edit-mode .au-id-avatar-svg:focus,
+#addUsersPage.is-edit-mode .au-id-avatar-img:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 #addUsersPage.is-edit-mode .au-id-avatar {
-  flex: 0 0 56px;
-  width: 56px;
-  height: 56px;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--brand-bg-soft, #E6E6FF);
-  color: var(--brand, #3611C8);
   overflow: hidden;
+  /* Figma 847:16174 placeholder carries its own white circle + indigo
+     stroke, so the container has no background of its own. Photo path
+     (`.au-id-avatar-img`) layers fully against the circular crop via
+     `overflow: hidden` above. */
+  background: transparent;
 }
 #addUsersPage.is-edit-mode .au-id-avatar--external {
-  /* External users always use the neutral placeholder treatment —
-     subtle gray ring + neutral icon, no photo affordance. */
-  background: var(--neutral-bg, #EFF3F5);
-  color: var(--text-muted, #6A8095);
+  /* External users render the same blue initials chip the External
+     Users table uses (`.avatar-initials`, 40 px). Edit User scales
+     it up to the 72 px identity circle below via
+     `.au-id-avatar-initials`. The container background stays
+     transparent — the chip paints the visible blue disc itself, so
+     this matches the table's chip exactly at every DPI. */
+  background: transparent;
+}
+/* External Edit User initials chip — same shape, color, and font
+   stack as the table chip (`.avatar-initials`, defined globally),
+   but scaled up to the 72 px identity circle and bumped to a
+   readable size at that scale. Inherits `background:
+   rgb(78,136,210)`, `color: #FFFFFF`, `border-radius: 50%`,
+   `font-weight: 700`, `letter-spacing: 0.5px` from the global
+   `.avatar-initials` rule, so the table chip and Edit User chip
+   are visually 1:1 (Frances QA, 2026-05-29). */
+#addUsersPage.is-edit-mode .au-id-avatar .au-id-avatar-initials {
+  width: 72px;
+  height: 72px;
+  font-size: 28px;
+  line-height: 1;
 }
 #addUsersPage.is-edit-mode .au-id-avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  /* Hint the renderer to keep the 72-px circle crisp even if the
+     source asset is slightly larger or smaller than 144 px @2x. */
+  image-rendering: -webkit-optimize-contrast;
 }
+/* Figma 847:16174 placeholder SVG — rendered inline at native 72x72
+   so vector strokes stay sharp at every DPI. `display: block` kills
+   the inline baseline gap, `shape-rendering: geometricPrecision`
+   keeps the indigo outline circle smooth. */
+#addUsersPage.is-edit-mode .au-id-avatar-svg {
+  display: block;
+  width: 72px;
+  height: 72px;
+  shape-rendering: geometricPrecision;
+}
+/* Legacy 40-px line-art icon (no longer rendered in V3 edit mode) —
+   kept for any add-mode fallback that might still emit the old SVG. */
 #addUsersPage.is-edit-mode .au-id-avatar-icon {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
 }
 #addUsersPage.is-edit-mode .au-id-meta {
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  flex: 1 1 auto;
 }
 #addUsersPage.is-edit-mode .au-id-name {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 22px;
+  /* Figma 847:16182 — Medium 18/21, EDL Gray 95. */
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21px;
   color: var(--text-primary, #171C20);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #addUsersPage.is-edit-mode .au-id-email-row {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 #addUsersPage.is-edit-mode .au-id-email {
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--text-muted, #6A8095);
+  /* Figma 847:16184 — Roman 14/21, EDL Gray 95 (not muted). */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary, #171C20);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
 }
 #addUsersPage.is-edit-mode .au-id-status {
+  /* Figma 847:16185 — 16 × 16 check-circle, EDL Green 70 #056C07. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 14px;
+  flex: 0 0 16px;
 }
 
-/* ─── Basic Information grid in edit mode ─────────────────────────────
-   The Figma node lays Basic Information as: identity column (left) +
-   2x2 fields (right). The existing Add-mode grid is a 3-column flex
-   layout reordered by `.au-field-*` order classes. We don't rewrite
-   the grid; instead, we host the identity block above the grid and
-   collapse the 3rd column placeholders that are not part of the Figma
-   spec (Name / Email / Status / Profile picture) so the remaining
-   fields (Preferred name, Region, Team, Timezone) flow into a 2-col
-   subgrid. */
-#addUsersPage.is-edit-mode .au-field-edit-only { display: none !important; } /* drop the read-only "Name" row */
+/* ─── Field columns (Figma 847:16186 + 847:16189) ──────────────────
+   Add-mode `.au-grid` uses display:flex with .au-field-* order
+   classes. In edit mode we hide every Add-mode-only field (Name,
+   First/Last name, Email, Status, Profile picture) so only Preferred
+   name / Team / Region / Timezone remain, then collapse `.au-grid`
+   into a transparent flex shell that lets the four fields participate
+   in the parent `.au-edit-row` flex layout via `display: contents`.
+   Each field then gets a fixed 296-px width to land on the Figma
+   3-col grid. */
+#addUsersPage.is-edit-mode .au-field-edit-only { display: none !important; } /* the read-only "Name" row */
 #addUsersPage.is-edit-mode .au-field-email     { display: none !important; }
 #addUsersPage.is-edit-mode .au-field-status    { display: none !important; }
 #addUsersPage.is-edit-mode .au-profile-field   { display: none !important; }
 #addUsersPage.is-edit-mode .au-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 24px;
-  row-gap: 16px;
+  /* `display: contents` lifts the four remaining .au-field children
+     into the .au-edit-row sibling-context above. The .au-grid box
+     itself is invisible. We pair this with `order` so the fields
+     reflow under the identity block on wrap. */
+  display: contents;
 }
-#addUsersPage.is-edit-mode .au-grid > .au-field { min-width: 0; }
-/* Figma node 847:16112 field order: row 1 = Preferred name | Region,
-   row 2 = Team | Timezone. The existing Add-mode `.au-field-*` order
-   classes lay these out as Preferred / Region / Timezone / Team, which
-   puts Timezone on row 2 left instead of right. Pin grid-row + 
-   grid-column explicitly here to land on the Figma order without
-   disturbing Add-mode order. */
-#addUsersPage.is-edit-mode .au-field-preferred { grid-row: 1; grid-column: 1; order: 0; }
-#addUsersPage.is-edit-mode .au-field-region    { grid-row: 1; grid-column: 2; order: 0; }
-#addUsersPage.is-edit-mode .au-field-team      { grid-row: 2; grid-column: 1; order: 0; }
-#addUsersPage.is-edit-mode .au-field-timezone  { grid-row: 2; grid-column: 2; order: 0; }
-@media (max-width: 720px) {
-  #addUsersPage.is-edit-mode .au-grid { grid-template-columns: 1fr; }
-  #addUsersPage.is-edit-mode .au-field-preferred,
-  #addUsersPage.is-edit-mode .au-field-region,
-  #addUsersPage.is-edit-mode .au-field-team,
-  #addUsersPage.is-edit-mode .au-field-timezone {
-    grid-row: auto; grid-column: auto;
+/* Each field becomes a flex item inside .au-edit-row's flex line.
+   Two 296-px columns × two rows are achieved via order + width. */
+/* Edit-mode 3-col CSS Grid layout — scoped to the Basic Information
+   card only. The Permission Options card (#auPermsCard) keeps its
+   own layout untouched.
+
+   Grid: 3 cols × 2 rows, 296 px col tracks, 39 px col-gap, 24 px
+   row-gap. Identity block (.au-edit-row) spans row 1 only in col 1
+   (row 2 col 1 stays empty, like the Figma). Preferred + Team
+   stack in col 2; Region + Timezone stack in col 3. */
+#addUsersPage.is-edit-mode #auBasicCard .au-section-body {
+  display: grid;
+  grid-template-columns: 296px 296px 296px;
+  grid-template-rows: auto auto;
+  column-gap: 39px;
+  row-gap: 24px;
+  padding-top: 8px;
+  align-items: center;
+}
+#addUsersPage.is-edit-mode #auBasicCard .au-section-body > .au-edit-row {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 0;
+  gap: 0;
+  width: 296px;
+}
+/* `.au-grid` is the legacy Add-mode wrapper around the form fields.
+   In edit mode we collapse its box (display:contents) so its four
+   real field children participate directly in the section-body grid
+   tracks defined above. */
+#addUsersPage.is-edit-mode #auBasicCard .au-section-body > .au-grid {
+  display: contents;
+}
+#addUsersPage.is-edit-mode #auBasicCard .au-field-preferred { grid-column: 2; grid-row: 1; order: 0; }
+#addUsersPage.is-edit-mode #auBasicCard .au-field-region    { grid-column: 3; grid-row: 1; order: 0; }
+#addUsersPage.is-edit-mode #auBasicCard .au-field-team      { grid-column: 2; grid-row: 2; order: 0; }
+#addUsersPage.is-edit-mode #auBasicCard .au-field-timezone  { grid-column: 3; grid-row: 2; order: 0; }
+#addUsersPage.is-edit-mode #auBasicCard .au-grid > .au-field {
+  min-width: 0;
+  margin: 0;
+  width: 296px;
+}
+
+/* Narrow viewports: collapse to single column. */
+@media (max-width: 1000px) {
+  #addUsersPage.is-edit-mode #auBasicCard .au-section-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    column-gap: 0;
+    row-gap: 16px;
+  }
+  #addUsersPage.is-edit-mode #auBasicCard .au-section-body > .au-edit-row,
+  #addUsersPage.is-edit-mode #auBasicCard .au-field-preferred,
+  #addUsersPage.is-edit-mode #auBasicCard .au-field-region,
+  #addUsersPage.is-edit-mode #auBasicCard .au-field-team,
+  #addUsersPage.is-edit-mode #auBasicCard .au-field-timezone {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
   }
 }
 
@@ -5616,74 +5742,162 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    actions area in a follow-up. */
 #addUsersPage.is-edit-mode #auRemoveUser { display: none !important; }
 
-/* ─── Permission Options card ─────────────────────────────────────── */
-#auPermsCard .au-perms-helper {
-  margin: 0 0 8px 0;
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--text-secondary, #48494A);
+/* ─── Section titles in V3 Edit mode (Figma 847:16112) ─────────────
+   Both "Basic Information" and "Permission Options" use the indigo
+   brand (#3611C8) section title color in the Figma — distinct from
+   the dark-text section titles V2 / Add mode use. Scoped to Edit
+   mode so Add User and earlier versions are untouched. */
+#addUsersPage.is-edit-mode #auBasicCard .cr-section-title,
+#addUsersPage.is-edit-mode #auPermsCard .cr-section-title {
+  color: var(--brand, #3611C8);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
 }
-#auPermsCard .au-perms-helper-future {
-  color: var(--text-muted, #6A8095);
-  font-style: italic;
-  margin-bottom: 16px;
+#addUsersPage.is-edit-mode #auBasicCard .cr-section-chev,
+#addUsersPage.is-edit-mode #auPermsCard .cr-section-chev {
+  color: var(--brand, #3611C8);
 }
-#auPermsCard .au-perms-app-field { margin-top: 0; margin-bottom: 16px; }
 
+/* ─── Permission Options card (Figma 847:16138) ─────────────────────
+   Single helper paragraph above the Assigned Applications field.
+   Per Figma 847:16145 — 14 px Source Sans Pro Regular, leading 20,
+   EDL Gray 95 (#171C20). The V3 helper also carries the future-state
+   custom-actions sentence after a period (no separate UI control). */
+#auPermsCard .au-perms-helper {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-primary, #171C20);
+}
+#auPermsCard .au-perms-app-field { margin-top: 0; margin-bottom: 24px; }
+
+/* ─── Assigned Applications row width cap (Figma 847:16146) ────────
+   The Figma frame shows a moderate-width dropdown with the Add
+   button immediately to its right (16-px gap), not a full-width
+   combo stretched across the section. Cap the row at one app-card
+   column so the dropdown reads at the Figma proportion. Mirrors
+   the cap already in place on `#auRolesCard .au-role-row`. */
+#auPermsCard .au-perms-app-field .au-role-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: nowrap;
+  max-width: min(100%, calc((100% - 24px) / 2));
+}
+#auPermsCard .au-perms-app-field .au-role-row > .au-role-dd-field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#auPermsCard .au-perms-app-field .au-role-row > .au-btn-add {
+  flex: 0 0 auto;
+}
+
+/* ─── Add button visual (Figma 847:16152) ──────────────────────────
+   Figma shows the Add button in its standard *resting* (enabled)
+   state. The functional `disabled` attribute is preserved (clicks
+   are gated on a combo selection), but we suppress the dim
+   appearance so the button doesn't read as broken at the
+   page-loaded baseline. Cursor still flips to not-allowed when
+   actually disabled, so the affordance is honest. */
+#auPermsCard .au-perms-app-field .au-role-row > .au-btn-add:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* Two cards in a row, 24 px gap per Figma 847:16429. Wraps to a
+   single column on narrow viewports. */
 #auPermsCard .au-perms-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
 }
 @media (max-width: 900px) {
   #auPermsCard .au-perms-cards { grid-template-columns: 1fr; }
 }
+
+/* Application card shell (Figma 847:16382 / 847:16327).
+   border 1px #EDEEF0, radius 16, padding 24, gap 16 between blocks.
+   `min-height: 344px` matches the Figma card height so Show all
+   permissions bottom-anchors at the Figma position with comfortable
+   space above the rows. */
 #auPermsCard .au-perms-card {
-  border: 1px solid var(--border-card, #E2E9EC);
-  border-radius: 8px;
+  border: 1px solid #EDEEF0;
+  border-radius: 16px;
   background: #FFFFFF;
-  padding: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
   min-width: 0;
+  min-height: 344px;
 }
+
+/* Card header (Figma 847:16385 — gap 8, items center, justify
+   between). Title left, Remove right. */
 #auPermsCard .au-perms-card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  gap: 8px;
 }
+/* Card title — InspireTWDC Heavy 18/22, color #48494A (Figma 847:16388).
+   Project ships "InspireTWDC" via @font-face; falls back to the system
+   sans stack if the font fails to load. */
 #auPermsCard .au-perms-card-title {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  color: var(--text-primary, #171C20);
+  font-family: 'InspireTWDC', 'Source Sans Pro', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  color: #48494A;
 }
+/* Remove button — Figma 847:16389. 24-px trash icon + "Remove" link
+   in EDL Indigo (#3611C8), 14 px Roman, gap 8. No background, no
+   border. Treat as a destructive *link*, not a button surface. */
 #auPermsCard .au-perms-card-remove {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   background: transparent;
   border: 0;
-  padding: 4px 6px;
+  padding: 4px 2px;
   border-radius: 4px;
-  color: var(--text-muted, #6A8095);
-  font-size: 13px;
+  color: var(--brand, #3611C8);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
   cursor: pointer;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition: opacity 0.12s ease;
 }
-#auPermsCard .au-perms-card-remove:hover {
-  background: var(--neutral-hover, #EFF3F5);
-  color: var(--text-primary, #171C20);
+#auPermsCard .au-perms-card-remove svg {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
 }
+#auPermsCard .au-perms-card-remove-label { line-height: 21px; }
+#auPermsCard .au-perms-card-remove:hover { opacity: 0.85; }
 #auPermsCard .au-perms-card-remove:focus-visible {
   outline: 2px solid var(--brand-focus-ring, #928AFF);
   outline-offset: 1px;
 }
 
-/* Access Level field inside an application card */
-#auPermsCard .au-perms-access-field { margin-bottom: 12px; }
+/* Card body — flex column with explicit gap so Access Level breathes
+   off the rows list and Show all permissions sits comfortably below
+   the rows (Figma 847:16382 — `gap-[16px]` between the header/access
+   block and the rows block, then `gap-[64px]` between the rows and
+   Show-all). The flex stack on `.au-perms-card` itself handles the
+   header → body gap with `gap: 16px`. */
+#auPermsCard .au-perms-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Access Level field inside an application card (Figma 847:16392) */
+#auPermsCard .au-perms-access-field { margin-bottom: 0; }
 #auPermsCard .au-perms-access-wrap {
   position: relative;
   display: flex;
@@ -5693,7 +5907,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  height: 36px;
+  height: 32px;
   padding: 0 36px 0 12px;
   border: 1px solid var(--border-input, #D4DEE3);
   border-radius: 6px;
@@ -5708,95 +5922,77 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   cursor: pointer;
 }
 #auPermsCard .au-perms-access-select:focus { outline: none; border-color: var(--brand, #3611C8); }
-#auPermsCard .au-perms-access-coverage {
-  /* Coverage label is purely informational — sits to the right of the
-     dropdown on wide cards, wraps below on narrow widths. Hidden by
-     default to keep the dropdown as the visual anchor; the coverage
-     text already reads inside the selected option label. */
-  display: none;
-}
+#auPermsCard .au-perms-access-coverage { display: none; }
 
-/* Read-only permission coverage rows */
+/* Read-only permission coverage rows (Figma 847:16394 — gap 16,
+   label left bold + actions right bold, EDL Gray 95). */
 #auPermsCard .au-perms-rows {
   list-style: none;
-  margin: 0 0 12px 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 #auPermsCard .au-perms-row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  font-size: 13px;
-  line-height: 18px;
+  gap: 16px;
+  font-size: 14px;
+  line-height: 21px;
   color: var(--text-primary, #171C20);
+  letter-spacing: -0.1px;
 }
 #auPermsCard .au-perms-row-label {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary, #171C20);
 }
+/* Per Figma 847:16400/16406/16412 the action list is dark Heavy text,
+   not muted. Aligned right to mirror Figma's two-column split. */
 #auPermsCard .au-perms-row-actions {
-  color: var(--text-muted, #6A8095);
+  font-weight: 700;
+  color: var(--text-primary, #171C20);
   text-align: right;
 }
 
-/* Show all permissions toggle */
+/* Show all permissions toggle (Figma 847:16413 — gap 4, center,
+   indigo brand, 14 px Open Sans SemiBold, with feather Arrow-Down
+   icon at 16 px). Bottom-anchored under the rows. */
 #auPermsCard .au-perms-show-all {
   align-self: center;
   background: transparent;
   border: 0;
   padding: 8px 12px;
+  margin-top: auto;
   color: var(--brand, #3611C8);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 20px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   border-radius: 4px;
 }
 #auPermsCard .au-perms-show-all:hover { background: var(--brand-bg-soft, #E6E6FF); }
 #auPermsCard .au-perms-show-all:focus-visible { outline: 2px solid var(--brand-focus-ring, #928AFF); outline-offset: 1px; }
-#auPermsCard .au-perms-show-all-arr { font-size: 12px; }
+#auPermsCard .au-perms-show-all-arr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+#auPermsCard .au-perms-show-all-arr svg { width: 16px; height: 16px; }
 
-/* Expanded read-only details — same row shape, with a subtle note */
+/* Expanded read-only details — same row shape, light divider, no
+   helper paragraph (Figma doesn't show one). */
 #auPermsCard .au-perms-card-expand {
   margin-top: 4px;
   padding-top: 12px;
   border-top: 1px dashed var(--border-card, #E2E9EC);
 }
-#auPermsCard .au-perms-card-expand-note {
-  margin: 0 0 8px 0;
-  font-size: 12px;
-  color: var(--text-muted, #6A8095);
-  font-style: italic;
-}
-
-/* Future-state affordance: "+ Add custom action".
-   Disabled by design — the visual treatment is intentionally secondary
-   (ghost button, muted color, dashed outline) so it never reads as a
-   current-state CTA. Tooltip-only feedback explains the future state. */
-#auPermsCard .au-perms-card-footer {
-  margin-top: 8px;
-  display: flex;
-  justify-content: flex-start;
-}
-#auPermsCard .au-perms-add-action {
-  background: transparent;
-  border: 1px dashed var(--border-input, #D4DEE3);
-  color: var(--text-muted, #6A8095);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: not-allowed;
-  opacity: 0.85;
-}
-#auPermsCard .au-perms-add-action:hover { background: transparent; color: var(--text-muted, #6A8095); }
-#auPermsCard .au-perms-add-action[disabled] { pointer-events: auto; } /* allow native tooltip on hover */
 
 /* Save Permission disabled tint in edit mode — leans on the existing
    `.au-btn-save:disabled` rule but tightens contrast so the Figma
@@ -5804,4 +6000,288 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #addUsersPage.is-edit-mode .au-btn-save:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   V3 ONLY · Permission Catalog (Permissions tab)
+   ────────────────────────────────────────────────────────────────────
+   Read-only catalog of registered permission functions. Layout is
+   anchored inside #permsPanel and intentionally re-uses the existing
+   .tbar / .tbl / .pgn skeleton from R&P + Users so density, spacing,
+   and pagination match the rest of V3.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* No inner page title/subtitle on the Permissions tab (Frances QA
+   2026-05-29). The toolbar is the first content row inside
+   #permsPanel — matches Users/Roles layout exactly. Users/Roles
+   gets a ~12px gap below the tabs row from the panel's natural
+   margin; Permissions previously relied on the (now-removed)
+   .pm-pagehead block for that breathing room, so we restore the
+   same 12px gap directly on the panel here. Measured against the
+   Users/Roles tabs→toolbar gap (12px). */
+#permsPanel {
+  padding-top: 12px;
+}
+
+/* Toolbar right-side action group rule retained for any future
+   secondary action; currently no action sits in `.tbar-r` on the
+   Permissions tab (Export CSV removed). */
+#permsPanel .tbar-r {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* ─── Inline filter dropdowns (.pm-filter-dd) ─────────────────────
+   Narrow variant of the existing .cr-dd EDL combo. Three pills sit
+   on the same line as the search input. Width auto-fits the value
+   label; max-width caps for runaway labels. */
+#permsPanel .pm-filter-dd {
+  display: inline-block;
+  width: auto;
+  min-width: 0;
+}
+#permsPanel .pm-filter-dd .cr-dd-trigger {
+  height: 32px;
+  padding: 0 10px;
+  gap: 6px;
+  font-size: 13px;
+  background: var(--surface, #FFFFFF);
+  border: 1px solid var(--border-input, #D4DEE3);
+  border-radius: 6px;
+  color: var(--text-primary, #171C20);
+  display: inline-flex;
+  align-items: center;
+}
+#permsPanel .pm-filter-dd .cr-dd-label {
+  /* Filter label (e.g. "Application:") is EDL secondary text Gray 70,
+     not Gray 60 muted — pairs the active filter value (Gray 95) with
+     a calm secondary tone. */
+  color: var(--text-secondary, #526374);
+  font-weight: 400;
+}
+#permsPanel .pm-filter-dd .cr-dd-value {
+  color: var(--text-primary, #171C20);
+  font-weight: 500;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#permsPanel .pm-filter-dd .cr-dd-chev {
+  margin-left: 2px;
+  color: var(--text-secondary, #526374);
+}
+#permsPanel .pm-filter-dd.open .cr-dd-trigger {
+  border-color: var(--brand-text, #3611C8);
+}
+#permsPanel .pm-filter-dd .cr-dd-menu {
+  min-width: 180px;
+}
+
+/* ─── Catalog table columns + rows ───────────────────────────────── */
+#permsPanel .pm-catalog-tbl col[data-pm-col="key"]      { width: 220px; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="name"]     { width: 220px; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="app"]      { width: 140px; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="resource"] { width: 130px; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="action"]   { width: 100px; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="used"]     { width: 140px; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="status"]   { width: 130px; }
+
+#permsPanel .pm-catalog-tbl th { padding-left: 16px; padding-right: 16px; }
+#permsPanel .pm-catalog-tbl td { padding-left: 16px; padding-right: 16px; }
+#permsPanel .pm-catalog-tbl th.pm-key:first-child,
+#permsPanel .pm-catalog-tbl td.pm-key { padding-left: 16px; }
+
+/* Function key cell — EDL table body text styling. The markup is a
+   <code> tag so the key still semantically marks itself as a stable
+   identifier, but visually it follows the table-cell typography
+   (same family, size, weight, and Gray 95 color as Display name or
+   Application). No monospace, no code-block tint, no inline padding —
+   reads like a normal table value (Frances QA 2026-05-29). */
+#permsPanel .pm-catalog-tbl .pm-key-code {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: var(--text-primary, #171C20);
+  background: transparent;
+  padding: 0;
+  letter-spacing: 0;
+}
+
+/* Whole-row click → drawer. Hover/focus reads as interactive. */
+#permsPanel .pm-catalog-row {
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+#permsPanel .pm-catalog-row:hover {
+  background: var(--row-hover, #F7F9FB);
+}
+#permsPanel .pm-catalog-row:focus-visible {
+  outline: 2px solid var(--brand-text, #3611C8);
+  outline-offset: -2px;
+}
+
+/* "Not assigned" treatment in the Used-in column — neutral muted text
+   so it reads as a benign empty state, not an error. */
+#permsPanel .pm-used-none {
+  color: var(--text-muted, #6A8095);
+  font-style: italic;
+}
+
+/* ─── Status chips (Permission Catalog) ──────────────────────────
+   EDL neutral-info chip: white surface, --blue-50 text and border.
+   Both Active and Future state use the same chip — the label text
+   carries the meaning, so we don't color-code lifecycle in a
+   read-only browse view (Frances QA 2026-05-29). */
+#permsPanel .pm-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+#permsPanel .pm-chip--info,
+#permsPanel .pm-chip--active,
+#permsPanel .pm-chip--future {
+  background: var(--bg-surface, #FFFFFF);
+  color: var(--blue-50, #1570C8);
+  border-color: var(--blue-50, #1570C8);
+}
+
+/* ─── Read-only details drawer ──────────────────────────────────
+   z-index matches the existing R&P filter drawer pattern
+   (.flt-overlay = 200, .flt-drawer = 201) so the catalog drawer
+   layers above the sticky Disney nav (z-index 100) the same way. */
+#permsPanel .pm-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 28, 32, 0.32);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 200;
+}
+#permsPanel .pm-drawer-overlay.open { opacity: 1; }
+
+#permsPanel .pm-drawer {
+  /* EDL detail panel — 440 px width (Frances QA 2026-05-29 brief:
+     420-480 px range). White surface, subtle elevation shadow,
+     slides in from the right. */
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 440px;
+  max-width: 90vw;
+  background: var(--bg-surface, #FFFFFF);
+  box-shadow: -8px 0 24px rgba(23, 28, 32, 0.12);
+  transform: translateX(100%);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 201;
+  outline: none;
+}
+#permsPanel .pm-drawer.open { transform: translateX(0); }
+
+#permsPanel .pm-drawer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid var(--border-card, #E2E9EC);
+}
+#permsPanel .pm-drawer-head-meta { min-width: 0; flex: 1 1 auto; }
+#permsPanel .pm-drawer-title {
+  /* Display name title — EDL Gray 95, 18/24 SemiBold (matches the
+     drawer headers used elsewhere in V3). */
+  margin: 0 0 6px 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--text-primary, #171C20);
+  word-break: break-word;
+}
+#permsPanel .pm-drawer-key {
+  /* Function-key subtitle — EDL Gray 70 monospace; reads as a
+     supporting technical identifier, not a primary value. */
+  margin: 0;
+  font-family: 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-secondary, #526374);
+  word-break: break-all;
+}
+#permsPanel .pm-drawer-close {
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary, #526374);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  flex: 0 0 auto;
+}
+#permsPanel .pm-drawer-close:hover {
+  background: var(--row-hover, #F7F9FB);
+  color: var(--text-primary, #171C20);
+}
+#permsPanel .pm-drawer-close:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, #928AFF);
+  outline-offset: 2px;
+}
+
+#permsPanel .pm-drawer-body {
+  padding: 20px 24px 24px 24px;
+  overflow-y: auto;
+}
+
+/* EDL label/value detail list. Solid (not dashed) hairline divider
+   between rows, sentence-case Gray 70 labels, Gray 95 values. */
+#permsPanel .pm-drawer-dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+#permsPanel .pm-drawer-dl-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-card, #E2E9EC);
+}
+#permsPanel .pm-drawer-dl-row:first-child { padding-top: 0; }
+#permsPanel .pm-drawer-dl-row:last-child { border-bottom: 0; padding-bottom: 0; }
+#permsPanel .pm-drawer-dl dt {
+  /* EDL secondary label — sentence-case, Gray 70, normal weight.
+     No uppercase / no letter-spacing so it doesn't read as a
+     debug or eyebrow label. */
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-secondary, #526374);
+  text-transform: none;
+  letter-spacing: 0;
+}
+#permsPanel .pm-drawer-dl dd {
+  /* EDL primary value — Gray 95, 14/20 SemiBold so it carries the
+     same weight as table body values elsewhere in the prototype. */
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-primary, #171C20);
+  word-break: break-word;
+}
+
+/* Narrow viewports: drawer takes full width. */
+@media (max-width: 600px) {
+  #permsPanel .pm-drawer { width: 100vw; max-width: 100vw; }
 }

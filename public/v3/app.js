@@ -1130,14 +1130,63 @@ function buildPermissionFunctionsCatalog() {
 
 var PERMISSION_FUNCTIONS_DATA = buildPermissionFunctionsCatalog();
 
-/* Permission Management table state — mirrors rp* state shape so a
+/* ─── V3 Permission Catalog (Permissions tab) ─────────────────────────
+   Read-only catalog of registered permission functions across Atlas
+   applications. The Permissions tab in V3 was reframed from an editable
+   "Permission Management" workflow into a future-facing catalog: rows
+   are not editable, no functions can be created/deleted from this page,
+   and assignment is handled exclusively through the Roles tab.
+
+   The catalog is a static, hand-curated seed (not derived from
+   FUNCTION_REGISTRY) — V3 needs control over the exact set of rows
+   shown, including one Future-state row that demonstrates how upcoming
+   custom-action work will register here.
+
+   Row shape:
+     id           — stable row identity (used by the read-only drawer)
+     key          — `app.resource.action` function key (e.g. planning.order.view)
+     name         — Display name shown in the table
+     app          — Application label (Core Planning, IAM, ICM, Disney Ads Agent)
+     resource     — Resource the action targets (Orders, Roles, Users, …)
+     action       — Action verb (View, Create, Update, Delete, Assign, …)
+     usedIn       — Numeric count of roles using this function; null = "Not assigned"
+     status       — "Active" or "Future state"
+*/
+var PERMISSION_CATALOG_DATA = [
+  { id: "pc001", key: "planning.order.view",          name: "View orders",             app: "Core Planning",    resource: "Orders",          action: "View",    usedIn: 8,    status: "Active"       },
+  { id: "pc002", key: "planning.order.create",        name: "Create order",            app: "Core Planning",    resource: "Orders",          action: "Create",  usedIn: 6,    status: "Active"       },
+  { id: "pc003", key: "planning.order.update",        name: "Update order",            app: "Core Planning",    resource: "Orders",          action: "Update",  usedIn: 4,    status: "Active"       },
+  { id: "pc004", key: "planning.mediaPlan.view",      name: "View media plans",        app: "Core Planning",    resource: "Media Plans",     action: "View",    usedIn: 8,    status: "Active"       },
+  { id: "pc005", key: "planning.mediaPlan.approve",   name: "Approve media plan",      app: "Core Planning",    resource: "Media Plans",     action: "Approve", usedIn: 2,    status: "Active"       },
+  { id: "pc006", key: "planning.lineItem.update",     name: "Update line items",       app: "Core Planning",    resource: "Line Items",      action: "Update",  usedIn: 4,    status: "Active"       },
+  { id: "pc007", key: "iam.user.view",                name: "View users",              app: "IAM",              resource: "Users",           action: "View",    usedIn: 2,    status: "Active"       },
+  { id: "pc008", key: "iam.role.assign",              name: "Assign roles",            app: "IAM",              resource: "Roles",           action: "Assign",  usedIn: 1,    status: "Active"       },
+  { id: "pc009", key: "icm.offering.view",            name: "View offerings",          app: "ICM",              resource: "Offerings",       action: "View",    usedIn: 3,    status: "Active"       },
+  { id: "pc010", key: "adsAgent.forecast.view",       name: "View forecast output",    app: "Disney Ads Agent", resource: "Forecast Output", action: "View",    usedIn: 3,    status: "Active"       },
+  { id: "pc011", key: "planning.mediaPlan.comment",   name: "Comment on media plan",   app: "Core Planning",    resource: "Media Plans",     action: "Comment", usedIn: null, status: "Future state" },
+  { id: "pc012", key: "planning.order.export",        name: "Export order",            app: "Core Planning",    resource: "Orders",          action: "Export",  usedIn: null, status: "Future state" }
+];
+
+/* Filter option allow-lists.  Application + Action lists are surfaced
+   in the inline filter dropdowns; values match user-visible labels. */
+var PM_FILTER_APPS    = ["All", "Core Planning", "IAM", "ICM", "Disney Ads Agent"];
+var PM_FILTER_ACTIONS = ["All", "View", "List", "Create", "Update", "Delete", "Assign", "Approve", "Comment", "Export"];
+var PM_FILTER_STATUS  = ["All", "Active", "Future state"];
+
+/* Permission Catalog table state — mirrors rp* state shape so a
    future merge / shared table abstraction is straightforward. */
 var pmCurrentPage = 1;
 var pmPageSize = 10;
 var pmSortKey = null;
 var pmSortDir = null;
 var pmSearchTerm = "";
-var PM_SEARCH_FIELDS = ["name", "description", "type", "app", "key"];
+var pmAppFilter    = "All";
+var pmActionFilter = "All";
+var pmStatusFilter = "All";
+/* Catalog search now spans display name, resource, function key, app,
+   and action. Description/type from the legacy table were removed —
+   the catalog row shape doesn't have them. */
+var PM_SEARCH_FIELDS = ["name", "resource", "key", "app", "action"];
 
 var ROLES_PERMISSIONS_DATA = [
   { id: "r001", role: "Atlas Admin", description: "Owns full IAM administration and end-to-end Core Planning governance.", status: "Standard", createdBy: "Homer Simpson", createDate: "01/15/2026", functions: buildRoleFunctions("r001") },
@@ -2004,24 +2053,22 @@ document.addEventListener("DOMContentLoaded", function () {
       var newTotalOthers = tableWidth - targetRightPx;
       if (oldTotalOthers <= 0 || newTotalOthers <= 0) return;
 
-      /* R&P only: keep Role and Created By at their measured widths; give
-         all horizontal slack to Functions (Description column removed).
-         Column order after Figma 770:19301: [sel(44), role, func, by, date].
-         The leading checkbox col is fixed-width via CSS (rp-col-sel:44px)
-         and is preserved as-is; indices 1..4 below are role/func/by/date. */
-      if (table.id === "rpTable" && oldWidths.length >= 5 && rightIdx === 4) {
+      /* R&P only: keep Role and Created By at their measured widths;
+         give all horizontal slack to Functions.
+         Column order after the checkbox removal (2026-05-29):
+           [role(0), func(1), by(2), date(3)]. The Date column is the
+         right-anchor for alignment, so `rightIdx === 3`. */
+      if (table.id === "rpTable" && oldWidths.length >= 4 && rightIdx === 3) {
         var MIN_FUNC = 220;
-        var selPx = oldWidths[0];
-        var rolePx = oldWidths[1];
-        var byPx = oldWidths[3];
-        var rem = newTotalOthers - selPx - rolePx - byPx;
+        var rolePx = oldWidths[0];
+        var byPx = oldWidths[2];
+        var rem = newTotalOthers - rolePx - byPx;
         if (rem >= MIN_FUNC) {
           var funcPx = Math.max(MIN_FUNC, rem);
-          cols[0].style.width = Math.max(1, Math.round(selPx)) + "px";
-          cols[1].style.width = Math.max(1, Math.round(rolePx)) + "px";
-          cols[2].style.width = funcPx + "px";
-          cols[3].style.width = Math.max(1, Math.round(byPx)) + "px";
-          cols[4].style.width = targetRightPx + "px";
+          cols[0].style.width = Math.max(1, Math.round(rolePx)) + "px";
+          cols[1].style.width = funcPx + "px";
+          cols[2].style.width = Math.max(1, Math.round(byPx)) + "px";
+          cols[3].style.width = targetRightPx + "px";
           return;
         }
       }
@@ -3459,6 +3506,7 @@ document.addEventListener("DOMContentLoaded", function () {
        These DOM nodes only render when the page is in edit mode
        (`#addUsersPage.is-edit-mode`); in Add mode they stay hidden and
        the existing Add User flow is untouched. */
+    var auEditRow   = document.getElementById("auEditRow");
     var auIdBlock   = document.getElementById("auIdBlock");
     var auIdAvatar  = document.getElementById("auIdAvatar");
     var auIdName    = document.getElementById("auIdName");
@@ -3982,7 +4030,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function applyAuPageChrome() {
       var isEdit = auPageMode === "edit";
       if (addUsersPage) addUsersPage.classList.toggle("is-edit-mode", isEdit);
-      if (auPageTitle) auPageTitle.textContent = isEdit ? "Edit User" : AU_PAGE_TITLE_ADD;
+      if (auPageTitle) auPageTitle.textContent = isEdit ? "Edit user" : AU_PAGE_TITLE_ADD;
       if (auPageSubtitle) {
         /* Figma node 847:16112 sets the Edit User subtitle to
            "Permission management" (per the latest Tatiana copy).
@@ -3990,7 +4038,13 @@ document.addEventListener("DOMContentLoaded", function () {
         auPageSubtitle.textContent = isEdit ? "Permission management" : AU_PAGE_SUB_ADD;
       }
       if (auBackLabel) {
-        auBackLabel.textContent = isEdit ? "Back to Roles and Permissions" : "Back to users";
+        /* V3 short-nav convention: tabs are "Users / Roles / Permissions".
+           Edit User is opened from the Users table (`closeAddUsers`
+           below calls `switchTab("users")`), so the back-link copy
+           should name the actual destination — "Back to Users" — not
+           the older composite "Back to Roles and Permissions" label
+           that referenced two tabs together before the rename. */
+        auBackLabel.textContent = isEdit ? "Back to Users" : "Back to users";
       }
       if (auRemoveUser) auRemoveUser.hidden = !isEdit;
       /* In edit mode the primary action is "Save Permission" (matches
@@ -4004,24 +4058,38 @@ document.addEventListener("DOMContentLoaded", function () {
         auEmail.setAttribute("aria-readonly", isEdit ? "true" : "false");
       }
       if (auStatusReadonly) auStatusReadonly.hidden = !isEdit;
-      /* Show identity block + Permission Options card in edit mode;
-         hide Roles & Permissions card in edit mode. Add mode keeps
-         the original Roles & Permissions section intact. */
-      if (auIdBlock)   auIdBlock.hidden   = !isEdit;
+      /* Show identity-row (Figma 847:16172, contains the identity block
+         plus the two field columns on the same horizontal line) and
+         the Permission Options card in edit mode; hide Roles &
+         Permissions card in edit mode. Add mode keeps the original
+         Roles & Permissions section intact. */
+      if (auEditRow)   auEditRow.hidden   = !isEdit;
       if (auPermsCard) auPermsCard.hidden = !isEdit;
       if (auRolesCard) auRolesCard.hidden = isEdit;
     }
 
-    /* V3 Edit User — Internal/External classification. External users
-       (no Disney profile photo) always use the neutral placeholder.
-       Internal users with a record-level `avatar` field use that
-       photo; otherwise also fall back to the placeholder. The neutral
-       SVG is pre-rendered in `#auIdAvatar` so the placeholder cost is
-       a single innerHTML swap when an avatar is provided. */
+    /* V3 Edit User — Internal/External classification.
+       Rule (Frances QA, 2026-05-29): the Edit User avatar MUST match
+       the avatar shown for the selected user on the Users list. The
+       Users list renders the user's photo (`user.avatar`) via
+       `renderAvatarHtml`; Edit User now mirrors that — when a real
+       photo URL exists on the user record, it renders as `<img
+       object-fit:cover>` in the 72-px circle. When no photo is
+       available (external users, or any record without `.avatar`),
+       Edit User falls back to the EDL neutral placeholder SVG so
+       the circle stays crisp. */
+    /* Figma node 847:16174 — the canonical EDL avatar placeholder
+       asset (white circle, indigo outline + indigo silhouette).
+       Rendered as inline SVG so it stays crisp at any DPI and never
+       upscales a low-resolution raster source. */
     var AU_ID_AVATAR_PLACEHOLDER_SVG =
-      '<svg class="au-id-avatar-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<circle cx="12" cy="8" r="3.5"/>' +
-      '<path d="M5.5 19.5c1.4-3 4-4.5 6.5-4.5s5.1 1.5 6.5 4.5"/>' +
+      '<svg class="au-id-avatar-svg" xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">' +
+        '<path d="M72 36C72 55.8823 55.8823 72 36 72C16.1177 72 0 55.8823 0 36C0 16.1177 16.1177 0 36 0C55.8823 0 72 16.1177 72 36Z" fill="white"/>' +
+        '<path fill-rule="evenodd" clip-rule="evenodd" d="M36 69.1579C54.3126 69.1579 69.1579 54.3126 69.1579 36C69.1579 17.6874 54.3126 2.84211 36 2.84211C17.6874 2.84211 2.84211 17.6874 2.84211 36C2.84211 54.3126 17.6874 69.1579 36 69.1579ZM36 72C55.8823 72 72 55.8823 72 36C72 16.1177 55.8823 0 36 0C16.1177 0 0 16.1177 0 36C0 55.8823 16.1177 72 36 72Z" fill="#5458C9"/>' +
+        '<path d="M48.3159 27.0003C48.3159 34.0637 42.8019 39.7898 36.0001 39.7898C29.1983 39.7898 23.6843 34.0637 23.6843 27.0003C23.6843 19.9369 29.1983 14.2108 36.0001 14.2108C42.8019 14.2108 48.3159 19.9369 48.3159 27.0003Z" fill="white"/>' +
+        '<path fill-rule="evenodd" clip-rule="evenodd" d="M36.0001 36.9477C41.1321 36.9477 45.4738 32.5961 45.4738 27.0003C45.4738 21.4045 41.1321 17.0529 36.0001 17.0529C30.8681 17.0529 26.5264 21.4045 26.5264 27.0003C26.5264 32.5961 30.8681 36.9477 36.0001 36.9477ZM36.0001 39.7898C42.8019 39.7898 48.3159 34.0637 48.3159 27.0003C48.3159 19.9369 42.8019 14.2108 36.0001 14.2108C29.1983 14.2108 23.6843 19.9369 23.6843 27.0003Z" fill="#5458C9"/>' +
+        '<path fill-rule="evenodd" clip-rule="evenodd" d="M9.58008 60.4541C11.0036 50.5618 22.2891 42.8569 36.0001 42.8569C49.711 42.8569 60.9965 50.5617 62.4201 60.454C55.8443 67.555 46.4413 72.0001 36 72.0001C25.5588 72.0001 16.1558 67.5551 9.58008 60.4541Z" fill="white"/>' +
+        '<path fill-rule="evenodd" clip-rule="evenodd" d="M12.6586 59.5505C18.6534 65.4928 26.8968 69.158 36 69.158C45.1033 69.158 53.3467 65.4928 59.3416 59.5505C57.4032 52.1526 48.2393 45.699 36.0001 45.699C23.7608 45.699 14.5969 52.1526 12.6586 59.5505ZM62.4201 60.454C60.9965 50.5617 49.711 42.8569 36.0001 42.8569C22.2891 42.8569 11.0036 50.5618 9.58008 60.4541C16.1558 67.5551 25.5588 72.0001 36 72.0001C46.4413 72.0001 55.8443 67.555 62.4201 60.454Z" fill="#5458C9"/>' +
       '</svg>';
     function isAuUserExternal(user) {
       if (!user) return false;
@@ -4035,14 +4103,41 @@ document.addEventListener("DOMContentLoaded", function () {
       var displayEmail = (user.email || "").toLowerCase();
       if (auIdName) auIdName.textContent = displayName;
       if (auIdEmail) auIdEmail.textContent = displayEmail;
-      /* Avatar: photo for internal users with an avatar field; neutral
-         placeholder otherwise (and always for external users — Tatiana
-         specifically said external should not imply a photo exists). */
+      /* Avatar — mirror the Users list (Frances QA, 2026-05-29):
+           • External users → blue initials chip identical to the
+             External Users table chip (`.avatar-initials`). Never
+             show a real photo and never the generic 72-px SVG
+             placeholder for externals (per rule: "Do not show the
+             generic 72px profile icon for external users").
+           • Internal users with a photo → render as `<img>` at 72 px
+             with `object-fit: cover`. JS-attached `error` listener
+             swaps in the EDL neutral placeholder if the photo URL
+             fails to load.
+           • Internal users without a photo → EDL neutral placeholder
+             SVG (existing behavior preserved).
+         The `.au-id-avatar--external` modifier on the container
+         lets CSS scale the chip to the Edit User 72-px circle while
+         keeping the table chip at 40 px untouched. */
       if (auIdAvatar) {
         var external = isAuUserExternal(user);
         auIdAvatar.classList.toggle("au-id-avatar--external", external);
-        if (!external && user.avatar) {
-          auIdAvatar.innerHTML = '<img class="au-id-avatar-img" src="' + esc(user.avatar) + '" alt="" aria-hidden="true">';
+        if (external) {
+          var extInitials = getInitials(user.name || "");
+          var extLabel = user.name || "External user";
+          auIdAvatar.innerHTML =
+            '<div class="au-id-avatar-initials avatar-initials" aria-label="' + esc(extLabel) + '">' +
+              esc(extInitials) +
+            '</div>';
+        } else if (user.avatar) {
+          auIdAvatar.innerHTML =
+            '<img class="au-id-avatar-img" src="' + esc(user.avatar) + '"' +
+              ' alt="" decoding="async" loading="eager">';
+          var imgEl = auIdAvatar.querySelector("img.au-id-avatar-img");
+          if (imgEl) {
+            imgEl.addEventListener("error", function () {
+              if (auIdAvatar) auIdAvatar.innerHTML = AU_ID_AVATAR_PLACEHOLDER_SVG;
+            }, { once: true });
+          }
         } else {
           auIdAvatar.innerHTML = AU_ID_AVATAR_PLACEHOLDER_SVG;
         }
@@ -4477,10 +4572,9 @@ document.addEventListener("DOMContentLoaded", function () {
          • Three read-only permission rows (Inventory Items, Offerings,
            Sales Packages → View, Create, Edit, Delete).
          • "Show all permissions" toggle reveals more read-only rows.
-         • "+ Add custom action" — future-state secondary affordance,
-           disabled, surfaces a tooltip explaining future support.
-       The card markup intentionally avoids any editable function/action
-       widgets (no checkboxes, no inline editors, no action-row delete).  */
+       The card has NO in-card future-state affordance. The custom-actions
+       future phase is communicated only via the helper text above the
+       card grid. */
     function buildAUPermsAccessLevelOptionsHtml(selected) {
       var html = "";
       for (var i = 0; i < AU_PERM_ACCESS_LEVELS.length; i++) {
@@ -4500,6 +4594,26 @@ document.addEventListener("DOMContentLoaded", function () {
       html += '</ul>';
       return html;
     }
+    /* Per Figma 847:16138 the Remove control is a 24-px trash icon
+       followed by the word "Remove" in indigo (#3611C8). Built inline
+       so the icon strokes are crisp and the link tone matches the
+       Permission Options card title. */
+    var AU_PERMS_REMOVE_TRASH_SVG =
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<polyline points="3 6 5 6 21 6"/>' +
+        '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>' +
+      '</svg>';
+    /* Show-all arrow per Figma 847:16415 — Feather "Arrow-Down" icon
+       at 16 px (NOT the unicode `↓` glyph the earlier build used). */
+    var AU_PERMS_SHOW_ARROW_DOWN_SVG =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>' +
+      '</svg>';
+    var AU_PERMS_SHOW_ARROW_UP_SVG =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>' +
+      '</svg>';
+
     function buildAUPermsCardHtml(assignment, idx) {
       var expanded = !!assignment.expanded;
       var coverage = "Full Access | " + (assignment.coverage || "12 permissions");
@@ -4507,7 +4621,8 @@ document.addEventListener("DOMContentLoaded", function () {
         '<header class="au-perms-card-head">' +
           '<h3 class="au-perms-card-title">' + esc(assignment.app) + '</h3>' +
           '<button type="button" class="au-perms-card-remove" data-au-perms-remove="' + idx + '" title="Remove assigned application" aria-label="Remove assigned application ' + esc(assignment.app) + '">' +
-            TRASH_SVG + '<span>Remove</span>' +
+            AU_PERMS_REMOVE_TRASH_SVG +
+            '<span class="au-perms-card-remove-label">Remove</span>' +
           '</button>' +
         '</header>' +
         '<div class="au-perms-card-body">' +
@@ -4521,19 +4636,16 @@ document.addEventListener("DOMContentLoaded", function () {
             '</div>' +
           '</div>' +
           buildAUPermsRowsHtml() +
+          /* Show-all toggle. Expanded state still appends a duplicate
+             rows-block (read-only) for the prototype walk-through;
+             no extra hint paragraph (Figma 847:16413 has neither). */
           '<button type="button" class="au-perms-show-all" data-au-perms-toggle="' + idx + '" aria-expanded="' + (expanded ? 'true' : 'false') + '">' +
             '<span>' + (expanded ? 'Hide all permissions' : 'Show all permissions') + '</span>' +
-            '<span class="au-perms-show-all-arr" aria-hidden="true">' + (expanded ? "\u2191" : "\u2193") + '</span>' +
+            '<span class="au-perms-show-all-arr" aria-hidden="true">' + (expanded ? AU_PERMS_SHOW_ARROW_UP_SVG : AU_PERMS_SHOW_ARROW_DOWN_SVG) + '</span>' +
           '</button>' +
           (expanded
-            ? ('<div class="au-perms-card-expand"><p class="au-perms-card-expand-note">Read-only view. Editing function/action lists is not available in the current state.</p>' + buildAUPermsRowsHtml() + '</div>')
+            ? ('<div class="au-perms-card-expand">' + buildAUPermsRowsHtml() + '</div>')
             : '') +
-          '<div class="au-perms-card-footer">' +
-            /* Future-state affordance: NOT a CTA. Disabled button with
-               an EDL-style hint tooltip. Does not open a builder, does
-               not create actions, does not change Access Level. */
-            '<button type="button" class="au-perms-add-action" data-au-perms-future="' + idx + '" disabled aria-disabled="true" title="Custom actions will be available in a future phase.">+ Add custom action</button>' +
-          '</div>' +
         '</div>' +
       '</article>';
     }
@@ -4943,18 +5055,18 @@ document.addEventListener("DOMContentLoaded", function () {
     var rows = getRPPageData();
     var tb = document.getElementById("rpTbody");
     if (rows.length === 0) {
-      tb.innerHTML = '<tr><td colspan="5" class="empty-state">No results found</td></tr>';
+      tb.innerHTML = '<tr><td colspan="4" class="empty-state">No results found</td></tr>';
       return;
     }
     var html = "";
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
       var roleCell = '<a class="rp-role-link" href="#" data-role-edit="' + esc(r.id) + '">' + esc(r.role) + '</a>';
-      /* Per-row checkbox (Figma 770:19301). aria-label is dynamic so screen
-         readers announce which role each checkbox selects. The select-all
-         header checkbox toggles every body checkbox via .rp-tbl-select-all. */
+      /* Roles table rows (Figma 770:19301, with the per-row checkbox
+         intentionally removed — this page does not support bulk
+         selection / bulk actions). Role link remains the row entry
+         point into the Create / Edit Role flow. */
       html += '<tr data-id="' + esc(r.id) + '">' +
-        '<td class="rp-sel"><input type="checkbox" class="rp-check rp-row-check" aria-label="Select ' + esc(r.role) + '"></td>' +
         '<td class="rp-role" title="' + esc(r.role) + '">' + roleCell + '</td>' +
         '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + "</span></td>" +
         '<td class="rp-by">' + esc(r.createdBy) + '</td>' +
@@ -4962,11 +5074,6 @@ document.addEventListener("DOMContentLoaded", function () {
         '</tr>';
     }
     tb.innerHTML = html;
-    /* Resync the header select-all visual after any re-render (page
-       change, sort, filter). Body checkboxes always render unchecked,
-       so the header is unchecked & indeterminate=false on every render. */
-    var selAll = document.getElementById("rpSelectAll");
-    if (selAll) { selAll.checked = false; selAll.indeterminate = false; }
   }
 
   function rpTotalPages() {
@@ -5098,59 +5205,37 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ─── R&P Row-select checkboxes (Figma 770:19301) ───
-     Visual selection only — no bulk-action toolbar in this prototype build.
-     Header checkbox cascades on/off to every body checkbox on the current
-     page; tri-state (indeterminate) reflects partial selection. A delegated
-     click on tbody updates the header to match. */
-  var rpSelectAll = document.getElementById("rpSelectAll");
-  var rpTbodyEl = document.getElementById("rpTbody");
-  function rpSyncSelectAllFromRows() {
-    if (!rpSelectAll || !rpTbodyEl) return;
-    var checks = rpTbodyEl.querySelectorAll(".rp-row-check");
-    var total = checks.length;
-    if (total === 0) {
-      rpSelectAll.checked = false;
-      rpSelectAll.indeterminate = false;
-      return;
-    }
-    var on = 0;
-    for (var i = 0; i < checks.length; i++) if (checks[i].checked) on++;
-    rpSelectAll.checked = on === total;
-    rpSelectAll.indeterminate = on > 0 && on < total;
-  }
-  if (rpSelectAll) {
-    rpSelectAll.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (!rpTbodyEl) return;
-      var want = rpSelectAll.checked;
-      var checks = rpTbodyEl.querySelectorAll(".rp-row-check");
-      for (var i = 0; i < checks.length; i++) checks[i].checked = want;
-      rpSelectAll.indeterminate = false;
-    });
-  }
-  if (rpTbodyEl) {
-    rpTbodyEl.addEventListener("click", function (e) {
-      if (e.target && e.target.classList && e.target.classList.contains("rp-row-check")) {
-        e.stopPropagation();
-        rpSyncSelectAllFromRows();
-      }
-    });
-  }
+  /* ─── R&P Row selection ─────────────────────────────────────────
+     Intentionally not implemented. The Roles table is a navigation /
+     read-and-edit surface — clicking a role name opens the role
+     detail; there is no bulk-action toolbar, no select-all behavior,
+     and no per-row checkboxes. (Header + row checkboxes removed
+     2026-05-29 per Frances QA on this tab.) Role-link click → Edit
+     Role wiring lives further down via `document.getElementById('rpTbody')`. */
 
-  /* ═══ PERMISSION MANAGEMENT TABLE (Figma 770:20032) ═══
-     Mirrors the R&P table pipeline (filter → sort → page → render). The
-     dataset (PERMISSION_FUNCTIONS_DATA) is a flat catalog derived from
-     FUNCTION_REGISTRY at module load, so this table is a read-only view
-     of the same data the R&P table consumes — internal consistency by
-     construction. */
+  /* ═══ V3 PERMISSION CATALOG TABLE ═══
+     Read-only catalog of registered permission functions. Pipeline:
+     filter (search + app + action + status) → sort → page → render.
+     The dataset is the static `PERMISSION_CATALOG_DATA` seed (see
+     declaration near line ~1131); the Permissions tab in V3 does not
+     surface the legacy FUNCTION_REGISTRY-derived data. */
   function getPMFilteredData() {
-    var result = PERMISSION_FUNCTIONS_DATA;
+    var result = PERMISSION_CATALOG_DATA;
+    if (pmAppFilter && pmAppFilter !== "All") {
+      result = result.filter(function (row) { return row.app === pmAppFilter; });
+    }
+    if (pmActionFilter && pmActionFilter !== "All") {
+      result = result.filter(function (row) { return row.action === pmActionFilter; });
+    }
+    if (pmStatusFilter && pmStatusFilter !== "All") {
+      result = result.filter(function (row) { return row.status === pmStatusFilter; });
+    }
     if (pmSearchTerm) {
       var q = pmSearchTerm.toLowerCase();
       result = result.filter(function (row) {
         for (var i = 0; i < PM_SEARCH_FIELDS.length; i++) {
-          if ((row[PM_SEARCH_FIELDS[i]] || "").toLowerCase().indexOf(q) !== -1) return true;
+          var v = row[PM_SEARCH_FIELDS[i]];
+          if (v != null && String(v).toLowerCase().indexOf(q) !== -1) return true;
         }
         return false;
       });
@@ -5188,19 +5273,35 @@ document.addEventListener("DOMContentLoaded", function () {
     return Math.max(1, Math.ceil(getPMFilteredData().length / pmPageSize));
   }
 
-  /* Map PM Type taxonomy → chip modifier class (Figma 770:20039 chips).
-     Only two variants exist per Figma:
-       • Default → light neutral background, brand-text
-       • Custom  → brand-tint background, brand-text
-     Unknown values fall back to Default so the table stays defensive
-     if the taxonomy is ever extended without a CSS pairing. */
-  var PM_TYPE_CHIP_CLASS = {
-    "Default": "pm-chip--default",
-    "Custom":  "pm-chip--custom"
+  /* Status chip styles for the Permission Catalog table.
+     Both Active and Future state use the EDL neutral-info chip
+     (white surface, --blue-50 text + border). Status meaning is
+     carried by the label text — no green/red color coding in a
+     read-only browse view (Frances QA 2026-05-29). */
+  var PM_STATUS_CHIP_CLASS = {
+    "Active":       "pm-chip--info",
+    "Future state": "pm-chip--info"
   };
-  function pmTypeChipHtml(type) {
-    var cls = PM_TYPE_CHIP_CLASS[type] || "pm-chip--default";
-    return '<span class="pm-chip ' + cls + '">' + esc(type) + '</span>';
+  function pmStatusChipHtml(status) {
+    var cls = PM_STATUS_CHIP_CLASS[status] || "pm-chip--info";
+    return '<span class="pm-chip ' + cls + '">' + esc(status) + '</span>';
+  }
+
+  /* Used-in cell helper. Numeric counts read as "N role(s)";
+     null = "Not assigned". When the catalog row maps to roles that
+     exist in ROLES_PERMISSIONS_DATA via `permissionUsedInRoles`, the
+     real role names hydrate the EDL hover tooltip so users can see
+     which roles consume the function without leaving the table.  */
+  function pmUsedInCell(row) {
+    if (row.usedIn == null) {
+      return '<span class="pm-used-none">Not assigned</span>';
+    }
+    var label = String(row.usedIn) + " " + (row.usedIn === 1 ? "role" : "roles");
+    var roles = (typeof permissionUsedInRoles === "function") ? permissionUsedInRoles(row.key) : [];
+    if (roles && roles.length > 0) {
+      return '<span class="pm-used-roles" data-roles-tip="' + esc(roles.join("\n")) + '" tabindex="0" aria-label="' + esc(label + ": " + roles.join(", ")) + '">' + esc(label) + '</span>';
+    }
+    return esc(label);
   }
 
   function renderPMTable() {
@@ -5208,41 +5309,27 @@ document.addEventListener("DOMContentLoaded", function () {
     var tb = document.getElementById("pmTbody");
     if (!tb) return;
     if (rows.length === 0) {
-      tb.innerHTML = '<tr><td colspan="6" class="empty-state">No functions match this search.</td></tr>';
+      tb.innerHTML = '<tr><td colspan="7" class="empty-state">No functions match the current filters.</td></tr>';
       return;
     }
     var html = "";
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
-      /* Function name is rendered as an indigo link per Figma; clicking
-         is a no-op in this prototype build (the function-detail page is
-         not designed). Keeping the link affordance signals the row is
-         the entry point for a future detail view. */
-      var nameCell = '<a class="pm-name-link" href="#" data-pm-view="' + esc(r.id) + '">' + esc(r.name) + '</a>';
-      /* Used-in cell: visible text stays "N role(s)" (Figma + table
-         scannability). The role names that back that count are stamped
-         on a child span as data-roles-tip so the EDL hover tooltip can
-         reveal them on hover/focus without changing the cell layout. */
-      var usedLabel = String(r.usedIn) + ' ' + (r.usedIn === 1 ? 'role' : 'roles');
-      var usedRoles = permissionUsedInRoles(r.key);
-      var usedCell;
-      if (usedRoles.length > 0) {
-        usedCell = '<span class="pm-used-roles" data-roles-tip="' + esc(usedRoles.join("\n")) + '" tabindex="0" aria-label="' + esc(usedLabel + ': ' + usedRoles.join(", ")) + '">' + esc(usedLabel) + '</span>';
-      } else {
-        usedCell = esc(usedLabel);
-      }
-      html += '<tr data-id="' + esc(r.id) + '">' +
-        '<td class="pm-sel"><input type="checkbox" class="rp-check pm-row-check" aria-label="Select ' + esc(r.name) + '"></td>' +
-        '<td class="pm-name" title="' + esc(r.key) + '">' + nameCell + '</td>' +
-        '<td class="pm-desc" title="' + esc(r.description) + '">' + esc(r.description) + '</td>' +
-        '<td class="pm-type">' + pmTypeChipHtml(r.type) + '</td>' +
-        '<td class="pm-used">' + usedCell + '</td>' +
-        '<td class="pm-date">' + esc(r.lastUpdated) + '</td>' +
+      /* Whole row is a read-only entry into the details drawer; no
+         per-row CTAs, no edit affordance, no checkbox. `data-pm-view`
+         stays on the row itself so `openPMCatalogDrawer` can look up
+         the catalog entry from a single delegated click handler. */
+      html += '<tr data-id="' + esc(r.id) + '" data-pm-view="' + esc(r.id) + '" class="pm-catalog-row" tabindex="0" role="button" aria-label="View details for ' + esc(r.name) + '">' +
+        '<td class="pm-key"><code class="pm-key-code">' + esc(r.key) + '</code></td>' +
+        '<td class="pm-name">' + esc(r.name) + '</td>' +
+        '<td class="pm-app">' + esc(r.app) + '</td>' +
+        '<td class="pm-resource">' + esc(r.resource) + '</td>' +
+        '<td class="pm-action">' + esc(r.action) + '</td>' +
+        '<td class="pm-used">' + pmUsedInCell(r) + '</td>' +
+        '<td class="pm-status">' + pmStatusChipHtml(r.status) + '</td>' +
         '</tr>';
     }
     tb.innerHTML = html;
-    var selAll = document.getElementById("pmSelectAll");
-    if (selAll) { selAll.checked = false; selAll.indeterminate = false; }
   }
 
   function renderPMPagination() {
@@ -5286,7 +5373,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var ic = document.getElementById("pmItemCount");
     if (ic) ic.textContent = "of " + filteredCount + " items";
     var tl = document.getElementById("pmTotalLabel");
-    if (tl) tl.textContent = "Total functions: " + PERMISSION_FUNCTIONS_DATA.length;
+    if (tl) tl.textContent = "Total functions: " + PERMISSION_CATALOG_DATA.length;
 
     /* Page-size dropdown menu sync (reused EDL .cr-dd component). */
     var pmPageSizeMenu = document.getElementById("pmPageSizeMenu");
@@ -5346,45 +5433,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ─── PM Row-select checkboxes (same visual-only semantics as R&P) ─── */
-  var pmSelectAll = document.getElementById("pmSelectAll");
+  /* ─── PM Catalog row click → read-only details drawer ─────────────
+     Whole-row click and Enter / Space key both open `#pmDrawer` with
+     the row's data hydrated in place. The drawer is the only entry
+     point into per-function context on V3 — there is no edit page
+     reachable from the catalog. */
   var pmTbodyEl = document.getElementById("pmTbody");
-  function pmSyncSelectAllFromRows() {
-    if (!pmSelectAll || !pmTbodyEl) return;
-    var checks = pmTbodyEl.querySelectorAll(".pm-row-check");
-    var total = checks.length;
-    if (total === 0) { pmSelectAll.checked = false; pmSelectAll.indeterminate = false; return; }
-    var on = 0;
-    for (var i = 0; i < checks.length; i++) if (checks[i].checked) on++;
-    pmSelectAll.checked = on === total;
-    pmSelectAll.indeterminate = on > 0 && on < total;
-  }
-  if (pmSelectAll) {
-    pmSelectAll.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (!pmTbodyEl) return;
-      var want = pmSelectAll.checked;
-      var checks = pmTbodyEl.querySelectorAll(".pm-row-check");
-      for (var i = 0; i < checks.length; i++) checks[i].checked = want;
-      pmSelectAll.indeterminate = false;
-    });
-  }
   if (pmTbodyEl) {
     pmTbodyEl.addEventListener("click", function (e) {
-      if (e.target && e.target.classList && e.target.classList.contains("pm-row-check")) {
-        e.stopPropagation();
-        pmSyncSelectAllFromRows();
-        return;
-      }
-      /* Name-link opens the Permission Capability detail page
-         (Figma 788:4348). The link still has href="#" so we cancel the
-         default scroll-to-top before navigating into the detail flow. */
-      var nameLink = e.target.closest && e.target.closest(".pm-name-link");
-      if (nameLink) {
-        e.preventDefault();
-        var rowId = nameLink.getAttribute("data-pm-view");
-        if (rowId) openPermissionDetail(rowId);
-      }
+      var row = e.target.closest && e.target.closest(".pm-catalog-row");
+      if (!row) return;
+      var rowId = row.getAttribute("data-pm-view");
+      if (rowId) openPMCatalogDrawer(rowId);
+    });
+    pmTbodyEl.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      var row = e.target.closest && e.target.closest(".pm-catalog-row");
+      if (!row) return;
+      e.preventDefault();
+      var rowId = row.getAttribute("data-pm-view");
+      if (rowId) openPMCatalogDrawer(rowId);
     });
   }
 
@@ -6226,6 +6294,152 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   })();
+
+  /* ─── PM Catalog inline filter dropdowns (Application / Action / Status) ─
+     Reuses the EDL `.cr-dd` trigger + menu component. Each filter
+     writes to its own state slot (`pmAppFilter`, `pmActionFilter`,
+     `pmStatusFilter`) and re-runs the filter pipeline. Open / close
+     follows the same single-menu-at-a-time pattern as the existing
+     pagination size dropdown. */
+  (function wirePmCatalogFilters() {
+    var triggers = [
+      { ddId: "pmAppFilterDD",    trigId: "pmAppFilterTrigger",    menuId: "pmAppFilterMenu",    valId: "pmAppFilterValue",    opts: PM_FILTER_APPS,    setter: function (v) { pmAppFilter = v; } },
+      { ddId: "pmActionFilterDD", trigId: "pmActionFilterTrigger", menuId: "pmActionFilterMenu", valId: "pmActionFilterValue", opts: PM_FILTER_ACTIONS, setter: function (v) { pmActionFilter = v; } },
+      { ddId: "pmStatusFilterDD", trigId: "pmStatusFilterTrigger", menuId: "pmStatusFilterMenu", valId: "pmStatusFilterValue", opts: PM_FILTER_STATUS,  setter: function (v) { pmStatusFilter = v; } }
+    ];
+
+    function closeAllPmFilters(except) {
+      for (var i = 0; i < triggers.length; i++) {
+        var t = triggers[i];
+        var dd = document.getElementById(t.ddId);
+        if (!dd) continue;
+        if (except && dd === except) continue;
+        dd.classList.remove("open");
+        var trig = document.getElementById(t.trigId);
+        if (trig) trig.setAttribute("aria-expanded", "false");
+      }
+    }
+
+    triggers.forEach(function (t) {
+      var dd   = document.getElementById(t.ddId);
+      var trig = document.getElementById(t.trigId);
+      var menu = document.getElementById(t.menuId);
+      var val  = document.getElementById(t.valId);
+      if (!dd || !trig || !menu || !val) return;
+
+      /* Populate options. Each option carries its label as data so the
+         delegated click handler can read it without re-parsing the
+         menu DOM. */
+      var html = "";
+      for (var i = 0; i < t.opts.length; i++) {
+        var label = t.opts[i];
+        html += '<div class="cr-dd-option' + (i === 0 ? " is-selected" : "") + '" role="option" data-pm-flt="' + esc(label) + '">' + esc(label) + '</div>';
+      }
+      menu.innerHTML = html;
+
+      trig.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var open = dd.classList.toggle("open");
+        trig.setAttribute("aria-expanded", open ? "true" : "false");
+        if (open) closeAllPmFilters(dd);
+      });
+
+      menu.addEventListener("click", function (e) {
+        var opt = e.target.closest("[data-pm-flt]");
+        if (!opt) return;
+        var label = opt.getAttribute("data-pm-flt");
+        t.setter(label);
+        val.textContent = label;
+        /* Mark the selected option in the menu for next open. */
+        var all = menu.querySelectorAll(".cr-dd-option");
+        for (var i = 0; i < all.length; i++) all[i].classList.toggle("is-selected", all[i] === opt);
+        dd.classList.remove("open");
+        trig.setAttribute("aria-expanded", "false");
+        pmCurrentPage = 1;
+        renderPMTable();
+        renderPMPagination();
+      });
+    });
+
+    /* Click anywhere outside any open filter dropdown closes them. */
+    document.addEventListener("click", function (e) {
+      var inside = e.target.closest && e.target.closest(".pm-filter-dd");
+      if (!inside) closeAllPmFilters(null);
+    });
+  })();
+
+  /* PM Export CSV — removed Frances QA 2026-05-29. The Permission
+     Catalog is intentionally read-only browse only; no Export CSV,
+     no Create Permission, no Add custom action. */
+
+  /* ─── PM Catalog read-only details drawer ─────────────────────────
+     `openPMCatalogDrawer(rowId)` hydrates `#pmDrawer` with the row's
+     data and slides it in from the right. Close paths: × button,
+     overlay click, Escape. There is NO edit form, NO action buttons
+     beyond Close — the drawer is purely contextual. */
+  var pmDrawer        = document.getElementById("pmDrawer");
+  var pmDrawerOverlay = document.getElementById("pmDrawerOverlay");
+  var pmDrawerClose   = document.getElementById("pmDrawerClose");
+  var pmDrawerName    = document.getElementById("pmDrawerName");
+  var pmDrawerKey     = document.getElementById("pmDrawerKey");
+  var pmDrawerApp     = document.getElementById("pmDrawerApp");
+  var pmDrawerRes     = document.getElementById("pmDrawerResource");
+  var pmDrawerAct     = document.getElementById("pmDrawerAction");
+  var pmDrawerStatus  = document.getElementById("pmDrawerStatus");
+  var pmDrawerUsed    = document.getElementById("pmDrawerUsed");
+
+  function getPMCatalogRow(rowId) {
+    for (var i = 0; i < PERMISSION_CATALOG_DATA.length; i++) {
+      if (PERMISSION_CATALOG_DATA[i].id === rowId) return PERMISSION_CATALOG_DATA[i];
+    }
+    return null;
+  }
+
+  function openPMCatalogDrawer(rowId) {
+    var row = getPMCatalogRow(rowId);
+    if (!row || !pmDrawer) return;
+    if (pmDrawerName)   pmDrawerName.textContent   = row.name;
+    if (pmDrawerKey)    pmDrawerKey.textContent    = row.key;
+    if (pmDrawerApp)    pmDrawerApp.textContent    = row.app;
+    if (pmDrawerRes)    pmDrawerRes.textContent    = row.resource;
+    if (pmDrawerAct)    pmDrawerAct.textContent    = row.action;
+    if (pmDrawerStatus) pmDrawerStatus.innerHTML   = pmStatusChipHtml(row.status);
+    if (pmDrawerUsed) {
+      if (row.usedIn == null) {
+        pmDrawerUsed.textContent = "Not assigned";
+      } else {
+        var label = String(row.usedIn) + " " + (row.usedIn === 1 ? "role" : "roles");
+        var roles = (typeof permissionUsedInRoles === "function") ? permissionUsedInRoles(row.key) : [];
+        pmDrawerUsed.textContent = roles.length > 0 ? label + " — " + roles.join(", ") : label;
+      }
+    }
+    pmDrawer.hidden = false;
+    if (pmDrawerOverlay) pmDrawerOverlay.hidden = false;
+    /* Defer the `open` class so the slide-in transition fires after
+       the element is in the layout. */
+    requestAnimationFrame(function () {
+      pmDrawer.classList.add("open");
+      if (pmDrawerOverlay) pmDrawerOverlay.classList.add("open");
+    });
+    if (typeof pmDrawer.focus === "function") pmDrawer.focus();
+  }
+
+  function closePMCatalogDrawer() {
+    if (!pmDrawer) return;
+    pmDrawer.classList.remove("open");
+    if (pmDrawerOverlay) pmDrawerOverlay.classList.remove("open");
+    /* Hide after the transition to keep `aria-hidden` honest. */
+    setTimeout(function () {
+      if (!pmDrawer.classList.contains("open")) pmDrawer.hidden = true;
+      if (pmDrawerOverlay && !pmDrawerOverlay.classList.contains("open")) pmDrawerOverlay.hidden = true;
+    }, 220);
+  }
+
+  if (pmDrawerClose)   pmDrawerClose.addEventListener("click", closePMCatalogDrawer);
+  if (pmDrawerOverlay) pmDrawerOverlay.addEventListener("click", closePMCatalogDrawer);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pmDrawer && pmDrawer.classList.contains("open")) closePMCatalogDrawer();
+  });
 
   /* ─── R&P Pagination events ─── */
   document.getElementById("rpPgNums").addEventListener("click", function (e) {

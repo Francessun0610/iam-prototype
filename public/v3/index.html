@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260529edituser2">
+  <link rel="stylesheet" href="styles.css?v=20260529pmclean4">
 </head>
 <body>
 
@@ -123,16 +123,19 @@
   <div class="card">
     <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032 (three secondary tabs).
          All three tabs are now wired to real panes:
-           1. Users → #usersPanel (Figma 770:17428)
-           2. Role assignment → #rolesPanel (Figma 770:19301)
-           3. Permission Management → #permsPanel (Figma 770:20032)
+           1. Users       → #usersPanel  (Figma 770:17428)
+           2. Roles       → #rolesPanel  (Figma 770:19301)
+           3. Permissions → #permsPanel  (Permission Catalog — V3-only
+              read-only catalog of registered permission functions)
          Visual treatment is identical across all three (inactive = muted,
-         active = brand text + indigo underline). -->
+         active = brand text + indigo underline). The Permissions tab
+         page-level title is "Permission Catalog" — rendered inside
+         #permsPanel above the toolbar. -->
     <div class="tabs-row">
       <nav>
         <button class="tab-btn on">Users</button>
-        <button class="tab-btn">Role assignment</button>
-        <button class="tab-btn">Permission Management</button>
+        <button class="tab-btn">Roles</button>
+        <button class="tab-btn">Permissions</button>
       </nav>
     </div>
 
@@ -247,8 +250,11 @@
 
       <div class="tbl-wrap">
         <table class="tbl rp-tbl" id="rpTable">
+          <!-- Roles table colgroup. No leading select column — this page
+               does not support bulk selection or bulk actions, so the
+               checkbox column was removed (Frances QA, 2026-05-29).
+               Role column now anchors the left edge per EDL pattern. -->
           <colgroup id="rpColgroup">
-            <col data-rp-col="sel" class="rp-col-sel">
             <col data-rp-col="role">
             <col data-rp-col="func">
             <col data-rp-col="by">
@@ -256,7 +262,6 @@
           </colgroup>
           <thead>
             <tr>
-              <th class="rp-sel" aria-label="Select all roles"><input type="checkbox" id="rpSelectAll" class="rp-check" aria-label="Select all roles"></th>
               <th class="rp-role" data-rp-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
               <th class="rp-func" data-rp-sort="functions"><div class="th-inner"><span>Functions</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
               <th class="rp-by" data-rp-sort="createdBy"><div class="th-inner"><span>Created By</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
@@ -294,45 +299,95 @@
       </div>
     </div>
 
-    <!-- Permission Management pane (Figma 770:20032) — flat catalog of
-         the function/permission atoms used by Role assignment. Read-only
-         view; the per-row link (Function Name) anchors a future detail
-         page. Toolbar mirrors R&P (Filter + Search) but omits an
-         "Add Users" CTA — that label in Figma is a copy-paste artifact
-         from the Users design and has no semantic meaning here. -->
+    <!-- ═ Permission Catalog (V3 only) ═
+         Reframed Permissions tab. This page is a *read-only catalog* of
+         registered permission functions across applications. Assignment
+         is handled through Roles (Roles tab) — there is no per-row edit
+         path here, no Create Permission CTA, no role/resource matrix,
+         and no custom-permission CRUD.
+
+         Catalog data lives in `PERMISSION_CATALOG_DATA` (V3-specific
+         seed of 8 functions covering Core Planning, IAM, ICM, plus one
+         Future-state row). Row click opens the #pmDrawer read-only
+         drawer, NOT the editable Permission Capability detail page —
+         see `openPMCatalogDrawer` in app.js.
+
+         The tab nav label stays "Permissions" (set by the short-nav
+         pass). The page-level title rendered below is "Permission
+         Catalog". -->
     <div id="permsPanel" style="display:none">
+      <!-- Inner page title/subtitle were removed (Frances QA 2026-05-29):
+           the outer page <h1> "Access Management" already names this
+           IAM section, and the "Permissions" tab label identifies the
+           sub-view. Toolbar now sits flush under the tabs row, matching
+           the Users/Roles tab layout. -->
       <div class="tbar">
         <div class="tbar-l">
-          <button class="btn-std" id="pmFilterBtn" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Filter
-          </button>
+          <!-- Search — placeholder updated to reflect that the catalog
+               is searchable across permission name, resource, and
+               function key. -->
           <div class="search" id="pmSearchWrap">
-            <input type="text" id="pmSearchInput" placeholder="Search functions" autocomplete="off">
+            <input type="text" id="pmSearchInput" placeholder="Search permission, resource, or function key…" autocomplete="off">
             <svg class="search-ico" id="pmSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <button type="button" class="search-clear hidden" id="pmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           </div>
+
+          <!-- Inline filter dropdowns: Application, Action, Status.
+               Reuses the existing .cr-dd EDL combo trigger pattern,
+               narrowed via .pm-filter-dd so three pills fit cleanly
+               next to the search input. JS populates the menus and
+               wires change handlers. -->
+          <div class="cr-dd pm-filter-dd" id="pmAppFilterDD">
+            <button type="button" class="cr-dd-trigger" id="pmAppFilterTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmAppFilterMenu">
+              <span class="cr-dd-label">Application:</span>
+              <span class="cr-dd-value" id="pmAppFilterValue">All</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="pmAppFilterMenu" role="listbox" aria-label="Application"></div>
+          </div>
+          <div class="cr-dd pm-filter-dd" id="pmActionFilterDD">
+            <button type="button" class="cr-dd-trigger" id="pmActionFilterTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmActionFilterMenu">
+              <span class="cr-dd-label">Action:</span>
+              <span class="cr-dd-value" id="pmActionFilterValue">All</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="pmActionFilterMenu" role="listbox" aria-label="Action"></div>
+          </div>
+          <div class="cr-dd pm-filter-dd" id="pmStatusFilterDD">
+            <button type="button" class="cr-dd-trigger" id="pmStatusFilterTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmStatusFilterMenu">
+              <span class="cr-dd-label">Status:</span>
+              <span class="cr-dd-value" id="pmStatusFilterValue">All</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="pmStatusFilterMenu" role="listbox" aria-label="Status"></div>
+          </div>
         </div>
+
+        <!-- No top-right action group. The Permission Catalog is
+             a read-only browse view — Export CSV removed per
+             Frances QA 2026-05-29, no replacement action. -->
       </div>
 
       <div class="tbl-wrap">
-        <table class="tbl pm-tbl" id="pmTable">
+        <table class="tbl pm-tbl pm-catalog-tbl" id="pmTable">
           <colgroup id="pmColgroup">
-            <col data-pm-col="sel" class="rp-col-sel">
+            <col data-pm-col="key">
             <col data-pm-col="name">
-            <col data-pm-col="desc">
-            <col data-pm-col="type">
+            <col data-pm-col="app">
+            <col data-pm-col="resource">
+            <col data-pm-col="action">
             <col data-pm-col="used">
-            <col data-pm-col="date">
+            <col data-pm-col="status">
           </colgroup>
           <thead>
             <tr>
-              <th class="pm-sel" aria-label="Select all functions"><input type="checkbox" id="pmSelectAll" class="rp-check" aria-label="Select all functions"></th>
-              <th class="pm-name" data-pm-sort="name"><div class="th-inner"><span>Function Name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-desc" data-pm-sort="description"><div class="th-inner"><span>Description</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-type" data-pm-sort="type"><div class="th-inner"><span>Type</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-used" data-pm-sort="usedIn"><div class="th-inner"><span>Used in</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-date" data-pm-sort="lastUpdated"><div class="th-inner"><span>Last Updated</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-key"      data-pm-sort="key"><div class="th-inner"><span>Function key</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-name"     data-pm-sort="name"><div class="th-inner"><span>Display name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-app"      data-pm-sort="app"><div class="th-inner"><span>Application</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-resource" data-pm-sort="resource"><div class="th-inner"><span>Resource</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-action"   data-pm-sort="action"><div class="th-inner"><span>Action</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-used"     data-pm-sort="usedIn"><div class="th-inner"><span>Used in roles</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="pm-status"   data-pm-sort="status"><div class="th-inner"><span>Status</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
             </tr>
           </thead>
           <tbody id="pmTbody"></tbody>
@@ -364,6 +419,42 @@
           <span class="pgn-lbl" id="pmTotalLabel">Total functions: 0</span>
         </div>
       </div>
+
+      <!-- ═ Read-only details drawer (Permission Catalog row click) ═
+           Slides in from the right with a backdrop overlay. Displays
+           the full row data (function key, display name, application,
+           resource, action, status, used-in-roles list) plus an
+           assignment note pointing users to Roles for management.
+           NO edit controls, NO delete, NO assign, NO future-state
+           explanation. -->
+      <div class="pm-drawer-overlay" id="pmDrawerOverlay" hidden></div>
+      <aside class="pm-drawer" id="pmDrawer" role="dialog" aria-modal="true" aria-labelledby="pmDrawerName" hidden tabindex="-1">
+        <!-- EDL detail-panel pattern (Frances QA 2026-05-29):
+             • Title (display name) at Gray 95
+             • Function-key subtitle at Gray 70 monospace
+             • Clean dl of label / value rows, subtle solid dividers
+             • Assignment is a normal row, not a callout block -->
+        <header class="pm-drawer-head">
+          <div class="pm-drawer-head-meta">
+            <h3 class="pm-drawer-title" id="pmDrawerName">—</h3>
+            <p class="pm-drawer-key" id="pmDrawerKey">—</p>
+          </div>
+          <button type="button" class="pm-drawer-close" id="pmDrawerClose" aria-label="Close details">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </header>
+
+        <div class="pm-drawer-body">
+          <dl class="pm-drawer-dl">
+            <div class="pm-drawer-dl-row"><dt>Application</dt><dd id="pmDrawerApp">—</dd></div>
+            <div class="pm-drawer-dl-row"><dt>Resource</dt><dd id="pmDrawerResource">—</dd></div>
+            <div class="pm-drawer-dl-row"><dt>Action</dt><dd id="pmDrawerAction">—</dd></div>
+            <div class="pm-drawer-dl-row"><dt>Status</dt><dd id="pmDrawerStatus">—</dd></div>
+            <div class="pm-drawer-dl-row"><dt>Used in roles</dt><dd id="pmDrawerUsed">—</dd></div>
+            <div class="pm-drawer-dl-row"><dt>Assignment</dt><dd>Managed through Roles</dd></div>
+          </dl>
+        </div>
+      </aside>
     </div>
   </div>
 </main>
@@ -396,34 +487,56 @@
       </div>
 
       <div class="au-section-body">
-      <!-- ═ Edit-mode identity block (V3 only) ═
-           Roster-style identity (Figma node 847:16112) — avatar, name,
-           email + status check-circle — rendered only when the Add/Edit
-           page is in edit mode. Hidden in Add mode via the existing
-           `#addUsersPage.is-edit-mode` toggle. Populated by
-           `populateEditFormFromUser` in app.js.
+      <!-- ═ Edit-mode identity row (V3 only) ═
+           Figma node 847:16172 — single horizontal row containing the
+           roster-style identity block (avatar + name + email + active
+           check-circle) on the left, followed by two 296-px form
+           columns to the right. Rendered only in edit mode; Add mode
+           keeps the existing 3-column `.au-grid` untouched.
 
-           Internal users get a photo when their record has `avatar`,
-           otherwise the EDL neutral user-circle placeholder. External
-           users always use the neutral placeholder (per Tatiana — no
-           personal photo treatment for external identities). -->
-      <div class="au-id-block au-edit-only" id="auIdBlock" hidden>
-        <div class="au-id-avatar" id="auIdAvatar" aria-hidden="true">
-          <!-- Neutral placeholder is rendered by default; the photo
-               variant is swapped in by JS for internal users with an
-               avatar field. -->
-          <svg class="au-id-avatar-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 19.5c1.4-3 4-4.5 6.5-4.5s5.1 1.5 6.5 4.5"/></svg>
-        </div>
-        <div class="au-id-meta">
-          <div class="au-id-name" id="auIdName">Marge Simpson</div>
-          <div class="au-id-email-row">
-            <span class="au-id-email" id="auIdEmail">marge.simpson@disney.com</span>
-            <!-- Read-only status icon. Active = filled green check;
-                 Inactive = neutral gray dot. Replaces the Add-mode
-                 Active/Inactive segmented control in edit mode. -->
-            <span class="au-id-status" id="auIdStatus" role="img" aria-label="Active">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
-            </span>
+           Figma geometry: 3 × 296px columns, 39px gaps, identity column
+           = 72px avatar + 16px gap + name/email meta column.
+
+           Avatar treatment: defaults to the EDL neutral placeholder to
+           match Figma 847:16174 (which shows the placeholder, not a
+           photo). The photo path remains supported for internal users
+           via `populateAuIdentityBlock` in app.js, but is opt-in per
+           user record so we don't upscale low-resolution sources.
+           External users always render the placeholder. -->
+      <div class="au-edit-row au-edit-only" id="auEditRow" hidden>
+        <div class="au-id-block" id="auIdBlock">
+          <div class="au-id-avatar" id="auIdAvatar" aria-hidden="true">
+            <!-- Neutral placeholder per Figma node 847:16174 (the exact
+                 EDL avatar placeholder asset: white circle, indigo
+                 outline, indigo silhouette of head + shoulders).
+                 Inline SVG renders crisply at any DPI. JS swaps this
+                 for a photo when an internal user record carries
+                 `usePhotoInEdit: true` AND a high-resolution avatar. -->
+            <svg class="au-id-avatar-svg" xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+              <path d="M72 36C72 55.8823 55.8823 72 36 72C16.1177 72 0 55.8823 0 36C0 16.1177 16.1177 0 36 0C55.8823 0 72 16.1177 72 36Z" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M36 69.1579C54.3126 69.1579 69.1579 54.3126 69.1579 36C69.1579 17.6874 54.3126 2.84211 36 2.84211C17.6874 2.84211 2.84211 17.6874 2.84211 36C2.84211 54.3126 17.6874 69.1579 36 69.1579ZM36 72C55.8823 72 72 55.8823 72 36C72 16.1177 55.8823 0 36 0C16.1177 0 0 16.1177 0 36C0 55.8823 16.1177 72 36 72Z" fill="#5458C9"/>
+              <path d="M48.3159 27.0003C48.3159 34.0637 42.8019 39.7898 36.0001 39.7898C29.1983 39.7898 23.6843 34.0637 23.6843 27.0003C23.6843 19.9369 29.1983 14.2108 36.0001 14.2108C42.8019 14.2108 48.3159 19.9369 48.3159 27.0003Z" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M36.0001 36.9477C41.1321 36.9477 45.4738 32.5961 45.4738 27.0003C45.4738 21.4045 41.1321 17.0529 36.0001 17.0529C30.8681 17.0529 26.5264 21.4045 26.5264 27.0003C26.5264 32.5961 30.8681 36.9477 36.0001 36.9477ZM36.0001 39.7898C42.8019 39.7898 48.3159 34.0637 48.3159 27.0003C48.3159 19.9369 42.8019 14.2108 36.0001 14.2108C29.1983 14.2108 23.6843 19.9369 23.6843 27.0003Z" fill="#5458C9"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M9.58008 60.4541C11.0036 50.5618 22.2891 42.8569 36.0001 42.8569C49.711 42.8569 60.9965 50.5617 62.4201 60.454C55.8443 67.555 46.4413 72.0001 36 72.0001C25.5588 72.0001 16.1558 67.5551 9.58008 60.4541Z" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6586 59.5505C18.6534 65.4928 26.8968 69.158 36 69.158C45.1033 69.158 53.3467 65.4928 59.3416 59.5505C57.4032 52.1526 48.2393 45.699 36.0001 45.699C23.7608 45.699 14.5969 52.1526 12.6586 59.5505ZM62.4201 60.454C60.9965 50.5617 49.711 42.8569 36.0001 42.8569C22.2891 42.8569 11.0036 50.5618 9.58008 60.4541C16.1558 67.5551 25.5588 72.0001 36 72.0001C46.4413 72.0001 55.8443 67.555 62.4201 60.454Z" fill="#5458C9"/>
+            </svg>
+          </div>
+          <!-- Name + email are populated by `populateAuIdentityBlock`
+               with the SELECTED user's record. Empty initial values
+               prevent a flash of the previous-session user when the
+               page is re-shown before the data swap runs. -->
+          <div class="au-id-meta">
+            <div class="au-id-name" id="auIdName"></div>
+            <div class="au-id-email-row">
+              <span class="au-id-email" id="auIdEmail"></span>
+              <!-- Read-only status icon. Active = filled green check
+                   (Figma 847:16185 — EDL Green 70 #056C07). Inactive
+                   = neutral gray dot. Replaces the Add-mode Active /
+                   Inactive segmented control. -->
+              <span class="au-id-status" id="auIdStatus" role="img" aria-label="Active">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -431,7 +544,7 @@
       <div class="au-grid">
         <div class="au-field au-field-edit-only">
           <label class="au-label" for="auFullName">Name</label>
-          <input class="au-input au-input-readonly" id="auFullName" type="text" value="Homer Simpson" readonly aria-readonly="true" tabindex="-1">
+          <input class="au-input au-input-readonly" id="auFullName" type="text" value="" readonly aria-readonly="true" tabindex="-1">
         </div>
         <div class="au-field au-field-first">
           <label class="au-label" for="auFirstName">First name<span class="au-req">*</span></label>
@@ -498,7 +611,9 @@
          and hidden by CSS when `.is-edit-mode` is set.
 
          Section content:
-           • Helper line + future-state line.
+           • Single helper line — names current-state behavior and the
+             future-state custom-actions phase (visual-only; no in-card
+             future-state controls).
            • Assigned Applications combo (predefined access groups only —
              no custom function builder).
            • Two application cards rendered by JS into `#auPermsCards`.
@@ -506,8 +621,9 @@
          Permission rows in each application card are READ-ONLY; the only
          current-state edits are: pick a predefined access level from the
          allow-list, add a predefined application, remove an assigned
-         application. The "+ Add custom action" affordance inside each card
-         is a future-state hint and does not open a builder. -->
+         application. There is no in-card future-state affordance — the
+         custom-actions future phase is communicated only via the helper
+         text above. -->
     <section class="au-card cr-card au-access-card au-edit-only" id="auPermsCard" aria-labelledby="auPermsTitle" hidden>
       <div class="cr-section-header" data-au-toggle="perms" role="button" tabindex="0" aria-expanded="true">
         <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
@@ -515,8 +631,10 @@
         <span class="cr-section-summary" id="auPermsSummary" aria-hidden="true"></span>
       </div>
       <div class="au-section-body">
+        <!-- Helper text trimmed to match Figma 847:16145 exactly. The
+             future-state custom-actions phase is intentionally NOT
+             described in the UI (PM will communicate it directly). -->
         <p class="au-perms-helper">Review predefined access levels and permission coverage.</p>
-        <p class="au-perms-helper au-perms-helper-future">Custom actions will be supported in a future phase.</p>
 
         <div class="au-field au-perms-app-field">
           <label class="au-label" for="auPermsAppCombo-ctl">Assigned Applications</label>
@@ -562,7 +680,7 @@
   <div class="cr-shell">
     <button class="cr-back" id="crBack">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Roles and Permissions
+      Back to Roles
     </button>
 
     <div class="cr-header">
@@ -660,7 +778,7 @@
   <div class="cr-shell">
     <button class="cr-back" id="pcBack">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Permission Management
+      Back to Permissions
     </button>
 
     <div class="cr-header">
@@ -942,6 +1060,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260529edituser2"></script>
+<script src="app.js?v=20260529pmclean4"></script>
 </body>
 </html>
