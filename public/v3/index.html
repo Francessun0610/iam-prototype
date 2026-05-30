@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260529permsgap1">
+  <link rel="stylesheet" href="styles.css?v=20260530adspass8">
 </head>
 <body>
 
@@ -121,21 +121,27 @@
   </div>
 
   <div class="card">
-    <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032 (three secondary tabs).
-         All three tabs are now wired to real panes:
-           1. Users       → #usersPanel  (Figma 770:17428)
-           2. Roles       → #rolesPanel  (Figma 770:19301)
-           3. Permissions → #permsPanel  (Permission Catalog — V3-only
-              read-only catalog of registered permission functions)
-         Visual treatment is identical across all three (inactive = muted,
-         active = brand text + indigo underline). The Permissions tab
-         page-level title is "Permission Catalog" — rendered inside
-         #permsPanel above the toolbar. -->
+    <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032 (three secondary tabs)
+         + Teams tab added 2026-05-29.
+         Order updated 2026-05-29 (Frances QA round 4) to match
+         Tatiana's direction:
+           1. Users     → #usersPanel  (Figma 770:17428)
+           2. Roles     → #rolesPanel  (Figma 770:19301)
+           3. Teams     → #teamsPanel  (read-only browse + Edit Team)
+           4. Functions → #permsPanel  (Permission Catalog — V3-only
+              read-only catalog of registered permission functions;
+              the Functions label replaces the prior "Permissions"
+              label per the same QA pass).
+         Visual treatment is identical across all four (inactive = muted,
+         active = brand text + indigo underline). Internal tab key for
+         #permsPanel remains "perms" — only the user-visible label
+         changed, so existing PM data/filter wiring stays intact. -->
     <div class="tabs-row">
       <nav>
         <button class="tab-btn on">Users</button>
         <button class="tab-btn">Roles</button>
-        <button class="tab-btn">Permissions</button>
+        <button class="tab-btn">Teams</button>
+        <button class="tab-btn">Functions</button>
       </nav>
     </div>
 
@@ -308,9 +314,8 @@
 
          Catalog data lives in `PERMISSION_CATALOG_DATA` (V3-specific
          seed of 8 functions covering Core Planning, IAM, ICM, plus one
-         Future-state row). Row click opens the #pmDrawer read-only
-         drawer, NOT the editable Permission Capability detail page —
-         see `openPMCatalogDrawer` in app.js.
+         Future-state row). The table is fully read-only — rows do not
+         open a drawer or detail page (drawer removed 2026-05-29).
 
          The tab nav label stays "Permissions" (set by the short-nav
          pass). The page-level title rendered below is "Permission
@@ -323,6 +328,16 @@
            the Users/Roles tab layout. -->
       <div class="tbar">
         <div class="tbar-l">
+          <!-- Filter button — same EDL pattern as Users tab and Roles
+               tab (.btn-std with funnel SVG + "Filter" label). Opens
+               #pmFltDrawer on the left. The previous inline filter
+               dropdowns (Application / Action / Status) were moved
+               into that drawer per Frances QA 2026-05-29 so the
+               toolbar matches Users/Roles. -->
+          <button class="btn-std" id="pmFilterBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filter
+          </button>
           <!-- Search — placeholder updated to reflect that the catalog
                is searchable across permission name, resource, and
                function key. -->
@@ -330,36 +345,6 @@
             <input type="text" id="pmSearchInput" placeholder="Search permission, resource, or function key…" autocomplete="off">
             <svg class="search-ico" id="pmSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <button type="button" class="search-clear hidden" id="pmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-          </div>
-
-          <!-- Inline filter dropdowns: Application, Action, Status.
-               Reuses the existing .cr-dd EDL combo trigger pattern,
-               narrowed via .pm-filter-dd so three pills fit cleanly
-               next to the search input. JS populates the menus and
-               wires change handlers. -->
-          <div class="cr-dd pm-filter-dd" id="pmAppFilterDD">
-            <button type="button" class="cr-dd-trigger" id="pmAppFilterTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmAppFilterMenu">
-              <span class="cr-dd-label">Application:</span>
-              <span class="cr-dd-value" id="pmAppFilterValue">All</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="pmAppFilterMenu" role="listbox" aria-label="Application"></div>
-          </div>
-          <div class="cr-dd pm-filter-dd" id="pmActionFilterDD">
-            <button type="button" class="cr-dd-trigger" id="pmActionFilterTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmActionFilterMenu">
-              <span class="cr-dd-label">Action:</span>
-              <span class="cr-dd-value" id="pmActionFilterValue">All</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="pmActionFilterMenu" role="listbox" aria-label="Action"></div>
-          </div>
-          <div class="cr-dd pm-filter-dd" id="pmStatusFilterDD">
-            <button type="button" class="cr-dd-trigger" id="pmStatusFilterTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmStatusFilterMenu">
-              <span class="cr-dd-label">Status:</span>
-              <span class="cr-dd-value" id="pmStatusFilterValue">All</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="cr-dd-menu" id="pmStatusFilterMenu" role="listbox" aria-label="Status"></div>
           </div>
         </div>
 
@@ -420,41 +405,61 @@
         </div>
       </div>
 
-      <!-- ═ Read-only details drawer (Permission Catalog row click) ═
-           Slides in from the right with a backdrop overlay. Displays
-           the full row data (function key, display name, application,
-           resource, action, status, used-in-roles list) plus an
-           assignment note pointing users to Roles for management.
-           NO edit controls, NO delete, NO assign, NO future-state
-           explanation. -->
-      <div class="pm-drawer-overlay" id="pmDrawerOverlay" hidden></div>
-      <aside class="pm-drawer" id="pmDrawer" role="dialog" aria-modal="true" aria-labelledby="pmDrawerName" hidden tabindex="-1">
-        <!-- EDL detail-panel pattern (Frances QA 2026-05-29):
-             • Title (display name) at Gray 95
-             • Function-key subtitle at Gray 70 monospace
-             • Clean dl of label / value rows, subtle solid dividers
-             • Assignment is a normal row, not a callout block -->
-        <header class="pm-drawer-head">
-          <div class="pm-drawer-head-meta">
-            <h3 class="pm-drawer-title" id="pmDrawerName">—</h3>
-            <p class="pm-drawer-key" id="pmDrawerKey">—</p>
-          </div>
-          <button type="button" class="pm-drawer-close" id="pmDrawerClose" aria-label="Close details">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </header>
+      <!-- Drawer/flyout removed (Frances QA 2026-05-29): the Permission
+           Catalog is a read-only browse table only. Per-function context
+           is intentionally not surfaced — assignment is managed through
+           the Roles tab. No row click, no overlay, no detail panel. -->
+    </div>
 
-        <div class="pm-drawer-body">
-          <dl class="pm-drawer-dl">
-            <div class="pm-drawer-dl-row"><dt>Application</dt><dd id="pmDrawerApp">—</dd></div>
-            <div class="pm-drawer-dl-row"><dt>Resource</dt><dd id="pmDrawerResource">—</dd></div>
-            <div class="pm-drawer-dl-row"><dt>Action</dt><dd id="pmDrawerAction">—</dd></div>
-            <div class="pm-drawer-dl-row"><dt>Status</dt><dd id="pmDrawerStatus">—</dd></div>
-            <div class="pm-drawer-dl-row"><dt>Used in roles</dt><dd id="pmDrawerUsed">—</dd></div>
-            <div class="pm-drawer-dl-row"><dt>Assignment</dt><dd>Managed through Roles</dd></div>
-          </dl>
+    <!-- ═══ TEAMS PANEL ═══
+         Sub-view of Access Management. Read-only browse of team groups;
+         clicking a team name opens #editTeamPage. The list intentionally
+         does NOT support: bulk actions, row checkboxes, sorting, or an
+         "+ Add Team" button — full team creation is out of scope for
+         this version (per Frances brief, Tatiana direction). The toolbar
+         carries only a "Search teams…" input. The table re-uses the
+         shared `.tbl` EDL styles; columns: Team / Description / Members
+         / Created. -->
+    <div id="teamsPanel" style="display:none">
+      <!-- Inner page title/subtitle removed 2026-05-29 (Frances QA
+           round 4): the tab label "Teams" already names this sub-view,
+           and the other tabs do not carry an internal title block.
+           The toolbar now sits flush under the tabs row, matching the
+           Users/Roles/Functions tabs. -->
+
+      <div class="tbar">
+        <div class="tbar-l">
+          <div class="search" id="tmSearchWrap">
+            <input type="text" id="tmSearchInput" placeholder="Search teams…" autocomplete="off">
+            <svg class="search-ico" id="tmSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <button type="button" class="search-clear hidden" id="tmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
         </div>
-      </aside>
+        <!-- No top-right actions. "+ Add Team" was intentionally NOT
+             added (Tatiana direction): this version's purpose is to
+             view/edit existing team definitions, not to build a full
+             team-creation flow. -->
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="tbl tm-tbl" id="tmTable">
+          <colgroup>
+            <col class="tm-col-name">
+            <col class="tm-col-desc">
+            <col class="tm-col-mem">
+            <col class="tm-col-created">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="tm-th-name"><div class="th-inner"><span>Team</span></div></th>
+              <th class="tm-th-desc"><div class="th-inner"><span>Description</span></div></th>
+              <th class="tm-th-mem"><div class="th-inner"><span>Members</span></div></th>
+              <th class="tm-th-created"><div class="th-inner"><span>Created</span></div></th>
+            </tr>
+          </thead>
+          <tbody id="tmTbody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </main>
@@ -675,6 +680,105 @@
       </div>
 
       <div class="au-role-cards" id="auRoleCards"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ═══ EDIT TEAM PAGE ═══
+     Detail page for a single team. Pattern reuses the Edit User shell
+     (`.au-shell` + `.au-back` + `.au-header` + `.au-card`) so spacing,
+     typography, and button placement match Edit User exactly.
+
+     Layout:
+       1. Back link → returns to Teams list.
+       2. Header: title "Edit Team", subtitle = current team name.
+          Top-right actions: Delete Team / Cancel / Save Team.
+       3. "Team details" card: Name (required) + Description fields.
+       4. "Members (read-only)" card: helper text + table of users
+          assigned to this team. Read-only — no Add/Remove member,
+          no inline editing. Helper makes the rule explicit:
+          "Assign users via the User edit screen."
+          A secondary "View all in Users →" link below the table
+          navigates back to the Users tab. -->
+<div id="editTeamPage" class="au-page tm-edit-page" style="display:none">
+  <div class="au-shell">
+    <button class="au-back" id="tmBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span class="au-back-label">Back to teams</span>
+    </button>
+
+    <div class="au-header">
+      <div class="au-header-left">
+        <h1 class="au-title">Edit Team</h1>
+        <p class="au-subtitle" id="tmEditSubtitle">National Ad Sales</p>
+      </div>
+      <div class="au-header-actions">
+        <!-- Delete Team rendered as the same destructive ghost link
+             treatment used by "Remove User" on Edit User, so the
+             dangerous action sits visually demoted next to Cancel /
+             Save Team (per EDL action-priority hierarchy). -->
+        <button type="button" class="au-remove-user-link" id="tmDelete">Delete Team</button>
+        <button type="button" class="btn-std" id="tmCancel">Cancel</button>
+        <button type="button" class="au-btn-save" id="tmSave">Save Team</button>
+      </div>
+    </div>
+
+    <section class="au-card cr-card tm-details-card" aria-labelledby="tmDetailsTitle">
+      <div class="cr-section-header" aria-expanded="true">
+        <span class="cr-section-title" id="tmDetailsTitle">Team details</span>
+      </div>
+      <div class="au-section-body tm-details-body">
+        <div class="au-field tm-field-name">
+          <label class="au-label" for="tmName">Name<span class="au-req">*</span></label>
+          <input class="au-input" id="tmName" type="text" value="National Ad Sales" autocomplete="off">
+        </div>
+        <div class="au-field tm-field-desc">
+          <label class="au-label" for="tmDesc">Description</label>
+          <input class="au-input" id="tmDesc" type="text" value="National advertising sales organization" autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <section class="au-card cr-card tm-members-card" aria-labelledby="tmMembersTitle">
+      <div class="cr-section-header" aria-expanded="true">
+        <span class="cr-section-title" id="tmMembersTitle">Members (read-only)</span>
+      </div>
+      <div class="au-section-body tm-members-body">
+        <!-- Helper makes the read-only rule explicit and tells the user
+             where the actual assignment lives. Verbatim from brief. -->
+        <p class="tm-members-helper">Assign users via the User edit screen.</p>
+
+        <div class="tbl-wrap tm-members-tbl-wrap">
+          <table class="tbl tm-members-tbl" id="tmMembersTable">
+            <colgroup>
+              <col class="tm-mcol-name">
+              <col class="tm-mcol-email">
+              <col class="tm-mcol-role">
+            </colgroup>
+            <thead>
+              <tr>
+                <th><div class="th-inner"><span>Name</span></div></th>
+                <th><div class="th-inner"><span>Email</span></div></th>
+                <th><div class="th-inner"><span>Role</span></div></th>
+              </tr>
+            </thead>
+            <tbody id="tmMembersTbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Secondary action: routes back to the Users tab. Per brief,
+             we do NOT build a new team-filter for Users — we just
+             switch tabs and let the existing Users search handle any
+             follow-up filtering. Rendered as `.btn-std` (EDL secondary
+             outlined button) so it reads as a navigational shortcut,
+             not a primary CTA. -->
+        <div class="tm-members-footer">
+          <button type="button" class="btn-std tm-view-all" id="tmViewAllUsers">
+            <span>View all in Users</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
       </div>
     </section>
   </div>
@@ -989,6 +1093,74 @@
   </div>
 </aside>
 
+<!-- ═══ PERMISSIONS FILTER DRAWER ═══
+     Same EDL slide-out filter panel pattern used by Users (#fltDrawer)
+     and Roles (#rpFltDrawer). Reuses the shared `.flt-*` design system
+     so spacing, typography, footer rhythm, and overlay opacity all
+     match Users/Roles 1:1.
+
+     Fields (per Frances brief, 2026-05-29):
+       • Function key  — text input
+       • Display name  — text input
+       • Application   — EDL combo (mounted by initCombo)
+       • Resource      — text input
+       • Action        — EDL combo
+       • Status        — EDL combo
+     Footer: Reset Filters / Cancel / Apply (apply-on-click model,
+     matching Roles — text inputs ALSO commit on Apply, not live, so
+     the Apply / Cancel split is meaningful). -->
+<div class="flt-overlay" id="pmFltOverlay"></div>
+<aside class="flt-drawer" id="pmFltDrawer">
+  <div class="flt-header">
+    <h2 class="flt-title">Filters</h2>
+    <button class="flt-close" id="pmFltClose" aria-label="Close filters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flt-body">
+    <div class="flt-field">
+      <label class="flt-label">Function key</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="pmFltFnKey" placeholder="Search function key">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear function key" data-for="pmFltFnKey"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Display name</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="pmFltDisplayName" placeholder="Search display name">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear display name" data-for="pmFltDisplayName"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Application</label>
+      <div class="edl-combo" id="pmFltAppCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Resource</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="pmFltResource" placeholder="Search resource">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear resource" data-for="pmFltResource"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Action</label>
+      <div class="edl-combo" id="pmFltActionCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Status</label>
+      <div class="edl-combo" id="pmFltStatusCombo"></div>
+    </div>
+  </div>
+  <div class="flt-footer">
+    <button class="flt-btn-reset" id="pmFltReset">Reset Filters</button>
+    <div class="flt-footer-r">
+      <button class="flt-btn-cancel" id="pmFltCancel">Cancel</button>
+      <button class="flt-btn-apply" id="pmFltApply">Apply</button>
+    </div>
+  </div>
+</aside>
+
 <!-- EDL toast container — visually matches the EDL Toast component (Figma node 15094:75972).
      Live region so screen readers announce toasts as they appear. -->
 <div class="edl-toast-container" id="edlToastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
@@ -1065,6 +1237,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260529permsgap1"></script>
+<script src="app.js?v=20260529teamdata1"></script>
 </body>
 </html>

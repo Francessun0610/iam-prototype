@@ -367,7 +367,7 @@ table { border-spacing: 0; border-collapse: collapse; }
    the padding on the panel (not `.tbar`) to avoid margin-collapsing
    through the un-styled panel wrappers. Internal spacing between
    toolbar → column headers → body → pagination is untouched. */
-#usersPanel, #rolesPanel { padding-top: 12px; }
+#usersPanel, #rolesPanel, #teamsPanel { padding-top: 12px; }
 .tabs-row nav { display: flex; gap: 24px; align-items: flex-start; }
 .tab-btn { display: inline-flex; align-items: flex-start; padding-bottom: 8px; font-size: 18px; font-weight: 800; line-height: 21px; color: var(--text-muted); position: relative; white-space: nowrap; }
 .tab-btn.on { color: var(--brand-text); }
@@ -2587,7 +2587,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .page { padding: 0 32px; max-width: 1200px; }
   .hdr { padding: 24px 0 28px; }
   .tabs-row { padding: 14px 16px 8px; }
-  #usersPanel, #rolesPanel { padding-top: 10px; }
+  #usersPanel, #rolesPanel, #teamsPanel { padding-top: 10px; }
   .tbar { height: auto; min-height: 48px; padding: 8px 32px 8px 16px; }
   #rolesPanel .tbar { padding-right: 32px; }
   .search { width: 280px; }
@@ -2693,7 +2693,7 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .tabs-row { height: auto; padding: 12px 12px 8px; }
   .tabs-row nav { width: 100%; gap: 14px; flex-wrap: wrap; }
   .tab-btn { font-size: 15px; padding-bottom: 6px; }
-  #usersPanel, #rolesPanel { padding-top: 8px; }
+  #usersPanel, #rolesPanel, #teamsPanel { padding-top: 8px; }
 
   .tbar { padding: 8px 12px; margin-bottom: 10px; }
   #usersPanel .tbar { margin-bottom: 6px; }
@@ -6046,52 +6046,12 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: center;
   gap: 8px;
 }
-/* ─── Inline filter dropdowns (.pm-filter-dd) ─────────────────────
-   Narrow variant of the existing .cr-dd EDL combo. Three pills sit
-   on the same line as the search input. Width auto-fits the value
-   label; max-width caps for runaway labels. */
-#permsPanel .pm-filter-dd {
-  display: inline-block;
-  width: auto;
-  min-width: 0;
-}
-#permsPanel .pm-filter-dd .cr-dd-trigger {
-  height: 32px;
-  padding: 0 10px;
-  gap: 6px;
-  font-size: 13px;
-  background: var(--surface, #FFFFFF);
-  border: 1px solid var(--border-input, #D4DEE3);
-  border-radius: 6px;
-  color: var(--text-primary, #171C20);
-  display: inline-flex;
-  align-items: center;
-}
-#permsPanel .pm-filter-dd .cr-dd-label {
-  /* Filter label (e.g. "Application:") is EDL secondary text Gray 70,
-     not Gray 60 muted — pairs the active filter value (Gray 95) with
-     a calm secondary tone. */
-  color: var(--text-secondary, #526374);
-  font-weight: 400;
-}
-#permsPanel .pm-filter-dd .cr-dd-value {
-  color: var(--text-primary, #171C20);
-  font-weight: 500;
-  max-width: 140px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-#permsPanel .pm-filter-dd .cr-dd-chev {
-  margin-left: 2px;
-  color: var(--text-secondary, #526374);
-}
-#permsPanel .pm-filter-dd.open .cr-dd-trigger {
-  border-color: var(--brand-text, #3611C8);
-}
-#permsPanel .pm-filter-dd .cr-dd-menu {
-  min-width: 180px;
-}
+/* Inline filter dropdown CSS (.pm-filter-dd) removed Frances QA
+   2026-05-29 round 3 — the Permissions toolbar now uses the shared
+   Filter button + left-side .flt-drawer pattern (see Users / Roles).
+   No #permsPanel-scoped filter dropdown styles needed; the EDL combos
+   inside #pmFltDrawer inherit the global .edl-combo treatment used
+   by the Roles drawer. */
 
 /* ─── Catalog table columns + rows ───────────────────────────────── */
 #permsPanel .pm-catalog-tbl col[data-pm-col="key"]      { width: 220px; }
@@ -6124,18 +6084,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   letter-spacing: 0;
 }
 
-/* Whole-row click → drawer. Hover/focus reads as interactive. */
-#permsPanel .pm-catalog-row {
-  cursor: pointer;
-  transition: background-color 0.12s ease;
-}
-#permsPanel .pm-catalog-row:hover {
-  background: var(--row-hover, #F7F9FB);
-}
-#permsPanel .pm-catalog-row:focus-visible {
-  outline: 2px solid var(--brand-text, #3611C8);
-  outline-offset: -2px;
-}
+/* Catalog rows are read-only — no cursor/hover treatment, no focus
+   outline, no row-click affordance (drawer removed 2026-05-29). The
+   shared `.tbl tbody tr` rule provides any baseline row styling. */
 
 /* "Not assigned" treatment in the Used-in column — neutral muted text
    so it reads as a benign empty state, not an error. */
@@ -6145,10 +6096,29 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ─── Status chips (Permission Catalog) ──────────────────────────
-   EDL neutral-info chip: white surface, --blue-50 text and border.
-   Both Active and Future state use the same chip — the label text
-   carries the meaning, so we don't color-code lifecycle in a
-   read-only browse view (Frances QA 2026-05-29). */
+   Status chip — color treatment swapped Frances QA 2026-05-29 (round 2)
+   to match the EDL Component Library "Promoted" chip variant for the
+   Active state. Source: Figma EDL Component Library node 4722-57865
+   (Type=Default, Color=Promoted, Dark Mode=False, Interaction=Resting).
+
+   Mapping:
+     • Active   → color=Promoted — Figma node 4722-57865
+                  bg     = white (sits on table-row surface)
+                  border = EDL Indigo 20 (#B8B8FF)
+                  text   = EDL Indigo 70 (#3611C8)
+                  Same indigo token used by `.btn-std` and `.name-link`,
+                  so Active reads as the system's primary brand state
+                  rather than as a generic neutral pill.
+     • Inactive → color=Demoted — Figma node 4722-57917
+                  (the visual treatment Active used pre-2026-05-29 PM)
+                  bg     = EDL Gray 15 (#E2E9EC)
+                  border = EDL Gray 20 (#D4DEE3)
+                  text   = EDL Gray 95 (#171C20)
+                  Inactive is intentionally muted/neutral — NOT red/pink
+                  and NOT error/destructive (per Frances brief).
+   Typography: InspireTWDC Roman 12/18 (T10 token), 400 weight — matches
+   the EDL chip body across all color variants. Height ~22 px, 10 px
+   horizontal padding, pill radius — same geometry the chip used before. */
 #permsPanel .pm-chip {
   display: inline-flex;
   align-items: center;
@@ -6156,147 +6126,346 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   padding: 0 10px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 500;
-  line-height: 1;
+  font-weight: 400;
+  line-height: 18px;
   border: 1px solid transparent;
   white-space: nowrap;
 }
-#permsPanel .pm-chip--info,
-#permsPanel .pm-chip--active,
-#permsPanel .pm-chip--future {
+#permsPanel .pm-chip--active {
   background: var(--bg-surface, #FFFFFF);
-  color: var(--blue-50, #1570C8);
-  border-color: var(--blue-50, #1570C8);
+  border-color: var(--indigo-20, #B8B8FF);
+  color: var(--indigo-70, #3611C8);
 }
-
-/* ─── Read-only details drawer ──────────────────────────────────
-   z-index matches the existing R&P filter drawer pattern
-   (.flt-overlay = 200, .flt-drawer = 201) so the catalog drawer
-   layers above the sticky Disney nav (z-index 100) the same way. */
-#permsPanel .pm-drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(23, 28, 32, 0.32);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 200;
-}
-#permsPanel .pm-drawer-overlay.open { opacity: 1; }
-
-#permsPanel .pm-drawer {
-  /* EDL detail panel — 440 px width (Frances QA 2026-05-29 brief:
-     420-480 px range). White surface, subtle elevation shadow,
-     slides in from the right. */
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: 440px;
-  max-width: 90vw;
-  background: var(--bg-surface, #FFFFFF);
-  box-shadow: -8px 0 24px rgba(23, 28, 32, 0.12);
-  transform: translateX(100%);
-  transition: transform 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  z-index: 201;
-  outline: none;
-}
-#permsPanel .pm-drawer.open { transform: translateX(0); }
-
-#permsPanel .pm-drawer-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 24px 24px 16px 24px;
-  border-bottom: 1px solid var(--border-card, #E2E9EC);
-}
-#permsPanel .pm-drawer-head-meta { min-width: 0; flex: 1 1 auto; }
-#permsPanel .pm-drawer-title {
-  /* Display name title — EDL Gray 95, 18/24 SemiBold (matches the
-     drawer headers used elsewhere in V3). */
-  margin: 0 0 6px 0;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 24px;
+#permsPanel .pm-chip--inactive {
+  background: var(--gray-15, #E2E9EC);
+  border-color: var(--gray-20, #D4DEE3);
   color: var(--text-primary, #171C20);
-  word-break: break-word;
 }
-#permsPanel .pm-drawer-key {
-  /* Function-key subtitle — EDL Gray 70 monospace; reads as a
-     supporting technical identifier, not a primary value. */
-  margin: 0;
-  font-family: 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--text-secondary, #526374);
-  word-break: break-all;
-}
-#permsPanel .pm-drawer-close {
-  border: 0;
-  background: transparent;
-  color: var(--text-secondary, #526374);
+
+/* Permission Catalog drawer/flyout CSS removed Frances QA 2026-05-29
+   along with the markup and JS. The Permissions tab is a read-only
+   browse table only — no detail panel, no overlay, no slide-in. */
+
+/* ═══════════════════════════════════════════════════════════════════
+   TEAMS — list panel + Edit Team page (added 2026-05-29)
+   ═══════════════════════════════════════════════════════════════════
+   All rules below are scoped to #teamsPanel or #editTeamPage so they
+   cannot leak into Users / Roles / Permissions / older versions. The
+   panel re-uses the shared EDL primitives (`.tbar`, `.tbl`, `.search`,
+   `.btn-std`, `.au-card`, `.au-input`) and only adds layout/spacing
+   rules unique to Teams. No new design tokens, no new colors.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Inner-page Teams title/subtitle CSS (.tm-pagehead, .tm-page-title,
+   .tm-page-sub) was removed Frances QA 2026-05-29 round 4 along with
+   its markup — the tab label "Teams" already names the sub-view, and
+   no other tab carries an inner title block. The panel now relies on
+   the shared `#usersPanel, #rolesPanel, #teamsPanel { padding-top: 12px }`
+   rule (see top of file) so the toolbar sits flush under the tabs row,
+   matching Users / Roles / Functions exactly. */
+
+/* Teams table column widths. Members column is intentionally narrow
+   (numeric, right-aligned for scanning), Description is the flex
+   column that absorbs slack. */
+#teamsPanel .tm-tbl .tm-col-name    { width: 28%; }
+#teamsPanel .tm-tbl .tm-col-desc    { width: auto; }
+#teamsPanel .tm-tbl .tm-col-mem     { width: 110px; }
+#teamsPanel .tm-tbl .tm-col-created { width: 160px; }
+
+#teamsPanel .tm-tbl .tm-cell-mem    { text-align: right; }
+#teamsPanel .tm-tbl .tm-th-mem .th-inner { justify-content: flex-end; }
+
+/* Team-name link — same visual treatment as Users `.name-link`
+   (see #usersPanel rule above). The Users selector is scoped to
+   #usersPanel so we redeclare the same EDL pattern here, scoped
+   to #teamsPanel, rather than widening the original selector and
+   risking a regression on Users. */
+#teamsPanel .tm-tbl tbody .tm-name-link {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--brand-text);
+  text-decoration: none;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  flex: 0 0 auto;
 }
-#permsPanel .pm-drawer-close:hover {
-  background: var(--row-hover, #F7F9FB);
-  color: var(--text-primary, #171C20);
+#teamsPanel .tm-tbl tbody .tm-name-link:hover {
+  color: var(--brand-text-hover);
+  text-decoration: underline;
 }
-#permsPanel .pm-drawer-close:focus-visible {
-  outline: 2px solid var(--brand-focus-ring, #928AFF);
+#teamsPanel .tm-tbl tbody .tm-name-link:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── Edit Team page ──
+   Reuses .au-shell / .au-back / .au-header / .au-card geometry from
+   Edit User. The two cards (Team details + Members) inherit
+   .au-card padding and rounded corners. Only the form-row layout
+   and members-table polish are new. */
+
+/* Two-up form layout for Name + Description — mirrors Edit User's
+   3-column .au-grid but uses a 2-column grid since Teams only has
+   two fields. Falls back to a single column on narrow viewports. */
+#editTeamPage .tm-details-body {
+  display: grid;
+  grid-template-columns: minmax(0, 296px) minmax(0, 1fr);
+  gap: 24px 39px;
+  padding: 16px 24px 24px;
+}
+#editTeamPage .tm-field-name { grid-column: 1 / 2; }
+#editTeamPage .tm-field-desc { grid-column: 2 / 3; }
+@media (max-width: 720px) {
+  #editTeamPage .tm-details-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  #editTeamPage .tm-field-name,
+  #editTeamPage .tm-field-desc { grid-column: 1 / -1; }
+}
+
+/* Members card body spacing — helper text sits 4px under the card
+   header, then 16px breathing room before the table, matching the
+   Permission Options helper rhythm on Edit User. */
+#editTeamPage .tm-members-body {
+  padding: 16px 24px 24px;
+}
+#editTeamPage .tm-members-helper {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-secondary, #526374);
+}
+
+/* Members table — re-uses .tbl primitives but pins column widths so
+   Name / Email / Role read in a predictable rhythm and don't reflow
+   when the underlying data changes. Read-only, so no row-hover
+   affordance and no cursor change. */
+#editTeamPage .tm-members-tbl .tm-mcol-name  { width: 30%; }
+#editTeamPage .tm-members-tbl .tm-mcol-email { width: auto; }
+#editTeamPage .tm-members-tbl .tm-mcol-role  { width: 25%; }
+
+#editTeamPage .tm-members-tbl tbody tr { cursor: default; }
+#editTeamPage .tm-members-tbl tbody tr:hover { background: transparent; }
+
+/* Footer slot under the members table holds the secondary
+   "View all in Users →" navigational button. Right-aligned per
+   EDL action priority — primary actions (Save/Delete) live in the
+   page header; this is a low-priority cross-link. */
+#editTeamPage .tm-members-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+#editTeamPage .tm-view-all svg {
+  margin-left: 4px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ADS Preview · Pass-7 — ADS v2.1 alignment polish (May 30, 2026).
+
+   Source of truth:
+     • /Users/frances.sun/My Drive/Cursor and Code/ads-design-system
+       (ADS v2.1 reference folder added 2026-05-29 by Frances)
+     • ads-cursor-setup/ads-components.json     v2.1.0  releaseDate 2026-05-29
+     • ads-cursor-setup/.cursor/rules/ads.mdc   conventions
+     • design.md                                Platform layer notes
+
+   What this pass does (ADS theme only):
+     1. Promotes the Permission Catalog status chips to ADS Chip
+        language under ADS Preview only. Active = brand-wash + brand
+        text/border (Indigo 50 / 300, the published "promoted" chip).
+        Inactive = recessed-gray + neutral primary text (the published
+        "demoted/neutral" chip). The base global `.pm-chip--*` rules
+        (lines ~6122-6143) keep painting EDL Light / EDL Dark with the
+        original EDL Indigo 70 / Gray 95 values — they are not touched.
+     2. Adds an ADS-scoped :disabled paint for form inputs so disabled
+        state reads consistently across the theme (the only existing
+        :disabled rule was `.pc-page .cr-input:disabled` and only for
+        the Permission Capability page).
+     3. Adds an ADS-scoped hover/active/focus treatment for the
+        destructive `.cr-btn-danger-solid` button. Pass-3 already
+        pins the 6 px radius; this fills in the remaining states using
+        the published ADS red ramp (Red 300 surface, Red 400 hover).
+
+   What this pass deliberately does NOT do:
+     • Does not change layout, IA, routing, data, avatar behaviour,
+       permission/team/role logic, or v1/v2 page content.
+     • Does not modify EDL Light (`:root`) or EDL Dark
+       (`[data-theme="dark"]`) tokens or rules.
+     • Does not modify any selector outside `[data-theme="ads-preview"]`.
+     • Does not retrofit em-dashes in pre-existing comments
+       (ads.mdc rule applies to net-new prompt-pack output, not to
+       a 6 K-line file's comments; touching those would be a
+       cross-theme edit and the brief forbids it).
+
+   QA guarantee: every selector below is prefixed with
+   `[data-theme="ads-preview"]` and only paints when the user opts
+   into ADS Preview from the profile-menu theme switcher. Switch to
+   EDL Light or EDL Dark and these rules stop firing.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ─── P7-1. Permission Catalog status chips — ADS Chip language ──────
+   Per ads-components.json the Chip family is folded under the broader
+   surface-and-text token system; the published "Active = Promoted"
+   chip uses the brand hue (Indigo) for both text and border, with a
+   wash background. The "Inactive = Demoted" chip uses the recessed-
+   gray surface with neutral primary text. This mirrors Pass-6 P4-14
+   (Permission Management Type column chips: Default / Custom) which
+   already maps Default → neutral surface + brand text and Custom →
+   brand wash + brand text. Repainting Active → brand wash + brand
+   text gives Active and Custom the same chromatic family so the two
+   "this row uses brand" affordances read consistently.
+
+   Geometry (height, padding, font-size, line-height, radius) is
+   inherited from the base `.pm-chip` rule (lines ~6122). We only
+   re-target the colour triplet (background / border / text). */
+[data-theme="ads-preview"] #permsPanel .pm-chip--active {
+  background: var(--brand-bg-soft);          /* Indigo 50  #E2E3F2 */
+  border-color: var(--brand);                /* Indigo 300 #4045C2 */
+  color: var(--brand-text);                  /* Indigo 300 #4045C2 */
+}
+[data-theme="ads-preview"] #permsPanel .pm-chip--inactive {
+  background: var(--ads-surface-recessed);   /* rgba(15,18,20,0.05) */
+  border-color: var(--border-default);       /* rgba(15,18,20,0.2)  */
+  color: var(--text-primary);                /* Gray 600   #1E2528 */
+}
+
+/* ─── P7-2. Form input disabled paint — ADS Field disabled state ─────
+   The published ADS Field component pairs disabled inputs with a
+   recessed surface + muted ink so the read-only intent is obvious
+   without resorting to opacity (which carries low-contrast a11y
+   risk). Mirrors the existing `.pc-page .cr-input:disabled` rule
+   (line ~5030) but extends it to every ADS-themed form control.
+
+   Scope is narrow on purpose: only inputs that already participate
+   in the ADS Preview re-skin (search, filter inputs, combo inputs,
+   create-role / create-permission inputs). Native `<select disabled>`
+   keeps the platform's UA paint — ADS does not publish a styled
+   native-select disabled state, and overriding it here would
+   contradict the "do not invent" rule in ads.mdc. */
+[data-theme="ads-preview"] .search input:disabled,
+[data-theme="ads-preview"] .flt-input:disabled,
+[data-theme="ads-preview"] .edl-combo-input:disabled,
+[data-theme="ads-preview"] .cr-input:disabled,
+[data-theme="ads-preview"] .cr-textarea:disabled {
+  background: var(--ads-surface-recessed);
+  color: var(--text-muted);
+  border-color: var(--border-input);
+  cursor: not-allowed;
+  -webkit-text-fill-color: var(--text-muted);
+  opacity: 1;
+}
+
+/* ─── P7-3. Destructive button — ADS Button "danger" variant states ──
+   ads-components.json `Button.variants` lists primary / secondary /
+   tertiary / ghost / danger. The Pass-3 button rules cover the first
+   four; the danger variant is currently shape-aligned (6 px radius,
+   `:active` step-down) but does not have a hover or focus treatment
+   under ADS Preview, so the Cancel-vs-Delete affordance pair on the
+   Remove App / Remove User / Inactive User confirmation modals reads
+   inconsistent (Cancel hovers, Delete does not).
+
+   Reference values come from the local --ads-red-* ramp declared at
+   the top of this section (file ~3036): Red 300 = #AF434E (rest),
+   Red 400 = #993B44 (hover/active text). We do not introduce a
+   new token; we point through the existing one. EDL Light / Dark
+   keep whatever the base `.cr-btn-danger-solid` rule provides. */
+[data-theme="ads-preview"] .cr-btn-danger-solid {
+  background: var(--ads-red-300);
+  color: #FFFFFF;
+  border-color: var(--ads-red-300);
+}
+[data-theme="ads-preview"] .cr-btn-danger-solid:hover:not(:disabled) {
+  background: var(--ads-red-400);
+  border-color: var(--ads-red-400);
+}
+[data-theme="ads-preview"] .cr-btn-danger-solid:active:not(:disabled) {
+  background: var(--ads-red-400);
+  border-color: var(--ads-red-400);
+}
+[data-theme="ads-preview"] .cr-btn-danger-solid:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+[data-theme="ads-preview"] .cr-btn-danger-solid:disabled {
+  background: var(--brand-disabled-bg);
+  color: var(--brand-disabled-fg);
+  border-color: transparent;
+  cursor: not-allowed;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ADS Preview · Pass-8 — Coverage polish from the May 30 audit.
+
+   Three doubly-scoped fixes that the Part 3 audit surfaced as the only
+   remaining ADS spec gaps inside this theme. Every rule below begins
+   with [data-theme="ads-preview"]; nothing here can reach EDL Light or
+   EDL Dark by CSS specificity. No HTML, no JS, no token authoring.
+
+   Items intentionally NOT included in Pass-8 (held for product call):
+     - Inline form error styling: ads-components.json publishes a Field
+       validation sub-component, but no IAM screen ships inline error
+       text yet. ads.mdc rule "tokens follow implementation" applies.
+     - Edit User permission card radius (16): explicitly designed at
+       16 in the project Figma (node 847:16382). ADS Card publishes 6.
+       The brief blocks Edit User layout edits, so this stays at 16
+       across all themes pending a design decision.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── P8-A. Filter drawer close button — ADS Modal close anatomy ────
+   The audit noted that the drawer Close (filter panel, scoped under
+   .flt-close) had radius and target size aligned, but no hover or
+   focus treatment under ADS. ads-components.json publishes Modal /
+   Sheet close as "always neutral" with a hover wash via
+   color/surface/recessed; ads.mdc reinforces this as a hard rule
+   (close buttons are never status-tinted, in any variant).
+
+   We add the missing hover wash and focus ring. Color stays neutral
+   (we do not push brand or status), which is what ADS expects. */
+[data-theme="ads-preview"] .flt-close {
+  transition: background-color .12s ease, color .12s ease;
+}
+[data-theme="ads-preview"] .flt-close:hover {
+  background: var(--ads-surface-recessed);
+  color: var(--text-primary);
+}
+[data-theme="ads-preview"] .flt-close:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
   outline-offset: 2px;
 }
 
-#permsPanel .pm-drawer-body {
-  padding: 20px 24px 24px 24px;
-  overflow-y: auto;
+/* ─── P8-B. Dropdown option disabled state — ADS Dropdown spec ──────
+   The audit noted that .cr-dd-option.is-disabled already had its
+   hover background suppressed under ADS (Pass-5 §P5), but did not
+   carry the matching ink and cursor that ads-components.json
+   Dropdown publishes for the disabled option state (text/muted +
+   cursor: not-allowed). Today this is a latent issue: no IAM
+   screen ships a disabled option in the live data set, but the
+   class can be applied at runtime by the access-level dropdown if
+   a license tier reduces options. Closing the loop now keeps the
+   theme self-consistent regardless of which option set ships. */
+[data-theme="ads-preview"] .cr-dd-option.is-disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 1;
 }
 
-/* EDL label/value detail list. Solid (not dashed) hairline divider
-   between rows, sentence-case Gray 70 labels, Gray 95 values. */
-#permsPanel .pm-drawer-dl {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-#permsPanel .pm-drawer-dl-row {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 16px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border-card, #E2E9EC);
-}
-#permsPanel .pm-drawer-dl-row:first-child { padding-top: 0; }
-#permsPanel .pm-drawer-dl-row:last-child { border-bottom: 0; padding-bottom: 0; }
-#permsPanel .pm-drawer-dl dt {
-  /* EDL secondary label — sentence-case, Gray 70, normal weight.
-     No uppercase / no letter-spacing so it doesn't read as a
-     debug or eyebrow label. */
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 18px;
-  color: var(--text-secondary, #526374);
-  text-transform: none;
-  letter-spacing: 0;
-}
-#permsPanel .pm-drawer-dl dd {
-  /* EDL primary value — Gray 95, 14/20 SemiBold so it carries the
-     same weight as table body values elsewhere in the prototype. */
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  color: var(--text-primary, #171C20);
-  word-break: break-word;
+/* ─── P8-C. Edit User identity status icon — ADS Success token ──────
+   The Basic Information block on the Edit User page renders a green
+   check-circle SVG to signal an Active user. Inline markup ships
+   stroke="#056C07" (EDL Green 70). ads-components.json names
+   color/green/300 (#568E6D) as the success anchor under ADS v2.1.
+
+   CSS overrides the inline SVG stroke attribute because presentation
+   attributes have lowest CSS specificity; any matching CSS rule wins.
+   Selector is doubly-scoped: ADS theme + .au-id-status descendant
+   svg only. EDL Light / EDL Dark continue rendering #056C07 from
+   the inline attribute. We reach through the existing --ads-green-300
+   token declared at the top of this theme block (file ~3040), so we
+   author no new token. */
+[data-theme="ads-preview"] .au-id-status svg {
+  stroke: var(--ads-green-300);
 }
 
-/* Narrow viewports: drawer takes full width. */
-@media (max-width: 600px) {
-  #permsPanel .pm-drawer { width: 100vw; max-width: 100vw; }
-}

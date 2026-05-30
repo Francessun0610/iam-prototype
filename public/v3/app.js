@@ -1139,39 +1139,67 @@ var PERMISSION_FUNCTIONS_DATA = buildPermissionFunctionsCatalog();
 
    The catalog is a static, hand-curated seed (not derived from
    FUNCTION_REGISTRY) — V3 needs control over the exact set of rows
-   shown, including one Future-state row that demonstrates how upcoming
-   custom-action work will register here.
+   shown. Most rows are Active; a few are Inactive so the table
+   demonstrates both EDL chip states.
 
    Row shape:
-     id           — stable row identity (used by the read-only drawer)
+     id           — stable row identity (diagnostic only; no drawer)
      key          — `app.resource.action` function key (e.g. planning.order.view)
      name         — Display name shown in the table
      app          — Application label (Core Planning, IAM, ICM, Disney Ads Agent)
      resource     — Resource the action targets (Orders, Roles, Users, …)
      action       — Action verb (View, Create, Update, Delete, Assign, …)
      usedIn       — Numeric count of roles using this function; null = "Not assigned"
-     status       — "Active" or "Future state"
+     status       — "Active" or "Inactive"
+                    (Frances QA 2026-05-29 — Future state removed;
+                    chips now map to EDL Component Library variants
+                    Demoted=Gray (Active) and Error=Red (Inactive))
 */
 var PERMISSION_CATALOG_DATA = [
-  { id: "pc001", key: "planning.order.view",          name: "View orders",             app: "Core Planning",    resource: "Orders",          action: "View",    usedIn: 8,    status: "Active"       },
-  { id: "pc002", key: "planning.order.create",        name: "Create order",            app: "Core Planning",    resource: "Orders",          action: "Create",  usedIn: 6,    status: "Active"       },
-  { id: "pc003", key: "planning.order.update",        name: "Update order",            app: "Core Planning",    resource: "Orders",          action: "Update",  usedIn: 4,    status: "Active"       },
-  { id: "pc004", key: "planning.mediaPlan.view",      name: "View media plans",        app: "Core Planning",    resource: "Media Plans",     action: "View",    usedIn: 8,    status: "Active"       },
-  { id: "pc005", key: "planning.mediaPlan.approve",   name: "Approve media plan",      app: "Core Planning",    resource: "Media Plans",     action: "Approve", usedIn: 2,    status: "Active"       },
-  { id: "pc006", key: "planning.lineItem.update",     name: "Update line items",       app: "Core Planning",    resource: "Line Items",      action: "Update",  usedIn: 4,    status: "Active"       },
-  { id: "pc007", key: "iam.user.view",                name: "View users",              app: "IAM",              resource: "Users",           action: "View",    usedIn: 2,    status: "Active"       },
-  { id: "pc008", key: "iam.role.assign",              name: "Assign roles",            app: "IAM",              resource: "Roles",           action: "Assign",  usedIn: 1,    status: "Active"       },
-  { id: "pc009", key: "icm.offering.view",            name: "View offerings",          app: "ICM",              resource: "Offerings",       action: "View",    usedIn: 3,    status: "Active"       },
-  { id: "pc010", key: "adsAgent.forecast.view",       name: "View forecast output",    app: "Disney Ads Agent", resource: "Forecast Output", action: "View",    usedIn: 3,    status: "Active"       },
-  { id: "pc011", key: "planning.mediaPlan.comment",   name: "Comment on media plan",   app: "Core Planning",    resource: "Media Plans",     action: "Comment", usedIn: null, status: "Future state" },
-  { id: "pc012", key: "planning.order.export",        name: "Export order",            app: "Core Planning",    resource: "Orders",          action: "Export",  usedIn: null, status: "Future state" }
+  { id: "pc001", key: "planning.order.view",          name: "View orders",             app: "Core Planning",    resource: "Orders",          action: "View",    usedIn: 8,    status: "Active"   },
+  { id: "pc002", key: "planning.order.create",        name: "Create order",            app: "Core Planning",    resource: "Orders",          action: "Create",  usedIn: 6,    status: "Active"   },
+  { id: "pc003", key: "planning.order.update",        name: "Update order",            app: "Core Planning",    resource: "Orders",          action: "Update",  usedIn: 4,    status: "Active"   },
+  { id: "pc004", key: "planning.mediaPlan.view",      name: "View media plans",        app: "Core Planning",    resource: "Media Plans",     action: "View",    usedIn: 8,    status: "Active"   },
+  { id: "pc005", key: "planning.mediaPlan.approve",   name: "Approve media plan",      app: "Core Planning",    resource: "Media Plans",     action: "Approve", usedIn: 2,    status: "Active"   },
+  { id: "pc006", key: "planning.lineItem.update",     name: "Update line items",       app: "Core Planning",    resource: "Line Items",      action: "Update",  usedIn: 4,    status: "Active"   },
+  { id: "pc007", key: "iam.user.view",                name: "View users",              app: "IAM",              resource: "Users",           action: "View",    usedIn: 2,    status: "Active"   },
+  { id: "pc008", key: "iam.role.assign",              name: "Assign roles",            app: "IAM",              resource: "Roles",           action: "Assign",  usedIn: 1,    status: "Active"   },
+  { id: "pc009", key: "icm.offering.view",            name: "View offerings",          app: "ICM",              resource: "Offerings",       action: "View",    usedIn: null, status: "Inactive" },
+  { id: "pc010", key: "adsAgent.forecast.view",       name: "View forecast output",    app: "Disney Ads Agent", resource: "Forecast Output", action: "View",    usedIn: 3,    status: "Active"   },
+  { id: "pc011", key: "planning.mediaPlan.comment",   name: "Comment on media plan",   app: "Core Planning",    resource: "Media Plans",     action: "Comment", usedIn: null, status: "Inactive" },
+  { id: "pc012", key: "planning.order.export",        name: "Export order",            app: "Core Planning",    resource: "Orders",          action: "Export",  usedIn: null, status: "Inactive" }
 ];
 
-/* Filter option allow-lists.  Application + Action lists are surfaced
-   in the inline filter dropdowns; values match user-visible labels. */
-var PM_FILTER_APPS    = ["All", "Core Planning", "IAM", "ICM", "Disney Ads Agent"];
-var PM_FILTER_ACTIONS = ["All", "View", "List", "Create", "Update", "Delete", "Assign", "Approve", "Comment", "Export"];
-var PM_FILTER_STATUS  = ["All", "Active", "Future state"];
+/* Filter option allow-lists for the Permissions filter drawer. The
+   Application / Action / Status combos are mounted by initCombo with
+   labels per the Frances brief (2026-05-29):
+     Application → "All Applications" / Core Planning / IAM / ICM / Disney Ads Agent
+     Action      → "All Actions" / View / Create / Update / Approve / Assign / Export
+     Status      → "All Statuses" / Active / Inactive
+   Values match the row data verbatim. The "All …" entries use the
+   sentinel value "" — a non-empty value triggers the row predicate
+   (see filteredPMData() in renderPMTable). */
+var PM_FILTER_APPS = [
+  { value: "", label: "All Applications" },
+  { value: "Core Planning",    label: "Core Planning" },
+  { value: "IAM",              label: "IAM" },
+  { value: "ICM",              label: "ICM" },
+  { value: "Disney Ads Agent", label: "Disney Ads Agent" }
+];
+var PM_FILTER_ACTIONS = [
+  { value: "", label: "All Actions" },
+  { value: "View",    label: "View" },
+  { value: "Create",  label: "Create" },
+  { value: "Update",  label: "Update" },
+  { value: "Approve", label: "Approve" },
+  { value: "Assign",  label: "Assign" },
+  { value: "Export",  label: "Export" }
+];
+var PM_FILTER_STATUS = [
+  { value: "", label: "All Statuses" },
+  { value: "Active",   label: "Active" },
+  { value: "Inactive", label: "Inactive" }
+];
 
 /* Permission Catalog table state — mirrors rp* state shape so a
    future merge / shared table abstraction is straightforward. */
@@ -1180,9 +1208,28 @@ var pmPageSize = 10;
 var pmSortKey = null;
 var pmSortDir = null;
 var pmSearchTerm = "";
-var pmAppFilter    = "All";
-var pmActionFilter = "All";
-var pmStatusFilter = "All";
+
+/* Filter drawer state — committed (applied) filters live in pmFilters.
+   The drawer writes into pmFltDraft; Apply commits draft → pmFilters,
+   Cancel discards the draft, Reset clears both. Empty string means
+   "no filter on this field" so the predicate in filteredPMData()
+   short-circuits cleanly. */
+var pmFilters = {
+  fnKey:       "",
+  displayName: "",
+  app:         "",
+  resource:    "",
+  action:      "",
+  status:      ""
+};
+var pmFltDraft = {
+  fnKey:       "",
+  displayName: "",
+  app:         "",
+  resource:    "",
+  action:      "",
+  status:      ""
+};
 /* Catalog search now spans display name, resource, function key, app,
    and action. Description/type from the legacy table were removed —
    the catalog row shape doesn't have them. */
@@ -3429,6 +3476,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var usersPanel = document.getElementById("usersPanel");
   var rolesPanel = document.getElementById("rolesPanel");
   var permsPanel = document.getElementById("permsPanel");
+  var teamsPanel = document.getElementById("teamsPanel");
   var hdrTitle = document.querySelector(".hdr h1");
   var hdrSub = document.querySelector(".hdr p");
 
@@ -3439,7 +3487,12 @@ document.addEventListener("DOMContentLoaded", function () {
        (per Figma 770:17428 / 770:19301 / 770:20032). Subtitle is also
        unified — the secondary tabs are sub-views inside the same
        workspace, so the page-level header shouldn't shape-shift with
-       each tab click. */
+       each tab click.
+
+       Tab order updated 2026-05-29 (Frances QA round 4) to match
+       Tatiana's direction: Users / Roles / Teams / Functions.
+       Internal tab key for the Functions tab remains "perms" so
+       the Permission Catalog table/filter wiring stays untouched. */
     hdrTitle.textContent = "Access Management";
     hdrSub.textContent = "Manage users, role assignments, and permission functions across Atlas";
     if (tab === "users") {
@@ -3447,18 +3500,33 @@ document.addEventListener("DOMContentLoaded", function () {
       usersPanel.style.display = "";
       rolesPanel.style.display = "none";
       if (permsPanel) permsPanel.style.display = "none";
+      if (teamsPanel) teamsPanel.style.display = "none";
     } else if (tab === "roles") {
       tabBtns[1].classList.add("on");
       usersPanel.style.display = "none";
       rolesPanel.style.display = "";
       if (permsPanel) permsPanel.style.display = "none";
+      if (teamsPanel) teamsPanel.style.display = "none";
       renderRPTable();
       renderRPPagination();
+    } else if (tab === "teams") {
+      /* Teams is the 3rd visual tab (index 2). Read-only browse of
+         team groups; clicking a team name opens #editTeamPage. */
+      if (tabBtns[2]) tabBtns[2].classList.add("on");
+      usersPanel.style.display = "none";
+      rolesPanel.style.display = "none";
+      if (permsPanel) permsPanel.style.display = "none";
+      if (teamsPanel) teamsPanel.style.display = "";
+      if (typeof renderTMTable === "function") renderTMTable();
     } else if (tab === "perms") {
-      tabBtns[2].classList.add("on");
+      /* "Functions" tab is the 4th visual tab (index 3). Internal
+         key remains "perms" — only the visible label changed, so
+         the Permission Catalog data/filter pipeline is unaffected. */
+      if (tabBtns[3]) tabBtns[3].classList.add("on");
       usersPanel.style.display = "none";
       rolesPanel.style.display = "none";
       if (permsPanel) permsPanel.style.display = "";
+      if (teamsPanel) teamsPanel.style.display = "none";
       renderPMTable();
       renderPMPagination();
     }
@@ -3466,7 +3534,338 @@ document.addEventListener("DOMContentLoaded", function () {
 
   tabBtns[0].addEventListener("click", function () { switchTab("users"); });
   tabBtns[1].addEventListener("click", function () { switchTab("roles"); });
-  if (tabBtns[2]) tabBtns[2].addEventListener("click", function () { switchTab("perms"); });
+  if (tabBtns[2]) tabBtns[2].addEventListener("click", function () { switchTab("teams"); });
+  if (tabBtns[3]) tabBtns[3].addEventListener("click", function () { switchTab("perms"); });
+
+  /* ═══ TEAMS PANEL + EDIT TEAM PAGE ═══
+     Read-only IAM team browse + simple definition editor.
+
+     Scope (per Frances brief, Tatiana direction, 2026-05-29):
+       • Teams list: search + 4-column EDL table (Team / Description /
+         Members / Created). Team name is the only interactive cell —
+         clicking it opens the Edit Team page for that team.
+       • Edit Team: editable Name + Description fields. Read-only
+         Members section with helper "Assign users via the User edit
+         screen." A "View all in Users →" link routes back to Users.
+       • Top-right actions: Delete Team / Cancel / Save Team.
+         All three are no-op safe (toggle UI only) — full CRUD is
+         intentionally out of scope.
+
+     Intentionally NOT built:
+       • + Add Team
+       • Add member / Remove member
+       • Bulk actions / row checkboxes
+       • Team permission matrix
+       • Team-scoped Users filter (we just `switchTab('users')`)
+
+     Data is colocated in this IIFE so it doesn't pollute the global
+     namespace and is easy to remove if Teams is rolled back. */
+  var renderTMTable;
+  (function setupTeamsPanel() {
+    var teamsPanelEl = document.getElementById("teamsPanel");
+    var editTeamPage = document.getElementById("editTeamPage");
+    if (!teamsPanelEl || !editTeamPage) return;
+
+    /* ── Seed data ──
+       Six teams aligned to the team values used in the Users table
+       (Frances QA 2026-05-29 round 5). Every `name` here matches a
+       value already present in `DATA[*].team`, so the Teams list
+       feels like a natural rollup of the same access model — not a
+       parallel taxonomy. The id is a stable lookup key used by
+       openEditTeam().
+
+       `members` is a plausible enterprise-scale count (the Users
+       table is a 60-row internal sample of 610 total users; team
+       counts here pad up to enterprise-level figures while
+       preserving the relative ordering observed in the sample). */
+    var TEAMS_DATA = [
+      {
+        id: "tm-national-ad-sales",
+        name: "National Ad Sales",
+        description: "National advertising sales organization",
+        members: 24,
+        created: "Jan 12, 2026"
+      },
+      {
+        id: "tm-digital-media-planning",
+        name: "Digital Media Planning",
+        description: "Digital media planning team",
+        members: 18,
+        created: "Jan 18, 2026"
+      },
+      {
+        id: "tm-addressable-ad-ops",
+        name: "Addressable Ad Ops",
+        description: "Addressable advertising operations team",
+        members: 16,
+        created: "Feb 3, 2026"
+      },
+      {
+        id: "tm-client-partnerships",
+        name: "Client Partnerships",
+        description: "Client partnership management team",
+        members: 14,
+        created: "Feb 8, 2026"
+      },
+      {
+        id: "tm-streaming-revenue",
+        name: "Streaming Revenue",
+        description: "Streaming revenue operations team",
+        members: 12,
+        created: "Feb 14, 2026"
+      },
+      {
+        id: "tm-ad-sales-finance",
+        name: "Ad Sales Finance",
+        description: "Advertising sales finance team",
+        members: 22,
+        created: "Feb 20, 2026"
+      }
+    ];
+
+    /* Members table on Edit Team is derived at runtime from the Users
+       table (`DATA`) so the Teams view stays automatically in sync
+       with the same source of truth Users displays. For each team
+       id we filter `DATA` by team-name match and project each user
+       to {name, email, role}. The role rendered here is the user's
+       first / most-prominent role from the Users table — chosen
+       because:
+         (a) the read-only members table only has a single Role
+             column (not a multi-role badge stack),
+         (b) Users displays the same first role at the head of its
+             role-list cell, so the two surfaces stay consistent,
+         (c) the table stays readable at narrow widths.
+       This block is intentionally read-only (no add/remove member,
+       no inline editing) per the brief's guardrails. */
+    function buildTeamMembersForName(teamName) {
+      if (!Array.isArray(DATA)) return [];
+      var rows = [];
+      for (var i = 0; i < DATA.length; i++) {
+        var u = DATA[i];
+        if (!u || u.team !== teamName) continue;
+        var role = (u.roles && u.roles.length) ? u.roles[0] : "";
+        rows.push({ name: u.name, email: u.email, role: role });
+      }
+      return rows;
+    }
+    var TEAM_MEMBERS_DATA = {};
+    for (var ti = 0; ti < TEAMS_DATA.length; ti++) {
+      TEAM_MEMBERS_DATA[TEAMS_DATA[ti].id] = buildTeamMembersForName(TEAMS_DATA[ti].name);
+    }
+
+    /* HTML escaper — mirrors the helper used in renderTable for
+       Users / renderRPTable for Roles / renderPMTable for Perms. */
+    function escTM(s) {
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    var tmTbody = document.getElementById("tmTbody");
+    var tmSearchInput = document.getElementById("tmSearchInput");
+    var tmSearchClear = document.getElementById("tmSearchClear");
+
+    /* Renders the Teams list table from TEAMS_DATA filtered by the
+       current search term. The Team-name cell is the ONLY interactive
+       element — rendered as `.name-link` (same affordance Users tab
+       uses for "open Edit User"). The rest of the row is plain text;
+       the row itself is NOT clickable so the table reads as a data
+       table, not a card grid. */
+    renderTMTable = function () {
+      if (!tmTbody) return;
+      var term = (tmSearchInput && tmSearchInput.value) ? tmSearchInput.value.trim().toLowerCase() : "";
+      var rows = TEAMS_DATA.filter(function (t) {
+        if (!term) return true;
+        return (
+          t.name.toLowerCase().indexOf(term) !== -1 ||
+          t.description.toLowerCase().indexOf(term) !== -1
+        );
+      });
+
+      if (rows.length === 0) {
+        tmTbody.innerHTML =
+          '<tr class="tbl-empty"><td colspan="4">' +
+          'No teams match your search. Try a different term.' +
+          '</td></tr>';
+        return;
+      }
+
+      var html = "";
+      for (var i = 0; i < rows.length; i++) {
+        var t = rows[i];
+        html +=
+          '<tr data-team-id="' + escTM(t.id) + '">' +
+            '<td class="tm-cell-name">' +
+              '<a href="#" class="name-link tm-name-link" data-team-id="' + escTM(t.id) + '" aria-label="Edit ' + escTM(t.name) + '">' + escTM(t.name) + '</a>' +
+            '</td>' +
+            '<td class="tm-cell-desc">' + escTM(t.description) + '</td>' +
+            '<td class="tm-cell-mem">' + escTM(t.members) + '</td>' +
+            '<td class="tm-cell-created">' + escTM(t.created) + '</td>' +
+          '</tr>';
+      }
+      tmTbody.innerHTML = html;
+    };
+
+    /* Search wiring — debounced via input event only (no Enter-to-
+       submit needed for a 2-row dataset). Clear button mirrors the
+       Permissions search clear icon. */
+    if (tmSearchInput) {
+      tmSearchInput.addEventListener("input", function () {
+        if (tmSearchClear) {
+          if (tmSearchInput.value.length > 0) tmSearchClear.classList.remove("hidden");
+          else tmSearchClear.classList.add("hidden");
+        }
+        renderTMTable();
+      });
+    }
+    if (tmSearchClear) {
+      tmSearchClear.addEventListener("click", function () {
+        if (!tmSearchInput) return;
+        tmSearchInput.value = "";
+        tmSearchClear.classList.add("hidden");
+        renderTMTable();
+        tmSearchInput.focus();
+      });
+    }
+
+    /* Delegated click on the Team-name link → openEditTeam.
+       We bind on tbody (not the link) so newly-rendered rows pick
+       up the handler without re-binding after each search filter. */
+    if (tmTbody) {
+      tmTbody.addEventListener("click", function (e) {
+        var link = e.target && e.target.closest ? e.target.closest("a.tm-name-link") : null;
+        if (!link) return;
+        e.preventDefault();
+        var teamId = link.getAttribute("data-team-id");
+        if (teamId) openEditTeam(teamId);
+      });
+    }
+
+    /* ── Edit Team page ── */
+    var mainPageEl = document.querySelector(".page");
+    var addUsersPageEl = document.getElementById("addUsersPage");
+    var createRolePageEl = document.getElementById("createRolePage");
+    var tmEditSubtitle = document.getElementById("tmEditSubtitle");
+    var tmName = document.getElementById("tmName");
+    var tmDesc = document.getElementById("tmDesc");
+    var tmMembersTbody = document.getElementById("tmMembersTbody");
+    var tmBackBtn = document.getElementById("tmBack");
+    var tmCancelBtn = document.getElementById("tmCancel");
+    var tmSaveBtn = document.getElementById("tmSave");
+    var tmDeleteBtn = document.getElementById("tmDelete");
+    var tmViewAllBtn = document.getElementById("tmViewAllUsers");
+
+    /* Local edit state — captures which team we're editing so the
+       Save/Cancel/Delete handlers know what to operate on. We
+       intentionally do NOT mutate TEAMS_DATA here; Save/Delete are
+       no-op-safe per scope. */
+    var tmCurrentTeamId = null;
+
+    function getTeamById(id) {
+      for (var i = 0; i < TEAMS_DATA.length; i++) {
+        if (TEAMS_DATA[i].id === id) return TEAMS_DATA[i];
+      }
+      return null;
+    }
+
+    function renderTeamMembers(teamId) {
+      if (!tmMembersTbody) return;
+      var members = TEAM_MEMBERS_DATA[teamId] || [];
+      if (members.length === 0) {
+        tmMembersTbody.innerHTML =
+          '<tr class="tbl-empty"><td colspan="3">' +
+          'No members yet. Assign users via the User edit screen.' +
+          '</td></tr>';
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < members.length; i++) {
+        var m = members[i];
+        html +=
+          '<tr>' +
+            '<td>' + escTM(m.name) + '</td>' +
+            '<td>' + escTM(m.email) + '</td>' +
+            '<td>' + escTM(m.role) + '</td>' +
+          '</tr>';
+      }
+      tmMembersTbody.innerHTML = html;
+    }
+
+    function openEditTeam(teamId) {
+      var team = getTeamById(teamId);
+      if (!team) return;
+      tmCurrentTeamId = teamId;
+      if (tmEditSubtitle) tmEditSubtitle.textContent = team.name;
+      if (tmName) tmName.value = team.name;
+      if (tmDesc) tmDesc.value = team.description;
+      renderTeamMembers(teamId);
+
+      /* Hide the main IAM page + any other detail pages, show
+         Edit Team. Mirrors the Edit User / Create Role flow so we
+         don't fight the existing page-toggle logic. */
+      if (mainPageEl) mainPageEl.style.display = "none";
+      if (addUsersPageEl) addUsersPageEl.style.display = "none";
+      if (createRolePageEl) createRolePageEl.style.display = "none";
+      editTeamPage.style.display = "";
+      window.scrollTo(0, 0);
+    }
+
+    function closeEditTeam() {
+      editTeamPage.style.display = "none";
+      if (mainPageEl) mainPageEl.style.display = "";
+      /* Stay on the Teams tab — switchTab keeps the panel visible
+         and re-renders the list (which re-applies any active
+         search filter). */
+      switchTab("teams");
+    }
+
+    if (tmBackBtn) tmBackBtn.addEventListener("click", closeEditTeam);
+    if (tmCancelBtn) tmCancelBtn.addEventListener("click", closeEditTeam);
+
+    if (tmSaveBtn) {
+      tmSaveBtn.addEventListener("click", function () {
+        /* Save is a no-op-safe stub: we mirror the field values
+           back into TEAMS_DATA so the list reflects any local edit
+           when the user returns. We do NOT call any API. */
+        if (!tmCurrentTeamId) { closeEditTeam(); return; }
+        var team = getTeamById(tmCurrentTeamId);
+        if (team) {
+          if (tmName) team.name = tmName.value || team.name;
+          if (tmDesc) team.description = tmDesc.value || team.description;
+        }
+        closeEditTeam();
+      });
+    }
+
+    if (tmDeleteBtn) {
+      tmDeleteBtn.addEventListener("click", function () {
+        /* Delete is intentionally a soft no-op for the prototype:
+           we just route back to the list. Implementing real delete
+           is out of scope and would require a confirmation dialog
+           we don't want to invent here. */
+        closeEditTeam();
+      });
+    }
+
+    if (tmViewAllBtn) {
+      tmViewAllBtn.addEventListener("click", function () {
+        /* Per brief: simply navigate to the Users tab. We do NOT
+           build a new team-filter just for this — the existing
+           Users search already covers ad-hoc filtering. */
+        editTeamPage.style.display = "none";
+        if (mainPageEl) mainPageEl.style.display = "";
+        switchTab("users");
+        window.scrollTo(0, 0);
+      });
+    }
+
+    /* Initial paint so the table is populated before the user
+       first clicks the Teams tab (matches Roles/Perms behavior). */
+    renderTMTable();
+  })();
 
   /* ═══ ADD USERS PAGE ═══
      One page with 3 UI states:
@@ -5219,20 +5618,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* ═══ V3 PERMISSION CATALOG TABLE ═══
      Read-only catalog of registered permission functions. Pipeline:
-     filter (search + app + action + status) → sort → page → render.
+     filter drawer (function key / display name / app / resource /
+     action / status) + toolbar search → sort → page → render.
      The dataset is the static `PERMISSION_CATALOG_DATA` seed (see
      declaration near line ~1131); the Permissions tab in V3 does not
-     surface the legacy FUNCTION_REGISTRY-derived data. */
+     surface the legacy FUNCTION_REGISTRY-derived data.
+
+     Filter contract: every filter on `pmFilters` is opt-in — empty
+     string means the predicate is skipped. Text inputs use a
+     case-insensitive substring match on the matching row field;
+     the three EDL combos (App / Action / Status) use exact equality
+     on the value (which mirrors the row data verbatim). */
   function getPMFilteredData() {
     var result = PERMISSION_CATALOG_DATA;
-    if (pmAppFilter && pmAppFilter !== "All") {
-      result = result.filter(function (row) { return row.app === pmAppFilter; });
+    if (pmFilters.app) {
+      result = result.filter(function (row) { return row.app === pmFilters.app; });
     }
-    if (pmActionFilter && pmActionFilter !== "All") {
-      result = result.filter(function (row) { return row.action === pmActionFilter; });
+    if (pmFilters.action) {
+      result = result.filter(function (row) { return row.action === pmFilters.action; });
     }
-    if (pmStatusFilter && pmStatusFilter !== "All") {
-      result = result.filter(function (row) { return row.status === pmStatusFilter; });
+    if (pmFilters.status) {
+      result = result.filter(function (row) { return row.status === pmFilters.status; });
+    }
+    if (pmFilters.fnKey) {
+      var qk = pmFilters.fnKey.toLowerCase();
+      result = result.filter(function (row) {
+        return row.key != null && String(row.key).toLowerCase().indexOf(qk) !== -1;
+      });
+    }
+    if (pmFilters.displayName) {
+      var qn = pmFilters.displayName.toLowerCase();
+      result = result.filter(function (row) {
+        return row.name != null && String(row.name).toLowerCase().indexOf(qn) !== -1;
+      });
+    }
+    if (pmFilters.resource) {
+      var qr = pmFilters.resource.toLowerCase();
+      result = result.filter(function (row) {
+        return row.resource != null && String(row.resource).toLowerCase().indexOf(qr) !== -1;
+      });
     }
     if (pmSearchTerm) {
       var q = pmSearchTerm.toLowerCase();
@@ -5278,16 +5702,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* Status chip styles for the Permission Catalog table.
-     Both Active and Future state use the EDL neutral-info chip
-     (white surface, --blue-50 text + border). Status meaning is
-     carried by the label text — no green/red color coding in a
-     read-only browse view (Frances QA 2026-05-29). */
+     EDL Component Library variants (Frances QA 2026-05-29):
+       • Active   → EDL Chip type=Default, color=Demoted (Gray 15 bg,
+                    Gray 20 border, Gray 95 text) — Figma 4722-57917
+       • Inactive → EDL Chip type=Default, color=Error  (Red 10 bg,
+                    Red 20 border, Red 70 text) — Figma 4722-58126 */
   var PM_STATUS_CHIP_CLASS = {
-    "Active":       "pm-chip--info",
-    "Future state": "pm-chip--info"
+    "Active":   "pm-chip--active",
+    "Inactive": "pm-chip--inactive"
   };
   function pmStatusChipHtml(status) {
-    var cls = PM_STATUS_CHIP_CLASS[status] || "pm-chip--info";
+    var cls = PM_STATUS_CHIP_CLASS[status] || "pm-chip--active";
     return '<span class="pm-chip ' + cls + '">' + esc(status) + '</span>';
   }
 
@@ -5319,11 +5744,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var html = "";
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
-      /* Whole row is a read-only entry into the details drawer; no
-         per-row CTAs, no edit affordance, no checkbox. `data-pm-view`
-         stays on the row itself so `openPMCatalogDrawer` can look up
-         the catalog entry from a single delegated click handler. */
-      html += '<tr data-id="' + esc(r.id) + '" data-pm-view="' + esc(r.id) + '" class="pm-catalog-row" tabindex="0" role="button" aria-label="View details for ' + esc(r.name) + '">' +
+      /* Read-only catalog row — no per-row CTAs, no edit affordance,
+         no checkbox, no click target (drawer removed 2026-05-29).
+         `data-id` is retained for table-state diagnostics only. */
+      html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="pm-key"><code class="pm-key-code">' + esc(r.key) + '</code></td>' +
         '<td class="pm-name">' + esc(r.name) + '</td>' +
         '<td class="pm-app">' + esc(r.app) + '</td>' +
@@ -5437,28 +5861,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ─── PM Catalog row click → read-only details drawer ─────────────
-     Whole-row click and Enter / Space key both open `#pmDrawer` with
-     the row's data hydrated in place. The drawer is the only entry
-     point into per-function context on V3 — there is no edit page
-     reachable from the catalog. */
-  var pmTbodyEl = document.getElementById("pmTbody");
-  if (pmTbodyEl) {
-    pmTbodyEl.addEventListener("click", function (e) {
-      var row = e.target.closest && e.target.closest(".pm-catalog-row");
-      if (!row) return;
-      var rowId = row.getAttribute("data-pm-view");
-      if (rowId) openPMCatalogDrawer(rowId);
-    });
-    pmTbodyEl.addEventListener("keydown", function (e) {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      var row = e.target.closest && e.target.closest(".pm-catalog-row");
-      if (!row) return;
-      e.preventDefault();
-      var rowId = row.getAttribute("data-pm-view");
-      if (rowId) openPMCatalogDrawer(rowId);
-    });
-  }
+  /* PM Catalog row click / keydown — removed Frances QA 2026-05-29.
+     The catalog is intentionally non-interactive; rows are pure
+     data and never open a drawer or detail page. */
 
   /* ─── Permission Capability detail page (Figma 788:4348) ───
      Renders the detail view for the permission function the user
@@ -6299,151 +6704,156 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })();
 
-  /* ─── PM Catalog inline filter dropdowns (Application / Action / Status) ─
-     Reuses the EDL `.cr-dd` trigger + menu component. Each filter
-     writes to its own state slot (`pmAppFilter`, `pmActionFilter`,
-     `pmStatusFilter`) and re-runs the filter pipeline. Open / close
-     follows the same single-menu-at-a-time pattern as the existing
-     pagination size dropdown. */
-  (function wirePmCatalogFilters() {
-    var triggers = [
-      { ddId: "pmAppFilterDD",    trigId: "pmAppFilterTrigger",    menuId: "pmAppFilterMenu",    valId: "pmAppFilterValue",    opts: PM_FILTER_APPS,    setter: function (v) { pmAppFilter = v; } },
-      { ddId: "pmActionFilterDD", trigId: "pmActionFilterTrigger", menuId: "pmActionFilterMenu", valId: "pmActionFilterValue", opts: PM_FILTER_ACTIONS, setter: function (v) { pmActionFilter = v; } },
-      { ddId: "pmStatusFilterDD", trigId: "pmStatusFilterTrigger", menuId: "pmStatusFilterMenu", valId: "pmStatusFilterValue", opts: PM_FILTER_STATUS,  setter: function (v) { pmStatusFilter = v; } }
-    ];
+  /* ─── PM Catalog filter drawer (Filters slide-out, EDL pattern) ───
+     Replaces the previous inline `.pm-filter-dd` dropdowns (Frances
+     QA 2026-05-29 round 3) so the Permissions tab now matches the
+     Filter-button + left-side drawer pattern used by Users (#fltDrawer)
+     and Roles (#rpFltDrawer).
 
-    function closeAllPmFilters(except) {
-      for (var i = 0; i < triggers.length; i++) {
-        var t = triggers[i];
-        var dd = document.getElementById(t.ddId);
-        if (!dd) continue;
-        if (except && dd === except) continue;
-        dd.classList.remove("open");
-        var trig = document.getElementById(t.trigId);
-        if (trig) trig.setAttribute("aria-expanded", "false");
+     State model (mirrors Roles, NOT Users):
+       • pmFilters     — committed/applied filters (drives the table)
+       • pmFltDraft    — drawer working copy (drives drawer UI only)
+       • Apply         → pmFilters = clone(pmFltDraft); render; close
+       • Cancel/X/scrim → close (drawer UI may be stale; next open
+                          re-syncs from pmFilters)
+       • Reset Filters → clear pmFilters AND drawer fields, render
+     This is the apply-on-click model — text inputs do NOT live-filter
+     the table from inside the drawer (matches Roles UX, lets the user
+     compose a multi-field filter before committing). */
+  (function setupPmFilterDrawer() {
+    var pmFltOverlay = document.getElementById("pmFltOverlay");
+    var pmFltDrawer  = document.getElementById("pmFltDrawer");
+    var pmFilterBtn  = document.getElementById("pmFilterBtn");
+    if (!pmFltOverlay || !pmFltDrawer || !pmFilterBtn) return;
+
+    /* Mount the three EDL combos. initCombo writes selections into
+       pmFltDraft (matching the Roles drawer flow). The setter is a
+       no-op so commits happen only on Apply. The "All …" rows in
+       PM_FILTER_* use empty-string values, so a cleared combo means
+       "no filter on this field". */
+    var setPmFltApp    = initCombo("pmFltAppCombo",    PM_FILTER_APPS,    "app",    "All Applications", pmFltDraft, function () {});
+    var setPmFltAction = initCombo("pmFltActionCombo", PM_FILTER_ACTIONS, "action", "All Actions",      pmFltDraft, function () {});
+    var setPmFltStatus = initCombo("pmFltStatusCombo", PM_FILTER_STATUS,  "status", "All Statuses",     pmFltDraft, function () {});
+
+    /* Three text-input fields. Same wiring as the Roles drawer:
+       typing into an input mutates pmFltDraft (NOT pmFilters), and
+       toggles the inline clear-x affordance. */
+    var pmFltTextInputs = [
+      { id: "pmFltFnKey",       key: "fnKey" },
+      { id: "pmFltDisplayName", key: "displayName" },
+      { id: "pmFltResource",    key: "resource" }
+    ];
+    function updatePmFltClearBtn(input) {
+      var btn = input.parentNode.querySelector(".flt-input-clear");
+      if (btn) btn.classList.toggle("hidden", !input.value);
+    }
+    for (var pti = 0; pti < pmFltTextInputs.length; pti++) {
+      (function (cfg) {
+        var input = document.getElementById(cfg.id);
+        if (!input) return;
+        input.addEventListener("input", function () {
+          pmFltDraft[cfg.key] = this.value.trim();
+          updatePmFltClearBtn(this);
+        });
+      })(pmFltTextInputs[pti]);
+    }
+
+    /* Delegated clear-x handler — same pattern as the Roles drawer. */
+    pmFltDrawer.addEventListener("click", function (e) {
+      var clearBtn = e.target.closest && e.target.closest(".flt-input-clear");
+      if (!clearBtn) return;
+      var input = document.getElementById(clearBtn.getAttribute("data-for"));
+      if (!input) return;
+      input.value = "";
+      input.focus();
+      input.dispatchEvent(new Event("input"));
+    });
+
+    /* Sync the drawer UI from the currently-applied pmFilters. Called
+       on every open and after Reset/Cancel so the drawer never shows
+       a stale draft. Mutates pmFltDraft in place — initCombo captured
+       this object reference at mount time. */
+    function syncPmFltDrawerFromApplied() {
+      pmFltDraft.fnKey       = pmFilters.fnKey;
+      pmFltDraft.displayName = pmFilters.displayName;
+      pmFltDraft.app         = pmFilters.app;
+      pmFltDraft.resource    = pmFilters.resource;
+      pmFltDraft.action      = pmFilters.action;
+      pmFltDraft.status      = pmFilters.status;
+      var fk = document.getElementById("pmFltFnKey");
+      var dn = document.getElementById("pmFltDisplayName");
+      var rs = document.getElementById("pmFltResource");
+      if (fk) fk.value = pmFilters.fnKey;
+      if (dn) dn.value = pmFilters.displayName;
+      if (rs) rs.value = pmFilters.resource;
+      setPmFltApp(pmFilters.app);
+      setPmFltAction(pmFilters.action);
+      setPmFltStatus(pmFilters.status);
+      for (var i = 0; i < pmFltTextInputs.length; i++) {
+        var el = document.getElementById(pmFltTextInputs[i].id);
+        if (el) updatePmFltClearBtn(el);
       }
     }
 
-    triggers.forEach(function (t) {
-      var dd   = document.getElementById(t.ddId);
-      var trig = document.getElementById(t.trigId);
-      var menu = document.getElementById(t.menuId);
-      var val  = document.getElementById(t.valId);
-      if (!dd || !trig || !menu || !val) return;
+    function openPmFilter() {
+      syncPmFltDrawerFromApplied();
+      pmFltOverlay.classList.add("open");
+      pmFltDrawer.classList.add("open");
+    }
+    function closePmFilter() {
+      pmFltOverlay.classList.remove("open");
+      pmFltDrawer.classList.remove("open");
+    }
 
-      /* Populate options. Each option carries its label as data so the
-         delegated click handler can read it without re-parsing the
-         menu DOM. */
-      var html = "";
-      for (var i = 0; i < t.opts.length; i++) {
-        var label = t.opts[i];
-        html += '<div class="cr-dd-option' + (i === 0 ? " is-selected" : "") + '" role="option" data-pm-flt="' + esc(label) + '">' + esc(label) + '</div>';
-      }
-      menu.innerHTML = html;
+    pmFilterBtn.addEventListener("click", openPmFilter);
+    var closeBtn  = document.getElementById("pmFltClose");
+    var cancelBtn = document.getElementById("pmFltCancel");
+    var applyBtn  = document.getElementById("pmFltApply");
+    var resetBtn  = document.getElementById("pmFltReset");
+    if (closeBtn)  closeBtn.addEventListener("click", closePmFilter);
+    if (cancelBtn) cancelBtn.addEventListener("click", closePmFilter);
+    pmFltOverlay.addEventListener("click", closePmFilter);
 
-      trig.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var open = dd.classList.toggle("open");
-        trig.setAttribute("aria-expanded", open ? "true" : "false");
-        if (open) closeAllPmFilters(dd);
+    /* Apply: commit draft → applied, reset to first page, re-render. */
+    if (applyBtn) {
+      applyBtn.addEventListener("click", function () {
+        pmFilters = {
+          fnKey:       pmFltDraft.fnKey,
+          displayName: pmFltDraft.displayName,
+          app:         pmFltDraft.app,
+          resource:    pmFltDraft.resource,
+          action:      pmFltDraft.action,
+          status:      pmFltDraft.status
+        };
+        pmCurrentPage = 1;
+        renderPMTable();
+        renderPMPagination();
+        closePmFilter();
       });
+    }
 
-      menu.addEventListener("click", function (e) {
-        var opt = e.target.closest("[data-pm-flt]");
-        if (!opt) return;
-        var label = opt.getAttribute("data-pm-flt");
-        t.setter(label);
-        val.textContent = label;
-        /* Mark the selected option in the menu for next open. */
-        var all = menu.querySelectorAll(".cr-dd-option");
-        for (var i = 0; i < all.length; i++) all[i].classList.toggle("is-selected", all[i] === opt);
-        dd.classList.remove("open");
-        trig.setAttribute("aria-expanded", "false");
+    /* Reset: clear committed + drawer fields, re-render. Mirrors the
+       Roles Reset behavior — does NOT close the drawer, so the user
+       can verify the table is back to its full state and then
+       continue composing or Cancel out. */
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        pmFilters = { fnKey: "", displayName: "", app: "", resource: "", action: "", status: "" };
+        syncPmFltDrawerFromApplied();
         pmCurrentPage = 1;
         renderPMTable();
         renderPMPagination();
       });
-    });
-
-    /* Click anywhere outside any open filter dropdown closes them. */
-    document.addEventListener("click", function (e) {
-      var inside = e.target.closest && e.target.closest(".pm-filter-dd");
-      if (!inside) closeAllPmFilters(null);
-    });
+    }
   })();
 
   /* PM Export CSV — removed Frances QA 2026-05-29. The Permission
      Catalog is intentionally read-only browse only; no Export CSV,
      no Create Permission, no Add custom action. */
 
-  /* ─── PM Catalog read-only details drawer ─────────────────────────
-     `openPMCatalogDrawer(rowId)` hydrates `#pmDrawer` with the row's
-     data and slides it in from the right. Close paths: × button,
-     overlay click, Escape. There is NO edit form, NO action buttons
-     beyond Close — the drawer is purely contextual. */
-  var pmDrawer        = document.getElementById("pmDrawer");
-  var pmDrawerOverlay = document.getElementById("pmDrawerOverlay");
-  var pmDrawerClose   = document.getElementById("pmDrawerClose");
-  var pmDrawerName    = document.getElementById("pmDrawerName");
-  var pmDrawerKey     = document.getElementById("pmDrawerKey");
-  var pmDrawerApp     = document.getElementById("pmDrawerApp");
-  var pmDrawerRes     = document.getElementById("pmDrawerResource");
-  var pmDrawerAct     = document.getElementById("pmDrawerAction");
-  var pmDrawerStatus  = document.getElementById("pmDrawerStatus");
-  var pmDrawerUsed    = document.getElementById("pmDrawerUsed");
-
-  function getPMCatalogRow(rowId) {
-    for (var i = 0; i < PERMISSION_CATALOG_DATA.length; i++) {
-      if (PERMISSION_CATALOG_DATA[i].id === rowId) return PERMISSION_CATALOG_DATA[i];
-    }
-    return null;
-  }
-
-  function openPMCatalogDrawer(rowId) {
-    var row = getPMCatalogRow(rowId);
-    if (!row || !pmDrawer) return;
-    if (pmDrawerName)   pmDrawerName.textContent   = row.name;
-    if (pmDrawerKey)    pmDrawerKey.textContent    = row.key;
-    if (pmDrawerApp)    pmDrawerApp.textContent    = row.app;
-    if (pmDrawerRes)    pmDrawerRes.textContent    = row.resource;
-    if (pmDrawerAct)    pmDrawerAct.textContent    = row.action;
-    if (pmDrawerStatus) pmDrawerStatus.innerHTML   = pmStatusChipHtml(row.status);
-    if (pmDrawerUsed) {
-      if (row.usedIn == null) {
-        pmDrawerUsed.textContent = "Not assigned";
-      } else {
-        var label = String(row.usedIn) + " " + (row.usedIn === 1 ? "role" : "roles");
-        var roles = (typeof permissionUsedInRoles === "function") ? permissionUsedInRoles(row.key) : [];
-        pmDrawerUsed.textContent = roles.length > 0 ? label + " — " + roles.join(", ") : label;
-      }
-    }
-    pmDrawer.hidden = false;
-    if (pmDrawerOverlay) pmDrawerOverlay.hidden = false;
-    /* Defer the `open` class so the slide-in transition fires after
-       the element is in the layout. */
-    requestAnimationFrame(function () {
-      pmDrawer.classList.add("open");
-      if (pmDrawerOverlay) pmDrawerOverlay.classList.add("open");
-    });
-    if (typeof pmDrawer.focus === "function") pmDrawer.focus();
-  }
-
-  function closePMCatalogDrawer() {
-    if (!pmDrawer) return;
-    pmDrawer.classList.remove("open");
-    if (pmDrawerOverlay) pmDrawerOverlay.classList.remove("open");
-    /* Hide after the transition to keep `aria-hidden` honest. */
-    setTimeout(function () {
-      if (!pmDrawer.classList.contains("open")) pmDrawer.hidden = true;
-      if (pmDrawerOverlay && !pmDrawerOverlay.classList.contains("open")) pmDrawerOverlay.hidden = true;
-    }, 220);
-  }
-
-  if (pmDrawerClose)   pmDrawerClose.addEventListener("click", closePMCatalogDrawer);
-  if (pmDrawerOverlay) pmDrawerOverlay.addEventListener("click", closePMCatalogDrawer);
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && pmDrawer && pmDrawer.classList.contains("open")) closePMCatalogDrawer();
-  });
+  /* PM Catalog details drawer — removed Frances QA 2026-05-29.
+     The Permission Catalog is intentionally a read-only browse
+     table with no per-row detail panel. */
 
   /* ─── R&P Pagination events ─── */
   document.getElementById("rpPgNums").addEventListener("click", function (e) {
