@@ -5716,7 +5716,15 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 #addUsersPage.is-edit-mode #auBasicCard .au-section-body > .au-edit-row {
   grid-column: 1;
-  grid-row: 1;
+  /* Identity column spans BOTH grid rows so the avatar + name + email
+     group is vertically centered against the full card height — not
+     stuck in row 1 at the top of the card (Frances QA 2026-06-01).
+     The form fields on the right still occupy two distinct rows
+     (Preferred name + Region on row 1, Team + Timezone on row 2); the
+     identity simply spans across them and `align-items: center` (set
+     on the grid container above) handles the vertical centering. */
+  grid-row: 1 / -1;
+  align-self: center;
   padding: 0;
   gap: 0;
   width: 296px;
