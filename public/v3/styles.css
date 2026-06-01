@@ -400,7 +400,8 @@ table { border-spacing: 0; border-collapse: collapse; }
 .tbar { display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 8px 56px 8px 16px; margin-bottom: 16px; }
 /* Users only: slightly less air between toolbar row and column headers (Roles unchanged). */
 #usersPanel .tbar { margin-bottom: 10px; }
-#rolesPanel .tbar { padding-right: 56px; }
+#rolesPanel .tbar,
+#teamsPanel .tbar { padding-right: 56px; }
 .tbar-l { display: flex; align-items: center; gap: 16px; }
 .tbar > .btn-ghost { align-self: center; margin-top: 0; margin-bottom: 0; }
 
@@ -1846,9 +1847,19 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-dd-option.is-disabled { color: var(--text-placeholder); cursor: not-allowed; }
 .cr-dd-option.is-disabled:hover { background: var(--bg-surface); }
 
-/* Add-application row (dropdown + Add button) */
-.cr-app-row { display: flex; align-items: flex-end; gap: 12px; }
-.cr-app-row-field { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; max-width: 320px; }
+/* Add-application row (dropdown + Add button).
+   The row hugs its content on the left so the Add button sits
+   directly beside the dropdown with a normal 12px gap — no
+   stretching, no space-between, no max-width trap. The field
+   column does NOT grow to fill remaining width; instead it sizes
+   to its child (.cr-dd is 283px wide via line 1748), which keeps
+   the Add button glued to the dropdown's right edge.
+   (Frances QA 2026-05-31 — previously the field column had
+   `flex: 1 1 auto; max-width: 320px`, which expanded the column
+   to 320px and pushed the Add button 37px further right than
+   intended.) */
+.cr-app-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.cr-app-row-field { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; }
 
 .cr-btn-add {
   display: inline-flex;
@@ -2579,7 +2590,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .cr-shell { max-width: 1080px; padding: 24px 40px 64px; }
   .au-shell { width: min(1048px, calc(100% - 80px)); }
   .tbar { padding: 8px 40px 8px 16px; }
-  #rolesPanel .tbar { padding-right: 40px; }
+  #rolesPanel .tbar,
+  #teamsPanel .tbar { padding-right: 40px; }
 }
 
 /* 1024–1199: 2-column grids for forms/cards */
@@ -2589,7 +2601,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .tabs-row { padding: 14px 16px 8px; }
   #usersPanel, #rolesPanel, #teamsPanel { padding-top: 10px; }
   .tbar { height: auto; min-height: 48px; padding: 8px 32px 8px 16px; }
-  #rolesPanel .tbar { padding-right: 32px; }
+  #rolesPanel .tbar,
+  #teamsPanel .tbar { padding-right: 32px; }
   .search { width: 280px; }
 
   .cr-shell { max-width: 980px; padding: 20px 32px 56px; }
@@ -2630,7 +2643,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
   .tbar { gap: 12px; flex-wrap: wrap; justify-content: space-between; padding: 8px 24px 8px 16px; margin-bottom: 12px; }
   #usersPanel .tbar { margin-bottom: 8px; }
-  #rolesPanel .tbar { padding-right: 24px; }
+  #rolesPanel .tbar,
+  #teamsPanel .tbar { padding-right: 24px; }
   .tbar-l { flex: 1 1 100%; flex-wrap: wrap; gap: 12px; }
   .search { width: min(100%, 420px); }
   .tbar > .btn-ghost { margin-left: auto; }
@@ -2697,7 +2711,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
   .tbar { padding: 8px 12px; margin-bottom: 10px; }
   #usersPanel .tbar { margin-bottom: 6px; }
-  #rolesPanel .tbar { padding-right: 12px; }
+  #rolesPanel .tbar,
+  #teamsPanel .tbar { padding-right: 12px; }
   .tbar-l { width: 100%; }
   .btn-std, .btn-ghost { height: 32px; }
   .search { width: 100%; }
@@ -5911,32 +5926,21 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   min-height: 0;
 }
 
-/* Access Level field inside an application card (Figma 847:16392) */
+/* Access Level field inside an application card (Figma 847:16392).
+   The dropdown itself reuses the shared EDL `.cr-dd / .cr-dd-trigger /
+   .cr-dd-menu / .cr-dd-option` rules so the trigger, open-state
+   chevron rotation, menu surface, and brand-selected option all
+   inherit from the design-system component (no native <select>).
+   These rules only handle the wrapping geometry so the EDL trigger
+   stretches to the card's content width. */
 #auPermsCard .au-perms-access-field { margin-bottom: 0; }
 #auPermsCard .au-perms-access-wrap {
   position: relative;
   display: flex;
   align-items: stretch;
 }
-#auPermsCard .au-perms-access-select {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 100%;
-  height: 32px;
-  padding: 0 36px 0 12px;
-  border: 1px solid var(--border-input, #D4DEE3);
-  border-radius: 6px;
-  background-color: #FFFFFF;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236A8095' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  color: var(--text-primary, #171C20);
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 20px;
-  cursor: pointer;
-}
-#auPermsCard .au-perms-access-select:focus { outline: none; border-color: var(--brand, #3611C8); }
+#auPermsCard .au-perms-access-dd { width: 100%; }
+#auPermsCard .au-perms-access-trigger { width: 100%; }
 #auPermsCard .au-perms-access-coverage { display: none; }
 
 /* Read-only permission coverage rows (Figma 847:16394 — gap 16,
@@ -6053,19 +6057,53 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    inside #pmFltDrawer inherit the global .edl-combo treatment used
    by the Roles drawer. */
 
-/* ─── Catalog table columns + rows ───────────────────────────────── */
-#permsPanel .pm-catalog-tbl col[data-pm-col="key"]      { width: 220px; }
-#permsPanel .pm-catalog-tbl col[data-pm-col="name"]     { width: 220px; }
-#permsPanel .pm-catalog-tbl col[data-pm-col="app"]      { width: 140px; }
-#permsPanel .pm-catalog-tbl col[data-pm-col="resource"] { width: 130px; }
-#permsPanel .pm-catalog-tbl col[data-pm-col="action"]   { width: 100px; }
-#permsPanel .pm-catalog-tbl col[data-pm-col="used"]     { width: 140px; }
-#permsPanel .pm-catalog-tbl col[data-pm-col="status"]   { width: 130px; }
+/* ─── Catalog table columns + rows ─────────────────────────────────
+   Aligned to the Roles (#rpColgroup) table system (Frances QA
+   2026-05-31). The previous fixed-px column widths + 16px in-cell
+   horizontal padding made the table feel cramped:
+     • all 7 columns hit their min content width simultaneously, so
+       the table read as 7 narrow vertical strips,
+     • the 16px inset on every cell stole content breathing room
+       inside each column,
+     • the first column gutter was only 16px vs Roles' 28px, so
+       "Function key" sat closer to the card edge than Role does.
 
-#permsPanel .pm-catalog-tbl th { padding-left: 16px; padding-right: 16px; }
-#permsPanel .pm-catalog-tbl td { padding-left: 16px; padding-right: 16px; }
-#permsPanel .pm-catalog-tbl th.pm-key:first-child,
-#permsPanel .pm-catalog-tbl td.pm-key { padding-left: 16px; }
+   This block now mirrors the Roles pattern exactly:
+     • proportional % column widths (sum to 100%, table fills the
+       card width like Roles does instead of staying at a 980px
+       fixed footprint and crushing every column),
+     • the base `.tbl th, .tbl td { padding: 0 8px }` is left alone
+       — Roles uses the same 8px in-cell padding,
+     • a 28px left gutter on the first column matches `.rp-role`'s
+       28px gutter, so the Function key column starts on the same
+       visual content edge as Role does.
+   Result: row rhythm, dividers, toolbar, and pagination already
+   inherit from `.tbl` + the shared `.tbar` / `.pgn` rules and
+   match Roles 1:1 (verified). */
+#permsPanel .pm-catalog-tbl col[data-pm-col="key"]      { width: 16%; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="name"]     { width: 17%; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="app"]      { width: 14%; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="resource"] { width: 13%; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="action"]   { width: 10%; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="used"]     { width: 14%; }
+#permsPanel .pm-catalog-tbl col[data-pm-col="status"]   { width: 16%; }
+
+/* 28px left gutter on the first column (Function key) matches the
+   `.rp-role` gutter on Roles so the table's left content edge is
+   shared across both tabs. Last column's right padding stays at
+   the base `.tbl` 8px so the Status chip sits clean. */
+#permsPanel .pm-catalog-tbl th.pm-key,
+#permsPanel .pm-catalog-tbl td.pm-key { padding-left: 28px !important; }
+
+/* Reset the legacy `.pm-tbl th.pm-name { padding-left: 28px }` rule
+   (line ~1152) when `.pm-name` is used inside the Functions catalog,
+   where it is the SECOND column — not the first. The legacy rule
+   was authored for an older Permissions schema where `.pm-name` was
+   the leading column; with `.pm-key` now leading, the second column
+   should not also carry the 28px gutter or it ends up indented
+   from its true cell edge and breaks Roles parity. */
+#permsPanel .pm-catalog-tbl th.pm-name,
+#permsPanel .pm-catalog-tbl td.pm-name { padding-left: 8px !important; }
 
 /* Function key cell — EDL table body text styling. The markup is a
    <code> tag so the key still semantically marks itself as a stable
@@ -6164,16 +6202,28 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    rule (see top of file) so the toolbar sits flush under the tabs row,
    matching Users / Roles / Functions exactly. */
 
-/* Teams table column widths. Members column is intentionally narrow
-   (numeric, right-aligned for scanning), Description is the flex
-   column that absorbs slack. */
-#teamsPanel .tm-tbl .tm-col-name    { width: 28%; }
-#teamsPanel .tm-tbl .tm-col-desc    { width: auto; }
-#teamsPanel .tm-tbl .tm-col-mem     { width: 110px; }
-#teamsPanel .tm-tbl .tm-col-created { width: 160px; }
+/* Teams table — aligned to the Roles (#rpColgroup) rhythm so both
+   tabs feel like the same product surface (Frances QA 2026-05-31).
+   • fixed table-layout + proportional percentages = Roles model
+   • 28px left gutter on the first column = Roles `.rp-role` rule
+   • Members/Created are left-aligned like Roles' right-side metadata
+     ("Created By" / "Create Date"), not right-rail numeric.
+   Percentages: Team 15 / Description 58 / Members 13 / Created 14
+   match Roles' 15 / 58 / 13 / 14 exactly so column edges line up
+   when scanning between tabs. */
+#teamsPanel .tm-tbl { min-width: 0; table-layout: fixed; }
 
-#teamsPanel .tm-tbl .tm-cell-mem    { text-align: right; }
-#teamsPanel .tm-tbl .tm-th-mem .th-inner { justify-content: flex-end; }
+#tmColgroup col[data-tm-col="name"]    { width: 15.00%; }
+#tmColgroup col[data-tm-col="desc"]    { width: 58.00%; }
+#tmColgroup col[data-tm-col="mem"]     { width: 13.00%; }
+#tmColgroup col[data-tm-col="created"] { width: 14.00%; }
+
+/* Roles uses `.rp-tbl th.rp-role, .rp-tbl td.rp-role { padding-left:
+   28px !important }` to anchor the first column to the same left
+   edge as the search input above. Apply the same 28px gutter to
+   the Teams first column so both tables share the same left edge. */
+#teamsPanel .tm-tbl th.tm-th-name,
+#teamsPanel .tm-tbl td.tm-cell-name { padding-left: 28px !important; }
 
 /* Team-name link — same visual treatment as Users `.name-link`
    (see #usersPanel rule above). The Users selector is scoped to
@@ -6204,14 +6254,37 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    .au-card padding and rounded corners. Only the form-row layout
    and members-table polish are new. */
 
-/* Two-up form layout for Name + Description — mirrors Edit User's
-   3-column .au-grid but uses a 2-column grid since Teams only has
-   two fields. Falls back to a single column on narrow viewports. */
+/* ─── Edit Team alignment grid (Frances QA 2026-05-31) ───
+   Both cards on the Edit Team page share one internal content grid.
+   `.au-card` already supplies the horizontal padding (24px each
+   side); the section body MUST NOT add a second horizontal inset on
+   top of it, or the form/table content drifts right of the section
+   title. So the card body padding is vertical-only.
+
+   The Name column of the members table is also pulled flush with
+   the body left edge (overriding `.tbl td { padding: 0 8px }`) so
+   the table's first column aligns with the card title and helper
+   text. The same applies to the trailing column on the right — it
+   uses `padding-right: 0` so the table's right edge lines up with
+   the card's right content edge.
+
+   Result: the title, helper text, form labels/inputs, table header
+   "Name", and first-column cells all sit on the same content
+   grid. */
+
+/* Shared body wrapper used by BOTH the Team details and Members
+   cards. Vertical breathing room only — horizontal alignment comes
+   from `.au-card`. */
+#editTeamPage .au-section-body {
+  padding: 16px 0 8px;
+}
+
+/* Two-up form layout for Name + Description. Inherits the shared
+   body padding above; only the grid columns/gap are local. */
 #editTeamPage .tm-details-body {
   display: grid;
   grid-template-columns: minmax(0, 296px) minmax(0, 1fr);
   gap: 24px 39px;
-  padding: 16px 24px 24px;
 }
 #editTeamPage .tm-field-name { grid-column: 1 / 2; }
 #editTeamPage .tm-field-desc { grid-column: 2 / 3; }
@@ -6224,12 +6297,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   #editTeamPage .tm-field-desc { grid-column: 1 / -1; }
 }
 
-/* Members card body spacing — helper text sits 4px under the card
-   header, then 16px breathing room before the table, matching the
-   Permission Options helper rhythm on Edit User. */
-#editTeamPage .tm-members-body {
-  padding: 16px 24px 24px;
-}
+/* Helper text in the Members card. Sits flush-left with the card
+   title and the first column of the table below. */
 #editTeamPage .tm-members-helper {
   margin: 0 0 16px;
   font-size: 14px;
@@ -6249,17 +6318,21 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #editTeamPage .tm-members-tbl tbody tr { cursor: default; }
 #editTeamPage .tm-members-tbl tbody tr:hover { background: transparent; }
 
-/* Footer slot under the members table holds the secondary
-   "View all in Users →" navigational button. Right-aligned per
-   EDL action priority — primary actions (Save/Delete) live in the
-   page header; this is a low-priority cross-link. */
-#editTeamPage .tm-members-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 16px;
-}
-#editTeamPage .tm-view-all svg {
-  margin-left: 4px;
+/* First and last column flush with the card's content edges so the
+   header text "Name" lines up under the card title / helper, and
+   the right edge of the table lines up with the card's right
+   content edge. */
+#editTeamPage .tm-members-tbl th:first-child,
+#editTeamPage .tm-members-tbl td:first-child { padding-left: 0; }
+#editTeamPage .tm-members-tbl th:last-child,
+#editTeamPage .tm-members-tbl td:last-child  { padding-right: 0; }
+
+/* Members card body trims its bottom padding now that the
+   "View all in Users" footer CTA is gone (Frances QA 2026-05-31).
+   The card's own `.au-card` padding-bottom (18px) already gives
+   the table comfortable breathing room below the last row. */
+#editTeamPage .tm-members-body {
+  padding-bottom: 0;
 }
 
 /* ════════════════════════════════════════════════════════════════════

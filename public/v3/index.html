@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260530adspass8">
+  <link rel="stylesheet" href="styles.css?v=20260531fnspace2">
 </head>
 <body>
 
@@ -443,11 +443,11 @@
 
       <div class="tbl-wrap">
         <table class="tbl tm-tbl" id="tmTable">
-          <colgroup>
-            <col class="tm-col-name">
-            <col class="tm-col-desc">
-            <col class="tm-col-mem">
-            <col class="tm-col-created">
+          <colgroup id="tmColgroup">
+            <col data-tm-col="name">
+            <col data-tm-col="desc">
+            <col data-tm-col="mem">
+            <col data-tm-col="created">
           </colgroup>
           <thead>
             <tr>
@@ -459,6 +459,37 @@
           </thead>
           <tbody id="tmTbody"></tbody>
         </table>
+      </div>
+
+      <!-- Footer pagination — mirrors #rpPgn structure exactly so the
+           Teams tab uses the same EDL footer system as Roles (Frances
+           QA 2026-05-31). Read-only browse with one page today, but
+           the page-size dropdown + page nav + total label render so
+           the surface reads as a consistent product component. -->
+      <div class="pgn" id="tmPgn">
+        <div class="pgn-show">
+          <span class="pgn-lbl">Show</span>
+          <div class="pgn-sel-wrap">
+            <div class="cr-dd pgn-dd" id="tmPageSizeDD">
+              <button type="button" class="cr-dd-trigger" id="tmPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="tmPageSizeMenu">
+                <span class="cr-dd-value" id="tmPageSizeValue">10</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="tmPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+            </div>
+          </div>
+          <span class="pgn-lbl" id="tmItemCount">of 0 items</span>
+        </div>
+        <div class="pgn-pages" id="tmPgnPages">
+          <button class="pg-nav off" data-tm-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+          <button class="pg-nav off" data-tm-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="pg-nums" id="tmPgNums"></div>
+          <button class="pg-nav" data-tm-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="pg-nav" data-tm-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+        </div>
+        <div class="pgn-jump">
+          <span class="pgn-lbl" id="tmTotalLabel">Total teams: 0</span>
+        </div>
       </div>
     </div>
   </div>
@@ -695,12 +726,13 @@
        2. Header: title "Edit Team", subtitle = current team name.
           Top-right actions: Delete Team / Cancel / Save Team.
        3. "Team details" card: Name (required) + Description fields.
-       4. "Members (read-only)" card: helper text + table of users
-          assigned to this team. Read-only — no Add/Remove member,
-          no inline editing. Helper makes the rule explicit:
-          "Assign users via the User edit screen."
-          A secondary "View all in Users →" link below the table
-          navigates back to the Users tab. -->
+       4. "Members" card: helper text + table of users assigned to
+          this team. Read-only — no Add/Remove member, no inline
+          editing. The "read-only" rule lives entirely in the helper
+          copy ("Assign users via the User edit screen.") so the
+          card title can stay clean. The bottom "View all in Users"
+          CTA was removed (Frances QA 2026-05-31): users navigate
+          to the Users tab from the top-level tabs instead. -->
 <div id="editTeamPage" class="au-page tm-edit-page" style="display:none">
   <div class="au-shell">
     <button class="au-back" id="tmBack">
@@ -742,11 +774,13 @@
 
     <section class="au-card cr-card tm-members-card" aria-labelledby="tmMembersTitle">
       <div class="cr-section-header" aria-expanded="true">
-        <span class="cr-section-title" id="tmMembersTitle">Members (read-only)</span>
+        <span class="cr-section-title" id="tmMembersTitle">Members</span>
       </div>
       <div class="au-section-body tm-members-body">
-        <!-- Helper makes the read-only rule explicit and tells the user
-             where the actual assignment lives. Verbatim from brief. -->
+        <!-- Helper makes the read-only rule explicit and tells the
+             user where the actual assignment lives. This is the
+             only place we surface "read-only"; the card title is
+             intentionally clean. -->
         <p class="tm-members-helper">Assign users via the User edit screen.</p>
 
         <div class="tbl-wrap tm-members-tbl-wrap">
@@ -765,19 +799,6 @@
             </thead>
             <tbody id="tmMembersTbody"></tbody>
           </table>
-        </div>
-
-        <!-- Secondary action: routes back to the Users tab. Per brief,
-             we do NOT build a new team-filter for Users — we just
-             switch tabs and let the existing Users search handle any
-             follow-up filtering. Rendered as `.btn-std` (EDL secondary
-             outlined button) so it reads as a navigational shortcut,
-             not a primary CTA. -->
-        <div class="tm-members-footer">
-          <button type="button" class="btn-std tm-view-all" id="tmViewAllUsers">
-            <span>View all in Users</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
         </div>
       </div>
     </section>
@@ -1237,6 +1258,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260529teamdata1"></script>
+<script src="app.js?v=20260531accessdd1"></script>
 </body>
 </html>

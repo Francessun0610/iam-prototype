@@ -3546,7 +3546,8 @@ document.addEventListener("DOMContentLoaded", function () {
          clicking it opens the Edit Team page for that team.
        • Edit Team: editable Name + Description fields. Read-only
          Members section with helper "Assign users via the User edit
-         screen." A "View all in Users →" link routes back to Users.
+         screen." (The card title itself stays clean — the
+         read-only rule lives in the helper, not the title.)
        • Top-right actions: Delete Team / Cancel / Save Team.
          All three are no-op safe (toggle UI only) — full CRUD is
          intentionally out of scope.
@@ -3668,28 +3669,51 @@ document.addEventListener("DOMContentLoaded", function () {
     var tmSearchInput = document.getElementById("tmSearchInput");
     var tmSearchClear = document.getElementById("tmSearchClear");
 
-    /* Renders the Teams list table from TEAMS_DATA filtered by the
-       current search term. The Team-name cell is the ONLY interactive
-       element — rendered as `.name-link` (same affordance Users tab
-       uses for "open Edit User"). The rest of the row is plain text;
-       the row itself is NOT clickable so the table reads as a data
-       table, not a card grid. */
-    renderTMTable = function () {
-      if (!tmTbody) return;
+    /* Pagination state — mirrors `rpCurrentPage` / `rpPageSize` so the
+       Teams footer behaves like the Roles footer (Frances QA
+       2026-05-31). With six seed rows there is only one page today,
+       but the same Show 10 / page-nav / Total label render so both
+       tabs share the same product surface. */
+    var tmCurrentPage = 1;
+    var tmPageSize = 10;
+
+    function getTMFilteredData() {
       var term = (tmSearchInput && tmSearchInput.value) ? tmSearchInput.value.trim().toLowerCase() : "";
-      var rows = TEAMS_DATA.filter(function (t) {
+      return TEAMS_DATA.filter(function (t) {
         if (!term) return true;
         return (
           t.name.toLowerCase().indexOf(term) !== -1 ||
           t.description.toLowerCase().indexOf(term) !== -1
         );
       });
+    }
+
+    function getTMPageData() {
+      var filtered = getTMFilteredData();
+      var start = (tmCurrentPage - 1) * tmPageSize;
+      return filtered.slice(start, start + tmPageSize);
+    }
+
+    function tmTotalPages() {
+      return Math.max(1, Math.ceil(getTMFilteredData().length / tmPageSize));
+    }
+
+    /* Renders the Teams list table from the paginated slice. The
+       Team-name cell is the ONLY interactive element — rendered as
+       `.name-link` (same affordance Users tab uses for "open Edit
+       User"). The rest of the row is plain text; the row itself is
+       NOT clickable so the table reads as a data table, not a card
+       grid. */
+    renderTMTable = function () {
+      if (!tmTbody) return;
+      var rows = getTMPageData();
 
       if (rows.length === 0) {
         tmTbody.innerHTML =
           '<tr class="tbl-empty"><td colspan="4">' +
           'No teams match your search. Try a different term.' +
           '</td></tr>';
+        renderTMPagination();
         return;
       }
 
@@ -3707,17 +3731,129 @@ document.addEventListener("DOMContentLoaded", function () {
           '</tr>';
       }
       tmTbody.innerHTML = html;
+      renderTMPagination();
     };
 
+    /* Pagination renderer — same shape as `renderRPPagination`. Page
+       numbers, page-size dropdown, item count, total label all
+       update; nav arrows toggle `.off` when at the boundary. */
+    function renderTMPagination() {
+      var tp = tmTotalPages();
+      var pgNums = document.getElementById("tmPgNums");
+      if (!pgNums) return;
+      var btns = [];
+      if (tp <= 7) {
+        for (var i = 1; i <= tp; i++) btns.push(i);
+      } else {
+        btns.push(1);
+        if (tmCurrentPage > 3) btns.push("...");
+        var lo = Math.max(2, tmCurrentPage - 1);
+        var hi = Math.min(tp - 1, tmCurrentPage + 1);
+        if (tmCurrentPage <= 3) { lo = 2; hi = 4; }
+        if (tmCurrentPage >= tp - 2) { lo = tp - 3; hi = tp - 1; }
+        for (var j = lo; j <= hi; j++) btns.push(j);
+        if (tmCurrentPage < tp - 2) btns.push("...");
+        btns.push(tp);
+      }
+      var html = "";
+      for (var k = 0; k < btns.length; k++) {
+        if (btns[k] === "...") {
+          html += '<span class="pg-dots">\u2026</span>';
+        } else {
+          html += '<button class="pg-n' + (btns[k] === tmCurrentPage ? " on" : "") + '" data-tm-pg="' + btns[k] + '">' + btns[k] + '</button>';
+        }
+      }
+      pgNums.innerHTML = html;
+
+      var navFirst = document.querySelector('#tmPgnPages [data-tm-nav="first"]');
+      var navPrev  = document.querySelector('#tmPgnPages [data-tm-nav="prev"]');
+      var navNext  = document.querySelector('#tmPgnPages [data-tm-nav="next"]');
+      var navLast  = document.querySelector('#tmPgnPages [data-tm-nav="last"]');
+      if (navFirst) navFirst.classList.toggle("off", tmCurrentPage === 1);
+      if (navPrev)  navPrev.classList.toggle("off", tmCurrentPage === 1);
+      if (navNext)  navNext.classList.toggle("off", tmCurrentPage === tp);
+      if (navLast)  navLast.classList.toggle("off", tmCurrentPage === tp);
+
+      var filteredCount = getTMFilteredData().length;
+      var tmItemCount = document.getElementById("tmItemCount");
+      if (tmItemCount) tmItemCount.textContent = "of " + filteredCount + " items";
+      var tmTotalLabel = document.getElementById("tmTotalLabel");
+      if (tmTotalLabel) tmTotalLabel.textContent = "Total teams: " + filteredCount;
+
+      var tmPageSizeMenu = document.getElementById("tmPageSizeMenu");
+      var tmPageSizeValue = document.getElementById("tmPageSizeValue");
+      if (tmPageSizeMenu && tmPageSizeValue) {
+        var sizes = [10, 25, 50];
+        var pshtml = "";
+        for (var si = 0; si < sizes.length; si++) {
+          var ns = sizes[si];
+          pshtml += '<div class="cr-dd-option' + (ns === tmPageSize ? " is-selected" : "") + '" role="option" data-tm-psize="' + ns + '">' + ns + "</div>";
+        }
+        tmPageSizeMenu.innerHTML = pshtml;
+        tmPageSizeValue.textContent = String(tmPageSize);
+      }
+    }
+
+    function tmGoToPage(pg) {
+      var tp = tmTotalPages();
+      pg = Math.max(1, Math.min(pg, tp));
+      if (pg === tmCurrentPage) return;
+      tmCurrentPage = pg;
+      renderTMTable();
+    }
+
+    /* Pagination event wiring — same shape as Roles. Click on a page
+       number, nav arrow, or size option re-renders. The page-size
+       dropdown reuses the shared `togglePgnDd` helper used by Users
+       and Roles. */
+    var tmPgNumsEl = document.getElementById("tmPgNums");
+    if (tmPgNumsEl) {
+      tmPgNumsEl.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-tm-pg]");
+        if (btn) tmGoToPage(parseInt(btn.getAttribute("data-tm-pg"), 10));
+      });
+    }
+    var tmNavFirst = document.querySelector('#tmPgnPages [data-tm-nav="first"]');
+    var tmNavPrev  = document.querySelector('#tmPgnPages [data-tm-nav="prev"]');
+    var tmNavNext  = document.querySelector('#tmPgnPages [data-tm-nav="next"]');
+    var tmNavLast  = document.querySelector('#tmPgnPages [data-tm-nav="last"]');
+    if (tmNavFirst) tmNavFirst.addEventListener("click", function () { tmGoToPage(1); });
+    if (tmNavPrev)  tmNavPrev.addEventListener("click",  function () { tmGoToPage(tmCurrentPage - 1); });
+    if (tmNavNext)  tmNavNext.addEventListener("click",  function () { tmGoToPage(tmCurrentPage + 1); });
+    if (tmNavLast)  tmNavLast.addEventListener("click",  function () { tmGoToPage(tmTotalPages()); });
+
+    var tmPageSizeMenuEl = document.getElementById("tmPageSizeMenu");
+    var tmPageSizeDDEl = document.getElementById("tmPageSizeDD");
+    var tmPageSizeTriggerEl = document.getElementById("tmPageSizeTrigger");
+    if (tmPageSizeMenuEl) {
+      tmPageSizeMenuEl.addEventListener("click", function (e) {
+        var row = e.target.closest("[data-tm-psize]");
+        if (!row) return;
+        tmPageSize = parseInt(row.getAttribute("data-tm-psize"), 10);
+        tmCurrentPage = 1;
+        if (tmPageSizeDDEl) tmPageSizeDDEl.classList.remove("open");
+        if (tmPageSizeTriggerEl) tmPageSizeTriggerEl.setAttribute("aria-expanded", "false");
+        renderTMTable();
+      });
+    }
+    if (tmPageSizeDDEl && tmPageSizeTriggerEl && typeof togglePgnDd === "function") {
+      tmPageSizeTriggerEl.addEventListener("click", function (e) {
+        e.stopPropagation();
+        togglePgnDd(tmPageSizeDDEl, tmPageSizeTriggerEl);
+      });
+    }
+
     /* Search wiring — debounced via input event only (no Enter-to-
-       submit needed for a 2-row dataset). Clear button mirrors the
-       Permissions search clear icon. */
+       submit needed for a small dataset). Clear button mirrors the
+       Permissions search clear icon. Filtering resets to page 1 so
+       the pagination state stays consistent with Roles. */
     if (tmSearchInput) {
       tmSearchInput.addEventListener("input", function () {
         if (tmSearchClear) {
           if (tmSearchInput.value.length > 0) tmSearchClear.classList.remove("hidden");
           else tmSearchClear.classList.add("hidden");
         }
+        tmCurrentPage = 1;
         renderTMTable();
       });
     }
@@ -3726,6 +3862,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!tmSearchInput) return;
         tmSearchInput.value = "";
         tmSearchClear.classList.add("hidden");
+        tmCurrentPage = 1;
         renderTMTable();
         tmSearchInput.focus();
       });
@@ -3756,7 +3893,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var tmCancelBtn = document.getElementById("tmCancel");
     var tmSaveBtn = document.getElementById("tmSave");
     var tmDeleteBtn = document.getElementById("tmDelete");
-    var tmViewAllBtn = document.getElementById("tmViewAllUsers");
 
     /* Local edit state — captures which team we're editing so the
        Save/Cancel/Delete handlers know what to operate on. We
@@ -3850,17 +3986,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    if (tmViewAllBtn) {
-      tmViewAllBtn.addEventListener("click", function () {
-        /* Per brief: simply navigate to the Users tab. We do NOT
-           build a new team-filter just for this — the existing
-           Users search already covers ad-hoc filtering. */
-        editTeamPage.style.display = "none";
-        if (mainPageEl) mainPageEl.style.display = "";
-        switchTab("users");
-        window.scrollTo(0, 0);
-      });
-    }
+    /* The "View all in Users" footer CTA was removed (Frances QA
+       2026-05-31). Navigation back to Users is handled by the
+       top-level tab nav. */
 
     /* Initial paint so the table is populated before the user
        first clicks the Teams tab (matches Roles/Perms behavior). */
@@ -4431,10 +4559,15 @@ document.addEventListener("DOMContentLoaded", function () {
       if (addUsersPage) addUsersPage.classList.toggle("is-edit-mode", isEdit);
       if (auPageTitle) auPageTitle.textContent = isEdit ? "Edit user" : AU_PAGE_TITLE_ADD;
       if (auPageSubtitle) {
-        /* Figma node 847:16112 sets the Edit User subtitle to
-           "Permission management" (per the latest Tatiana copy).
+        /* Edit User subtitle copy updated to describe the full scope
+           of the page (Frances QA 2026-05-31). The previous copy
+           was "Permission management" — replaced with the more
+           descriptive sentence below. No user name in the subtitle;
+           the user's identity lives in the Basic Information card.
            Add mode keeps the original capture-style helper. */
-        auPageSubtitle.textContent = isEdit ? "Permission management" : AU_PAGE_SUB_ADD;
+        auPageSubtitle.textContent = isEdit
+          ? "Manage user details, team assignment, region, timezone, and application access."
+          : AU_PAGE_SUB_ADD;
       }
       if (auBackLabel) {
         /* V3 short-nav convention: tabs are "Users / Roles / Permissions".
@@ -4977,12 +5110,23 @@ document.addEventListener("DOMContentLoaded", function () {
          • "Show all permissions" toggle reveals more read-only rows.
        The card has NO in-card future-state affordance. The custom-actions
        future phase is communicated only via the helper text above the
-       card grid. */
-    function buildAUPermsAccessLevelOptionsHtml(selected) {
+       card grid.
+
+       The Access Level dropdown reuses the EDL `.cr-dd` pattern (same
+       trigger / menu / option markup used by Create Role's access-level
+       dropdown). This avoids the native OS dropdown that an HTML
+       `<select>` would otherwise render — chevron, surface, hover, and
+       brand-selected state all come from the shared `.cr-dd-*` styles.
+       Menu is portalled to body via `attachCrDdLayeredMenu` so it
+       overlays cleanly above the card without clipping. */
+    function buildAUPermsAccessLevelMenuHtml(selected) {
       var html = "";
       for (var i = 0; i < AU_PERM_ACCESS_LEVELS.length; i++) {
         var v = AU_PERM_ACCESS_LEVELS[i];
-        html += '<option value="' + esc(v) + '"' + (v === selected ? ' selected' : '') + '>' + esc(v) + '</option>';
+        var isSel = (v === selected);
+        html += '<div class="cr-dd-option au-perms-access-option' + (isSel ? " is-selected" : "") + '"' +
+          ' role="option" data-au-perms-access-option="true" data-au-perms-access-value="' + esc(v) + '"' +
+          ' aria-selected="' + (isSel ? "true" : "false") + '">' + esc(v) + '</div>';
       }
       return html;
     }
@@ -5030,11 +5174,21 @@ document.addEventListener("DOMContentLoaded", function () {
         '</header>' +
         '<div class="au-perms-card-body">' +
           '<div class="au-perms-access-field">' +
-            '<label class="au-label" for="auPermsAccess-' + idx + '">Access Level<span class="au-req">*</span></label>' +
+            '<span class="au-label" id="auPermsAccessLbl-' + idx + '">Access Level<span class="au-req">*</span></span>' +
             '<div class="au-perms-access-wrap">' +
-              '<select class="au-perms-access-select" id="auPermsAccess-' + idx + '" data-au-perms-access="' + idx + '" aria-label="Access Level for ' + esc(assignment.app) + '">' +
-                buildAUPermsAccessLevelOptionsHtml(assignment.access || "Full Access") +
-              '</select>' +
+              '<div class="cr-dd au-perms-access-dd" data-au-perms-access-dd="' + idx + '">' +
+                '<button type="button" class="cr-dd-trigger au-perms-access-trigger"' +
+                  ' id="auPermsAccessTrigger-' + idx + '"' +
+                  ' aria-haspopup="listbox" aria-expanded="false"' +
+                  ' aria-controls="auPermsAccessMenu-' + idx + '"' +
+                  ' aria-labelledby="auPermsAccessLbl-' + idx + ' auPermsAccessTrigger-' + idx + '">' +
+                  '<span class="cr-dd-value au-perms-access-value">' + esc(assignment.access || "Full Access") + '</span>' +
+                  '<svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                '</button>' +
+                '<div class="cr-dd-menu au-perms-access-menu" id="auPermsAccessMenu-' + idx + '" role="listbox" aria-labelledby="auPermsAccessLbl-' + idx + '" data-au-perms-access-idx="' + idx + '">' +
+                  buildAUPermsAccessLevelMenuHtml(assignment.access || "Full Access") +
+                '</div>' +
+              '</div>' +
               '<span class="au-perms-access-coverage" aria-hidden="true">' + esc(coverage) + '</span>' +
             '</div>' +
           '</div>' +
@@ -5223,6 +5377,34 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
     if (auPermsCardsEl) {
+      /* ─── Access Level EDL dropdown (per card) ───
+         Reuses the shared `.cr-dd` open/close + layered-menu helpers
+         (same pattern as Create Role's access-level dropdown). Native
+         <select> was retired in favour of this so the menu uses EDL
+         styling instead of the OS dropdown. */
+      function closeAuPermsAccessDD(dd) {
+        if (!dd) return;
+        if (typeof detachCrDdLayeredMenu === "function") detachCrDdLayeredMenu(dd);
+        dd.classList.remove("open");
+        var trigger = dd.querySelector(".au-perms-access-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", "false");
+      }
+      function closeAllAuPermsAccessDDs(except) {
+        var open = auPermsCardsEl.querySelectorAll(".au-perms-access-dd.open");
+        for (var i = 0; i < open.length; i++) {
+          if (except && open[i] === except) continue;
+          closeAuPermsAccessDD(open[i]);
+        }
+      }
+      function openAuPermsAccessDD(dd) {
+        if (!dd) return;
+        closeAllAuPermsAccessDDs(dd);
+        dd.classList.add("open");
+        var trigger = dd.querySelector(".au-perms-access-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", "true");
+        if (typeof attachCrDdLayeredMenu === "function") attachCrDdLayeredMenu(dd);
+      }
+
       auPermsCardsEl.addEventListener("click", function (e) {
         var removeBtn = e.target.closest("[data-au-perms-remove]");
         if (removeBtn) {
@@ -5241,15 +5423,48 @@ document.addEventListener("DOMContentLoaded", function () {
             auPermsState.assignments[ti].expanded = !auPermsState.assignments[ti].expanded;
             renderAUPermsCards();
           }
+          return;
+        }
+        var accessTrigger = e.target.closest(".au-perms-access-trigger");
+        if (accessTrigger) {
+          e.stopPropagation();
+          var hostDd = accessTrigger.closest(".au-perms-access-dd");
+          if (!hostDd) return;
+          if (hostDd.classList.contains("open")) closeAuPermsAccessDD(hostDd);
+          else openAuPermsAccessDD(hostDd);
         }
       });
-      auPermsCardsEl.addEventListener("change", function (e) {
-        var sel = e.target.closest("[data-au-perms-access]");
-        if (!sel) return;
-        var ai = parseInt(sel.getAttribute("data-au-perms-access"), 10);
-        if (!isNaN(ai) && auPermsState.assignments[ai]) {
-          auPermsState.assignments[ai].access = sel.value;
-        }
+
+      /* Option clicks come from the menu, which `attachCrDdLayeredMenu`
+         portals to <body>, so we listen on document for the option
+         click and use [data-au-perms-access-option] to disambiguate
+         from Create Role's access-level menu. */
+      document.addEventListener("click", function (e) {
+        var opt = e.target.closest("[data-au-perms-access-option]");
+        if (!opt) return;
+        var menu = opt.closest(".au-perms-access-menu");
+        if (!menu) return;
+        var idx = parseInt(menu.getAttribute("data-au-perms-access-idx"), 10);
+        if (isNaN(idx) || !auPermsState.assignments[idx]) return;
+        var newVal = opt.getAttribute("data-au-perms-access-value");
+        if (!newVal) return;
+        auPermsState.assignments[idx].access = newVal;
+        /* Rebuild just the visible card so the trigger label + the
+           menu's is-selected/aria-selected stay in sync. */
+        renderAUPermsCards();
+      });
+
+      /* Close all access DDs on outside click or Escape. The outside
+         test must also account for the layered menu, which is portalled
+         to <body> (so it is not inside .au-perms-card). */
+      document.addEventListener("click", function (e) {
+        var inDd = e.target.closest(".au-perms-access-dd");
+        var inMenu = e.target.closest(".au-perms-access-menu");
+        if (inDd || inMenu) return;
+        closeAllAuPermsAccessDDs();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeAllAuPermsAccessDDs();
       });
     }
 
