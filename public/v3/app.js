@@ -1,75 +1,75 @@
 var DATA = [
   /* ── Page 1 ── */
   { id: "u001", avatar: "../avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["Core Planning Admin", "Planning Manager", "Planner"],              status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
-  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "marge.simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
-  { id: "u003", avatar: "../avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
-  { id: "u004", avatar: "../avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Streaming Revenue",          title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
-  { id: "u005", avatar: "../avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation",  title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
-  { id: "u006", avatar: "../avatars/photos/m04.png", name: "Montgomery Burns",             email: "Montgomery.Burns@disney.com",             roles: ["Campaign Planner", "Planning Manager"],                             status: "Inactive", team: "Yield & Inventory",          title: "SVP, Revenue Strategy",                region: "NA",    lastLogin: "Feb 14, 2026, 10:30 AM"  },
-  { id: "u007", avatar: "../avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Operations Admin"],                                                 status: "Active",   team: "Programmatic Sales",         title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
-  { id: "u008", avatar: "../avatars/photos/f03.png", name: "Maggie Simpson",               email: "Maggie.Simpson@disney.com",               roles: ["Read-Only Viewer", "Planner"],                                      status: "Active",   team: "Revenue Operations",         title: "Associate, Revenue Ops",               region: "NA",    lastLogin: "May 2, 2026, 7:00 PM"   },
-  { id: "u009", avatar: "../avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"],                status: "Inactive", team: "Ad Sales Finance",           title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
-  { id: "u010", avatar: "../avatars/photos/m07.png", name: "Nelson Muntz",                 email: "Nelson.Muntz@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Finance & Planning",        region: "LATAM", lastLogin: "Apr 25, 2026, 5:30 PM"   },
+  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "marge.simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Sales Planning",             title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
+  { id: "u003", avatar: "../avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "National Ad Sales",          title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
+  { id: "u004", avatar: "../avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Client & Brand Solutions",   title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
+  { id: "u005", avatar: "../avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Operations",              title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
+  { id: "u006", avatar: "../avatars/photos/m04.png", name: "Montgomery Burns",             email: "Montgomery.Burns@disney.com",             roles: ["Campaign Planner", "Planning Manager"],                             status: "Inactive", team: "Revenue & Yield Management", title: "SVP, Revenue Strategy",                region: "NA",    lastLogin: "Feb 14, 2026, 10:30 AM"  },
+  { id: "u007", avatar: "../avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Operations Admin"],                                                 status: "Active",   team: "Sales Planning",             title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
+  { id: "u008", avatar: "../avatars/photos/f03.png", name: "Maggie Simpson",               email: "Maggie.Simpson@disney.com",               roles: ["Read-Only Viewer", "Planner"],                                      status: "Active",   team: "Revenue & Yield Management", title: "Associate, Revenue Ops",               region: "NA",    lastLogin: "May 2, 2026, 7:00 PM"   },
+  { id: "u009", avatar: "../avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"],                status: "Inactive", team: "Sales Planning",             title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
+  { id: "u010", avatar: "../avatars/photos/m07.png", name: "Nelson Muntz",                 email: "Nelson.Muntz@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue & Yield Management", title: "Associate, Finance & Planning",        region: "LATAM", lastLogin: "Apr 25, 2026, 5:30 PM"   },
 
   /* ── Page 2 ── */
-  { id: "u011", avatar: "../avatars/photos/m08.png", name: "Ralph Wiggum",                 email: "Ralph.Wiggum@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Ad Operations",             region: "NA",    lastLogin: "Apr 29, 2026, 1:15 PM"   },
-  { id: "u012", avatar: "../avatars/photos/m09.png", name: "Principal Skinner",            email: "Principal.Skinner@disney.com",            roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Agency Sales",               title: "Sr. Manager, Agency Partnerships",     region: "NA",    lastLogin: "May 1, 2026, 10:00 AM"   },
-  { id: "u013", avatar: "../avatars/photos/m10.png", name: "Krusty the Clown",             email: "Krusty.TheClown@disney.com",              roles: ["Campaign Planner"],                                                 status: "Active",   team: "National Ad Sales",          title: "Director, Brand Partnerships",         region: "NA",    lastLogin: "Apr 22, 2026, 2:00 PM"   },
-  { id: "u014", avatar: "../avatars/photos/f04.png", name: "Selma Bouvier",                email: "Selma.Bouvier@disney.com",                roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"],      status: "Active",   team: "Ad Sales Finance",           title: "Manager, Billing Operations",          region: "EMEA",  lastLogin: "Apr 18, 2026, 9:30 AM"   },
-  { id: "u015", avatar: "../avatars/photos/f05.png", name: "Patty Bouvier",                email: "Patty.Bouvier@disney.com",                roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Revenue Reporting",       region: "EMEA",  lastLogin: "May 2, 2026, 11:45 AM"   },
-  { id: "u016", avatar: "../avatars/photos/m11.png", name: "Lenny Leonard",                email: "Lenny.Leonard@disney.com",                roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Media Investment",        region: "NA",    lastLogin: "Apr 30, 2026, 4:15 PM"   },
-  { id: "u017", avatar: "../avatars/photos/m12.png", name: "Carl Carlson",                 email: "Carl.Carlson@disney.com",                 roles: ["Operations Admin", "Planning Specialist"],                          status: "Active",   team: "Yield & Inventory",          title: "Manager, Yield Optimization",          region: "NA",    lastLogin: "Apr 27, 2026, 3:00 PM"   },
-  { id: "u018", avatar: "../avatars/photos/m13.png", name: "Moe Szyslak",                  email: "Moe.Szyslak@disney.com",                  roles: ["Read-Only Viewer", "Planner"],                                      status: "Inactive", team: "Client Partnerships",        title: "Coordinator, Client Services",         region: "LATAM", lastLogin: "Mar 10, 2026, 6:00 PM"   },
-  { id: "u019", avatar: "../avatars/photos/m14.png", name: "Apu Nahasapeemapetilon",       email: "Apu.Nahasapeemapetilon@disney.com",       roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Global Partnerships",    title: "Sr. Manager, International Strategy",  region: "ANZ",   lastLogin: "May 3, 2026, 7:30 AM"   },
-  { id: "u020", avatar: "../avatars/photos/m15.png", name: "Comic Book Guy",               email: "Comic.BookGuy@disney.com",                roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Ad Sales Finance",           title: "Analyst, Financial Planning",          region: "NA",    lastLogin: "Apr 14, 2026, 12:30 PM"  },
+  { id: "u011", avatar: "../avatars/photos/m08.png", name: "Ralph Wiggum",                 email: "Ralph.Wiggum@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Ad Operations",              title: "Associate, Ad Operations",             region: "NA",    lastLogin: "Apr 29, 2026, 1:15 PM"   },
+  { id: "u012", avatar: "../avatars/photos/m09.png", name: "Principal Skinner",            email: "Principal.Skinner@disney.com",            roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Agency & Holding Company Sales", title: "Sr. Manager, Agency Partnerships",     region: "NA",    lastLogin: "May 1, 2026, 10:00 AM"   },
+  { id: "u013", avatar: "../avatars/photos/m10.png", name: "Krusty the Clown",             email: "Krusty.TheClown@disney.com",              roles: ["Campaign Planner"],                                                 status: "Active",   team: "Client & Brand Solutions",   title: "Director, Brand Partnerships",         region: "NA",    lastLogin: "Apr 22, 2026, 2:00 PM"   },
+  { id: "u014", avatar: "../avatars/photos/f04.png", name: "Selma Bouvier",                email: "Selma.Bouvier@disney.com",                roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"],      status: "Active",   team: "National Ad Sales",          title: "Manager, Billing Operations",          region: "EMEA",  lastLogin: "Apr 18, 2026, 9:30 AM"   },
+  { id: "u015", avatar: "../avatars/photos/f05.png", name: "Patty Bouvier",                email: "Patty.Bouvier@disney.com",                roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue & Yield Management", title: "Sr. Analyst, Revenue Reporting",       region: "EMEA",  lastLogin: "May 2, 2026, 11:45 AM"   },
+  { id: "u016", avatar: "../avatars/photos/m11.png", name: "Lenny Leonard",                email: "Lenny.Leonard@disney.com",                roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Sales Planning",             title: "Sr. Planner, Media Investment",        region: "NA",    lastLogin: "Apr 30, 2026, 4:15 PM"   },
+  { id: "u017", avatar: "../avatars/photos/m12.png", name: "Carl Carlson",                 email: "Carl.Carlson@disney.com",                 roles: ["Operations Admin", "Planning Specialist"],                          status: "Active",   team: "Revenue & Yield Management", title: "Manager, Yield Optimization",          region: "NA",    lastLogin: "Apr 27, 2026, 3:00 PM"   },
+  { id: "u018", avatar: "../avatars/photos/m13.png", name: "Moe Szyslak",                  email: "Moe.Szyslak@disney.com",                  roles: ["Read-Only Viewer", "Planner"],                                      status: "Inactive", team: "Client & Brand Solutions",   title: "Coordinator, Client Services",         region: "LATAM", lastLogin: "Mar 10, 2026, 6:00 PM"   },
+  { id: "u019", avatar: "../avatars/photos/m14.png", name: "Apu Nahasapeemapetilon",       email: "Apu.Nahasapeemapetilon@disney.com",       roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Agency & Holding Company Sales", title: "Sr. Manager, International Strategy",  region: "ANZ",   lastLogin: "May 3, 2026, 7:30 AM"   },
+  { id: "u020", avatar: "../avatars/photos/m15.png", name: "Comic Book Guy",               email: "Comic.BookGuy@disney.com",                roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Revenue & Yield Management", title: "Analyst, Financial Planning",          region: "NA",    lastLogin: "Apr 14, 2026, 12:30 PM"  },
 
   /* ── Page 3 ── */
-  { id: "u021", avatar: "../avatars/photos/m16.png", name: "Chief Wiggum",                 email: "Chief.Wiggum@disney.com",                 roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "VP, Client Solutions",                 region: "NA",    lastLogin: "Apr 24, 2026, 10:15 AM"  },
-  { id: "u022", avatar: "../avatars/photos/f06.png", name: "Edna Krabappel",               email: "Edna.Krabappel@disney.com",               roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"],         status: "Active",   team: "Digital Media Planning",     title: "Director, Planning & Activation",      region: "NA",    lastLogin: "May 1, 2026, 3:30 PM"   },
-  { id: "u023", avatar: "../avatars/photos/m17.png", name: "Groundskeeper Willie",         email: "Groundskeeper.Willie@disney.com",         roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Lead, Campaign Trafficking",           region: "EMEA",  lastLogin: "Apr 20, 2026, 8:00 AM"   },
-  { id: "u024", avatar: "../avatars/photos/m18.png", name: "Fat Tony",                     email: "Fat.Tony@disney.com",                     roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"],      status: "Active",   team: "Streaming Revenue",          title: "SVP, Distribution Strategy",           region: "NA",    lastLogin: "Apr 16, 2026, 1:00 PM"   },
-  { id: "u025", avatar: "../avatars/photos/m19.png", name: "Dr. Hibbert",                  email: "Julius.Hibbert@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"],         status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Analytics",           region: "NA",    lastLogin: "Apr 29, 2026, 9:45 AM"   },
-  { id: "u026", avatar: "../avatars/photos/m20.png", name: "Professor Frink",              email: "Professor.Frink@disney.com",              roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Programmatic Sales",         title: "Sr. Analyst, Programmatic Yield",      region: "NA",    lastLogin: "Apr 12, 2026, 2:15 PM"   },
-  { id: "u027", avatar: "../avatars/photos/m21.png", name: "Barney Gumble",                email: "Barney.Gumble@disney.com",                roles: ["Campaign Planner", "Ad Operations Specialist"],                     status: "Inactive", team: "Addressable Ad Ops",         title: "Coordinator, Campaign Delivery",       region: "NA",    lastLogin: "Feb 28, 2026, 11:00 AM"  },
-  { id: "u028", avatar: "../avatars/photos/m22.png", name: "Sideshow Bob",                 email: "Sideshow.Bob@disney.com",                 roles: ["Read-Only Viewer", "Campaign Planner", "Planner"],                  status: "Active",   team: "Agency Sales",               title: "Director, Agency Development",         region: "EMEA",  lastLogin: "Apr 8, 2026, 4:45 PM"    },
-  { id: "u029", avatar: "../avatars/photos/m23.png", name: "Kent Brockman",                email: "Kent.Brockman@disney.com",                roles: ["Core Planning Admin", "Planning Manager"],                          status: "Active",   team: "Global Partnerships",        title: "VP, Global Media Sales",               region: "NA",    lastLogin: "May 2, 2026, 6:30 PM"   },
-  { id: "u030", avatar: "../avatars/photos/m24.png", name: "Otto Mann",                    email: "Otto.Mann@disney.com",                    roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Accounts Receivable",       region: "LATAM", lastLogin: "Apr 5, 2026, 10:00 AM"   },
+  { id: "u021", avatar: "../avatars/photos/m16.png", name: "Chief Wiggum",                 email: "Chief.Wiggum@disney.com",                 roles: ["Planner"],                                                          status: "Active",   team: "Client & Brand Solutions",   title: "VP, Client Solutions",                 region: "NA",    lastLogin: "Apr 24, 2026, 10:15 AM"  },
+  { id: "u022", avatar: "../avatars/photos/f06.png", name: "Edna Krabappel",               email: "Edna.Krabappel@disney.com",               roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"],         status: "Active",   team: "Sales Planning",             title: "Director, Planning & Activation",      region: "NA",    lastLogin: "May 1, 2026, 3:30 PM"   },
+  { id: "u023", avatar: "../avatars/photos/m17.png", name: "Groundskeeper Willie",         email: "Groundskeeper.Willie@disney.com",         roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Operations",              title: "Lead, Campaign Trafficking",           region: "EMEA",  lastLogin: "Apr 20, 2026, 8:00 AM"   },
+  { id: "u024", avatar: "../avatars/photos/m18.png", name: "Fat Tony",                     email: "Fat.Tony@disney.com",                     roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"],      status: "Active",   team: "Revenue & Yield Management", title: "SVP, Distribution Strategy",           region: "NA",    lastLogin: "Apr 16, 2026, 1:00 PM"   },
+  { id: "u025", avatar: "../avatars/photos/m19.png", name: "Dr. Hibbert",                  email: "Julius.Hibbert@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"],         status: "Active",   team: "Revenue & Yield Management", title: "Manager, Revenue Analytics",           region: "NA",    lastLogin: "Apr 29, 2026, 9:45 AM"   },
+  { id: "u026", avatar: "../avatars/photos/m20.png", name: "Professor Frink",              email: "Professor.Frink@disney.com",              roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Addressable & Programmatic Sales", title: "Sr. Analyst, Programmatic Yield",      region: "NA",    lastLogin: "Apr 12, 2026, 2:15 PM"   },
+  { id: "u027", avatar: "../avatars/photos/m21.png", name: "Barney Gumble",                email: "Barney.Gumble@disney.com",                roles: ["Campaign Planner", "Ad Operations Specialist"],                     status: "Inactive", team: "Ad Operations",              title: "Coordinator, Campaign Delivery",       region: "NA",    lastLogin: "Feb 28, 2026, 11:00 AM"  },
+  { id: "u028", avatar: "../avatars/photos/m22.png", name: "Sideshow Bob",                 email: "Sideshow.Bob@disney.com",                 roles: ["Read-Only Viewer", "Campaign Planner", "Planner"],                  status: "Active",   team: "Agency & Holding Company Sales", title: "Director, Agency Development",         region: "EMEA",  lastLogin: "Apr 8, 2026, 4:45 PM"    },
+  { id: "u029", avatar: "../avatars/photos/m23.png", name: "Kent Brockman",                email: "Kent.Brockman@disney.com",                roles: ["Core Planning Admin", "Planning Manager"],                          status: "Active",   team: "National Ad Sales",          title: "VP, Global Media Sales",               region: "NA",    lastLogin: "May 2, 2026, 6:30 PM"   },
+  { id: "u030", avatar: "../avatars/photos/m24.png", name: "Otto Mann",                    email: "Otto.Mann@disney.com",                    roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue & Yield Management", title: "Associate, Accounts Receivable",       region: "LATAM", lastLogin: "Apr 5, 2026, 10:00 AM"   },
 
   /* ── Page 4 ── */
-  { id: "u031", avatar: "../avatars/photos/m25.png", name: "Mayor Quimby",                 email: "Mayor.Quimby@disney.com",                 roles: ["Planning Manager", "Planning Specialist"],                          status: "Active",   team: "National Ad Sales",          title: "SVP, Sales & Partnerships",            region: "NA",    lastLogin: "Apr 3, 2026, 11:30 AM"   },
-  { id: "u032", avatar: "../avatars/photos/m26.png", name: "Hans Moleman",                 email: "Hans.Moleman@disney.com",                 roles: ["Operations Admin"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Billing Support",           region: "NA",    lastLogin: "Apr 18, 2026, 8:15 AM"   },
-  { id: "u033", avatar: "../avatars/photos/m27.png", name: "Gil Gunderson",                email: "Gil.Gunderson@disney.com",                roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Inactive", team: "Client Partnerships",        title: "Coordinator, New Business",            region: "NA",    lastLogin: "Jan 15, 2026, 3:00 PM"   },
-  { id: "u034", avatar: "../avatars/photos/m28.png", name: "Rainier Wolfcastle",           email: "Rainier.Wolfcastle@disney.com",           roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Streaming Revenue",          title: "Director, Content Partnerships",       region: "EMEA",  lastLogin: "Apr 14, 2026, 9:00 AM"   },
-  { id: "u035", avatar: "../avatars/photos/m29.png", name: "Troy McClure",                 email: "Troy.McClure@disney.com",                 roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Manager, Cross-Platform Planning",     region: "NA",    lastLogin: "Apr 10, 2026, 2:45 PM"   },
-  { id: "u036", avatar: "../avatars/photos/m30.png", name: "Disco Stu",                    email: "Disco.Stu@disney.com",                    roles: ["Ad Operations Specialist"],                                         status: "Active",   team: "Ad Solutions & Innovation",  title: "Analyst, Creative Ad Solutions",       region: "LATAM", lastLogin: "Mar 28, 2026, 12:00 PM"  },
-  { id: "u037", avatar: "../avatars/photos/m31.png", name: "Dr. Nick Riviera",             email: "Nick.Riviera@disney.com",                 roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Active",   team: "Revenue Operations",         title: "Analyst, Revenue Reconciliation",      region: "NA",    lastLogin: "Apr 22, 2026, 11:15 AM"  },
-  { id: "u038", avatar: "../avatars/photos/m32.png", name: "Kirk Van Houten",              email: "Kirk.VanHouten@disney.com",               roles: ["Operations Admin", "Planning Specialist"],                          status: "Inactive", team: "Yield & Inventory",          title: "Associate, Inventory Management",      region: "NA",    lastLogin: "Mar 5, 2026, 4:00 PM"    },
-  { id: "u039", avatar: "../avatars/photos/f07.png", name: "Luann Van Houten",             email: "Luann.VanHouten@disney.com",              roles: ["Planner", "Campaign Planner"],                                      status: "Active",   team: "Agency Sales",               title: "Manager, Client Relations",            region: "ANZ",   lastLogin: "Apr 25, 2026, 8:30 AM"   },
-  { id: "u040", avatar: "../avatars/photos/f08.png", name: "Agnes Skinner",                email: "Agnes.Skinner@disney.com",                roles: ["Read-Only Viewer", "TOM Admin"],                                    status: "Active",   team: "Addressable Ad Ops",         title: "Sr. Analyst, Financial Controls",      region: "NA",    lastLogin: "Apr 17, 2026, 1:30 PM"   },
+  { id: "u031", avatar: "../avatars/photos/m25.png", name: "Mayor Quimby",                 email: "Mayor.Quimby@disney.com",                 roles: ["Planning Manager", "Planning Specialist"],                          status: "Active",   team: "Sales Planning",             title: "SVP, Sales & Partnerships",            region: "NA",    lastLogin: "Apr 3, 2026, 11:30 AM"   },
+  { id: "u032", avatar: "../avatars/photos/m26.png", name: "Hans Moleman",                 email: "Hans.Moleman@disney.com",                 roles: ["Operations Admin"],                                                 status: "Active",   team: "National Ad Sales",          title: "Associate, Billing Support",           region: "NA",    lastLogin: "Apr 18, 2026, 8:15 AM"   },
+  { id: "u033", avatar: "../avatars/photos/m27.png", name: "Gil Gunderson",                email: "Gil.Gunderson@disney.com",                roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Inactive", team: "National Ad Sales",          title: "Coordinator, New Business",            region: "NA",    lastLogin: "Jan 15, 2026, 3:00 PM"   },
+  { id: "u034", avatar: "../avatars/photos/m28.png", name: "Rainier Wolfcastle",           email: "Rainier.Wolfcastle@disney.com",           roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Client & Brand Solutions",   title: "Director, Content Partnerships",       region: "EMEA",  lastLogin: "Apr 14, 2026, 9:00 AM"   },
+  { id: "u035", avatar: "../avatars/photos/m29.png", name: "Troy McClure",                 email: "Troy.McClure@disney.com",                 roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Sales Planning",             title: "Manager, Cross-Platform Planning",     region: "NA",    lastLogin: "Apr 10, 2026, 2:45 PM"   },
+  { id: "u036", avatar: "../avatars/photos/m30.png", name: "Disco Stu",                    email: "Disco.Stu@disney.com",                    roles: ["Ad Operations Specialist"],                                         status: "Active",   team: "Ad Operations",              title: "Analyst, Creative Ad Solutions",       region: "LATAM", lastLogin: "Mar 28, 2026, 12:00 PM"  },
+  { id: "u037", avatar: "../avatars/photos/m31.png", name: "Dr. Nick Riviera",             email: "Nick.Riviera@disney.com",                 roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Active",   team: "Revenue & Yield Management", title: "Analyst, Revenue Reconciliation",      region: "NA",    lastLogin: "Apr 22, 2026, 11:15 AM"  },
+  { id: "u038", avatar: "../avatars/photos/m32.png", name: "Kirk Van Houten",              email: "Kirk.VanHouten@disney.com",               roles: ["Operations Admin", "Planning Specialist"],                          status: "Inactive", team: "Sales Planning",             title: "Associate, Inventory Management",      region: "NA",    lastLogin: "Mar 5, 2026, 4:00 PM"    },
+  { id: "u039", avatar: "../avatars/photos/f07.png", name: "Luann Van Houten",             email: "Luann.VanHouten@disney.com",              roles: ["Planner", "Campaign Planner"],                                      status: "Active",   team: "Agency & Holding Company Sales", title: "Manager, Client Relations",            region: "ANZ",   lastLogin: "Apr 25, 2026, 8:30 AM"   },
+  { id: "u040", avatar: "../avatars/photos/f08.png", name: "Agnes Skinner",                email: "Agnes.Skinner@disney.com",                roles: ["Read-Only Viewer", "TOM Admin"],                                    status: "Active",   team: "National Ad Sales",          title: "Sr. Analyst, Financial Controls",      region: "NA",    lastLogin: "Apr 17, 2026, 1:30 PM"   },
 
   /* ── Page 5 ── */
-  { id: "u041", avatar: "../avatars/photos/m43.png", name: "Snake Jailbird",               email: "Snake.Jailbird@disney.com",               roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Coordinator, Programmatic Deals",      region: "NA",    lastLogin: "Apr 2, 2026, 9:15 AM"    },
-  { id: "u042", avatar: "../avatars/photos/m44.png", name: "Jimbo Jones",                  email: "Jimbo.Jones@disney.com",                  roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Analyst, Ad Targeting",                region: "NA",    lastLogin: "Apr 30, 2026, 2:00 PM"   },
-  { id: "u043", avatar: "../avatars/photos/m45.png", name: "Dolph Starbeam",               email: "Dolph.Starbeam@disney.com",               roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy",         region: "EMEA",  lastLogin: "Mar 20, 2026, 10:45 AM"  },
-  { id: "u044", avatar: "../avatars/photos/f09.png", name: "Sherri Mackleberry",           email: "Sherri.Mackleberry@disney.com",           roles: ["Planner"],                                                          status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Audience Strategy",       region: "NA",    lastLogin: "May 1, 2026, 8:45 AM"    },
-  { id: "u045", avatar: "../avatars/photos/f10.png", name: "Terri Mackleberry",            email: "Terri.Mackleberry@disney.com",            roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Integrated Media",        region: "NA",    lastLogin: "Apr 28, 2026, 5:00 PM"   },
-  { id: "u046", avatar: "../avatars/photos/m33.png", name: "Martin Prince",                email: "Martin.Prince@disney.com",                roles: ["Read-Only Viewer", "Planning Manager"],                             status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Data Governance",         region: "NA",    lastLogin: "Apr 24, 2026, 3:15 PM"   },
-  { id: "u047", avatar: "../avatars/photos/m34.png", name: "Timothy Lovejoy",              email: "Timothy.Lovejoy@disney.com",              roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts",        region: "ANZ",   lastLogin: "Apr 19, 2026, 10:30 AM"  },
-  { id: "u048", avatar: "../avatars/photos/m35.png", name: "Cletus Spuckler",              email: "Cletus.Spuckler@disney.com",              roles: ["Operations Admin", "Read-Only Viewer"],                             status: "Active",   team: "Ad Sales Finance",           title: "Coordinator, Invoice Processing",      region: "NA",    lastLogin: "Apr 13, 2026, 12:00 PM"  },
+  { id: "u041", avatar: "../avatars/photos/m43.png", name: "Snake Jailbird",               email: "Snake.Jailbird@disney.com",               roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Active",   team: "Addressable & Programmatic Sales", title: "Coordinator, Programmatic Deals",      region: "NA",    lastLogin: "Apr 2, 2026, 9:15 AM"    },
+  { id: "u042", avatar: "../avatars/photos/m44.png", name: "Jimbo Jones",                  email: "Jimbo.Jones@disney.com",                  roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable & Programmatic Sales", title: "Analyst, Ad Targeting",                region: "NA",    lastLogin: "Apr 30, 2026, 2:00 PM"   },
+  { id: "u043", avatar: "../avatars/photos/m45.png", name: "Dolph Starbeam",               email: "Dolph.Starbeam@disney.com",               roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Operations",              title: "Associate, Campaign Strategy",         region: "EMEA",  lastLogin: "Mar 20, 2026, 10:45 AM"  },
+  { id: "u044", avatar: "../avatars/photos/f09.png", name: "Sherri Mackleberry",           email: "Sherri.Mackleberry@disney.com",           roles: ["Planner"],                                                          status: "Active",   team: "Sales Planning",             title: "Sr. Planner, Audience Strategy",       region: "NA",    lastLogin: "May 1, 2026, 8:45 AM"    },
+  { id: "u045", avatar: "../avatars/photos/f10.png", name: "Terri Mackleberry",            email: "Terri.Mackleberry@disney.com",            roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Sales Planning",             title: "Sr. Planner, Integrated Media",        region: "NA",    lastLogin: "Apr 28, 2026, 5:00 PM"   },
+  { id: "u046", avatar: "../avatars/photos/m33.png", name: "Martin Prince",                email: "Martin.Prince@disney.com",                roles: ["Read-Only Viewer", "Planning Manager"],                             status: "Active",   team: "Sales Planning",             title: "Sr. Analyst, Data Governance",         region: "NA",    lastLogin: "Apr 24, 2026, 3:15 PM"   },
+  { id: "u047", avatar: "../avatars/photos/m34.png", name: "Timothy Lovejoy",              email: "Timothy.Lovejoy@disney.com",              roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "National Ad Sales",          title: "Director, Strategic Accounts",        region: "ANZ",   lastLogin: "Apr 19, 2026, 10:30 AM"  },
+  { id: "u048", avatar: "../avatars/photos/m35.png", name: "Cletus Spuckler",              email: "Cletus.Spuckler@disney.com",              roles: ["Operations Admin", "Read-Only Viewer"],                             status: "Active",   team: "National Ad Sales",          title: "Coordinator, Invoice Processing",      region: "NA",    lastLogin: "Apr 13, 2026, 12:00 PM"  },
   { id: "u049", avatar: "../avatars/photos/f11.png", name: "Cookie Kwan",                  email: "Cookie.Kwan@disney.com",                  roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "Sr. Manager, Regional Sales",          region: "ANZ",   lastLogin: "May 2, 2026, 9:00 AM"    },
-  { id: "u050", avatar: "../avatars/photos/f12.png", name: "Lindsey Naegle",               email: "Lindsey.Naegle@disney.com",               roles: ["Operations Admin", "Planning Specialist", "TOM Admin"],             status: "Active",   team: "Yield & Inventory",          title: "Director, Yield Strategy",             region: "NA",    lastLogin: "Apr 26, 2026, 4:30 PM"   },
+  { id: "u050", avatar: "../avatars/photos/f12.png", name: "Lindsey Naegle",               email: "Lindsey.Naegle@disney.com",               roles: ["Operations Admin", "Planning Specialist", "TOM Admin"],             status: "Active",   team: "Revenue & Yield Management", title: "Director, Yield Strategy",             region: "NA",    lastLogin: "Apr 26, 2026, 4:30 PM"   },
 
   /* ── Page 6 ── */
-  { id: "u051", avatar: "../avatars/photos/m36.png", name: "Lionel Hutz",                  email: "Lionel.Hutz@disney.com",                  roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Manager, Business Development",        region: "NA",    lastLogin: "Apr 11, 2026, 2:45 PM"   },
-  { id: "u052", avatar: "../avatars/photos/f13.png", name: "Helen Lovejoy",                email: "Helen.Lovejoy@disney.com",                roles: ["Planner", "Campaign Planner", "Planning Specialist"],               status: "Active",   team: "Agency Sales",               title: "Sr. Planner, Agency Investment",        region: "EMEA",  lastLogin: "Apr 22, 2026, 10:00 AM"  },
-  { id: "u053", avatar: "../avatars/photos/m37.png", name: "Artie Ziff",                   email: "Artie.Ziff@disney.com",                   roles: ["Planning Manager", "Core Planning Admin"],                          status: "Active",   team: "Streaming Revenue",          title: "VP, Digital Revenue",                  region: "NA",    lastLogin: "May 3, 2026, 11:00 AM"   },
-  { id: "u054", avatar: "../avatars/photos/f14.png", name: "Ruth Powers",                  email: "Ruth.Powers@disney.com",                  roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Systems",             region: "NA",    lastLogin: "Apr 27, 2026, 3:30 PM"   },
-  { id: "u055", avatar: "../avatars/photos/m38.png", name: "Herman Hermann",               email: "Herman.Hermann@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Inactive", team: "Ad Sales Finance",           title: "Analyst, Cost Allocation",             region: "LATAM", lastLogin: "Feb 8, 2026, 9:15 AM"    },
-  { id: "u056", avatar: "../avatars/photos/m39.png", name: "Wendell Borton",               email: "Wendell.Borton@disney.com",               roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Associate, Creative Operations",       region: "NA",    lastLogin: "Apr 23, 2026, 1:45 PM"   },
-  { id: "u057", avatar: "../avatars/photos/m40.png", name: "Lyle Lanley",                  email: "Lyle.Lanley@disney.com",                  roles: ["Campaign Planner", "Planning Manager", "Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Sr. Manager, Programmatic Sales",      region: "NA",    lastLogin: "May 1, 2026, 7:30 PM"    },
-  { id: "u058", avatar: "../avatars/photos/m41.png", name: "Lewis Clark",                  email: "Lewis.Clark@disney.com",                  roles: ["Operations Admin"],                                                 status: "Inactive", team: "Yield & Inventory",          title: "Analyst, Inventory Forecasting",       region: "ANZ",   lastLogin: "Mar 14, 2026, 11:00 AM"  },
-  { id: "u059", avatar: "../avatars/photos/m42.png", name: "Kearney Zzyzwicz",             email: "Kearney.Zzyzwicz@disney.com",             roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Global Partnerships",        title: "Coordinator, Partner Relations",       region: "EMEA",  lastLogin: "Apr 16, 2026, 6:15 PM"   },
-  { id: "u060", avatar: "../avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon",   email: "Manjula.Nahasapeemapetilon@disney.com",   roles: ["Operations Admin", "Read-Only Viewer", "Planner"],                  status: "Active",   team: "Addressable Ad Ops",         title: "Lead, Operations Support",             region: "ANZ",   lastLogin: "Apr 29, 2026, 8:00 AM"   }
+  { id: "u051", avatar: "../avatars/photos/m36.png", name: "Lionel Hutz",                  email: "Lionel.Hutz@disney.com",                  roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client & Brand Solutions",   title: "Manager, Business Development",        region: "NA",    lastLogin: "Apr 11, 2026, 2:45 PM"   },
+  { id: "u052", avatar: "../avatars/photos/f13.png", name: "Helen Lovejoy",                email: "Helen.Lovejoy@disney.com",                roles: ["Planner", "Campaign Planner", "Planning Specialist"],               status: "Active",   team: "Agency & Holding Company Sales", title: "Sr. Planner, Agency Investment",        region: "EMEA",  lastLogin: "Apr 22, 2026, 10:00 AM"  },
+  { id: "u053", avatar: "../avatars/photos/m37.png", name: "Artie Ziff",                   email: "Artie.Ziff@disney.com",                   roles: ["Planning Manager", "Core Planning Admin"],                          status: "Active",   team: "Revenue & Yield Management", title: "VP, Digital Revenue",                  region: "NA",    lastLogin: "May 3, 2026, 11:00 AM"   },
+  { id: "u054", avatar: "../avatars/photos/f14.png", name: "Ruth Powers",                  email: "Ruth.Powers@disney.com",                  roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Revenue & Yield Management", title: "Manager, Revenue Systems",             region: "NA",    lastLogin: "Apr 27, 2026, 3:30 PM"   },
+  { id: "u055", avatar: "../avatars/photos/m38.png", name: "Herman Hermann",               email: "Herman.Hermann@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Inactive", team: "Revenue & Yield Management", title: "Analyst, Cost Allocation",             region: "LATAM", lastLogin: "Feb 8, 2026, 9:15 AM"    },
+  { id: "u056", avatar: "../avatars/photos/m39.png", name: "Wendell Borton",               email: "Wendell.Borton@disney.com",               roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Operations",              title: "Associate, Creative Operations",       region: "NA",    lastLogin: "Apr 23, 2026, 1:45 PM"   },
+  { id: "u057", avatar: "../avatars/photos/m40.png", name: "Lyle Lanley",                  email: "Lyle.Lanley@disney.com",                  roles: ["Campaign Planner", "Planning Manager", "Planner"],                  status: "Active",   team: "Addressable & Programmatic Sales", title: "Sr. Manager, Programmatic Sales",      region: "NA",    lastLogin: "May 1, 2026, 7:30 PM"    },
+  { id: "u058", avatar: "../avatars/photos/m41.png", name: "Lewis Clark",                  email: "Lewis.Clark@disney.com",                  roles: ["Operations Admin"],                                                 status: "Inactive", team: "Revenue & Yield Management", title: "Analyst, Inventory Forecasting",       region: "ANZ",   lastLogin: "Mar 14, 2026, 11:00 AM"  },
+  { id: "u059", avatar: "../avatars/photos/m42.png", name: "Kearney Zzyzwicz",             email: "Kearney.Zzyzwicz@disney.com",             roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Agency & Holding Company Sales", title: "Coordinator, Partner Relations",       region: "EMEA",  lastLogin: "Apr 16, 2026, 6:15 PM"   },
+  { id: "u060", avatar: "../avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon",   email: "Manjula.Nahasapeemapetilon@disney.com",   roles: ["Operations Admin", "Read-Only Viewer", "Planner"],                  status: "Active",   team: "Ad Operations",              title: "Lead, Operations Support",             region: "ANZ",   lastLogin: "Apr 29, 2026, 8:00 AM"   }
 ];
 
 var ORIGINAL_ORDER = DATA.slice();
@@ -82,76 +82,88 @@ var TOTAL_ITEMS = 610;
 var INTERNAL_ORIGINAL_SNAPSHOT = ORIGINAL_ORDER.slice();
 var INTERNAL_TOTAL = TOTAL_ITEMS;
 
-/* External (agency / partner) users — 12 representative records.
+/* External (agency / brand partner) users — 60 representative records.
    Structure matches internal DATA except: no `avatar` (initials shown),
-   no `team` (replaced by `organization` in the Team column). */
+   no `team` (replaced by `organization` in the Company column).
+
+   Frances QA 2026-06-08 cleanup pass:
+   The approved-company allow-list collapsed to 12 names (7 agencies +
+   5 brand advertisers). Previously seeded sub-agencies (Mindshare,
+   Wavemaker, Hearts & Science, Starcom, Zenith, Carat, Dentsu, etc.)
+   and brand advertisers outside the approved set (Coca-Cola, Nike,
+   Apple, Toyota, etc.) are remapped to their holding company or to
+   one of the approved Disney Ad Sales advertiser accounts so the
+   external dataset stays realistic without inventing placeholder
+   companies. User names, IDs, roles, status, region, and lastLogin
+   are preserved 1:1; only `organization`, `email`, and a few obvious
+   sport-/retail-specific titles are updated to fit the new account. */
 var EXTERNAL_DATA_ARRAY = [
-  /* ── Page 1 — Omnicom, OMD, PHD, Hearts & Science, GroupM ── */
-  { id: "e001", name: "Rachel Morales",       email: "r.morales@omnicommedia.com",   roles: ["Agency Admin"],             status: "Active",   organization: "Omnicom Media Group", title: "VP, Media Partnerships",           region: "NA",    lastLogin: "Apr 30, 2026, 10:15 AM"  },
-  { id: "e002", name: "Kevin Zhang",          email: "k.zhang@omnicommedia.com",     roles: ["Campaign Planner"],         status: "Active",   organization: "Omnicom Media Group", title: "Group Director, Media",            region: "NA",    lastLogin: "May 2, 2026, 3:00 PM"    },
-  { id: "e003", name: "Danielle Foster",      email: "d.foster@omd.com",             roles: ["Campaign Planner"],         status: "Active",   organization: "OMD",                 title: "Sr. Media Planner",                region: "NA",    lastLogin: "Apr 28, 2026, 2:30 PM"   },
-  { id: "e004", name: "James Okonkwo",        email: "j.okonkwo@omd.com",            roles: ["Planning Manager"],         status: "Active",   organization: "OMD",                 title: "Director, Media Planning",         region: "EMEA",  lastLogin: "May 1, 2026, 9:45 AM"    },
-  { id: "e005", name: "Leila Sharma",         email: "l.sharma@omd.com",             roles: ["Read-Only Viewer"],         status: "Active",   organization: "OMD",                 title: "Media Analyst",                    region: "NA",    lastLogin: "Apr 27, 2026, 11:00 AM"  },
-  { id: "e006", name: "Thomas Erikson",       email: "t.erikson@phdmedia.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "PHD",                 title: "Media Investment Lead",            region: "EMEA",  lastLogin: "Apr 24, 2026, 4:30 PM"   },
-  { id: "e007", name: "Ana Gutierrez",        email: "a.gutierrez@phdmedia.com",     roles: ["Planner"],                  status: "Active",   organization: "PHD",                 title: "Associate Media Director",         region: "LATAM", lastLogin: "May 3, 2026, 8:15 AM"    },
-  { id: "e008", name: "Michelle Kim",         email: "m.kim@heartsci.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Hearts & Science",    title: "Sr. Campaign Manager",             region: "NA",    lastLogin: "Apr 29, 2026, 1:30 PM"   },
-  { id: "e009", name: "Brandon Wu",           email: "b.wu@heartsci.com",            roles: ["Ad Operations Specialist"], status: "Active",   organization: "Hearts & Science",    title: "Programmatic Operations Lead",     region: "NA",    lastLogin: "Apr 25, 2026, 3:45 PM"   },
-  { id: "e010", name: "Sophie Laurent",       email: "s.laurent@groupm.com",         roles: ["External Partner Admin"],   status: "Active",   organization: "WPP / GroupM",        title: "Director, Partner Engagement",     region: "EMEA",  lastLogin: "May 2, 2026, 10:00 AM"   },
-  /* ── Page 2 — GroupM, Mindshare, Wavemaker, EssenceMediacom, Publicis ── */
-  { id: "e011", name: "Patrick O'Brien",      email: "p.obrien@groupm.com",          roles: ["Read-Only Viewer"],         status: "Active",   organization: "WPP / GroupM",        title: "Media Finance Analyst",            region: "NA",    lastLogin: "Apr 22, 2026, 2:15 PM"   },
-  { id: "e012", name: "Yuki Tanaka",          email: "y.tanaka@mindshare.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "Mindshare",           title: "Media Planner",                    region: "APAC",  lastLogin: "Apr 30, 2026, 9:00 AM"   },
-  { id: "e013", name: "Nadia Hassan",         email: "n.hassan@mindshare.com",       roles: ["Planning Manager"],         status: "Active",   organization: "Mindshare",           title: "Head of Planning",                 region: "EMEA",  lastLogin: "May 1, 2026, 11:30 AM"   },
-  { id: "e014", name: "Derek Williams",       email: "d.williams@mindshare.com",     roles: ["Read-Only Viewer"],         status: "Inactive", organization: "Mindshare",           title: "Digital Activation Specialist",    region: "NA",    lastLogin: "Feb 20, 2026, 3:00 PM"   },
-  { id: "e015", name: "Camille Rousseau",     email: "c.rousseau@wavemaker.com",     roles: ["Planner"],                  status: "Active",   organization: "Wavemaker",           title: "Content Investment Planner",       region: "EMEA",  lastLogin: "Apr 26, 2026, 1:00 PM"   },
-  { id: "e016", name: "Marcus Johnson",       email: "m.johnson@wavemaker.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Wavemaker",           title: "Sr. Media Planner",                region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"    },
-  { id: "e017", name: "Pooja Patel",          email: "p.patel@essencemediacom.com",  roles: ["External Partner Admin"],   status: "Active",   organization: "EssenceMediacom",     title: "Partner Solutions Director",       region: "NA",    lastLogin: "Apr 21, 2026, 4:00 PM"   },
-  { id: "e018", name: "Ryan Nguyen",          email: "r.nguyen@essencemediacom.com", roles: ["Ad Operations Specialist"], status: "Active",   organization: "EssenceMediacom",     title: "Programmatic Trader",              region: "NA",    lastLogin: "Apr 28, 2026, 10:30 AM"  },
-  { id: "e019", name: "Isabella Torres",      email: "i.torres@publicismedia.com",   roles: ["Campaign Planner"],         status: "Active",   organization: "Publicis Media",      title: "Sr. Campaign Planner",             region: "LATAM", lastLogin: "Apr 18, 2026, 2:00 PM"   },
-  { id: "e020", name: "Omar Shaikh",          email: "o.shaikh@publicismedia.com",   roles: ["Planning Manager"],         status: "Active",   organization: "Publicis Media",      title: "VP, Media Planning",               region: "NA",    lastLogin: "May 2, 2026, 9:15 AM"    },
-  /* ── Page 3 — Starcom, Zenith, Spark Foundry, IPG Mediabrands, UM ── */
-  { id: "e021", name: "Caroline Berg",        email: "c.berg@starcom.com",           roles: ["Planner"],                  status: "Active",   organization: "Starcom",             title: "Associate Media Director",         region: "EMEA",  lastLogin: "Apr 16, 2026, 11:45 AM"  },
-  { id: "e022", name: "Andre Dupont",         email: "a.dupont@starcom.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Starcom",             title: "Media Investment Director",        region: "EMEA",  lastLogin: "Apr 29, 2026, 3:30 PM"   },
-  { id: "e023", name: "Hiroshi Nakamura",     email: "h.nakamura@zenith.com",        roles: ["Read-Only Viewer"],         status: "Active",   organization: "Zenith",              title: "Digital Planner",                  region: "APAC",  lastLogin: "Apr 14, 2026, 10:00 AM"  },
-  { id: "e024", name: "Elena Petrov",         email: "e.petrov@zenith.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "Zenith",              title: "Sr. Programmatic Planner",         region: "EMEA",  lastLogin: "May 1, 2026, 8:00 AM"    },
-  { id: "e025", name: "Jasmine Reed",         email: "j.reed@sparkfoundry.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Spark Foundry",       title: "Media Campaign Manager",           region: "NA",    lastLogin: "Apr 24, 2026, 2:45 PM"   },
-  { id: "e026", name: "Trevor Blackwood",     email: "t.blackwood@sparkfoundry.com", roles: ["Planner"],                  status: "Inactive", organization: "Spark Foundry",       title: "Media Planner",                    region: "NA",    lastLogin: "Jan 30, 2026, 11:00 AM"  },
-  { id: "e027", name: "Amara Diallo",         email: "a.diallo@ipgmediabrands.com",  roles: ["External Partner Admin"],   status: "Active",   organization: "IPG Mediabrands",     title: "Partner Activation Lead",          region: "NA",    lastLogin: "Apr 20, 2026, 4:15 PM"   },
-  { id: "e028", name: "Steven Park",          email: "s.park@ipgmediabrands.com",    roles: ["Read-Only Viewer"],         status: "Active",   organization: "IPG Mediabrands",     title: "Investment Analyst",               region: "NA",    lastLogin: "May 2, 2026, 1:30 PM"    },
-  { id: "e029", name: "Fatima Al-Rashid",     email: "f.alrashid@umww.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "UM",                  title: "Global Media Planner",             region: "EMEA",  lastLogin: "Apr 17, 2026, 9:30 AM"   },
-  { id: "e030", name: "Lucas Martins",        email: "l.martins@umww.com",           roles: ["Planner"],                  status: "Active",   organization: "UM",                  title: "Associate Media Planner",          region: "LATAM", lastLogin: "Apr 27, 2026, 2:00 PM"   },
-  /* ── Page 4 — Initiative, Dentsu, Carat, iProspect, Havas ── */
-  { id: "e031", name: "Diana Hoffman",        email: "d.hoffman@initiative.com",     roles: ["Planning Manager"],         status: "Active",   organization: "Initiative",          title: "Director, Strategic Planning",     region: "NA",    lastLogin: "May 3, 2026, 10:00 AM"   },
-  { id: "e032", name: "Kwame Asante",         email: "k.asante@initiative.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Initiative",          title: "Sr. Media Planner",                region: "NA",    lastLogin: "Apr 22, 2026, 3:15 PM"   },
-  { id: "e033", name: "Mei-Ling Chen",        email: "m.chen@dentsu.com",            roles: ["Agency Admin"],             status: "Active",   organization: "Dentsu",              title: "Managing Director",                region: "APAC",  lastLogin: "Apr 15, 2026, 9:45 AM"   },
-  { id: "e034", name: "Roberto Russo",        email: "r.russo@dentsu.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Dentsu",              title: "Media Activation Manager",         region: "EMEA",  lastLogin: "Apr 30, 2026, 11:30 AM"  },
-  { id: "e035", name: "Zoe Mitchell",         email: "z.mitchell@carat.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Carat",               title: "Digital Campaign Planner",         region: "NA",    lastLogin: "Apr 28, 2026, 2:00 PM"   },
-  { id: "e036", name: "Aleksei Volkov",       email: "a.volkov@carat.com",           roles: ["Planner"],                  status: "Active",   organization: "Carat",               title: "Media Planner",                    region: "EMEA",  lastLogin: "May 1, 2026, 10:15 AM"   },
-  { id: "e037", name: "Tanya Iyer",           email: "t.iyer@iprospect.com",         roles: ["Ad Operations Specialist"], status: "Active",   organization: "iProspect",           title: "Biddable Media Specialist",        region: "NA",    lastLogin: "Apr 19, 2026, 4:30 PM"   },
-  { id: "e038", name: "Christopher Lam",      email: "c.lam@iprospect.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "iProspect",           title: "Performance Media Manager",        region: "APAC",  lastLogin: "Apr 25, 2026, 8:45 AM"   },
-  { id: "e039", name: "Samira Khalil",        email: "s.khalil@havasmedia.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Havas Media",         title: "Media Campaign Lead",              region: "EMEA",  lastLogin: "May 2, 2026, 3:45 PM"    },
-  { id: "e040", name: "Ben Nakajima",         email: "b.nakajima@havasmedia.com",    roles: ["Read-Only Viewer"],         status: "Active",   organization: "Havas Media",         title: "Media Analytics Lead",             region: "APAC",  lastLogin: "Apr 13, 2026, 12:00 PM"  },
-  /* ── Page 5 — Horizon, Stagwell, Assembly, Amazon Ads, Walmart Connect, Coca-Cola ── */
-  { id: "e041", name: "Veronica Cruz",        email: "v.cruz@horizonmedia.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Sr. Campaign Manager",             region: "NA",    lastLogin: "Apr 29, 2026, 10:30 AM"  },
-  { id: "e042", name: "Daniel Schwartz",      email: "d.schwartz@horizonmedia.com",  roles: ["Planning Manager"],         status: "Active",   organization: "Horizon Media",       title: "VP, Investment",                   region: "NA",    lastLogin: "May 3, 2026, 9:00 AM"    },
-  { id: "e043", name: "Naomi Clarke",         email: "n.clarke@stagwellglobal.com",  roles: ["External Partner Admin"],   status: "Active",   organization: "Stagwell",            title: "Partner Development Director",     region: "NA",    lastLogin: "Apr 23, 2026, 1:15 PM"   },
-  { id: "e044", name: "Felix Andersson",      email: "f.andersson@stagwellglobal.com", roles: ["Campaign Planner"],       status: "Active",   organization: "Stagwell",            title: "Media Strategy Manager",           region: "EMEA",  lastLogin: "Apr 26, 2026, 4:00 PM"   },
-  { id: "e045", name: "Jade Thompson",        email: "j.thompson@assemblyglobal.com", roles: ["Campaign Planner"],        status: "Active",   organization: "Assembly",            title: "Sr. Media Planner",                region: "NA",    lastLogin: "May 1, 2026, 2:30 PM"    },
-  { id: "e046", name: "Ravi Mehta",           email: "r.mehta@assemblyg.com",        roles: ["Ad Operations Specialist"], status: "Active",   organization: "Assembly",            title: "Programmatic Lead",                region: "NA",    lastLogin: "Apr 21, 2026, 11:00 AM"  },
-  { id: "e047", name: "Christine Wu",         email: "c.wu@amazon.com",              roles: ["External Partner Admin"],   status: "Active",   organization: "Amazon Ads",          title: "Partner Account Manager",          region: "NA",    lastLogin: "Apr 28, 2026, 9:30 AM"   },
-  { id: "e048", name: "Michael Torres",       email: "m.torres@amazon.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "Amazon Ads",          title: "Advertising Campaign Manager",     region: "NA",    lastLogin: "May 2, 2026, 4:15 PM"    },
-  { id: "e049", name: "Ashley Brennan",       email: "a.brennan@walmartconnect.com", roles: ["Read-Only Viewer"],         status: "Active",   organization: "Walmart Connect",     title: "Retail Media Planner",             region: "NA",    lastLogin: "Apr 24, 2026, 10:45 AM"  },
-  { id: "e050", name: "Sophia Adebayo",       email: "s.adebayo@coca-cola.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Coca-Cola",           title: "Global Media Manager",             region: "NA",    lastLogin: "Apr 30, 2026, 3:00 PM"   },
-  /* ── Page 6 — Coca-Cola, PepsiCo, P&G, Nike, Toyota, Verizon, T-Mobile, Samsung, Apple ── */
-  { id: "e051", name: "Gregory Faulkner",     email: "g.faulkner@coca-cola.com",     roles: ["Read-Only Viewer"],         status: "Active",   organization: "Coca-Cola",           title: "Media Analytics Director",         region: "NA",    lastLogin: "Apr 17, 2026, 2:15 PM"   },
-  { id: "e052", name: "Natalia Romero",       email: "n.romero@pepsico.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "PepsiCo",             title: "Sr. Media Manager",                region: "NA",    lastLogin: "May 3, 2026, 11:30 AM"   },
-  { id: "e053", name: "William Chen",         email: "w.chen@pg.com",                roles: ["Planning Manager"],         status: "Active",   organization: "Procter & Gamble",    title: "Media Investment Lead",            region: "NA",    lastLogin: "Apr 25, 2026, 9:00 AM"   },
-  { id: "e054", name: "Amelia Grant",         email: "a.grant@pg.com",               roles: ["Campaign Planner"],         status: "Active",   organization: "Procter & Gamble",    title: "Sr. Brand Media Planner",          region: "NA",    lastLogin: "Apr 29, 2026, 1:45 PM"   },
-  { id: "e055", name: "Jordan Rivera",        email: "j.rivera@nike.com",            roles: ["Campaign Planner"],         status: "Active",   organization: "Nike",                title: "Global Sports Media Manager",      region: "NA",    lastLogin: "Apr 22, 2026, 4:00 PM"   },
-  { id: "e056", name: "Takeshi Yamamoto",     email: "t.yamamoto@toyota.com",        roles: ["Read-Only Viewer"],         status: "Active",   organization: "Toyota",              title: "Media Planning Specialist",        region: "APAC",  lastLogin: "Apr 15, 2026, 10:30 AM"  },
-  { id: "e057", name: "Catherine O'Sullivan", email: "c.osullivan@verizon.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Verizon",             title: "National Media Planner",           region: "NA",    lastLogin: "May 2, 2026, 8:30 AM"    },
-  { id: "e058", name: "Brandon Nguyen",       email: "b.nguyen@t-mobile.com",        roles: ["Ad Operations Specialist"], status: "Active",   organization: "T-Mobile",            title: "Digital Activation Manager",       region: "NA",    lastLogin: "Apr 27, 2026, 2:45 PM"   },
-  { id: "e059", name: "Ji-Young Park",        email: "j.park@samsung.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Samsung",             title: "Sr. Campaign Strategist",          region: "APAC",  lastLogin: "Apr 20, 2026, 11:15 AM"  },
-  { id: "e060", name: "Rachel Huang",         email: "r.huang@apple.com",            roles: ["External Partner Admin"],   status: "Inactive", organization: "Apple",               title: "Partner Channel Manager",          region: "NA",    lastLogin: "Feb 11, 2026, 3:30 PM"   }
+  /* ── Page 1 — Omnicom Media Group, OMD, PHD, WPP / GroupM ── */
+  { id: "e001", name: "Rachel Morales",       email: "r.morales@omnicommedia.com",       roles: ["Agency Admin"],             status: "Active",   organization: "Omnicom Media Group", title: "VP, Media Partnerships",           region: "NA",    lastLogin: "Apr 30, 2026, 10:15 AM"  },
+  { id: "e002", name: "Kevin Zhang",          email: "k.zhang@omnicommedia.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Omnicom Media Group", title: "Group Director, Media",            region: "NA",    lastLogin: "May 2, 2026, 3:00 PM"    },
+  { id: "e003", name: "Danielle Foster",      email: "d.foster@omd.com",                 roles: ["Campaign Planner"],         status: "Active",   organization: "OMD",                 title: "Sr. Media Planner",                region: "NA",    lastLogin: "Apr 28, 2026, 2:30 PM"   },
+  { id: "e004", name: "James Okonkwo",        email: "j.okonkwo@omd.com",                roles: ["Planning Manager"],         status: "Active",   organization: "OMD",                 title: "Director, Media Planning",         region: "EMEA",  lastLogin: "May 1, 2026, 9:45 AM"    },
+  { id: "e005", name: "Leila Sharma",         email: "l.sharma@omd.com",                 roles: ["Read-Only Viewer"],         status: "Active",   organization: "OMD",                 title: "Media Analyst",                    region: "NA",    lastLogin: "Apr 27, 2026, 11:00 AM"  },
+  { id: "e006", name: "Thomas Erikson",       email: "t.erikson@phdmedia.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "PHD",                 title: "Media Investment Lead",            region: "EMEA",  lastLogin: "Apr 24, 2026, 4:30 PM"   },
+  { id: "e007", name: "Ana Gutierrez",        email: "a.gutierrez@phdmedia.com",         roles: ["Planner"],                  status: "Active",   organization: "PHD",                 title: "Associate Media Director",         region: "LATAM", lastLogin: "May 3, 2026, 8:15 AM"    },
+  { id: "e008", name: "Michelle Kim",         email: "m.kim@omnicommedia.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Omnicom Media Group", title: "Sr. Campaign Manager",             region: "NA",    lastLogin: "Apr 29, 2026, 1:30 PM"   },
+  { id: "e009", name: "Brandon Wu",           email: "b.wu@omnicommedia.com",            roles: ["Ad Operations Specialist"], status: "Active",   organization: "Omnicom Media Group", title: "Programmatic Operations Lead",     region: "NA",    lastLogin: "Apr 25, 2026, 3:45 PM"   },
+  { id: "e010", name: "Sophie Laurent",       email: "s.laurent@groupm.com",             roles: ["External Partner Admin"],   status: "Active",   organization: "WPP / GroupM",        title: "Director, Partner Engagement",     region: "EMEA",  lastLogin: "May 2, 2026, 10:00 AM"   },
+  /* ── Page 2 — WPP / GroupM, Publicis Media ── */
+  { id: "e011", name: "Patrick O'Brien",      email: "p.obrien@groupm.com",              roles: ["Read-Only Viewer"],         status: "Active",   organization: "WPP / GroupM",        title: "Media Finance Analyst",            region: "NA",    lastLogin: "Apr 22, 2026, 2:15 PM"   },
+  { id: "e012", name: "Yuki Tanaka",          email: "y.tanaka@groupm.com",              roles: ["Campaign Planner"],         status: "Active",   organization: "WPP / GroupM",        title: "Media Planner",                    region: "APAC",  lastLogin: "Apr 30, 2026, 9:00 AM"   },
+  { id: "e013", name: "Nadia Hassan",         email: "n.hassan@groupm.com",              roles: ["Planning Manager"],         status: "Active",   organization: "WPP / GroupM",        title: "Head of Planning",                 region: "EMEA",  lastLogin: "May 1, 2026, 11:30 AM"   },
+  { id: "e014", name: "Derek Williams",       email: "d.williams@groupm.com",            roles: ["Read-Only Viewer"],         status: "Inactive", organization: "WPP / GroupM",        title: "Digital Activation Specialist",    region: "NA",    lastLogin: "Feb 20, 2026, 3:00 PM"   },
+  { id: "e015", name: "Camille Rousseau",     email: "c.rousseau@groupm.com",            roles: ["Planner"],                  status: "Active",   organization: "WPP / GroupM",        title: "Content Investment Planner",       region: "EMEA",  lastLogin: "Apr 26, 2026, 1:00 PM"   },
+  { id: "e016", name: "Marcus Johnson",       email: "m.johnson@groupm.com",             roles: ["Campaign Planner"],         status: "Active",   organization: "WPP / GroupM",        title: "Sr. Media Planner",                region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"    },
+  { id: "e017", name: "Pooja Patel",          email: "p.patel@groupm.com",               roles: ["External Partner Admin"],   status: "Active",   organization: "WPP / GroupM",        title: "Partner Solutions Director",       region: "NA",    lastLogin: "Apr 21, 2026, 4:00 PM"   },
+  { id: "e018", name: "Ryan Nguyen",          email: "r.nguyen@groupm.com",              roles: ["Ad Operations Specialist"], status: "Active",   organization: "WPP / GroupM",        title: "Programmatic Trader",              region: "NA",    lastLogin: "Apr 28, 2026, 10:30 AM"  },
+  { id: "e019", name: "Isabella Torres",      email: "i.torres@publicismedia.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "Publicis Media",      title: "Sr. Campaign Planner",             region: "LATAM", lastLogin: "Apr 18, 2026, 2:00 PM"   },
+  { id: "e020", name: "Omar Shaikh",          email: "o.shaikh@publicismedia.com",       roles: ["Planning Manager"],         status: "Active",   organization: "Publicis Media",      title: "VP, Media Planning",               region: "NA",    lastLogin: "May 2, 2026, 9:15 AM"    },
+  /* ── Page 3 — Publicis Media, IPG Mediabrands ── */
+  { id: "e021", name: "Caroline Berg",        email: "c.berg@publicismedia.com",         roles: ["Planner"],                  status: "Active",   organization: "Publicis Media",      title: "Associate Media Director",         region: "EMEA",  lastLogin: "Apr 16, 2026, 11:45 AM"  },
+  { id: "e022", name: "Andre Dupont",         email: "a.dupont@publicismedia.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "Publicis Media",      title: "Media Investment Director",        region: "EMEA",  lastLogin: "Apr 29, 2026, 3:30 PM"   },
+  { id: "e023", name: "Hiroshi Nakamura",     email: "h.nakamura@publicismedia.com",     roles: ["Read-Only Viewer"],         status: "Active",   organization: "Publicis Media",      title: "Digital Planner",                  region: "APAC",  lastLogin: "Apr 14, 2026, 10:00 AM"  },
+  { id: "e024", name: "Elena Petrov",         email: "e.petrov@publicismedia.com",       roles: ["Campaign Planner"],         status: "Active",   organization: "Publicis Media",      title: "Sr. Programmatic Planner",         region: "EMEA",  lastLogin: "May 1, 2026, 8:00 AM"    },
+  { id: "e025", name: "Jasmine Reed",         email: "j.reed@publicismedia.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Publicis Media",      title: "Media Campaign Manager",           region: "NA",    lastLogin: "Apr 24, 2026, 2:45 PM"   },
+  { id: "e026", name: "Trevor Blackwood",     email: "t.blackwood@publicismedia.com",    roles: ["Planner"],                  status: "Inactive", organization: "Publicis Media",      title: "Media Planner",                    region: "NA",    lastLogin: "Jan 30, 2026, 11:00 AM"  },
+  { id: "e027", name: "Amara Diallo",         email: "a.diallo@ipgmediabrands.com",      roles: ["External Partner Admin"],   status: "Active",   organization: "IPG Mediabrands",     title: "Partner Activation Lead",          region: "NA",    lastLogin: "Apr 20, 2026, 4:15 PM"   },
+  { id: "e028", name: "Steven Park",          email: "s.park@ipgmediabrands.com",        roles: ["Read-Only Viewer"],         status: "Active",   organization: "IPG Mediabrands",     title: "Investment Analyst",               region: "NA",    lastLogin: "May 2, 2026, 1:30 PM"    },
+  { id: "e029", name: "Fatima Al-Rashid",     email: "f.alrashid@ipgmediabrands.com",    roles: ["Campaign Planner"],         status: "Active",   organization: "IPG Mediabrands",     title: "Global Media Planner",             region: "EMEA",  lastLogin: "Apr 17, 2026, 9:30 AM"   },
+  { id: "e030", name: "Lucas Martins",        email: "l.martins@ipgmediabrands.com",     roles: ["Planner"],                  status: "Active",   organization: "IPG Mediabrands",     title: "Associate Media Planner",          region: "LATAM", lastLogin: "Apr 27, 2026, 2:00 PM"   },
+  /* ── Page 4 — IPG Mediabrands, Horizon Media ── */
+  { id: "e031", name: "Diana Hoffman",        email: "d.hoffman@ipgmediabrands.com",     roles: ["Planning Manager"],         status: "Active",   organization: "IPG Mediabrands",     title: "Director, Strategic Planning",     region: "NA",    lastLogin: "May 3, 2026, 10:00 AM"   },
+  { id: "e032", name: "Kwame Asante",         email: "k.asante@ipgmediabrands.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "IPG Mediabrands",     title: "Sr. Media Planner",                region: "NA",    lastLogin: "Apr 22, 2026, 3:15 PM"   },
+  { id: "e033", name: "Mei-Ling Chen",        email: "m.chen@horizonmedia.com",          roles: ["Agency Admin"],             status: "Active",   organization: "Horizon Media",       title: "Managing Director",                region: "APAC",  lastLogin: "Apr 15, 2026, 9:45 AM"   },
+  { id: "e034", name: "Roberto Russo",        email: "r.russo@horizonmedia.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Media Activation Manager",         region: "EMEA",  lastLogin: "Apr 30, 2026, 11:30 AM"  },
+  { id: "e035", name: "Zoe Mitchell",         email: "z.mitchell@horizonmedia.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Digital Campaign Planner",         region: "NA",    lastLogin: "Apr 28, 2026, 2:00 PM"   },
+  { id: "e036", name: "Aleksei Volkov",       email: "a.volkov@horizonmedia.com",        roles: ["Planner"],                  status: "Active",   organization: "Horizon Media",       title: "Media Planner",                    region: "EMEA",  lastLogin: "May 1, 2026, 10:15 AM"   },
+  { id: "e037", name: "Tanya Iyer",           email: "t.iyer@horizonmedia.com",          roles: ["Ad Operations Specialist"], status: "Active",   organization: "Horizon Media",       title: "Biddable Media Specialist",        region: "NA",    lastLogin: "Apr 19, 2026, 4:30 PM"   },
+  { id: "e038", name: "Christopher Lam",      email: "c.lam@horizonmedia.com",           roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Performance Media Manager",        region: "APAC",  lastLogin: "Apr 25, 2026, 8:45 AM"   },
+  { id: "e039", name: "Samira Khalil",        email: "s.khalil@horizonmedia.com",        roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Media Campaign Lead",              region: "EMEA",  lastLogin: "May 2, 2026, 3:45 PM"    },
+  { id: "e040", name: "Ben Nakajima",         email: "b.nakajima@horizonmedia.com",      roles: ["Read-Only Viewer"],         status: "Active",   organization: "Horizon Media",       title: "Media Analytics Lead",             region: "APAC",  lastLogin: "Apr 13, 2026, 12:00 PM"  },
+  /* ── Page 5 — Horizon Media, American Express, Mercedes-Benz ── */
+  { id: "e041", name: "Veronica Cruz",        email: "v.cruz@horizonmedia.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Sr. Campaign Manager",             region: "NA",    lastLogin: "Apr 29, 2026, 10:30 AM"  },
+  { id: "e042", name: "Daniel Schwartz",      email: "d.schwartz@horizonmedia.com",      roles: ["Planning Manager"],         status: "Active",   organization: "Horizon Media",       title: "VP, Investment",                   region: "NA",    lastLogin: "May 3, 2026, 9:00 AM"    },
+  { id: "e043", name: "Naomi Clarke",         email: "n.clarke@horizonmedia.com",        roles: ["External Partner Admin"],   status: "Active",   organization: "Horizon Media",       title: "Partner Development Director",     region: "NA",    lastLogin: "Apr 23, 2026, 1:15 PM"   },
+  { id: "e044", name: "Felix Andersson",      email: "f.andersson@horizonmedia.com",     roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Media Strategy Manager",           region: "EMEA",  lastLogin: "Apr 26, 2026, 4:00 PM"   },
+  { id: "e045", name: "Jade Thompson",        email: "j.thompson@horizonmedia.com",      roles: ["Campaign Planner"],         status: "Active",   organization: "Horizon Media",       title: "Sr. Media Planner",                region: "NA",    lastLogin: "May 1, 2026, 2:30 PM"    },
+  { id: "e046", name: "Ravi Mehta",           email: "r.mehta@horizonmedia.com",         roles: ["Ad Operations Specialist"], status: "Active",   organization: "Horizon Media",       title: "Programmatic Lead",                region: "NA",    lastLogin: "Apr 21, 2026, 11:00 AM"  },
+  { id: "e047", name: "Christine Wu",         email: "c.wu@aexp.com",                    roles: ["External Partner Admin"],   status: "Active",   organization: "American Express",    title: "Brand Partnerships Manager",       region: "NA",    lastLogin: "Apr 28, 2026, 9:30 AM"   },
+  { id: "e048", name: "Michael Torres",       email: "m.torres@aexp.com",                roles: ["Campaign Planner"],         status: "Active",   organization: "American Express",    title: "Advertising Campaign Manager",     region: "NA",    lastLogin: "May 2, 2026, 4:15 PM"    },
+  { id: "e049", name: "Ashley Brennan",       email: "a.brennan@aexp.com",               roles: ["Read-Only Viewer"],         status: "Active",   organization: "American Express",    title: "Brand Media Planner",              region: "NA",    lastLogin: "Apr 24, 2026, 10:45 AM"  },
+  { id: "e050", name: "Sophia Adebayo",       email: "s.adebayo@mbusa.com",              roles: ["Campaign Planner"],         status: "Active",   organization: "Mercedes-Benz",       title: "Global Media Manager",             region: "NA",    lastLogin: "Apr 30, 2026, 3:00 PM"   },
+  /* ── Page 6 — Mercedes-Benz, Progressive, Honda, Lexus ── */
+  { id: "e051", name: "Gregory Faulkner",     email: "g.faulkner@mbusa.com",             roles: ["Read-Only Viewer"],         status: "Active",   organization: "Mercedes-Benz",       title: "Media Analytics Director",         region: "NA",    lastLogin: "Apr 17, 2026, 2:15 PM"   },
+  { id: "e052", name: "Natalia Romero",       email: "n.romero@mbusa.com",               roles: ["Campaign Planner"],         status: "Active",   organization: "Mercedes-Benz",       title: "Sr. Media Manager",                region: "NA",    lastLogin: "May 3, 2026, 11:30 AM"   },
+  { id: "e053", name: "William Chen",         email: "w.chen@progressive.com",           roles: ["Planning Manager"],         status: "Active",   organization: "Progressive",         title: "Media Investment Lead",            region: "NA",    lastLogin: "Apr 25, 2026, 9:00 AM"   },
+  { id: "e054", name: "Amelia Grant",         email: "a.grant@progressive.com",          roles: ["Campaign Planner"],         status: "Active",   organization: "Progressive",         title: "Sr. Brand Media Planner",          region: "NA",    lastLogin: "Apr 29, 2026, 1:45 PM"   },
+  { id: "e055", name: "Jordan Rivera",        email: "j.rivera@progressive.com",         roles: ["Campaign Planner"],         status: "Active",   organization: "Progressive",         title: "Global Media Manager",             region: "NA",    lastLogin: "Apr 22, 2026, 4:00 PM"   },
+  { id: "e056", name: "Takeshi Yamamoto",     email: "t.yamamoto@honda.com",             roles: ["Read-Only Viewer"],         status: "Active",   organization: "Honda",               title: "Media Planning Specialist",        region: "APAC",  lastLogin: "Apr 15, 2026, 10:30 AM"  },
+  { id: "e057", name: "Catherine O'Sullivan", email: "c.osullivan@honda.com",            roles: ["Campaign Planner"],         status: "Active",   organization: "Honda",               title: "National Media Planner",           region: "NA",    lastLogin: "May 2, 2026, 8:30 AM"    },
+  { id: "e058", name: "Brandon Nguyen",       email: "b.nguyen@honda.com",               roles: ["Ad Operations Specialist"], status: "Active",   organization: "Honda",               title: "Digital Activation Manager",       region: "NA",    lastLogin: "Apr 27, 2026, 2:45 PM"   },
+  { id: "e059", name: "Ji-Young Park",        email: "j.park@lexus.com",                 roles: ["Campaign Planner"],         status: "Active",   organization: "Lexus",               title: "Sr. Campaign Strategist",          region: "APAC",  lastLogin: "Apr 20, 2026, 11:15 AM"  },
+  { id: "e060", name: "Rachel Huang",         email: "r.huang@lexus.com",                roles: ["External Partner Admin"],   status: "Inactive", organization: "Lexus",               title: "Partner Channel Manager",          region: "NA",    lastLogin: "Feb 11, 2026, 3:30 PM"   }
 ];
 var EXTERNAL_TOTAL = 60;
 var userView = "internal";
@@ -435,7 +447,7 @@ function appDisplayNameForKey(key) {
   var token = appForFunctionKey(key);
   if (token === "IAM") return "Identity Access Management";
   if (token === "ICM") return "Inventory Catalog Manager";
-  if (token === "TOM") return "Target Options Manager";
+  if (token === "TOM") return "Targeting Options Manager";
   return token;
 }
 
@@ -455,7 +467,7 @@ var PC_APPS = [
   "Identity Access Management",
   "Core Planning",
   "Inventory Catalog Manager",
-  "Target Options Manager",
+  "Targeting Options Manager",
   "Disney Ads Agent",
   "Deal Configuration Manager",
   "Unified Financial System",
@@ -473,7 +485,7 @@ var PC_GROUPS_BY_APP = {
   "Identity Access Management":   ["Analytics", "Data Access", "Roles", "Users"],
   "Core Planning":                ["Order", "Media Plans", "Line Items"],
   "Inventory Catalog Manager":    ["Offerings", "Sales Packages"],
-  "Target Options Manager":       ["Targeting Options", "Targeting Groups", "Targeting Templates"],
+  "Targeting Options Manager":       ["Targeting Options", "Targeting Groups", "Targeting Templates"],
   "Disney Ads Agent":             ["Disney Ads Agent"],
   "Deal Configuration Manager":   ["Deal Types", "Package Rules", "Pricing Rules"],
   "Unified Financial System":     ["Billing Periods", "Invoice Dashboard", "Revenue Summary"],
@@ -490,7 +502,7 @@ var PC_APP_HINTS = {
   "Identity Access Management":   { name: "e.g. View IAM Analytics",          desc: "Read IAM usage analytics and access-pattern reports." },
   "Core Planning":                { name: "e.g. Approve Media Plans",         desc: "Approve media plans submitted from the planning workspace." },
   "Inventory Catalog Manager":    { name: "e.g. Manage Offerings",            desc: "Author and maintain inventory offerings and sales packages." },
-  "Target Options Manager":       { name: "e.g. Publish Targeting Templates", desc: "Curate and publish reusable targeting templates and groups." },
+  "Targeting Options Manager":       { name: "e.g. Publish Targeting Templates", desc: "Curate and publish reusable targeting templates and groups." },
   "Disney Ads Agent":             { name: "e.g. Run Forecasting Queries",     desc: "Query forecasting and planning summaries from Disney Ads Agent." },
   "Deal Configuration Manager":   { name: "e.g. Activate Deal Types",         desc: "Configure deal types, package rules, and pricing rules for active deals." },
   "Unified Financial System":     { name: "e.g. Lock Billing Period",         desc: "Lock billing periods and reconcile invoice dashboards and revenue summaries." },
@@ -1155,85 +1167,13 @@ var PERMISSION_FUNCTIONS_DATA = buildPermissionFunctionsCatalog();
                     chips now map to EDL Component Library variants
                     Demoted=Gray (Active) and Error=Red (Inactive))
 */
-var PERMISSION_CATALOG_DATA = [
-  { id: "pc001", key: "planning.order.view",          name: "View orders",             app: "Core Planning",    resource: "Orders",          action: "View",    usedIn: 8,    status: "Active"   },
-  { id: "pc002", key: "planning.order.create",        name: "Create order",            app: "Core Planning",    resource: "Orders",          action: "Create",  usedIn: 6,    status: "Active"   },
-  { id: "pc003", key: "planning.order.update",        name: "Update order",            app: "Core Planning",    resource: "Orders",          action: "Update",  usedIn: 4,    status: "Active"   },
-  { id: "pc004", key: "planning.mediaPlan.view",      name: "View media plans",        app: "Core Planning",    resource: "Media Plans",     action: "View",    usedIn: 8,    status: "Active"   },
-  { id: "pc005", key: "planning.mediaPlan.approve",   name: "Approve media plan",      app: "Core Planning",    resource: "Media Plans",     action: "Approve", usedIn: 2,    status: "Active"   },
-  { id: "pc006", key: "planning.lineItem.update",     name: "Update line items",       app: "Core Planning",    resource: "Line Items",      action: "Update",  usedIn: 4,    status: "Active"   },
-  { id: "pc007", key: "iam.user.view",                name: "View users",              app: "IAM",              resource: "Users",           action: "View",    usedIn: 2,    status: "Active"   },
-  { id: "pc008", key: "iam.role.assign",              name: "Assign roles",            app: "IAM",              resource: "Roles",           action: "Assign",  usedIn: 1,    status: "Active"   },
-  { id: "pc009", key: "icm.offering.view",            name: "View offerings",          app: "ICM",              resource: "Offerings",       action: "View",    usedIn: null, status: "Inactive" },
-  { id: "pc010", key: "adsAgent.forecast.view",       name: "View forecast output",    app: "Disney Ads Agent", resource: "Forecast Output", action: "View",    usedIn: 3,    status: "Active"   },
-  { id: "pc011", key: "planning.mediaPlan.comment",   name: "Comment on media plan",   app: "Core Planning",    resource: "Media Plans",     action: "Comment", usedIn: null, status: "Inactive" },
-  { id: "pc012", key: "planning.order.export",        name: "Export order",            app: "Core Planning",    resource: "Orders",          action: "Export",  usedIn: null, status: "Inactive" }
-];
-
-/* Filter option allow-lists for the Permissions filter drawer. The
-   Application / Action / Status combos are mounted by initCombo with
-   labels per the Frances brief (2026-05-29):
-     Application → "All Applications" / Core Planning / IAM / ICM / Disney Ads Agent
-     Action      → "All Actions" / View / Create / Update / Approve / Assign / Export
-     Status      → "All Statuses" / Active / Inactive
-   Values match the row data verbatim. The "All …" entries use the
-   sentinel value "" — a non-empty value triggers the row predicate
-   (see filteredPMData() in renderPMTable). */
-var PM_FILTER_APPS = [
-  { value: "", label: "All Applications" },
-  { value: "Core Planning",    label: "Core Planning" },
-  { value: "IAM",              label: "IAM" },
-  { value: "ICM",              label: "ICM" },
-  { value: "Disney Ads Agent", label: "Disney Ads Agent" }
-];
-var PM_FILTER_ACTIONS = [
-  { value: "", label: "All Actions" },
-  { value: "View",    label: "View" },
-  { value: "Create",  label: "Create" },
-  { value: "Update",  label: "Update" },
-  { value: "Approve", label: "Approve" },
-  { value: "Assign",  label: "Assign" },
-  { value: "Export",  label: "Export" }
-];
-var PM_FILTER_STATUS = [
-  { value: "", label: "All Statuses" },
-  { value: "Active",   label: "Active" },
-  { value: "Inactive", label: "Inactive" }
-];
-
-/* Permission Catalog table state — mirrors rp* state shape so a
-   future merge / shared table abstraction is straightforward. */
-var pmCurrentPage = 1;
-var pmPageSize = 10;
-var pmSortKey = null;
-var pmSortDir = null;
-var pmSearchTerm = "";
-
-/* Filter drawer state — committed (applied) filters live in pmFilters.
-   The drawer writes into pmFltDraft; Apply commits draft → pmFilters,
-   Cancel discards the draft, Reset clears both. Empty string means
-   "no filter on this field" so the predicate in filteredPMData()
-   short-circuits cleanly. */
-var pmFilters = {
-  fnKey:       "",
-  displayName: "",
-  app:         "",
-  resource:    "",
-  action:      "",
-  status:      ""
-};
-var pmFltDraft = {
-  fnKey:       "",
-  displayName: "",
-  app:         "",
-  resource:    "",
-  action:      "",
-  status:      ""
-};
-/* Catalog search now spans display name, resource, function key, app,
-   and action. Description/type from the legacy table were removed —
-   the catalog row shape doesn't have them. */
-var PM_SEARCH_FIELDS = ["name", "resource", "key", "app", "action"];
+/* Standalone Permission Catalog data, filter option lists, table state,
+   and search field config were REMOVED 2026-06-07 along with the
+   Permissions / Functions tab. The Edit Role permission matrix uses a
+   separate model layer (`PM_TOKEN_TO_CR_APP`, `pmGroupsForAppToken`,
+   `derivePMResourcesForApp`, `FUNCTION_REGISTRY`, `PC_GROUP_FOR_KEY`,
+   `PC_POOL_BY_GROUP`) that is intentionally KEPT — those names share
+   the `pm/PC` prefix but they are not the standalone tab. */
 
 var ROLES_PERMISSIONS_DATA = [
   { id: "r001", role: "Atlas Admin", description: "Owns full IAM administration and end-to-end Core Planning governance.", status: "Standard", createdBy: "Homer Simpson", createDate: "01/15/2026", functions: buildRoleFunctions("r001") },
@@ -1246,7 +1186,7 @@ var ROLES_PERMISSIONS_DATA = [
   { id: "r014", role: "Ad Operations Specialist", description: "Executes and manages live campaigns, handles trafficking, monitoring, and optimization tasks across active orders.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/09/2026", functions: buildRoleFunctions("r014") },
   { id: "r008", role: "Read-Only Viewer", description: "Provides read-only visibility across planning entities and details.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/10/2026", functions: buildRoleFunctions("r008") },
   { id: "r009", role: "ICM Admin", description: "Maintains Inventory Catalog Manager offerings and sales package access.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/14/2026", functions: buildRoleFunctions("r009") },
-  { id: "r010", role: "TOM Admin", description: "Administers Target Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") }
+  { id: "r010", role: "TOM Admin", description: "Administers Targeting Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") }
 ];
 var RP_ORIGINAL_ORDER = ROLES_PERMISSIONS_DATA.slice();
 
@@ -1715,7 +1655,10 @@ function updateUserViewColumns() {
   var thTm = document.querySelector("#usersTable th.c-tm");
   if (!thTm) return;
   var span = thTm.querySelector(".th-inner span");
-  if (span) span.textContent = userView === "external" ? "Organization" : "Team";
+  /* Brief §2: "If there is a Team column, rename it to Company" for
+     external users. The underlying data field stays `organization`;
+     only the UI label/sort-key flips. */
+  if (span) span.textContent = userView === "external" ? "Company" : "Team";
   thTm.setAttribute("data-sort", userView === "external" ? "organization" : "team");
 }
 
@@ -1877,7 +1820,7 @@ document.addEventListener("DOMContentLoaded", function () {
        Medium-content columns (short phrases / names):
          nm  (Name, 200)    — 48px avatar + gap + name text.
          tm  (Team, 140)    — team names can truncate gracefully
-                              (e.g. "Ad Solutions & Innovation").
+                              (e.g. "Agency & Holding Company Sales").
          ll  (Last Login,170)— full date strings ("Apr 30, 2026, 3:00 PM").
          by  (Created By,130)— user names ("Homer Simpson" ≈ 100px).
        Long-content columns (multi-item / long prose):
@@ -1891,11 +1834,45 @@ document.addEventListener("DOMContentLoaded", function () {
        back to the cell's CSS ellipsis + the truncation-gated tooltip
        (see getCellTruncationInfo), so nothing is ever lost — only
        visibly truncated when the column is too narrow to show it. */
+    /* Per-column floor widths. Keys reflect the `data-*-col` attribute
+       value on the <col> element. Added 2026-06-09 round 6:
+         Teams (tmTable):       name 200, desc 240, mem 96, created 140
+         Members (tmMembers):   name 180, em 220, role 180, actions 96
+         Edit User Access:      app 180, level 140, summary 220
+       Brief mandates Name/User ≥ 180, Role ≥ 180, Team/Company ≥ 180,
+       Description ≥ 240, Status ≥ 96, Date ≥ 140, Action ≥ 72–96,
+       Functions in matrix tables ≥ 180–220. Note Users-table `nm` was
+       already set to 200 for the avatar + name layout; leaving that
+       legacy floor in place. */
     var MIN_WIDTHS = {
       "nm": 200, "rl": 220, "st": 60, "tm": 140, "ll": 170, "rg": 80,
-      "role": 160, "func": 240, "by": 130, "date": 120
+      "role": 160, "func": 240, "by": 130, "date": 120,
+
+      "name": 200, "desc": 240, "mem": 96, "created": 140,
+      "em": 220, "actions": 96,
+      "app": 180, "level": 140, "summary": 220
     };
-    var SKIP_KEYS = { "ct": 1, "em": 1 };
+    /* Columns where a drag handle would never make sense, by data-key:
+         ct      — hidden Company Title col (0-width in Users table)
+       Note: previously this list also skipped Users `em` (email), but
+       there is no design rule against resizing email; we now expose it. */
+    var SKIP_KEYS = { "ct": 1 };
+
+    /* Read whatever data-*-col attribute a <col> declares. The shared
+       resizer is now table-agnostic — Users (data-u-col), Roles
+       (data-rp-col), Teams (data-tm-col), Edit Team Members
+       (data-tmm-col), and Edit User Access (data-aueff-col) all map
+       through the same MIN_WIDTHS table by key name. */
+    function readColKey(col) {
+      if (!col || !col.attributes) return "";
+      for (var i = 0; i < col.attributes.length; i++) {
+        var a = col.attributes[i];
+        if (a && a.name && a.name.indexOf("data-") === 0 && a.name.slice(-4) === "-col") {
+          return a.value || "";
+        }
+      }
+      return "";
+    }
 
     function attach(table) {
       if (!table) return;
@@ -1909,11 +1886,14 @@ document.addEventListener("DOMContentLoaded", function () {
           var col = cols[idx];
           if (!th || !col) return;
           if (th.querySelector(".col-resize-handle")) return;
-          var key = col.getAttribute("data-u-col") || col.getAttribute("data-rp-col") || "";
+          var key = readColKey(col);
           if (SKIP_KEYS[key]) return;
           var handle = document.createElement("span");
           handle.className = "col-resize-handle";
-          handle.setAttribute("aria-hidden", "true");
+          handle.setAttribute("role", "separator");
+          handle.setAttribute("aria-orientation", "vertical");
+          handle.setAttribute("aria-label", "Resize column");
+          handle.setAttribute("tabindex", "-1");
           handle.addEventListener("mousedown", function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
@@ -1984,6 +1964,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     attach(document.getElementById("usersTable"));
     attach(document.getElementById("rpTable"));
+    /* Round 6 (2026-06-09): extend resizer to the rest of the V3
+       table family. Each target ships with the same prerequisites the
+       helper needs — a <colgroup> with `data-*-col` keys + a static
+       <thead> whose <th>s persist across <tbody> re-renders. The
+       handles are appended once per <th>; downstream tbody re-renders
+       (e.g. team selection, role switch) never touch them.
+         • tmTable        — Teams list
+         • tmMembersTable — Edit Team Members
+         • auEffTable     — Edit User Access (Effective access)
+       The Create/Edit Role permission matrices are intentionally not
+       attached — they don't carry a colgroup, and a column drag risks
+       desynchronising header select-all checkboxes from body cell
+       alignment. (Brief: "If matrix resizing is risky, report it and
+       leave matrix tables unchanged rather than breaking them.") */
+    attach(document.getElementById("tmTable"));
+    attach(document.getElementById("tmMembersTable"));
+    attach(document.getElementById("auEffTable"));
 
     /* ResizeObserver on the Users Role column header — guarantees
        fitUsersRoleCells() re-runs whenever the column's rendered
@@ -3317,7 +3314,7 @@ document.addEventListener("DOMContentLoaded", function () {
      mapping rather than a hoisted-but-undefined var. */
   var RP_FUNC_DISPLAY_NAME = {
     "Core Planning": "Core Planning",
-    "TOM": "Target Options Manager",
+    "TOM": "Targeting Options Manager",
     "IAM": "Identity Access Management",
     "ICM": "Inventory Catalog Manager",
     "Disney Ads Agent": "Disney Ads Agent"
@@ -3475,7 +3472,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var tabBtns = document.querySelectorAll(".tab-btn");
   var usersPanel = document.getElementById("usersPanel");
   var rolesPanel = document.getElementById("rolesPanel");
-  var permsPanel = document.getElementById("permsPanel");
   var teamsPanel = document.getElementById("teamsPanel");
   var hdrTitle = document.querySelector(".hdr h1");
   var hdrSub = document.querySelector(".hdr p");
@@ -3483,29 +3479,26 @@ document.addEventListener("DOMContentLoaded", function () {
   function switchTab(tab) {
     activeTab = tab;
     for (var i = 0; i < tabBtns.length; i++) tabBtns[i].classList.remove("on");
-    /* v2 page title is unified to "Access Management" across all tabs
-       (per Figma 770:17428 / 770:19301 / 770:20032). Subtitle is also
-       unified — the secondary tabs are sub-views inside the same
-       workspace, so the page-level header shouldn't shape-shift with
-       each tab click.
+    /* Page title is unified to "Access Management" across all tabs.
+       Subtitle is also unified — the secondary tabs are sub-views
+       inside the same workspace, so the page-level header shouldn't
+       shape-shift with each tab click.
 
-       Tab order updated 2026-05-29 (Frances QA round 4) to match
-       Tatiana's direction: Users / Roles / Teams / Functions.
-       Internal tab key for the Functions tab remains "perms" so
-       the Permission Catalog table/filter wiring stays untouched. */
+       Tab order finalized 2026-06-07 per Tatiana direction:
+       Users / Roles / Teams. The standalone Functions / Permission
+       Catalog tab was removed; the role/permission matrix lives in
+       Edit Role and is unaffected. */
     hdrTitle.textContent = "Access Management";
     hdrSub.textContent = "Manage users, role assignments, and permission functions across Atlas";
     if (tab === "users") {
       tabBtns[0].classList.add("on");
       usersPanel.style.display = "";
       rolesPanel.style.display = "none";
-      if (permsPanel) permsPanel.style.display = "none";
       if (teamsPanel) teamsPanel.style.display = "none";
     } else if (tab === "roles") {
       tabBtns[1].classList.add("on");
       usersPanel.style.display = "none";
       rolesPanel.style.display = "";
-      if (permsPanel) permsPanel.style.display = "none";
       if (teamsPanel) teamsPanel.style.display = "none";
       renderRPTable();
       renderRPPagination();
@@ -3515,27 +3508,14 @@ document.addEventListener("DOMContentLoaded", function () {
       if (tabBtns[2]) tabBtns[2].classList.add("on");
       usersPanel.style.display = "none";
       rolesPanel.style.display = "none";
-      if (permsPanel) permsPanel.style.display = "none";
       if (teamsPanel) teamsPanel.style.display = "";
       if (typeof renderTMTable === "function") renderTMTable();
-    } else if (tab === "perms") {
-      /* "Functions" tab is the 4th visual tab (index 3). Internal
-         key remains "perms" — only the visible label changed, so
-         the Permission Catalog data/filter pipeline is unaffected. */
-      if (tabBtns[3]) tabBtns[3].classList.add("on");
-      usersPanel.style.display = "none";
-      rolesPanel.style.display = "none";
-      if (permsPanel) permsPanel.style.display = "";
-      if (teamsPanel) teamsPanel.style.display = "none";
-      renderPMTable();
-      renderPMPagination();
     }
   }
 
   tabBtns[0].addEventListener("click", function () { switchTab("users"); });
   tabBtns[1].addEventListener("click", function () { switchTab("roles"); });
   if (tabBtns[2]) tabBtns[2].addEventListener("click", function () { switchTab("teams"); });
-  if (tabBtns[3]) tabBtns[3].addEventListener("click", function () { switchTab("perms"); });
 
   /* ═══ TEAMS PANEL + EDIT TEAM PAGE ═══
      Read-only IAM team browse + simple definition editor.
@@ -3579,6 +3559,14 @@ document.addEventListener("DOMContentLoaded", function () {
        table is a 60-row internal sample of 610 total users; team
        counts here pad up to enterprise-level figures while
        preserving the relative ordering observed in the sample). */
+    /* Disney Ad Sales approved team taxonomy (Frances QA 2026-06-07 round 3).
+       7 teams; legacy placeholder teams (Digital Media Planning /
+       Streaming Revenue / Ad Sales Finance / Revenue Operations /
+       Inventory & Pricing Operations) were retired this round. Each
+       user record's `team` field, the Edit User Team dropdown
+       (`AU_TEAM_NAMES`), and the Edit Team members table all key off
+       the same `name` strings, so adding a team here makes it
+       immediately reachable across the prototype. */
     var TEAMS_DATA = [
       {
         id: "tm-national-ad-sales",
@@ -3588,39 +3576,46 @@ document.addEventListener("DOMContentLoaded", function () {
         created: "Jan 12, 2026"
       },
       {
-        id: "tm-digital-media-planning",
-        name: "Digital Media Planning",
-        description: "Digital media planning team",
+        id: "tm-agency-holding-company-sales",
+        name: "Agency & Holding Company Sales",
+        description: "Sales coverage for agency and holding company relationships",
         members: 18,
         created: "Jan 18, 2026"
       },
       {
-        id: "tm-addressable-ad-ops",
-        name: "Addressable Ad Ops",
-        description: "Addressable advertising operations team",
+        id: "tm-client-brand-solutions",
+        name: "Client & Brand Solutions",
+        description: "Client strategy, branded solutions, and integrated marketing partnerships",
         members: 16,
+        created: "Jan 24, 2026"
+      },
+      {
+        id: "tm-revenue-yield-management",
+        name: "Revenue & Yield Management",
+        description: "Revenue strategy, pricing guidance, and yield management",
+        members: 12,
         created: "Feb 3, 2026"
       },
       {
-        id: "tm-client-partnerships",
-        name: "Client Partnerships",
-        description: "Client partnership management team",
-        members: 14,
+        id: "tm-sales-planning",
+        name: "Sales Planning",
+        description: "Planning support for media plans, orders, and campaign setup",
+        members: 22,
         created: "Feb 8, 2026"
       },
       {
-        id: "tm-streaming-revenue",
-        name: "Streaming Revenue",
-        description: "Streaming revenue operations team",
-        members: 12,
+        id: "tm-addressable-programmatic-sales",
+        name: "Addressable & Programmatic Sales",
+        description: "Programmatic and addressable advertising sales support",
+        members: 14,
         created: "Feb 14, 2026"
       },
       {
-        id: "tm-ad-sales-finance",
-        name: "Ad Sales Finance",
-        description: "Advertising sales finance team",
-        members: 22,
-        created: "Feb 20, 2026"
+        id: "tm-ad-operations",
+        name: "Ad Operations",
+        description: "Campaign operations, trafficking coordination, and delivery support",
+        members: 20,
+        created: "Feb 21, 2026"
       }
     ];
 
@@ -3907,24 +3902,70 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
 
-    function renderTeamMembers(teamId) {
+    /* ─── Local edit state for the currently-open team ─────────────
+       On Edit Team open we clone the team's member list into a
+       per-session working set so add/remove are non-destructive
+       until the user clicks Save Team. Cancel / Back close without
+       persisting. The initial snapshot is captured for dirty-state
+       comparison so Save Team enables only when the working set
+       actually differs from the original. */
+    var tmWorkingMembers = [];     /* [{userId, name, email, role}] */
+    var tmInitialSnapshot = "";    /* JSON.stringify of the original */
+
+    function tmSnapshot() {
+      var name = (tmName && tmName.value) || "";
+      var desc = (tmDesc && tmDesc.value) || "";
+      var ids = [];
+      for (var i = 0; i < tmWorkingMembers.length; i++) {
+        ids.push(tmWorkingMembers[i].userId || tmWorkingMembers[i].email || tmWorkingMembers[i].name);
+      }
+      ids.sort();
+      return JSON.stringify({ name: name, desc: desc, members: ids });
+    }
+    function tmRefreshDirty() {
+      if (!tmSaveBtn) return;
+      var dirty = tmSnapshot() !== tmInitialSnapshot;
+      tmSaveBtn.disabled = !dirty;
+    }
+
+    /* Internal-user filter — Teams may only contain internal users
+       (have a `team` field) and exclude inactive accounts is
+       NOT required by the brief, but external (`organization`-based)
+       users are explicitly excluded. The eligible list for the
+       Add members modal excludes anyone already in the working
+       set as well. */
+    function tmIsInternalUser(u) {
+      if (!u) return false;
+      if (u.id && String(u.id).charAt(0) === "e") return false;
+      if (u.organization && !u.team) return false;
+      return true;
+    }
+    function tmMemberFromUser(u) {
+      var role = (u.roles && u.roles.length) ? u.roles[0] : "";
+      return { userId: u.id, name: u.name, email: u.email, role: role };
+    }
+
+    function renderTeamMembers() {
       if (!tmMembersTbody) return;
-      var members = TEAM_MEMBERS_DATA[teamId] || [];
-      if (members.length === 0) {
+      if (!tmWorkingMembers || tmWorkingMembers.length === 0) {
         tmMembersTbody.innerHTML =
-          '<tr class="tbl-empty"><td colspan="3">' +
-          'No members yet. Assign users via the User edit screen.' +
+          '<tr class="tbl-empty"><td colspan="4">' +
+          'No members yet. Click <strong>+ Add members</strong> to assign internal users to this team.' +
           '</td></tr>';
         return;
       }
       var html = "";
-      for (var i = 0; i < members.length; i++) {
-        var m = members[i];
+      for (var i = 0; i < tmWorkingMembers.length; i++) {
+        var m = tmWorkingMembers[i];
+        var idAttr = m.userId ? ' data-user-id="' + escTM(m.userId) + '"' : ' data-user-email="' + escTM(m.email || "") + '"';
         html +=
-          '<tr>' +
+          '<tr' + idAttr + '>' +
             '<td>' + escTM(m.name) + '</td>' +
             '<td>' + escTM(m.email) + '</td>' +
             '<td>' + escTM(m.role) + '</td>' +
+            '<td class="tm-cell-actions">' +
+              '<button type="button" class="tm-row-remove" data-tm-remove="' + escTM(m.userId || m.email || m.name) + '" aria-label="Remove ' + escTM(m.name) + ' from team">Remove</button>' +
+            '</td>' +
           '</tr>';
       }
       tmMembersTbody.innerHTML = html;
@@ -3937,7 +3978,26 @@ document.addEventListener("DOMContentLoaded", function () {
       if (tmEditSubtitle) tmEditSubtitle.textContent = team.name;
       if (tmName) tmName.value = team.name;
       if (tmDesc) tmDesc.value = team.description;
-      renderTeamMembers(teamId);
+
+      /* Clone the canonical member list into the working set. We
+         re-resolve userIds from DATA so removes can de-dup against
+         a stable identifier (the seed member list only stores
+         {name, email, role}). */
+      var seed = TEAM_MEMBERS_DATA[teamId] || [];
+      tmWorkingMembers = [];
+      for (var s = 0; s < seed.length; s++) {
+        var seedRow = seed[s];
+        var userId = null;
+        if (Array.isArray(DATA)) {
+          for (var di = 0; di < DATA.length; di++) {
+            if (DATA[di] && DATA[di].email === seedRow.email) { userId = DATA[di].id; break; }
+          }
+        }
+        tmWorkingMembers.push({ userId: userId, name: seedRow.name, email: seedRow.email, role: seedRow.role });
+      }
+      tmInitialSnapshot = tmSnapshot();
+      renderTeamMembers();
+      tmRefreshDirty();
 
       /* Hide the main IAM page + any other detail pages, show
          Edit Team. Mirrors the Edit User / Create Role flow so we
@@ -3963,14 +4023,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (tmSaveBtn) {
       tmSaveBtn.addEventListener("click", function () {
-        /* Save is a no-op-safe stub: we mirror the field values
-           back into TEAMS_DATA so the list reflects any local edit
-           when the user returns. We do NOT call any API. */
+        /* Save is a no-op-safe stub: we mirror the field values +
+           working member set back into TEAMS_DATA / TEAM_MEMBERS_DATA
+           so the list reflects any local edit when the user returns.
+           We do NOT call any API. */
         if (!tmCurrentTeamId) { closeEditTeam(); return; }
         var team = getTeamById(tmCurrentTeamId);
         if (team) {
           if (tmName) team.name = tmName.value || team.name;
           if (tmDesc) team.description = tmDesc.value || team.description;
+        }
+        /* Persist the working member set into the canonical map
+           and update the team's member count so the Teams list
+           reflects the new total. We strip the working `userId`
+           so the persisted shape matches the seed shape. */
+        var persisted = [];
+        for (var pi = 0; pi < tmWorkingMembers.length; pi++) {
+          var w = tmWorkingMembers[pi];
+          persisted.push({ name: w.name, email: w.email, role: w.role });
+        }
+        TEAM_MEMBERS_DATA[tmCurrentTeamId] = persisted;
+        if (team) team.members = persisted.length;
+        if (typeof showEdlToast === "function") {
+          showEdlToast({
+            type: "success",
+            title: "Team saved",
+            bodyHtml: "Updates to <strong>" + escTM(team ? team.name : "this team") + "</strong> were saved."
+          });
         }
         closeEditTeam();
       });
@@ -3985,6 +4064,204 @@ document.addEventListener("DOMContentLoaded", function () {
         closeEditTeam();
       });
     }
+
+    /* Dirty-state wiring: typing in Name or Description should
+       enable Save Team if the new value differs from the captured
+       initial snapshot. Add/Remove member calls also call
+       tmRefreshDirty after mutating tmWorkingMembers. */
+    if (tmName) tmName.addEventListener("input", tmRefreshDirty);
+    if (tmDesc) tmDesc.addEventListener("input", tmRefreshDirty);
+
+    /* Row-remove delegate — clicking the Remove button in a member
+       row drops the user from the working set, re-renders, and
+       updates the dirty state. */
+    if (tmMembersTbody) {
+      tmMembersTbody.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-tm-remove]");
+        if (!btn) return;
+        var key = btn.getAttribute("data-tm-remove");
+        for (var i = 0; i < tmWorkingMembers.length; i++) {
+          var m = tmWorkingMembers[i];
+          if ((m.userId && m.userId === key) || m.email === key || m.name === key) {
+            tmWorkingMembers.splice(i, 1);
+            break;
+          }
+        }
+        renderTeamMembers();
+        tmRefreshDirty();
+      });
+    }
+
+    /* ─── Add members modal ─────────────────────────────────────────
+       Opens a compact searchable multi-select dialog of internal
+       users not yet on the team. The modal reuses the EDL
+       .cr-confirm-* shell (Remove Role / Remove app / Set inactive)
+       so behavior (keyboard close, backdrop click) is consistent
+       with the rest of the prototype. Selection is local to the
+       modal; on confirm the picked users append to tmWorkingMembers
+       and the Members table re-renders. Cancel discards. */
+    var tmAddBtn = document.getElementById("tmAddMembersBtn");
+    var tmAddBackdrop = document.getElementById("tmAddMembersBackdrop");
+    var tmAddSearch = document.getElementById("tmAddMembersSearch");
+    var tmAddList = document.getElementById("tmAddMembersList");
+    var tmAddEmpty = document.getElementById("tmAddMembersEmpty");
+    var tmAddCancel = document.getElementById("tmAddMembersCancel");
+    var tmAddConfirm = document.getElementById("tmAddMembersConfirm");
+    var tmAddCount = document.getElementById("tmAddMembersCount");
+
+    var tmAddEligible = [];      /* all eligible internal users for the current team */
+    var tmAddSelected = {};      /* userId → user object */
+    var tmAddLastFocus = null;
+
+    function tmGetExistingKeySet() {
+      var existing = {};
+      for (var i = 0; i < tmWorkingMembers.length; i++) {
+        var m = tmWorkingMembers[i];
+        if (m.userId) existing[m.userId] = true;
+        if (m.email) existing["email:" + m.email] = true;
+      }
+      return existing;
+    }
+    function tmBuildEligible() {
+      var existing = tmGetExistingKeySet();
+      var out = [];
+      if (!Array.isArray(DATA)) return out;
+      for (var i = 0; i < DATA.length; i++) {
+        var u = DATA[i];
+        if (!tmIsInternalUser(u)) continue;
+        if (u.id && existing[u.id]) continue;
+        if (u.email && existing["email:" + u.email]) continue;
+        out.push(u);
+      }
+      out.sort(function (a, b) { return (a.name || "").localeCompare(b.name || ""); });
+      return out;
+    }
+    /* Round 7 (2026-06-09): the right-side metadata in each user row
+       now surfaces the user's CURRENT TEAM (not their primary role).
+       Rationale: this dialog is "Add members to <thisTeam>". The admin
+       needs to see where the candidate currently sits so they can
+       decide whether the move is appropriate. Search matches name /
+       email / team. External users are still filtered out by
+       tmIsInternalUser.
+
+       Round 10 (2026-06-09): per brief, the repeated "Current team"
+       caption was removed from every row — the modal title +
+       subtitle + search placeholder already make the context clear,
+       and the caption was adding visual noise. The right-side
+       metadata now collapses to a single 14/20 muted team-name span
+       (no caption stack). Aria-label on the row still carries the
+       "Current team" context for screen readers so the affordance
+       is preserved for assistive tech. */
+    function tmRenderAddList() {
+      if (!tmAddList) return;
+      var q = (tmAddSearch && tmAddSearch.value || "").trim().toLowerCase();
+      var rendered = 0;
+      var html = "";
+      for (var i = 0; i < tmAddEligible.length; i++) {
+        var u = tmAddEligible[i];
+        var teamName = u.team || "";
+        if (q) {
+          var hay = (u.name + " " + u.email + " " + teamName).toLowerCase();
+          if (hay.indexOf(q) === -1) continue;
+        }
+        rendered++;
+        var sel = !!tmAddSelected[u.id];
+        var teamLabel = teamName || "—";
+        var rowAria = "Select " + u.name + ", " + u.email +
+          (teamName ? ", current team " + teamName : "");
+        html +=
+          '<label class="tm-add-row' + (sel ? " is-selected" : "") + '" data-user-id="' + escTM(u.id) + '" aria-label="' + escTM(rowAria) + '">' +
+            '<input type="checkbox" class="cr-perm-check tm-add-row-check" data-user-id="' + escTM(u.id) + '"' + (sel ? " checked" : "") + ">" +
+            '<span class="tm-add-row-info">' +
+              '<span class="tm-add-row-name">' + escTM(u.name) + '</span>' +
+              '<span class="tm-add-row-meta">' + escTM(u.email) + '</span>' +
+            '</span>' +
+            '<span class="tm-add-row-side">' +
+              '<span class="tm-add-row-side-value">' + escTM(teamLabel) + '</span>' +
+            '</span>' +
+          '</label>';
+      }
+      tmAddList.innerHTML = html;
+      if (tmAddEmpty) {
+        if (rendered === 0) tmAddEmpty.removeAttribute("hidden");
+        else tmAddEmpty.setAttribute("hidden", "");
+      }
+    }
+    function tmUpdateAddConfirmState() {
+      var n = 0;
+      for (var k in tmAddSelected) if (Object.prototype.hasOwnProperty.call(tmAddSelected, k)) n++;
+      if (tmAddCount) tmAddCount.textContent = n + " selected";
+      if (tmAddConfirm) tmAddConfirm.disabled = n === 0;
+    }
+    function tmOpenAddMembers() {
+      if (!tmAddBackdrop) return;
+      tmAddSelected = {};
+      tmAddEligible = tmBuildEligible();
+      if (tmAddSearch) tmAddSearch.value = "";
+      tmRenderAddList();
+      tmUpdateAddConfirmState();
+      tmAddLastFocus = document.activeElement;
+      tmAddBackdrop.removeAttribute("hidden");
+      setTimeout(function () { if (tmAddSearch) tmAddSearch.focus(); }, 0);
+    }
+    function tmCloseAddMembers() {
+      if (!tmAddBackdrop) return;
+      tmAddBackdrop.setAttribute("hidden", "");
+      if (tmAddLastFocus && typeof tmAddLastFocus.focus === "function") tmAddLastFocus.focus();
+      tmAddLastFocus = null;
+    }
+    function tmConfirmAddMembers() {
+      var added = 0;
+      for (var k in tmAddSelected) {
+        if (!Object.prototype.hasOwnProperty.call(tmAddSelected, k)) continue;
+        var u = tmAddSelected[k];
+        tmWorkingMembers.push(tmMemberFromUser(u));
+        added++;
+      }
+      tmCloseAddMembers();
+      renderTeamMembers();
+      tmRefreshDirty();
+      if (added > 0 && typeof showEdlToast === "function") {
+        showEdlToast({
+          type: "success",
+          title: added === 1 ? "1 member added" : added + " members added",
+          bodyHtml: "Click <strong>Save Team</strong> to keep these changes."
+        });
+      }
+    }
+
+    if (tmAddBtn) tmAddBtn.addEventListener("click", tmOpenAddMembers);
+    if (tmAddCancel) tmAddCancel.addEventListener("click", tmCloseAddMembers);
+    if (tmAddConfirm) tmAddConfirm.addEventListener("click", tmConfirmAddMembers);
+    if (tmAddBackdrop) {
+      tmAddBackdrop.addEventListener("click", function (e) {
+        if (e.target === tmAddBackdrop) tmCloseAddMembers();
+      });
+    }
+    if (tmAddSearch) tmAddSearch.addEventListener("input", tmRenderAddList);
+    if (tmAddList) {
+      tmAddList.addEventListener("change", function (e) {
+        var box = e.target.closest(".tm-add-row-check");
+        if (!box) return;
+        var uid = box.getAttribute("data-user-id");
+        if (box.checked) {
+          for (var i = 0; i < tmAddEligible.length; i++) {
+            if (tmAddEligible[i].id === uid) { tmAddSelected[uid] = tmAddEligible[i]; break; }
+          }
+        } else {
+          delete tmAddSelected[uid];
+        }
+        var row = box.closest(".tm-add-row");
+        if (row) row.classList.toggle("is-selected", box.checked);
+        tmUpdateAddConfirmState();
+      });
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      if (tmAddBackdrop && !tmAddBackdrop.hasAttribute("hidden")) {
+        tmCloseAddMembers();
+      }
+    });
 
     /* The "View all in Users" footer CTA was removed (Frances QA
        2026-05-31). Navigation back to Users is handled by the
@@ -4059,6 +4336,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var auStatusReadonly = document.getElementById("auStatusReadonly");
     var auBasicCard = document.getElementById("auBasicCard");
     var auRolesCard = document.getElementById("auRolesCard");
+    var auRolesPermissionsTitle = document.getElementById("auRolesPermissionsTitle");
+    var auEffTbody = document.getElementById("auEffTbody");
     var auBasicSummary = document.getElementById("auBasicSummary");
     var auRolesSummary = document.getElementById("auRolesSummary");
     var auInactiveConfirmBackdrop = document.getElementById("auInactiveConfirmBackdrop");
@@ -4188,22 +4467,20 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     /* Add User → Team list: AU_TEAM_NAMES (EDL combo options). */
+    /* Disney Ad Sales team taxonomy (Frances QA 2026-06-07 round 3).
+       The Add User / Edit User Team dropdown surfaces the same 7
+       teams used in TEAMS_DATA so user-facing team strings stay in
+       a single allow-list. Removed legacy / placeholder team names
+       (National Sales / Local Sales / Sports Ad Sales / etc.) so
+       admins can't pick a team that doesn't exist on the Teams tab. */
     var AU_TEAM_NAMES = [
-      "National Sales",
-      "Local Sales",
-      "Integrated Marketing & Sales",
-      "Client Partnerships",
-      "Programmatic Sales",
-      "Sports Ad Sales",
-      "Entertainment Ad Sales",
-      "Kids & Family Ad Sales",
-      "Streaming/Streaming Ad Sales",
-      "Direct Response Sales",
-      "Sales Solutions & Strategy",
-      "Ad Operations & Yield Management",
-      "International Sales",
-      "Digital Ad Sales",
-      "Agency Partnerships"
+      "National Ad Sales",
+      "Agency & Holding Company Sales",
+      "Client & Brand Solutions",
+      "Revenue & Yield Management",
+      "Sales Planning",
+      "Addressable & Programmatic Sales",
+      "Ad Operations"
     ];
 
     var TRASH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
@@ -4316,6 +4593,14 @@ document.addEventListener("DOMContentLoaded", function () {
         auState.selectedRoleId = auComboState.addUserRolePick || "";
         syncAuRoleChrome();
         updateAuSummaries();
+        /* Edit User v3 — when the role picker changes, also re-render
+           the effective-access table so the Application/Access/Summary
+           rows update to match the newly chosen role. Add-mode is
+           unaffected (the table only renders in edit mode anyway). */
+        if (auPageMode === "edit") {
+          auState.editPrimaryRoleId = auState.selectedRoleId || "";
+          renderAuEffectiveAccessTable(auState.editPrimaryRoleId);
+        }
       },
       "edl-combo-menu--add-user"
     );
@@ -4442,6 +4727,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (setAuTeamCombo) setAuTeamCombo("");
       if (setAuRoleCombo) setAuRoleCombo("");
       setAUStatus("Active");
+      /* Always restore the Team combo (not Company readonly) on
+         reset — Add User mode is always internal-team only; the
+         readonly Company display only exists while editing an
+         external user. */
+      if (typeof applyAuBasicInfoCompanyOrTeam === "function") applyAuBasicInfoCompanyOrTeam(null);
       renderAURolePicker();
       renderAURoleCards();
       auExpandSections();
@@ -4559,45 +4849,47 @@ document.addEventListener("DOMContentLoaded", function () {
       if (addUsersPage) addUsersPage.classList.toggle("is-edit-mode", isEdit);
       if (auPageTitle) auPageTitle.textContent = isEdit ? "Edit user" : AU_PAGE_TITLE_ADD;
       if (auPageSubtitle) {
-        /* Edit User subtitle copy updated to describe the full scope
-           of the page (Frances QA 2026-05-31). The previous copy
-           was "Permission management" — replaced with the more
-           descriptive sentence below. No user name in the subtitle;
-           the user's identity lives in the Basic Information card.
-           Add mode keeps the original capture-style helper. */
+        /* Edit User v3 — Figma 788:4348 (Frances QA 2026-06-07).
+           The page focuses on identity + role assignment now; the
+           old standalone Permission Options card was retired this
+           pass. Subtitle copy reflects that reduced scope. */
         auPageSubtitle.textContent = isEdit
-          ? "Manage user details, team assignment, region, timezone, and application access."
+          ? "Manage user details and role assignment"
           : AU_PAGE_SUB_ADD;
       }
       if (auBackLabel) {
-        /* V3 short-nav convention: tabs are "Users / Roles / Permissions".
-           Edit User is opened from the Users table (`closeAddUsers`
-           below calls `switchTab("users")`), so the back-link copy
-           should name the actual destination — "Back to Users" — not
-           the older composite "Back to Roles and Permissions" label
-           that referenced two tabs together before the rename. */
-        auBackLabel.textContent = isEdit ? "Back to Users" : "Back to users";
+        /* Lowercase "users" in both modes — matches Figma 788:4348
+           and the on-page tab label. */
+        auBackLabel.textContent = "Back to users";
       }
       if (auRemoveUser) auRemoveUser.hidden = !isEdit;
-      /* In edit mode the primary action is "Save Permission" (matches
-         Figma). It stays disabled unless legitimate current-state edits
-         exist (access level change, app added/removed, profile field
-         change). The dirty tracking already drives `auSave.disabled` via
-         `refreshAuSaveDirty`. */
-      if (auSave) auSave.textContent = isEdit ? "Save Permission" : "Add User";
+      /* Edit-mode primary action label per Figma 788:4348 ("Save user").
+         Stays disabled until legitimate edits exist; dirty tracking
+         already drives `auSave.disabled` via `refreshAuSaveDirty`. */
+      if (auSave) auSave.textContent = isEdit ? "Save user" : "Add User";
       if (auEmail) {
         auEmail.readOnly = isEdit;
         auEmail.setAttribute("aria-readonly", isEdit ? "true" : "false");
       }
       if (auStatusReadonly) auStatusReadonly.hidden = !isEdit;
-      /* Show identity-row (Figma 847:16172, contains the identity block
-         plus the two field columns on the same horizontal line) and
-         the Permission Options card in edit mode; hide Roles &
-         Permissions card in edit mode. Add mode keeps the original
-         Roles & Permissions section intact. */
+      /* Edit-mode card visibility (Figma 788:4348):
+           • Identity row (avatar + name + email + active-status icon
+             flush with the form field columns) — show.
+           • Permission Options card — HIDDEN in edit mode. The user
+             page no longer edits per-app permissions; that lives in
+             Edit Role.
+           • Access card — show in edit mode (this is the renamed
+             "Roles & Permissions" card; in edit mode it carries the
+             helper text + Assigned Role dropdown + effective-access
+             table). Add-mode behavior unchanged. */
       if (auEditRow)   auEditRow.hidden   = !isEdit;
-      if (auPermsCard) auPermsCard.hidden = !isEdit;
-      if (auRolesCard) auRolesCard.hidden = isEdit;
+      if (auPermsCard) auPermsCard.hidden = true;
+      if (auRolesCard) auRolesCard.hidden = false;
+      /* Section title swaps: "Access" in edit mode, original
+         "Roles & Permissions" in add mode. */
+      if (auRolesPermissionsTitle) {
+        auRolesPermissionsTitle.textContent = isEdit ? "Access" : "Roles & Permissions";
+      }
     }
 
     /* V3 Edit User — Internal/External classification.
@@ -4705,6 +4997,70 @@ document.addEventListener("DOMContentLoaded", function () {
       if (setAuPermsAppCombo) setAuPermsAppCombo("");
     }
 
+    /* Internal/External Basic Info field swap (Frances QA 2026-06-08
+       cleanup pass).
+
+       The `.au-field-team` slot holds either:
+         • Internal user → label "Team" + editable EDL combo (existing).
+         • External user → label "Company" + read-only static value
+           (the company string from `user.organization`).
+
+       The DOM structure stays identical (same `.au-field` grid slot,
+       same label element, same combo container) so no CSS layout
+       changes are needed. The combo's `<div>` shell stays in the DOM
+       so initCombo's wiring keeps working when the next user is
+       internal; we just hide its `.edl-combo-input-wrap` (the
+       interactive trigger) and inject a sibling read-only display
+       node when external. Switching back to an internal user
+       removes the read-only node and unhides the combo trigger. */
+    function applyAuBasicInfoCompanyOrTeam(user) {
+      var fieldEl  = document.querySelector("#addUsersPage .au-field-team");
+      var labelEl  = fieldEl ? fieldEl.querySelector(".au-label") : null;
+      var comboEl  = document.getElementById("auTeamCombo");
+      if (!fieldEl || !labelEl || !comboEl) return;
+      var external = isAuUserExternal(user);
+      /* The interactive trigger lives at `.edl-combo-input-wrap` inside
+         the combo shell. The combo's menu/options sit elsewhere
+         (rendered into body for layered combos), so hiding the
+         trigger is sufficient to hide all interactive surface area. */
+      var triggerEl = comboEl.querySelector(".edl-combo-input-wrap");
+      var roEl = fieldEl.querySelector(".au-field-team-readonly");
+      if (external) {
+        labelEl.textContent = "Company";
+        labelEl.removeAttribute("for");
+        if (triggerEl) triggerEl.style.display = "none";
+        var companyText = (user && user.organization) ? String(user.organization) : "";
+        if (!roEl) {
+          roEl = document.createElement("div");
+          roEl.className = "au-field-team-readonly au-input";
+          /* Inline styles only — no `styles.css` changes per the
+             cleanup-pass guardrails. Match the existing read-only
+             email field's visual rhythm: same border / padding /
+             color tokens used by `.au-input[readonly]`. */
+          roEl.style.background = "var(--bg-readonly, #F6F8FA)";
+          roEl.style.border     = "1px solid var(--border-input, #D8DEE5)";
+          roEl.style.borderRadius = "6px";
+          roEl.style.padding    = "8px 12px";
+          roEl.style.fontSize   = "14px";
+          roEl.style.lineHeight = "20px";
+          roEl.style.color      = "var(--text-primary, #1F2933)";
+          roEl.style.minHeight  = "36px";
+          roEl.style.display    = "flex";
+          roEl.style.alignItems = "center";
+          roEl.setAttribute("role", "textbox");
+          roEl.setAttribute("aria-readonly", "true");
+          comboEl.parentNode.insertBefore(roEl, comboEl.nextSibling);
+        }
+        roEl.textContent = companyText;
+        roEl.setAttribute("aria-label", "Company");
+      } else {
+        labelEl.textContent = "Team";
+        labelEl.setAttribute("for", "auTeamCombo-ctl");
+        if (triggerEl) triggerEl.style.display = "";
+        if (roEl && roEl.parentNode) roEl.parentNode.removeChild(roEl);
+      }
+    }
+
     function populateEditFormFromUser(user) {
       if (!user) return;
       var parts = (user.name || "").trim().split(/\s+/);
@@ -4733,6 +5089,13 @@ document.addEventListener("DOMContentLoaded", function () {
       var teamVal = (user.team && user.team !== "Unassigned") ? user.team : "";
       if (auTeam) auTeam.value = teamVal;
       if (setAuTeamCombo) setAuTeamCombo(teamVal);
+      /* Internal vs External Basic Info field (Frances QA 2026-06-08
+         cleanup pass): internal users keep the editable Team combo,
+         external users get a read-only Company line in the same
+         `.au-field-team` slot — no layout change, just children. The
+         brief explicitly disallows showing "Select team" or any
+         internal team name for an external user. */
+      applyAuBasicInfoCompanyOrTeam(user);
       setAUStatus(user.status === "Inactive" ? "Inactive" : "Active");
       var ids = [];
       var rns = user.roles || [];
@@ -4755,7 +5118,653 @@ document.addEventListener("DOMContentLoaded", function () {
       seedAuPermsAssignments();
       renderAUPermsAppPicker();
       renderAUPermsCards();
+      /* Edit User v3 — Figma 788:4348 (Frances QA 2026-06-07).
+         Pick the user's first role (the same one Users-table displays
+         on the row) and seed the single Assigned Role dropdown +
+         effective access table. The user's full role list still feeds
+         the Add-mode role-cards stack above (which is hidden in edit
+         mode but kept in DOM for Add User compatibility). */
+      var primaryRoleName = (user.roles && user.roles.length) ? user.roles[0] : "";
+      var primaryRoleId = primaryRoleName ? findRoleIdByRoleName(primaryRoleName) : "";
+      auState.editPrimaryRoleId = primaryRoleId || "";
+      if (setAuRoleCombo && primaryRoleId) setAuRoleCombo(primaryRoleId);
+      /* Pass the full user record so the effective-access renderer
+         can route via role + team (Frances QA 2026-06-07 round 4). */
+      renderAuEffectiveAccessTable(primaryRoleId, user);
       updateAuSummaries();
+    }
+
+    /* ── Edit User effective-access table ─────────────────────────────
+       3-column read-only summary (Application / Access Level / Summary).
+
+       Visible rows are now ROLE-CLASS-driven (Frances QA 2026-06-07
+       round 2). Instead of always showing all 5 applications, the
+       table shows only the apps the assigned role grants meaningful
+       access to. This keeps the user page as a focused PREVIEW of
+       effective access — full per-app inventory lives in Edit Role.
+
+       Summary content is rendered as compact EDL chips per Figma
+       node 4722:57889 (EDL Component Library — Chip, color=Promoted).
+       Each chip is a resource name (Orders, Media Plans, Users, …);
+       function-level verbs and `_list`/`_get` tokens never reach
+       the user page.
+
+       App display names stay PRD-aligned ("Inventory Catalog Manager",
+       "Targeting Options Manager", "Disney Ads Agent" — never the
+       internal abbreviations or the Figma placeholder typos). */
+
+    /* Resource-chip allow-lists per application (PRD-aligned, per
+       brief). Order matters — first ~3 chips render first; anything
+       beyond shows as a "+N more" counter chip. */
+    var AU_EFF_APP_CHIPS = {
+      "Core Planning":              ["Orders", "Media Plans", "Line Items", "Approvals"],
+      "IAM":                        ["Users", "Roles", "Teams"],
+      "Inventory Catalog Manager":  ["Offerings", "Sales Packages"],
+      "Targeting Options Manager":  ["Targeting Options", "Targeting Groups", "Templates"],
+      "Disney Ads Agent":           ["Forecasting", "Planning Support", "Approval Comparisons"]
+    };
+
+    /* Role classification (brief §3) — maps role.id → access-class.
+       Each class then maps to a compact list of {app, level, chipKeys}.
+       This is the authoritative PRD-aligned access preview for the
+       user page; the underlying per-function authorization model in
+       Edit Role is unchanged. */
+    var AU_EFF_ROLE_CLASS = {
+      r001: "admin",            /* Atlas Admin            */
+      r002: "planning_admin",   /* Core Planning Admin    */
+      r003: "planning_admin",   /* Operations Admin       */
+      r004: "planner",          /* Planner                */
+      r005: "planner",          /* Planning Specialist    */
+      r006: "planning_manager", /* Planning Manager       */
+      r013: "planner",          /* Campaign Planner       */
+      r014: "ad_ops",           /* Ad Operations Spec.    */
+      r008: "viewer",           /* Read-Only Viewer       */
+      r009: "icm_admin",        /* ICM Admin              */
+      r010: "tom_admin"         /* TOM Admin              */
+      /* (planning_admin class now exists in AU_EFF_PATTERNS so the
+         Core Planning Admin row renders the brief's 2-row preview
+         instead of falling back to _default.) */
+    };
+
+    /* Effective-access patterns by class. Each entry is an array of
+       row specs the table renders, in display order. Apps not listed
+       are intentionally omitted from the preview (per brief §8:
+       "Only show applications where the selected role grants
+       meaningful access. … This page is a role-based access preview,
+       not an audit report."). Chips reference resources from
+       AU_EFF_APP_CHIPS in the order they should appear; "*" means
+       "all chips for this app".
+
+       Class taxonomy (Frances QA 2026-06-07 round 4 — Disney Ad Sales
+       PRD alignment):
+         • sales            — Account Executive / sales user (§7.A)
+         • planner          — Planner / Sales Planner (§7.B)
+         • planning_manager — Planning Manager on Sales Planning team (§7.C)
+         • revenue_yield    — Planning Manager / R&YM-team users (§7.F)
+         • programmatic     — Addressable / Programmatic user (§7.D)
+         • ad_ops           — Ad Operations / Trafficking user (§7.E)
+         • admin            — DEP / Atlas Admin (§7.G)
+         • icm_admin        — ICM Admin (§7.H)
+         • tom_admin        — TOM Admin (§7.I)
+         • viewer           — Read-Only Viewer with no other signal */
+    /* Patterns aligned to brief 2026-06-08 ("Tatiana-style resource/action
+       summary"). Each row's `chips` is the ORDERED list of resources to
+       surface in the read-only Effective access cell. A resource entry
+       may either be a string (use the default actions from
+       AU_EFF_ACTIONS[app][level][resource]) or an object
+       `{r:"Resource", a:["Read", …]}` that overrides the action list
+       just for this row — needed when the brief lists a narrower
+       per-resource action set than the row's overall Access Level
+       would imply (e.g., a Sales user has "Edit Access" to Core
+       Planning at the row level but the brief's example only lists
+       "Read" verbs per resource). */
+    var AU_EFF_PATTERNS = {
+      sales: [
+        /* Brief: "Core Planning | Edit Access | Orders: Read · Media Plans: Read" */
+        { app: "Core Planning",    level: "Edit Access", chips: [{r:"Orders", a:["Read"]}, {r:"Media Plans", a:["Read"]}] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Forecasting", "Planning Support"] }
+      ],
+      planner: [
+        /* Brief: "Core Planning | Full Access | Orders: Read, Create, Update · Media Plans: Read · Line Items: Read" */
+        { app: "Core Planning",    level: "Full Access", chips: ["Orders", {r:"Media Plans", a:["Read"]}, {r:"Line Items", a:["Read"]}] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Forecasting", "Planning Support"] }
+      ],
+      planning_admin: [
+        /* Brief: "Core Planning | Full Access | Orders: Read, Create, Update · Media Plans: Read · +2 more" */
+        { app: "Core Planning", level: "Full Access", chips: ["Orders", {r:"Media Plans", a:["Read"]}, {r:"Line Items", a:["Read"]}, {r:"Approvals", a:["Read"]}] },
+        /* Brief: "IAM | View Access | Users: Read · Roles: Assign" */
+        { app: "IAM",           level: "View Access", chips: ["Users", "Roles"] }
+      ],
+      planning_manager: [
+        { app: "Core Planning",    level: "Full Access", chips: "*" },
+        { app: "IAM",              level: "View Access", chips: ["Users", "Roles"] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Forecasting"] }
+      ],
+      revenue_yield: [
+        { app: "Core Planning",             level: "View Access", chips: ["Orders", "Media Plans"] },
+        { app: "Disney Ads Agent",          level: "View Access", chips: ["Forecasting"] },
+        { app: "Inventory Catalog Manager", level: "View Access", chips: ["Offerings"] }
+      ],
+      programmatic: [
+        { app: "Core Planning",    level: "Edit Access", chips: [{r:"Orders", a:["Read"]}, {r:"Media Plans", a:["Read"]}] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Forecasting", "Planning Support"] }
+      ],
+      ad_ops: [
+        /* Brief: "Core Planning | Edit Access | Orders: Read · Line Items: Read, Update · Approvals: Read" */
+        { app: "Core Planning",    level: "Edit Access", chips: [{r:"Orders", a:["Read"]}, "Line Items", {r:"Approvals", a:["Read"]}] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Approval Comparisons", "Planning Support"] }
+      ],
+      admin: [
+        /* Brief: "Core Planning | Full Access | Orders: Read, Create, Update · Media Plans: Read · +2 more" */
+        { app: "Core Planning",             level: "Full Access", chips: ["Orders", {r:"Media Plans", a:["Read"]}, {r:"Line Items", a:["Read"]}, {r:"Approvals", a:["Read"]}] },
+        { app: "IAM",                       level: "Full Access", chips: ["Users", "Roles", "Teams"] },
+        { app: "Inventory Catalog Manager", level: "Edit Access", chips: ["Offerings", {r:"Sales Packages", a:["Read"]}] },
+        { app: "Targeting Options Manager", level: "Edit Access", chips: ["Targeting Options", {r:"Targeting Groups", a:["Read"]}] },
+        { app: "Disney Ads Agent",          level: "View Access", chips: ["Forecasting", "Planning Support"] }
+      ],
+      icm_admin: [
+        { app: "Inventory Catalog Manager", level: "Full Access", chips: ["Offerings", "Sales Packages"] },
+        { app: "Core Planning",             level: "View Access", chips: ["Orders"] },
+        { app: "IAM",                       level: "View Access", chips: ["Users"] }
+      ],
+      tom_admin: [
+        { app: "Targeting Options Manager", level: "Full Access", chips: ["Targeting Options", "Targeting Groups", "Templates"] },
+        { app: "Core Planning",             level: "View Access", chips: ["Orders"] },
+        { app: "IAM",                       level: "View Access", chips: ["Users"] }
+      ],
+      viewer: [
+        { app: "Core Planning", level: "View Access", chips: ["Orders"] }
+      ],
+      /* Fallback for any unmapped / unknown role (per brief §3 fallback). */
+      _default: [
+        { app: "Core Planning", level: "View Access", chips: ["Orders"] }
+      ]
+    };
+
+    /* Per-(app, level, resource) → action wording for the Effective
+       access cell. Brief 2026-06-08 explicitly mandates user-facing
+       verbs only — Read / Create / Update / Assign — never list/get,
+       function keys, or "Query Access". Any resource not listed here
+       falls back to ["Read"] so the cell never breaks. */
+    var AU_EFF_ACTIONS = {
+      "Core Planning": {
+        "Full Access": {
+          "Orders":     ["Read", "Create", "Update"],
+          "Media Plans":["Read", "Create", "Update"],
+          "Line Items": ["Read", "Create", "Update"],
+          "Approvals":  ["Read", "Update"]
+        },
+        "Edit Access": {
+          "Orders":     ["Read", "Update"],
+          "Media Plans":["Read"],
+          "Line Items": ["Read", "Update"],
+          "Approvals":  ["Read"]
+        },
+        "View Access": {
+          "Orders":     ["Read"],
+          "Media Plans":["Read"],
+          "Line Items": ["Read"],
+          "Approvals":  ["Read"]
+        }
+      },
+      "IAM": {
+        "Full Access": {
+          "Users": ["Read", "Update"],
+          "Roles": ["Read", "Assign"],
+          "Teams": ["Read", "Update"]
+        },
+        "View Access": {
+          "Users": ["Read"],
+          "Roles": ["Assign"],
+          "Teams": ["Read"]
+        }
+      },
+      "Inventory Catalog Manager": {
+        "Full Access": {
+          "Offerings":     ["Read", "Create", "Update"],
+          "Sales Packages":["Read", "Create", "Update"]
+        },
+        "Edit Access": {
+          "Offerings":     ["Read", "Update"],
+          "Sales Packages":["Read"]
+        },
+        "View Access": {
+          "Offerings":     ["Read"],
+          "Sales Packages":["Read"]
+        }
+      },
+      "Targeting Options Manager": {
+        "Full Access": {
+          "Targeting Options":["Read", "Create", "Update"],
+          "Targeting Groups": ["Read", "Create", "Update"],
+          "Templates":        ["Read", "Update"]
+        },
+        "Edit Access": {
+          "Targeting Options":["Read", "Update"],
+          "Targeting Groups": ["Read"],
+          "Templates":        ["Read"]
+        },
+        "View Access": {
+          "Targeting Options":["Read"],
+          "Targeting Groups": ["Read"],
+          "Templates":        ["Read"]
+        }
+      },
+      "Disney Ads Agent": {
+        "View Access": {
+          "Forecasting":         ["Read"],
+          "Planning Support":    ["Read"],
+          "Approval Comparisons":["Read"]
+        }
+      }
+    };
+
+    /* Sales-context teams. When a user's primary role classifies as a
+       generic Read-Only Viewer / Planner, but their TEAM is one of these
+       sales-context teams, surface the sales pattern (§7.A) so the
+       preview reflects the actual day-to-day surface they touch. */
+    var AU_EFF_SALES_TEAMS = {
+      "National Ad Sales":              true,
+      "Agency & Holding Company Sales": true,
+      "Client & Brand Solutions":       true
+    };
+
+    /* Resolve a pattern's `chips` field into a normalized array of
+       resource entries. Each entry is `{r: "Resource", a: ["Read",…]
+       | null}`. When `a` is null, the renderer falls back to
+       AU_EFF_ACTIONS[app][level][resource]; when set, it overrides
+       just for this row (so a pattern can show narrower actions than
+       the row's Access Level would imply — see brief examples).
+       "*" expands to all known resources for the app with default
+       actions. */
+    function auEffResolveChips(appName, chips) {
+      var allow = AU_EFF_APP_CHIPS[appName] || [];
+      if (chips === "*") {
+        var all = [];
+        for (var x = 0; x < allow.length; x++) all.push({r: allow[x], a: null});
+        return all;
+      }
+      if (!chips || !chips.length) return [];
+      var out = [];
+      for (var i = 0; i < chips.length; i++) {
+        var c = chips[i];
+        var name, actions;
+        if (typeof c === "string") { name = c; actions = null; }
+        else if (c && typeof c === "object") { name = c.r; actions = (c.a && c.a.slice) ? c.a.slice() : null; }
+        else continue;
+        /* Defensive: only include resources that exist in the allow-
+           list so the table can never leak an unintended raw key. */
+        if (name && allow.indexOf(name) !== -1) out.push({r: name, a: actions});
+      }
+      return out;
+    }
+
+    /* Build the read-only "Resource: Actions; Resource: Actions; +N more"
+       summary for the Effective access cell. Brief 2026-06-08 (round 3):
+         • Plain table text — no chips, no purple pills, no border, no
+           hover affordance, no clickable styling.
+         • Single line at normal desktop widths; if the full string does
+           not fit, the tail is trimmed and "+N more" is appended (with a
+           native title tooltip that lists ONLY the hidden groups).
+         • Semicolon "; " separates Resource: Actions groups.
+         • Actions come from AU_EFF_ACTIONS[app][level][resource]. Any
+           resource without an entry falls back to ["Read"]. */
+    function auEffActionsFor(app, level, resource) {
+      var byApp   = AU_EFF_ACTIONS[app];
+      if (!byApp) return ["Read"];
+      var byLevel = byApp[level];
+      if (!byLevel) return ["Read"];
+      var verbs   = byLevel[resource];
+      return (verbs && verbs.length) ? verbs.slice() : ["Read"];
+    }
+    /* Build the normalized resource/action list used by both the
+       initial render and the post-render measure pass. The list is
+       independent of viewport width — overflow decisions happen in
+       auEffApplyOverflow() based on the actual cell width. */
+    function auEffBuildGroups(app, level, resEntries) {
+      var groups = [];
+      if (!resEntries || !resEntries.length) return groups;
+      for (var i = 0; i < resEntries.length; i++) {
+        var entry = resEntries[i];
+        var verbs = (entry.a && entry.a.length) ? entry.a : auEffActionsFor(app, level, entry.r);
+        groups.push({ r: entry.r, a: verbs.slice() });
+      }
+      return groups;
+    }
+    /* Round 5 (2026-06-09): summary row now renders compact resource
+       counts — "Orders (3); Media Plans (1); …" — instead of the
+       verbose "Resource: Action, Action" strings. The full action
+       list is reserved for the "View breakdown" modal so the table
+       stays scannable. The count is the number of action verbs the
+       user has for that resource at the row's Access Level. */
+    function auEffGroupHtml(group) {
+      var n = (group.a && group.a.length) ? group.a.length : 0;
+      return (
+        '<span class="au-eff-summary-group">' +
+          '<span class="au-eff-summary-res">' + esc(group.r) + '</span> ' +
+          '<span class="au-eff-summary-count">(' + n + ')</span>' +
+        '</span>'
+      );
+    }
+    function auEffGroupText(group) {
+      var n = (group.a && group.a.length) ? group.a.length : 0;
+      return group.r + " (" + n + ")";
+    }
+    /* Brief 2026-06-08 (round 3): single-line semicolon-separated
+       summary. The renderer emits the FULL text; auEffApplyOverflow()
+       then trims the tail until the row fits on one line and appends
+       "+N more" with a native title tooltip listing only the hidden
+       groups. No dot/bullet separators, no chips, no link styling. */
+    function auEffSummaryTextHtml(app, level, resEntries) {
+      var groups = auEffBuildGroups(app, level, resEntries);
+      if (!groups.length) {
+        return '<span class="au-eff-summary au-eff-summary--none">No assigned access</span>';
+      }
+      var SEP = '<span class="au-eff-summary-sep" aria-hidden="true">; </span>';
+      var parts = [];
+      for (var i = 0; i < groups.length; i++) parts.push(auEffGroupHtml(groups[i]));
+      return '<span class="au-eff-summary">' + parts.join(SEP) + '</span>';
+    }
+
+    /* Pick the most plausible access-class for a (role, team) pair.
+       Priority order:
+         1. Admin/ICM/TOM admin role → admin/icm_admin/tom_admin
+         2. Programmatic-relevant team → programmatic
+         3. Ad Ops team → ad_ops
+         4. Planning Manager + Revenue & Yield Management team → revenue_yield
+         5. Planning Manager (any other team) → planning_manager
+         6. Planner / Planning Specialist / Campaign Planner → planner
+         7. Ad Operations Specialist role → ad_ops (covers Lisa etc.)
+         8. Read-Only Viewer ON sales team → sales (§7.A)
+         9. Read-Only Viewer ON revenue team → revenue_yield
+        10. Read-Only Viewer (no other signal) → viewer
+        11. Operations Admin (catch-all) → planner if on planning team
+            else sales if on sales team else viewer
+       The function is conservative: only signal-driven mappings, no
+       random surprises. Unknown user → _default. */
+    function auEffClassifyForUser(roleId, teamName, userRecord) {
+      /* Honour explicit admin role IDs first. */
+      if (roleId && AU_EFF_ROLE_CLASS[roleId]) {
+        var byRole = AU_EFF_ROLE_CLASS[roleId];
+        if (byRole === "admin" || byRole === "icm_admin" || byRole === "tom_admin") return byRole;
+        if (byRole === "ad_ops") return "ad_ops";
+      }
+      /* Team-driven routing for the new sales / programmatic / ad-ops
+         / revenue-yield classes. */
+      if (teamName === "Addressable & Programmatic Sales") return "programmatic";
+      if (teamName === "Ad Operations") return "ad_ops";
+
+      /* Detect ICM Admin / TOM Admin even when it's a secondary role. */
+      var roleNames = (userRecord && userRecord.roles) || [];
+      for (var i = 0; i < roleNames.length; i++) {
+        if (roleNames[i] === "ICM Admin") return "icm_admin";
+        if (roleNames[i] === "TOM Admin") return "tom_admin";
+        if (roleNames[i] === "Atlas Admin") return "admin";
+      }
+      var primary = roleNames[0] || "";
+      if (primary === "Planning Manager") {
+        if (teamName === "Revenue & Yield Management") return "revenue_yield";
+        return "planning_manager";
+      }
+      if (primary === "Planner" || primary === "Planning Specialist" || primary === "Campaign Planner") {
+        if (teamName === "Revenue & Yield Management") return "revenue_yield";
+        if (AU_EFF_SALES_TEAMS[teamName]) return "sales";
+        return "planner";
+      }
+      if (primary === "Ad Operations Specialist") return "ad_ops";
+      if (primary === "Core Planning Admin") return "planning_admin";
+      if (primary === "Operations Admin") {
+        if (teamName === "Revenue & Yield Management") return "revenue_yield";
+        if (teamName === "Sales Planning") return "planner";
+        if (AU_EFF_SALES_TEAMS[teamName]) return "sales";
+        return "viewer";
+      }
+      if (primary === "Read-Only Viewer") {
+        if (teamName === "Revenue & Yield Management") return "revenue_yield";
+        if (AU_EFF_SALES_TEAMS[teamName]) return "sales";
+        return "viewer";
+      }
+      /* Fall back to roleId mapping if no other signal fired. */
+      if (roleId && AU_EFF_ROLE_CLASS[roleId]) return AU_EFF_ROLE_CLASS[roleId];
+      return "_default";
+    }
+
+    /* Round 5 (2026-06-09): we now also stash the resolved pattern
+       (assigned-role name + per-app sections + per-resource action
+       lists) into a module-level snapshot so the "View breakdown"
+       modal can render the long-form details without re-running the
+       classify/resolve pipeline. The table itself continues to show
+       the compact counts. */
+    var auEffLastBreakdown = null;
+
+    function renderAuEffectiveAccessTable(roleId, userRecord) {
+      if (!auEffTbody) return;
+      /* userRecord is optional — when called from openEditUserForId
+         it's the freshly-selected user. When called from the role
+         combo onChange (without a fresh user), fall back to the
+         currently-edited user via auEditingUserId. */
+      var u = userRecord;
+      if (!u && typeof findUserInOriginalById === "function" && auEditingUserId) {
+        u = findUserInOriginalById(auEditingUserId);
+      }
+      var teamName = u ? (u.team || "") : "";
+      var roleClass = auEffClassifyForUser(roleId, teamName, u);
+      var pattern = AU_EFF_PATTERNS[roleClass] || AU_EFF_PATTERNS._default;
+      var roleName = "";
+      if (roleId && typeof findRoleById === "function") {
+        var r = findRoleById(roleId);
+        if (r && r.role) roleName = r.role;
+      }
+      var breakdown = { roleName: roleName, sections: [] };
+      var html = "";
+      for (var i = 0; i < pattern.length; i++) {
+        var spec = pattern[i];
+        var chipKeys = auEffResolveChips(spec.app, spec.chips);
+        var levelClass = "au-eff-level-pill--" + (spec.level || "").toLowerCase().replace(/\s+/g, "-");
+        var groups = auEffBuildGroups(spec.app, spec.level, chipKeys);
+        breakdown.sections.push({ app: spec.app, level: spec.level, groups: groups });
+        var groupsAttr = esc(JSON.stringify(groups)).replace(/"/g, "&quot;");
+        html += '<tr>' +
+          '<td class="au-eff-app">' +
+            '<span class="au-eff-app-name">' + esc(spec.app) + '</span>' +
+          '</td>' +
+          '<td class="au-eff-level"><span class="au-eff-level-pill ' + levelClass + '">' + esc(spec.level) + '</span></td>' +
+          '<td class="au-eff-summary-cell" data-eff-groups="' + groupsAttr + '">' +
+            auEffSummaryTextHtml(spec.app, spec.level, chipKeys) +
+          '</td>' +
+        '</tr>';
+      }
+      auEffTbody.innerHTML = html;
+      auEffLastBreakdown = breakdown;
+      auEffApplyOverflow();
+    }
+
+    /* ─── Effective access breakdown modal ──────────────────────────
+       Opened by the "View breakdown" action in the Access table
+       header area. Reuses the EDL `.cr-confirm-*` shell (Remove Role /
+       Remove application / Set inactive / Add members) widened via
+       `.au-eff-modal-dialog` so the long resource/action list reads
+       comfortably. The modal is read-only and uses the snapshot
+       captured by renderAuEffectiveAccessTable, so the content stays
+       in sync with whatever the table currently shows. */
+    var auEffModalBackdrop = document.getElementById("auEffBreakdownBackdrop");
+    var auEffModalRoleName = document.getElementById("auEffBreakdownRoleName");
+    var auEffModalSections = document.getElementById("auEffBreakdownSections");
+    var auEffModalClose    = document.getElementById("auEffBreakdownClose");
+    /* Round 8: EDL Modal exposes a header `×` icon button. Wire it
+       to the same close handler so the icon, footer button, Esc, and
+       backdrop click all converge on `closeAuEffBreakdown()`. */
+    var auEffModalCloseX   = document.getElementById("auEffBreakdownX");
+    var auEffViewBtn       = document.getElementById("auEffViewBreakdown");
+    var auEffModalLastFocus = null;
+
+    function auEffRenderBreakdownModal() {
+      if (!auEffModalSections) return;
+      var b = auEffLastBreakdown;
+      if (auEffModalRoleName) {
+        auEffModalRoleName.textContent = (b && b.roleName) ? b.roleName : "—";
+      }
+      if (!b || !b.sections || !b.sections.length) {
+        auEffModalSections.innerHTML =
+          '<p class="au-eff-modal-empty">No effective access for the assigned role.</p>';
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < b.sections.length; i++) {
+        var sec = b.sections[i];
+        html += '<section class="au-eff-modal-section">';
+        html += '<h3 class="au-eff-modal-app">' + esc(sec.app) + '</h3>';
+        if (!sec.groups || !sec.groups.length) {
+          html += '<p class="au-eff-modal-empty">No assigned access.</p>';
+        } else {
+          html += '<dl class="au-eff-modal-list">';
+          for (var j = 0; j < sec.groups.length; j++) {
+            var g = sec.groups[j];
+            var verbs = (g.a && g.a.length) ? g.a.join(", ") : "Read";
+            html +=
+              '<div class="au-eff-modal-row">' +
+                '<dt class="au-eff-modal-res">' + esc(g.r) + '</dt>' +
+                '<dd class="au-eff-modal-acts">' + esc(verbs) + '</dd>' +
+              '</div>';
+          }
+          html += '</dl>';
+        }
+        html += '</section>';
+      }
+      auEffModalSections.innerHTML = html;
+    }
+
+    function openAuEffBreakdown() {
+      if (!auEffModalBackdrop) return;
+      auEffRenderBreakdownModal();
+      auEffModalLastFocus = document.activeElement;
+      auEffModalBackdrop.removeAttribute("hidden");
+      setTimeout(function () {
+        if (auEffModalClose) auEffModalClose.focus();
+      }, 0);
+    }
+    function closeAuEffBreakdown() {
+      if (!auEffModalBackdrop) return;
+      auEffModalBackdrop.setAttribute("hidden", "");
+      if (auEffModalLastFocus && typeof auEffModalLastFocus.focus === "function") {
+        auEffModalLastFocus.focus();
+      }
+      auEffModalLastFocus = null;
+    }
+
+    if (auEffViewBtn) auEffViewBtn.addEventListener("click", openAuEffBreakdown);
+    if (auEffModalClose) auEffModalClose.addEventListener("click", closeAuEffBreakdown);
+    if (auEffModalCloseX) auEffModalCloseX.addEventListener("click", closeAuEffBreakdown);
+    if (auEffModalBackdrop) {
+      auEffModalBackdrop.addEventListener("click", function (e) {
+        if (e.target === auEffModalBackdrop) closeAuEffBreakdown();
+      });
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      if (auEffModalBackdrop && !auEffModalBackdrop.hasAttribute("hidden")) {
+        closeAuEffBreakdown();
+      }
+    });
+
+    /* Post-render measure pass. For each .au-eff-summary-cell:
+         1. Recover the full ordered group list from data-eff-groups.
+         2. Render full text. If the cell's scrollWidth ≤ clientWidth
+            and the inner span doesn't break the line, leave full text
+            visible.
+         3. Otherwise, drop groups from the tail and append
+            "+N more" (with a native title tooltip listing only the
+            HIDDEN groups, one per line) until the row fits on a
+            single line OR we run out of groups to drop.
+       Called on initial render and on debounced window resize so the
+       summary expands back to full text when the user widens the
+       viewport. The pass uses temporary DOM writes only — no external
+       state — so it is safe to call repeatedly. */
+    function auEffApplyOverflow() {
+      if (!auEffTbody) return;
+      var cells = auEffTbody.querySelectorAll(".au-eff-summary-cell");
+      for (var i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        var raw = cell.getAttribute("data-eff-groups");
+        if (!raw) continue;
+        var groups;
+        try { groups = JSON.parse(raw); } catch (_e) { groups = []; }
+        if (!groups || !groups.length) continue;
+        renderSummaryCell(cell, groups, groups.length);
+        var n = groups.length;
+        /* Iteratively trim the tail until the visible string fits on
+           one line. cellFits() rounds to integer pixels because of
+           sub-pixel rendering on macOS Retina. */
+        while (n > 1 && !cellFits(cell)) {
+          n -= 1;
+          renderSummaryCell(cell, groups, n);
+        }
+      }
+    }
+    function cellFits(cell) {
+      var span = cell.querySelector(".au-eff-summary");
+      if (!span) return true;
+      /* +1 fudge for sub-pixel layout differences. */
+      return span.scrollWidth <= cell.clientWidth + 1;
+    }
+    function renderSummaryCell(cell, groups, visibleCount) {
+      var SEP = '<span class="au-eff-summary-sep" aria-hidden="true">; </span>';
+      var visible = groups.slice(0, visibleCount);
+      var hidden  = groups.slice(visibleCount);
+      var parts = [];
+      for (var j = 0; j < visible.length; j++) parts.push(auEffGroupHtml(visible[j]));
+      if (hidden.length) {
+        var tipLines = [];
+        for (var k = 0; k < hidden.length; k++) tipLines.push(auEffGroupText(hidden[k]));
+        /* data-tooltip is consumed by the existing EDL tooltip system
+           (showTooltipFor → multiline). Same attribute used by the
+           Users-table "+N role" chip, so visuals and positioning are
+           guaranteed consistent. The native title attribute is omitted
+           on purpose — we don't want the OS tooltip racing the EDL one. */
+        var tipAttr = esc(tipLines.join("\n")).replace(/"/g, "&quot;");
+        parts.push(
+          '<span class="au-eff-summary-more" aria-label="' + hidden.length + ' more"' +
+            ' data-tooltip="' + tipAttr + '" tabindex="0">+' + hidden.length + ' more</span>'
+        );
+      }
+      cell.innerHTML = '<span class="au-eff-summary">' + parts.join(SEP) + '</span>';
+    }
+
+    /* Debounced re-measure on viewport resize so "+N more" collapses or
+       expands as the column width changes. Only applies when the Access
+       table is mounted. Listener is attached once at IIFE scope. */
+    var auEffResizeTimer = null;
+    window.addEventListener("resize", function () {
+      if (!auEffTbody || !auEffTbody.children.length) return;
+      if (auEffResizeTimer) clearTimeout(auEffResizeTimer);
+      auEffResizeTimer = setTimeout(auEffApplyOverflow, 120);
+    });
+
+    /* Round 4 (2026-06-08): wire the existing EDL tooltip system to the
+       Access table's "+N more" trigger. The shared showTooltipFor /
+       hideTooltip helpers live at top-level script scope (used by
+       Users-table .role-extra and the PM "Used in" cell), so we can
+       reach them from this IIFE via lexical scope.
+       Native title= was unreliable for an inline span sitting inside an
+       overflow:hidden cell, so the renderer now writes data-tooltip
+       instead and we drive the EDL tooltip ourselves here. */
+    if (auEffTbody) {
+      auEffTbody.addEventListener("mouseover", function (e) {
+        var more = e.target.closest(".au-eff-summary-more");
+        if (!more) { hideTooltip(); return; }
+        var lines = more.getAttribute("data-tooltip");
+        if (lines) showTooltipFor(more, lines, true);
+      });
+      auEffTbody.addEventListener("mouseleave", hideTooltip);
+      auEffTbody.addEventListener("focusin", function (e) {
+        var more = e.target.closest(".au-eff-summary-more");
+        if (!more) return;
+        var lines = more.getAttribute("data-tooltip");
+        if (lines) showTooltipFor(more, lines, true);
+      });
+      auEffTbody.addEventListener("focusout", function (e) {
+        if (e.target.closest(".au-eff-summary-more")) hideTooltip();
+      });
     }
 
     function openEditUserForId(userId) {
@@ -5831,250 +6840,16 @@ document.addEventListener("DOMContentLoaded", function () {
      2026-05-29 per Frances QA on this tab.) Role-link click → Edit
      Role wiring lives further down via `document.getElementById('rpTbody')`. */
 
-  /* ═══ V3 PERMISSION CATALOG TABLE ═══
-     Read-only catalog of registered permission functions. Pipeline:
-     filter drawer (function key / display name / app / resource /
-     action / status) + toolbar search → sort → page → render.
-     The dataset is the static `PERMISSION_CATALOG_DATA` seed (see
-     declaration near line ~1131); the Permissions tab in V3 does not
-     surface the legacy FUNCTION_REGISTRY-derived data.
-
-     Filter contract: every filter on `pmFilters` is opt-in — empty
-     string means the predicate is skipped. Text inputs use a
-     case-insensitive substring match on the matching row field;
-     the three EDL combos (App / Action / Status) use exact equality
-     on the value (which mirrors the row data verbatim). */
-  function getPMFilteredData() {
-    var result = PERMISSION_CATALOG_DATA;
-    if (pmFilters.app) {
-      result = result.filter(function (row) { return row.app === pmFilters.app; });
-    }
-    if (pmFilters.action) {
-      result = result.filter(function (row) { return row.action === pmFilters.action; });
-    }
-    if (pmFilters.status) {
-      result = result.filter(function (row) { return row.status === pmFilters.status; });
-    }
-    if (pmFilters.fnKey) {
-      var qk = pmFilters.fnKey.toLowerCase();
-      result = result.filter(function (row) {
-        return row.key != null && String(row.key).toLowerCase().indexOf(qk) !== -1;
-      });
-    }
-    if (pmFilters.displayName) {
-      var qn = pmFilters.displayName.toLowerCase();
-      result = result.filter(function (row) {
-        return row.name != null && String(row.name).toLowerCase().indexOf(qn) !== -1;
-      });
-    }
-    if (pmFilters.resource) {
-      var qr = pmFilters.resource.toLowerCase();
-      result = result.filter(function (row) {
-        return row.resource != null && String(row.resource).toLowerCase().indexOf(qr) !== -1;
-      });
-    }
-    if (pmSearchTerm) {
-      var q = pmSearchTerm.toLowerCase();
-      result = result.filter(function (row) {
-        for (var i = 0; i < PM_SEARCH_FIELDS.length; i++) {
-          var v = row[PM_SEARCH_FIELDS[i]];
-          if (v != null && String(v).toLowerCase().indexOf(q) !== -1) return true;
-        }
-        return false;
-      });
-    }
-    return result;
-  }
-
-  function getPMSortedData() {
-    var data = getPMFilteredData();
-    if (!pmSortKey) return data;
-    var sorted = data.slice();
-    sorted.sort(function (a, b) {
-      var va = a[pmSortKey], vb = b[pmSortKey];
-      /* usedIn is numeric; coerce to number for correct ordering. */
-      if (pmSortKey === "usedIn") {
-        va = Number(va) || 0; vb = Number(vb) || 0;
-        return pmSortDir === "asc" ? va - vb : vb - va;
-      }
-      va = String(va || "").toLowerCase();
-      vb = String(vb || "").toLowerCase();
-      if (va < vb) return pmSortDir === "asc" ? -1 : 1;
-      if (va > vb) return pmSortDir === "asc" ? 1 : -1;
-      return 0;
-    });
-    return sorted;
-  }
-
-  function getPMPageData() {
-    var sorted = getPMSortedData();
-    var start = (pmCurrentPage - 1) * pmPageSize;
-    return sorted.slice(start, start + pmPageSize);
-  }
-
-  function pmTotalPages() {
-    return Math.max(1, Math.ceil(getPMFilteredData().length / pmPageSize));
-  }
-
-  /* Status chip styles for the Permission Catalog table.
-     EDL Component Library variants (Frances QA 2026-05-29):
-       • Active   → EDL Chip type=Default, color=Demoted (Gray 15 bg,
-                    Gray 20 border, Gray 95 text) — Figma 4722-57917
-       • Inactive → EDL Chip type=Default, color=Error  (Red 10 bg,
-                    Red 20 border, Red 70 text) — Figma 4722-58126 */
-  var PM_STATUS_CHIP_CLASS = {
-    "Active":   "pm-chip--active",
-    "Inactive": "pm-chip--inactive"
-  };
-  function pmStatusChipHtml(status) {
-    var cls = PM_STATUS_CHIP_CLASS[status] || "pm-chip--active";
-    return '<span class="pm-chip ' + cls + '">' + esc(status) + '</span>';
-  }
-
-  /* Used-in cell helper. Numeric counts read as "N role(s)";
-     null = "Not assigned". When the catalog row maps to roles that
-     exist in ROLES_PERMISSIONS_DATA via `permissionUsedInRoles`, the
-     real role names hydrate the EDL hover tooltip so users can see
-     which roles consume the function without leaving the table.  */
-  function pmUsedInCell(row) {
-    if (row.usedIn == null) {
-      return '<span class="pm-used-none">Not assigned</span>';
-    }
-    var label = String(row.usedIn) + " " + (row.usedIn === 1 ? "role" : "roles");
-    var roles = (typeof permissionUsedInRoles === "function") ? permissionUsedInRoles(row.key) : [];
-    if (roles && roles.length > 0) {
-      return '<span class="pm-used-roles" data-roles-tip="' + esc(roles.join("\n")) + '" tabindex="0" aria-label="' + esc(label + ": " + roles.join(", ")) + '">' + esc(label) + '</span>';
-    }
-    return esc(label);
-  }
-
-  function renderPMTable() {
-    var rows = getPMPageData();
-    var tb = document.getElementById("pmTbody");
-    if (!tb) return;
-    if (rows.length === 0) {
-      tb.innerHTML = '<tr><td colspan="7" class="empty-state">No functions match the current filters.</td></tr>';
-      return;
-    }
-    var html = "";
-    for (var i = 0; i < rows.length; i++) {
-      var r = rows[i];
-      /* Read-only catalog row — no per-row CTAs, no edit affordance,
-         no checkbox, no click target (drawer removed 2026-05-29).
-         `data-id` is retained for table-state diagnostics only. */
-      html += '<tr data-id="' + esc(r.id) + '">' +
-        '<td class="pm-key"><code class="pm-key-code">' + esc(r.key) + '</code></td>' +
-        '<td class="pm-name">' + esc(r.name) + '</td>' +
-        '<td class="pm-app">' + esc(r.app) + '</td>' +
-        '<td class="pm-resource">' + esc(r.resource) + '</td>' +
-        '<td class="pm-action">' + esc(r.action) + '</td>' +
-        '<td class="pm-used">' + pmUsedInCell(r) + '</td>' +
-        '<td class="pm-status">' + pmStatusChipHtml(r.status) + '</td>' +
-        '</tr>';
-    }
-    tb.innerHTML = html;
-  }
-
-  function renderPMPagination() {
-    var tp = pmTotalPages();
-    var pgNums = document.getElementById("pmPgNums");
-    if (!pgNums) return;
-    var btns = [];
-    if (tp <= 7) {
-      for (var i = 1; i <= tp; i++) btns.push(i);
-    } else {
-      btns.push(1);
-      if (pmCurrentPage > 3) btns.push("...");
-      var lo = Math.max(2, pmCurrentPage - 1);
-      var hi = Math.min(tp - 1, pmCurrentPage + 1);
-      if (pmCurrentPage <= 3) { lo = 2; hi = 4; }
-      if (pmCurrentPage >= tp - 2) { lo = tp - 3; hi = tp - 1; }
-      for (var j = lo; j <= hi; j++) btns.push(j);
-      if (pmCurrentPage < tp - 2) btns.push("...");
-      btns.push(tp);
-    }
-    var html = "";
-    for (var k = 0; k < btns.length; k++) {
-      if (btns[k] === "...") {
-        html += '<span class="pg-dots">\u2026</span>';
-      } else {
-        html += '<button class="pg-n' + (btns[k] === pmCurrentPage ? " on" : "") + '" data-pm-pg="' + btns[k] + '">' + btns[k] + '</button>';
-      }
-    }
-    pgNums.innerHTML = html;
-
-    var navFirst = document.querySelector('#pmPgnPages [data-pm-nav="first"]');
-    var navPrev  = document.querySelector('#pmPgnPages [data-pm-nav="prev"]');
-    var navNext  = document.querySelector('#pmPgnPages [data-pm-nav="next"]');
-    var navLast  = document.querySelector('#pmPgnPages [data-pm-nav="last"]');
-    if (navFirst) navFirst.classList.toggle("off", pmCurrentPage === 1);
-    if (navPrev)  navPrev.classList.toggle("off", pmCurrentPage === 1);
-    if (navNext)  navNext.classList.toggle("off", pmCurrentPage === tp);
-    if (navLast)  navLast.classList.toggle("off", pmCurrentPage === tp);
-
-    var filteredCount = getPMFilteredData().length;
-    var ic = document.getElementById("pmItemCount");
-    if (ic) ic.textContent = "of " + filteredCount + " items";
-    var tl = document.getElementById("pmTotalLabel");
-    if (tl) tl.textContent = "Total functions: " + PERMISSION_CATALOG_DATA.length;
-
-    /* Page-size dropdown menu sync (reused EDL .cr-dd component). */
-    var pmPageSizeMenu = document.getElementById("pmPageSizeMenu");
-    var pmPageSizeValue = document.getElementById("pmPageSizeValue");
-    if (pmPageSizeMenu && pmPageSizeValue) {
-      var sizes = [10, 25, 50];
-      var pshtml = "";
-      for (var si = 0; si < sizes.length; si++) {
-        var ns = sizes[si];
-        pshtml += '<div class="cr-dd-option' + (ns === pmPageSize ? " is-selected" : "") + '" role="option" data-pm-psize="' + ns + '">' + ns + "</div>";
-      }
-      pmPageSizeMenu.innerHTML = pshtml;
-      pmPageSizeValue.textContent = String(pmPageSize);
-    }
-  }
-
-  function pmGoToPage(pg) {
-    var tp = pmTotalPages();
-    pg = Math.max(1, Math.min(pg, tp));
-    if (pg === pmCurrentPage) return;
-    pmCurrentPage = pg;
-    renderPMTable();
-    renderPMPagination();
-  }
-
-  function applyPMSort(key) {
-    if (pmSortKey === key) {
-      if (pmSortDir === "asc") pmSortDir = "desc";
-      else if (pmSortDir === "desc") { pmSortDir = null; pmSortKey = null; }
-    } else {
-      pmSortKey = key;
-      pmSortDir = "asc";
-    }
-    pmCurrentPage = 1;
-    renderPMTable();
-    renderPMPagination();
-    updatePMSortHeaders();
-  }
-
-  function updatePMSortHeaders() {
-    var ths = document.querySelectorAll("th[data-pm-sort]");
-    for (var i = 0; i < ths.length; i++) {
-      ths[i].classList.remove("sort-asc", "sort-desc");
-      if (pmSortKey && ths[i].dataset.pmSort === pmSortKey) {
-        if (pmSortDir === "asc") ths[i].classList.add("sort-asc");
-        else if (pmSortDir === "desc") ths[i].classList.add("sort-desc");
-      }
-    }
-  }
-
-  /* ─── PM Sort header clicks ─── */
-  var pmThead = document.querySelector(".pm-tbl thead");
-  if (pmThead) {
-    pmThead.addEventListener("click", function (e) {
-      var th = e.target.closest("th[data-pm-sort]");
-      if (th) applyPMSort(th.dataset.pmSort);
-    });
-  }
+  /* Standalone Permission Catalog render / sort / pagination /
+     status-chip / used-in helpers (getPMFilteredData,
+     getPMSortedData, getPMPageData, pmTotalPages, renderPMTable,
+     renderPMPagination, pmGoToPage, applyPMSort,
+     updatePMSortHeaders, pmUsedInCell, pmStatusChipHtml) and the
+     `pmThead` sort-header listener were REMOVED 2026-06-07 along
+     with the Permissions / Functions tab. Edit Role's permission
+     matrix (built from `derivePMResourcesForApp` /
+     `pmGroupsForAppToken` / FUNCTION_REGISTRY / PC_GROUP_FOR_KEY /
+     PC_POOL_BY_GROUP) is intentionally KEPT and unchanged. */
 
   /* PM Catalog row click / keydown — removed Frances QA 2026-05-29.
      The catalog is intentionally non-interactive; rows are pure
@@ -6598,8 +7373,10 @@ document.addEventListener("DOMContentLoaded", function () {
     pcDetailPage.style.display = "none";
     var mp = document.querySelector(".page");
     if (mp) mp.style.display = "";
-    /* Return to the Permission Management tab specifically. */
-    if (typeof switchTab === "function") switchTab("perms");
+    /* The standalone Permissions tab was removed 2026-06-07; this
+       page is no longer reachable from any UI today, but if it ever
+       gets opened programmatically, return to Users (the default). */
+    if (typeof switchTab === "function") switchTab("users");
   }
 
   if (pcBackBtn)   pcBackBtn.addEventListener("click", closePermissionDetail);
@@ -6637,7 +7414,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "Identity Access Management":  "IAM",
     "Core Planning":               "Core Planning",
     "Inventory Catalog Manager":   "ICM",
-    "Target Options Manager":      "TOM",
+    "Targeting Options Manager":      "TOM",
     "Disney Ads Agent":            "Disney Ads Agent"
   };
   /* Per-app, per-group impacted-role seed for the newly-onboarded
@@ -6848,227 +7625,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ─── PM Pagination events ─── */
-  var pmPgNumsEl = document.getElementById("pmPgNums");
-  if (pmPgNumsEl) {
-    pmPgNumsEl.addEventListener("click", function (e) {
-      var btn = e.target.closest("[data-pm-pg]");
-      if (btn) pmGoToPage(parseInt(btn.dataset.pmPg, 10));
-    });
-  }
-  var pmNavFirst = document.querySelector('#pmPgnPages [data-pm-nav="first"]');
-  var pmNavPrev  = document.querySelector('#pmPgnPages [data-pm-nav="prev"]');
-  var pmNavNext  = document.querySelector('#pmPgnPages [data-pm-nav="next"]');
-  var pmNavLast  = document.querySelector('#pmPgnPages [data-pm-nav="last"]');
-  if (pmNavFirst) pmNavFirst.addEventListener("click", function () { pmGoToPage(1); });
-  if (pmNavPrev)  pmNavPrev.addEventListener("click", function () { pmGoToPage(pmCurrentPage - 1); });
-  if (pmNavNext)  pmNavNext.addEventListener("click", function () { pmGoToPage(pmCurrentPage + 1); });
-  if (pmNavLast)  pmNavLast.addEventListener("click", function () { pmGoToPage(pmTotalPages()); });
-
-  /* ─── PM Page-size dropdown (reuses EDL .cr-dd) ─── */
-  (function wirePmPageSizeDd() {
-    var pmPageSizeMenu = document.getElementById("pmPageSizeMenu");
-    var pmPageSizeDD = document.getElementById("pmPageSizeDD");
-    var pmPageSizeTrigger = document.getElementById("pmPageSizeTrigger");
-    if (pmPageSizeMenu) {
-      pmPageSizeMenu.addEventListener("click", function (e) {
-        var row = e.target.closest("[data-pm-psize]");
-        if (!row) return;
-        pmPageSize = parseInt(row.getAttribute("data-pm-psize"), 10);
-        pmCurrentPage = 1;
-        if (pmPageSizeDD) pmPageSizeDD.classList.remove("open");
-        if (pmPageSizeTrigger) pmPageSizeTrigger.setAttribute("aria-expanded", "false");
-        if (typeof detachCrDdLayeredMenu === "function") detachCrDdLayeredMenu(pmPageSizeDD);
-        renderPMTable();
-        renderPMPagination();
-      });
-    }
-    if (pmPageSizeTrigger && pmPageSizeDD) {
-      pmPageSizeTrigger.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var open = pmPageSizeDD.classList.toggle("open");
-        pmPageSizeTrigger.setAttribute("aria-expanded", open ? "true" : "false");
-        if (open && typeof attachCrDdLayeredMenu === "function") attachCrDdLayeredMenu(pmPageSizeDD);
-        else if (!open && typeof detachCrDdLayeredMenu === "function") detachCrDdLayeredMenu(pmPageSizeDD);
-      });
-    }
-  })();
-
-  /* ─── PM Search input ─── */
-  (function wirePmSearch() {
-    var pmInput = document.getElementById("pmSearchInput");
-    var pmClear = document.getElementById("pmSearchClear");
-    if (!pmInput) return;
-    pmInput.addEventListener("input", function () {
-      pmSearchTerm = (pmInput.value || "").trim();
-      pmCurrentPage = 1;
-      if (pmClear) pmClear.classList.toggle("hidden", pmSearchTerm === "");
-      renderPMTable();
-      renderPMPagination();
-    });
-    if (pmClear) {
-      pmClear.addEventListener("click", function () {
-        pmInput.value = "";
-        pmSearchTerm = "";
-        pmCurrentPage = 1;
-        pmClear.classList.add("hidden");
-        renderPMTable();
-        renderPMPagination();
-        pmInput.focus();
-      });
-    }
-  })();
-
-  /* ─── PM Catalog filter drawer (Filters slide-out, EDL pattern) ───
-     Replaces the previous inline `.pm-filter-dd` dropdowns (Frances
-     QA 2026-05-29 round 3) so the Permissions tab now matches the
-     Filter-button + left-side drawer pattern used by Users (#fltDrawer)
-     and Roles (#rpFltDrawer).
-
-     State model (mirrors Roles, NOT Users):
-       • pmFilters     — committed/applied filters (drives the table)
-       • pmFltDraft    — drawer working copy (drives drawer UI only)
-       • Apply         → pmFilters = clone(pmFltDraft); render; close
-       • Cancel/X/scrim → close (drawer UI may be stale; next open
-                          re-syncs from pmFilters)
-       • Reset Filters → clear pmFilters AND drawer fields, render
-     This is the apply-on-click model — text inputs do NOT live-filter
-     the table from inside the drawer (matches Roles UX, lets the user
-     compose a multi-field filter before committing). */
-  (function setupPmFilterDrawer() {
-    var pmFltOverlay = document.getElementById("pmFltOverlay");
-    var pmFltDrawer  = document.getElementById("pmFltDrawer");
-    var pmFilterBtn  = document.getElementById("pmFilterBtn");
-    if (!pmFltOverlay || !pmFltDrawer || !pmFilterBtn) return;
-
-    /* Mount the three EDL combos. initCombo writes selections into
-       pmFltDraft (matching the Roles drawer flow). The setter is a
-       no-op so commits happen only on Apply. The "All …" rows in
-       PM_FILTER_* use empty-string values, so a cleared combo means
-       "no filter on this field". */
-    var setPmFltApp    = initCombo("pmFltAppCombo",    PM_FILTER_APPS,    "app",    "All Applications", pmFltDraft, function () {});
-    var setPmFltAction = initCombo("pmFltActionCombo", PM_FILTER_ACTIONS, "action", "All Actions",      pmFltDraft, function () {});
-    var setPmFltStatus = initCombo("pmFltStatusCombo", PM_FILTER_STATUS,  "status", "All Statuses",     pmFltDraft, function () {});
-
-    /* Three text-input fields. Same wiring as the Roles drawer:
-       typing into an input mutates pmFltDraft (NOT pmFilters), and
-       toggles the inline clear-x affordance. */
-    var pmFltTextInputs = [
-      { id: "pmFltFnKey",       key: "fnKey" },
-      { id: "pmFltDisplayName", key: "displayName" },
-      { id: "pmFltResource",    key: "resource" }
-    ];
-    function updatePmFltClearBtn(input) {
-      var btn = input.parentNode.querySelector(".flt-input-clear");
-      if (btn) btn.classList.toggle("hidden", !input.value);
-    }
-    for (var pti = 0; pti < pmFltTextInputs.length; pti++) {
-      (function (cfg) {
-        var input = document.getElementById(cfg.id);
-        if (!input) return;
-        input.addEventListener("input", function () {
-          pmFltDraft[cfg.key] = this.value.trim();
-          updatePmFltClearBtn(this);
-        });
-      })(pmFltTextInputs[pti]);
-    }
-
-    /* Delegated clear-x handler — same pattern as the Roles drawer. */
-    pmFltDrawer.addEventListener("click", function (e) {
-      var clearBtn = e.target.closest && e.target.closest(".flt-input-clear");
-      if (!clearBtn) return;
-      var input = document.getElementById(clearBtn.getAttribute("data-for"));
-      if (!input) return;
-      input.value = "";
-      input.focus();
-      input.dispatchEvent(new Event("input"));
-    });
-
-    /* Sync the drawer UI from the currently-applied pmFilters. Called
-       on every open and after Reset/Cancel so the drawer never shows
-       a stale draft. Mutates pmFltDraft in place — initCombo captured
-       this object reference at mount time. */
-    function syncPmFltDrawerFromApplied() {
-      pmFltDraft.fnKey       = pmFilters.fnKey;
-      pmFltDraft.displayName = pmFilters.displayName;
-      pmFltDraft.app         = pmFilters.app;
-      pmFltDraft.resource    = pmFilters.resource;
-      pmFltDraft.action      = pmFilters.action;
-      pmFltDraft.status      = pmFilters.status;
-      var fk = document.getElementById("pmFltFnKey");
-      var dn = document.getElementById("pmFltDisplayName");
-      var rs = document.getElementById("pmFltResource");
-      if (fk) fk.value = pmFilters.fnKey;
-      if (dn) dn.value = pmFilters.displayName;
-      if (rs) rs.value = pmFilters.resource;
-      setPmFltApp(pmFilters.app);
-      setPmFltAction(pmFilters.action);
-      setPmFltStatus(pmFilters.status);
-      for (var i = 0; i < pmFltTextInputs.length; i++) {
-        var el = document.getElementById(pmFltTextInputs[i].id);
-        if (el) updatePmFltClearBtn(el);
-      }
-    }
-
-    function openPmFilter() {
-      syncPmFltDrawerFromApplied();
-      pmFltOverlay.classList.add("open");
-      pmFltDrawer.classList.add("open");
-    }
-    function closePmFilter() {
-      pmFltOverlay.classList.remove("open");
-      pmFltDrawer.classList.remove("open");
-    }
-
-    pmFilterBtn.addEventListener("click", openPmFilter);
-    var closeBtn  = document.getElementById("pmFltClose");
-    var cancelBtn = document.getElementById("pmFltCancel");
-    var applyBtn  = document.getElementById("pmFltApply");
-    var resetBtn  = document.getElementById("pmFltReset");
-    if (closeBtn)  closeBtn.addEventListener("click", closePmFilter);
-    if (cancelBtn) cancelBtn.addEventListener("click", closePmFilter);
-    pmFltOverlay.addEventListener("click", closePmFilter);
-
-    /* Apply: commit draft → applied, reset to first page, re-render. */
-    if (applyBtn) {
-      applyBtn.addEventListener("click", function () {
-        pmFilters = {
-          fnKey:       pmFltDraft.fnKey,
-          displayName: pmFltDraft.displayName,
-          app:         pmFltDraft.app,
-          resource:    pmFltDraft.resource,
-          action:      pmFltDraft.action,
-          status:      pmFltDraft.status
-        };
-        pmCurrentPage = 1;
-        renderPMTable();
-        renderPMPagination();
-        closePmFilter();
-      });
-    }
-
-    /* Reset: clear committed + drawer fields, re-render. Mirrors the
-       Roles Reset behavior — does NOT close the drawer, so the user
-       can verify the table is back to its full state and then
-       continue composing or Cancel out. */
-    if (resetBtn) {
-      resetBtn.addEventListener("click", function () {
-        pmFilters = { fnKey: "", displayName: "", app: "", resource: "", action: "", status: "" };
-        syncPmFltDrawerFromApplied();
-        pmCurrentPage = 1;
-        renderPMTable();
-        renderPMPagination();
-      });
-    }
-  })();
-
-  /* PM Export CSV — removed Frances QA 2026-05-29. The Permission
-     Catalog is intentionally read-only browse only; no Export CSV,
-     no Create Permission, no Add custom action. */
-
-  /* PM Catalog details drawer — removed Frances QA 2026-05-29.
-     The Permission Catalog is intentionally a read-only browse
-     table with no per-row detail panel. */
+  /* Standalone Permission Catalog pagination events, page-size
+     dropdown, search input, and filter drawer setup were REMOVED
+     2026-06-07 along with the tab itself. Edit Role permission
+     logic is unaffected. */
 
   /* ─── R&P Pagination events ─── */
   document.getElementById("rpPgNums").addEventListener("click", function (e) {
@@ -7171,7 +7731,7 @@ document.addEventListener("DOMContentLoaded", function () {
        PM's ICM/TOM pools, so the level would have resolved to an
        empty bundle. */
     inventory_catalog_manager:  { label: "Inventory Catalog Manager",   levels: APP_LEVELS_BY_CR_KEY.inventory_catalog_manager.slice() },
-    target_options_manager:     { label: "Target Options Manager",      levels: APP_LEVELS_BY_CR_KEY.target_options_manager.slice() }
+    target_options_manager:     { label: "Targeting Options Manager",      levels: APP_LEVELS_BY_CR_KEY.target_options_manager.slice() }
   };
   /* Populate `resources` + `bundles` from the PM catalog. Idempotent
      so it can be called again whenever the PM data model mutates (the
@@ -7227,12 +7787,18 @@ document.addEventListener("DOMContentLoaded", function () {
        data source (not just visually hidden). APP_PERMISSIONS mirrors
        this set — any key not present below has no permissions definition
        and cannot be selected, preselected, or searched. */
+    /* Round 9 (2026-06-09): the brief's Application Names list for
+       Create/Edit Role uses "IAM" (matches Figma node 924:14138). The
+       dropdown option label is updated here to match the matrix
+       section title (`CR_APP_DISPLAY_LABEL.identity_access_management
+       = "IAM"`). The underlying `value` is unchanged so all data
+       hydration / persistence keys remain stable. */
     var CR_APP_OPTIONS = [
-      { value: "identity_access_management", label: "Identity Access Management" },
+      { value: "identity_access_management", label: "IAM" },
       { value: "core_planning",              label: "Core Planning" },
       { value: "disney_ads_agent",           label: "Disney Ads Agent" },
       { value: "inventory_catalog_manager",  label: "Inventory Catalog Manager" },
-      { value: "target_options_manager",     label: "Target Options Manager" }
+      { value: "target_options_manager",     label: "Targeting Options Manager" }
     ];
     var crAppCurrent = "";
     var crAddedApps = [];
@@ -7311,8 +7877,158 @@ document.addEventListener("DOMContentLoaded", function () {
       "Core Planning": "core_planning",
       "TOM": "target_options_manager",
       "IAM": "identity_access_management",
-      "ICM": "inventory_catalog_manager"
+      "ICM": "inventory_catalog_manager",
+      "Disney Ads Agent": "disney_ads_agent"
     };
+
+    /* ─── Authoritative per-role permission matrix ──────────────────
+       Encodes the role archetypes from the Create/Edit Role brief.
+       Each entry maps role id → app key → resource title → list of
+       Figma column labels (Read/Create/Update/Delete/Assign).
+
+       This is the source of truth for which applications the role
+       opens with in Edit Role and which checkboxes are pre-checked.
+       The mapping mirrors the brief's "Suggested role matrix
+       mapping" section (A–J) so different roles look meaningfully
+       different on the Edit Role page (broad / partial / read-only /
+       partial-application coverage). */
+    var CR_ROLE_MATRIX = {
+      /* A. Atlas Admin — broad cross-app access (all 5 apps) */
+      r001: {
+        core_planning: {
+          "Orders":      ["Read", "Create", "Update", "Delete"],
+          "Media Plans": ["Read", "Create", "Update"],
+          "Line Items":  ["Read", "Create", "Update"],
+          "Approvals":   ["Read", "Update"]
+        },
+        identity_access_management: {
+          "Users": ["Read", "Create", "Update", "Delete"],
+          "Roles": ["Read", "Create", "Update", "Delete", "Assign"],
+          "Teams": ["Read", "Create", "Update"]
+        },
+        inventory_catalog_manager: {
+          "Offerings":      ["Read", "Create", "Update", "Delete"],
+          "Sales Packages": ["Read", "Create", "Update", "Delete"]
+        },
+        target_options_manager: {
+          "Targeting Options":   ["Read", "Create", "Update", "Delete", "Assign"],
+          "Targeting Groups":    ["Read", "Create", "Update", "Delete", "Assign"],
+          "Targeting Templates": ["Read", "Create", "Update", "Assign"]
+        },
+        disney_ads_agent: {
+          "Forecasting":          ["Read"],
+          "Planning Support":     ["Read"],
+          "Approval Comparisons": ["Read"]
+        }
+      },
+      /* B. Core Planning Admin */
+      r002: {
+        core_planning: {
+          "Orders":      ["Read", "Create", "Update"],
+          "Media Plans": ["Read", "Create", "Update"],
+          "Line Items":  ["Read", "Create", "Update"],
+          "Approvals":   ["Read", "Update"]
+        },
+        identity_access_management: {
+          "Users": ["Read"],
+          "Roles": ["Read", "Assign"],
+          "Teams": ["Read"]
+        },
+        disney_ads_agent: {
+          "Forecasting":      ["Read"],
+          "Planning Support": ["Read"]
+        }
+      },
+      /* C. Planning Manager */
+      r006: {
+        core_planning: {
+          "Orders":      ["Read", "Create", "Update"],
+          "Media Plans": ["Read", "Update"],
+          "Line Items":  ["Read", "Update"],
+          "Approvals":   ["Read", "Update"]
+        },
+        identity_access_management: {
+          "Users": ["Read"],
+          "Roles": ["Read"],
+          "Teams": ["Read"]
+        },
+        disney_ads_agent: {
+          "Forecasting":      ["Read"],
+          "Planning Support": ["Read"]
+        }
+      },
+      /* D. Planner (used for Planner, Planning Specialist, Campaign Planner) */
+      r004: {
+        core_planning: {
+          "Orders":      ["Read", "Create", "Update"],
+          "Media Plans": ["Read"],
+          "Line Items":  ["Read", "Create", "Update"],
+          "Approvals":   ["Read"]
+        },
+        disney_ads_agent: {
+          "Forecasting":      ["Read"],
+          "Planning Support": ["Read"]
+        }
+      },
+      /* F. Ad Operations Specialist (also Operations Admin) */
+      r014: {
+        core_planning: {
+          "Orders":     ["Read"],
+          "Line Items": ["Read", "Update"],
+          "Approvals":  ["Read", "Update"]
+        },
+        disney_ads_agent: {
+          "Planning Support":     ["Read"],
+          "Approval Comparisons": ["Read"]
+        }
+      },
+      /* G. Read-Only Viewer */
+      r008: {
+        core_planning: {
+          "Orders":      ["Read"],
+          "Media Plans": ["Read"],
+          "Line Items":  ["Read"]
+        }
+      },
+      /* H. ICM Admin */
+      r009: {
+        inventory_catalog_manager: {
+          "Offerings":      ["Read", "Create", "Update", "Delete"],
+          "Sales Packages": ["Read", "Create", "Update", "Delete"]
+        },
+        core_planning: {
+          "Orders":      ["Read"],
+          "Media Plans": ["Read"]
+        },
+        identity_access_management: {
+          "Users": ["Read"],
+          "Roles": ["Read"]
+        }
+      },
+      /* I. TOM Admin */
+      r010: {
+        target_options_manager: {
+          "Targeting Options":   ["Read", "Create", "Update", "Delete", "Assign"],
+          "Targeting Groups":    ["Read", "Create", "Update", "Delete", "Assign"],
+          "Targeting Templates": ["Read", "Create", "Update", "Assign"]
+        },
+        core_planning: {
+          "Orders":      ["Read"],
+          "Media Plans": ["Read"]
+        },
+        identity_access_management: {
+          "Users": ["Read"],
+          "Roles": ["Read"]
+        }
+      }
+    };
+    /* Alias entries — roles in the dataset that share an archetype
+       with another role get the same matrix without duplicating
+       data. r003 = Operations Admin → Ad Operations Specialist;
+       r005 = Planning Specialist & r013 = Campaign Planner → Planner. */
+    CR_ROLE_MATRIX.r003 = CR_ROLE_MATRIX.r014;
+    CR_ROLE_MATRIX.r005 = CR_ROLE_MATRIX.r004;
+    CR_ROLE_MATRIX.r013 = CR_ROLE_MATRIX.r004;
 
     function preferredValuesForRoleApp(roleId, appName) {
       var detail = (ROLE_ACCESS_DETAILS[roleId] && ROLE_ACCESS_DETAILS[roleId][appName]) || null;
@@ -7451,22 +8167,97 @@ document.addEventListener("DOMContentLoaded", function () {
       if (sens) sens.checked = (record.status === "Sensitive" || record.status === "Standard");
       if (reg)  reg.checked  = (record.status === "Regional" || record.status === "Standard");
 
-      var fns = record.functions || [];
-      for (var i = 0; i < fns.length; i++) {
-        var appKey = FUNCTION_TO_APP_KEY[fns[i].name];
-        if (!appKey || !APP_PERMISSIONS[appKey]) continue;
-        crAddApplication(appKey);
-        var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
-        if (section) {
-          var access = fns[i].access || roleAccessLevel(record.id, fns[i].name);
-          section.setAttribute("data-role-id", record.id);
-          setSectionAccessLevel(section, access);
-          if (isCustomAccessLevel(access)) prefillAppChecks(appKey, fns[i].count, preferredValuesForRoleApp(record.id, fns[i].name));
+      /* Hydration source of truth: CR_ROLE_MATRIX (per role id).
+         Falls back to the legacy record.functions → preferredValues
+         path only if a role isn't in the matrix yet (defensive). */
+      var matrix = CR_ROLE_MATRIX[record.id];
+      if (matrix) {
+        /* Add the matrix's apps in the order Atlas's app dropdown
+           uses (core_planning → IAM → ICM → TOM → Disney Ads Agent),
+           skipping apps the role doesn't have. */
+        var appOrder = ["core_planning", "identity_access_management", "inventory_catalog_manager", "target_options_manager", "disney_ads_agent"];
+        for (var ai = 0; ai < appOrder.length; ai++) {
+          var ak = appOrder[ai];
+          if (!matrix[ak]) continue;
+          crAddApplication(ak);
+          var sec = crPermsContent.querySelector('.cr-app-section[data-app-key="' + ak + '"]');
+          if (sec) {
+            sec.setAttribute("data-role-id", record.id);
+            applyRoleMatrixToSection(sec, ak, matrix[ak]);
+          }
+        }
+      } else {
+        var fns = record.functions || [];
+        for (var i = 0; i < fns.length; i++) {
+          var appKey = FUNCTION_TO_APP_KEY[fns[i].name];
+          if (!appKey || !APP_PERMISSIONS[appKey]) continue;
+          crAddApplication(appKey);
+          var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
+          if (section) {
+            section.setAttribute("data-role-id", record.id);
+            applyCheckedActions(section, preferredValuesForRoleApp(record.id, fns[i].name), fns[i].count);
+          }
         }
       }
       updateFunctionsCount();
       updateCrSummaries();
       captureCrInitialState();
+    }
+
+    /* Check the matrix boxes that correspond to a CR_ROLE_MATRIX
+       entry — `assignments` is { resourceTitle: [Figma columns] }.
+       Body cells only — we use `.cr-matrix tbody .cr-perm-check` so
+       the column-header select-all checkboxes (`.cr-matrix-col-toggle`,
+       which also carry `.cr-perm-check` for visual reuse) are left
+       alone during hydration. The header state is recomputed after
+       hydration by refreshAllColumnTogglesForSection. */
+    function applyRoleMatrixToSection(section, appKey, assignments) {
+      if (!section || !assignments) return;
+      var boxes = section.querySelectorAll('.cr-matrix tbody .cr-perm-check');
+      for (var x = 0; x < boxes.length; x++) boxes[x].checked = false;
+      for (var resource in assignments) {
+        if (!Object.prototype.hasOwnProperty.call(assignments, resource)) continue;
+        var cols = assignments[resource] || [];
+        for (var c = 0; c < cols.length; c++) {
+          var pmAction = CR_COLUMN_TO_PM_ACTION[cols[c]];
+          if (!pmAction) continue;
+          var sel = '.cr-matrix tbody .cr-perm-check[data-resource="' + resource.replace(/"/g, '\\"') + '"][data-action="' + pmAction.replace(/"/g, '\\"') + '"]';
+          var box = section.querySelector(sel);
+          if (box) box.checked = true;
+        }
+      }
+      if (typeof refreshAllColumnTogglesForSection === "function") {
+        refreshAllColumnTogglesForSection(section);
+      }
+    }
+
+    /* Check the matrix boxes that correspond to the role's persisted
+       resource::action pairs. If a `targetCount` is supplied and the
+       preferred values don't cover it (legacy demo data that only
+       stored a count), fall back to checking additional first-seen
+       boxes until the count is met. Mirrors the prior
+       prefillAppChecks behavior without any access-level coupling.
+       Body cells only — see applyRoleMatrixToSection for why. */
+    function applyCheckedActions(section, preferredValues, targetCount) {
+      if (!section) return;
+      var boxes = section.querySelectorAll('.cr-matrix tbody .cr-perm-check');
+      for (var x = 0; x < boxes.length; x++) boxes[x].checked = false;
+      var wanted = {};
+      if (preferredValues && preferredValues.length) {
+        for (var p = 0; p < preferredValues.length; p++) wanted[preferredValues[p]] = true;
+      }
+      var checked = 0;
+      for (var i = 0; i < boxes.length; i++) {
+        if (wanted[boxes[i].value]) { boxes[i].checked = true; checked++; }
+      }
+      if (typeof targetCount === "number") {
+        for (var j = 0; j < boxes.length && checked < targetCount; j++) {
+          if (!boxes[j].checked) { boxes[j].checked = true; checked++; }
+        }
+      }
+      if (typeof refreshAllColumnTogglesForSection === "function") {
+        refreshAllColumnTogglesForSection(section);
+      }
     }
 
     function resetCreateRole() {
@@ -7494,8 +8285,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateFunctionsCount() {
-      var checked = crPermsContent.querySelectorAll(".cr-perm-check:checked");
-      crFunctionsTitle.textContent = "Permissions (" + checked.length + " Selected)";
+      /* Figma section title is plain "Functions" with no count —
+         keep the function so callers continue to work and so the
+         summary chips stay fresh. */
+      if (crFunctionsTitle) crFunctionsTitle.textContent = "Functions";
       updateCrSummaries();
     }
 
@@ -7516,7 +8309,10 @@ document.addEventListener("DOMContentLoaded", function () {
       for (var s = 0; s < sections.length; s++) {
         var key = sections[s].getAttribute("data-app-key") || "";
         levels.push(key + ":" + (sections[s].getAttribute("data-access-level") || ""));
-        var boxes = sections[s].querySelectorAll(".cr-perm-check:checked");
+        /* Body cells only — column-header select-all checkboxes
+           share `.cr-perm-check` for visual reuse but are not
+           perm assignments. */
+        var boxes = sections[s].querySelectorAll('.cr-matrix tbody .cr-perm-check:checked');
         var values = [];
         for (var b = 0; b < boxes.length; b++) values.push(boxes[b].value);
         values.sort();
@@ -7547,7 +8343,8 @@ document.addEventListener("DOMContentLoaded", function () {
        baseline so reverting re-disables it. */
     function isCreateRoleValid() {
       var nameOk = !!(crRoleName.value && crRoleName.value.trim());
-      var selected = crPermsContent.querySelectorAll(".cr-perm-check:checked").length;
+      /* Body cells only — exclude `.cr-matrix-col-toggle` headers. */
+      var selected = crPermsContent.querySelectorAll('.cr-matrix tbody .cr-perm-check:checked').length;
       return nameOk && selected > 0;
     }
     function validateCreateRole() {
@@ -7619,7 +8416,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function crSetAppValue(value) {
       crAppCurrent = value;
       var opts = crAppMenu.querySelectorAll(".cr-dd-option");
-      var label = "Select Application";
+      var label = "Select applications";
       for (var i = 0; i < opts.length; i++) {
         if (opts[i].getAttribute("data-value") === value) {
           opts[i].classList.add("is-selected");
@@ -7632,7 +8429,7 @@ document.addEventListener("DOMContentLoaded", function () {
         crAppValue.textContent = label;
         crAppValue.classList.remove("is-placeholder");
       } else {
-        crAppValue.textContent = "Select Application";
+        crAppValue.textContent = "Select applications";
         crAppValue.classList.add("is-placeholder");
       }
       crUpdateAddBtnState();
@@ -7771,55 +8568,238 @@ document.addEventListener("DOMContentLoaded", function () {
         lines.length ? ('<div class="permission-detail-list cr-access-summary-list">' + lines.join("") + '</div>') : '<div class="cr-access-summary-empty">No permissions selected.</div>';
     }
 
+    /* Build the per-application function-action matrix table that
+       matches Figma 924:14107 ("Create Role").
+
+       Layout per app:
+         ┌─ Core Planning ────────────────────────── Remove ─┐
+         │  Functions ⇅ │ Read ⇅ │ Create ⇅ │ Update ⇅ │ … │
+         │  Orders      │   ☐    │    ☐     │    ☐     │ … │
+         │  Media Plans │   ☐    │    ☐     │    ☐     │ … │
+         └────────────────────────────────────────────────────┘
+
+       The matrix columns follow the Figma vocabulary
+       (Read / Create / Update / Delete / Assign). Underlying PM data
+       still uses the canonical action verbs (View, Edit, …), so we
+       keep a render-only mapping between the column heading and the
+       PM action that the checkbox writes into form state. */
+    var CR_MATRIX_COLUMNS = ["Read", "Create", "Update", "Delete", "Assign"];
+    var CR_COLUMN_TO_PM_ACTION = {
+      "Read":   "View",
+      "Create": "Create",
+      "Update": "Edit",
+      "Delete": "Delete",
+      "Assign": "Assign"
+    };
+
+    /* ─── Create-Role-only resource catalog ─────────────────────────
+       The PM catalog (PC_GROUP_FOR_KEY / PC_POOL_BY_GROUP) is the
+       single source of truth for the Permission Management screen.
+       For Create Role's matrix we need two adjustments without
+       touching PM:
+         1. Pluralized / cleaned resource names — Order → Orders,
+            Media Plan → Media Plans (PM data is unchanged because it
+            already uses "Approvals", "Line Items", etc.; "Order"
+            was the only typo we surface here).
+         2. Per-resource support map — which Figma columns are
+            *applicable* for that resource. The support union across
+            all resources determines which column headers an app's
+            matrix renders (e.g. Disney Ads Agent → Read only;
+            Core Planning → R/C/U/D; IAM/TOM → R/C/U/D/A). Cells
+            within an app's column set always render as real
+            checkboxes — there are no disabled tri-state cells —
+            matching Figma 924:14107 and the per-app column rule in
+            the latest Create Role brief. */
+    var CR_MATRIX_RESOURCES_BY_APP = {
+      core_planning: [
+        { title: "Orders",      pmGroup: "Order",       support: ["Read", "Create", "Update", "Delete"] },
+        { title: "Media Plans", pmGroup: "Media Plans", support: ["Read", "Create", "Update"] },
+        { title: "Line Items",  pmGroup: "Line Items",  support: ["Read", "Create", "Update"] },
+        { title: "Approvals",   pmGroup: "Approvals",   support: ["Read", "Update"] }
+      ],
+      identity_access_management: [
+        { title: "Users", pmGroup: "Users", support: ["Read", "Create", "Update", "Delete"] },
+        { title: "Roles", pmGroup: "Roles", support: ["Read", "Create", "Update", "Delete", "Assign"] },
+        { title: "Teams", pmGroup: "Teams", support: ["Read", "Create", "Update"] }
+      ],
+      inventory_catalog_manager: [
+        { title: "Offerings",      pmGroup: "Offerings",      support: ["Read", "Create", "Update", "Delete"] },
+        { title: "Sales Packages", pmGroup: "Sales Packages", support: ["Read", "Create", "Update", "Delete"] }
+      ],
+      target_options_manager: [
+        { title: "Targeting Options",   pmGroup: "Targeting Options",   support: ["Read", "Create", "Update", "Delete", "Assign"] },
+        { title: "Targeting Groups",    pmGroup: "Targeting Groups",    support: ["Read", "Create", "Update", "Delete", "Assign"] },
+        { title: "Targeting Templates", pmGroup: "Targeting Templates", support: ["Read", "Create", "Update", "Assign"] }
+      ],
+      disney_ads_agent: [
+        /* Disney Ads Agent in PM is a single group named "Disney Ads
+           Agent" containing four function keys. The brief asks us to
+           surface three sub-resources in the matrix
+           (Forecasting / Planning Support / Approval Comparisons),
+           each read-only. We honor that here while leaving PM
+           untouched — the matrix is a presentation layer over the
+           same underlying function keys, identified via `pmKey`. */
+        { title: "Forecasting",         pmGroup: "Disney Ads Agent", pmKey: "forecasting_queries",         support: ["Read"] },
+        { title: "Planning Support",    pmGroup: "Disney Ads Agent", pmKey: "planning_activity_summaries", support: ["Read"] },
+        { title: "Approval Comparisons",pmGroup: "Disney Ads Agent", pmKey: "approval_io_comparisons",     support: ["Read"] }
+      ]
+    };
+
+    /* Optional Create-Role display label override per app (does NOT
+       change `APP_PERMISSIONS[k].label` — used elsewhere).
+       Round 9 (2026-06-09): the brief's application-name list for
+       Create/Edit Role uses "IAM" (matches Figma node 924:14138).
+       Override here so the Functions matrix section header reads
+       "IAM" without disturbing the dropdown option list, the Roles
+       list summary, or any other surface that consumes
+       `APP_PERMISSIONS.identity_access_management.label`. */
+    var CR_APP_DISPLAY_LABEL = {
+      identity_access_management: "IAM"
+    };
+
+    function crResourcesForApp(appKey) {
+      var overrides = CR_MATRIX_RESOURCES_BY_APP[appKey];
+      if (overrides) return overrides;
+      /* Fall back to PM-derived resources (shouldn't happen for the
+         five supported apps but defends against future apps added to
+         APP_PERMISSIONS). */
+      var fallback = [];
+      var app = APP_PERMISSIONS[appKey];
+      if (app) {
+        for (var i = 0; i < app.resources.length; i++) {
+          var r = app.resources[i];
+          var support = [];
+          for (var j = 0; j < CR_MATRIX_COLUMNS.length; j++) {
+            var col = CR_MATRIX_COLUMNS[j];
+            var pmAction = CR_COLUMN_TO_PM_ACTION[col];
+            if (pmAction && r.actions && r.actions.indexOf(pmAction) !== -1) support.push(col);
+          }
+          fallback.push({ title: r.title, pmGroup: r.title, support: support });
+        }
+      }
+      return fallback;
+    }
+
+    /* Determine which Figma column headers to render for this app.
+       A column is shown if *any* resource in the app supports it. */
+    function crAppActionColumns(appKey) {
+      var resources = crResourcesForApp(appKey);
+      var seen = {};
+      var cols = [];
+      for (var i = 0; i < CR_MATRIX_COLUMNS.length; i++) {
+        var col = CR_MATRIX_COLUMNS[i];
+        for (var r = 0; r < resources.length; r++) {
+          if ((resources[r].support || []).indexOf(col) !== -1 && !seen[col]) {
+            seen[col] = true;
+            cols.push(col);
+            break;
+          }
+        }
+      }
+      return cols;
+    }
+
     function buildAppSectionHtml(appKey) {
       var app = APP_PERMISSIONS[appKey];
       if (!app) return "";
-      var accessMenuId = "cr-access-menu-" + appKey;
-      var accessTriggerId = "cr-access-trigger-" + appKey;
-      var html = '<div class="cr-app-section" data-app-key="' + esc(appKey) + '" data-expanded="false">';
+      var cols = crAppActionColumns(appKey);
+      var resources = crResourcesForApp(appKey);
+      var displayLabel = CR_APP_DISPLAY_LABEL[appKey] || app.label;
+      var html = '<div class="cr-app-section cr-app-section--matrix" data-app-key="' + esc(appKey) + '">';
+      /* App header with Remove (kept from the prior layout — Figma
+         doesn't show it on this state but the existing flow needs
+         a way to remove an added app, and the Roles list / Edit Role
+         flows depend on this affordance).
+
+         The `.cr-app-head-left` is the accordion toggle target —
+         click or Enter/Space toggles `.cr-app-section--collapsed`
+         on the section, which rotates the chevron and hides the
+         matrix wrapper. Remove sits outside the toggle so the
+         delete button never accidentally collapses the section. */
       html += '<div class="cr-app-section-head">';
-      html += '<div class="cr-app-head-left">';
-      html += '<span class="cr-app-title">' + esc(app.label) + '</span>';
+      var matrixWrapperId = "crMatrixWrap_" + appKey;
+      html += '<div class="cr-app-head-left" role="button" tabindex="0" aria-expanded="true" aria-controls="' + esc(matrixWrapperId) + '" data-cr-app-toggle="' + esc(appKey) + '">';
+      /* Inline "v" chevron matching Figma 924:14138 (left of the app
+         name). Rotates -90deg when the section is collapsed. */
+      html += '<svg class="cr-app-head-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+      html += '<span class="cr-app-title">' + esc(displayLabel) + '</span>';
       html += '</div>';
-      html += '<button type="button" class="cr-app-remove" data-remove-app="' + esc(appKey) + '" aria-label="Remove ' + esc(app.label) + '">';
+      /* Round 9 (2026-06-09): rename "Remove" → "Remove application"
+         to disambiguate from per-row remove affordances. The button
+         lives in `.cr-app-section-head` which uses
+         `justify-content: space-between`, and `.cr-app-section--matrix`
+         now stretches to `width: 100%` of the indented content
+         column, so this button aligns to the same right edge for
+         every application section regardless of matrix table width. */
+      html += '<button type="button" class="cr-app-remove" data-remove-app="' + esc(appKey) + '" aria-label="Remove ' + esc(displayLabel) + ' application">';
       html += CR_EDL_TRASH_SVG;
-      html += 'Remove';
+      html += 'Remove application';
       html += '</button>';
       html += '</div>';
-      html += '<div class="cr-app-body" id="cr-app-body-' + esc(appKey) + '">';
-      html += '<div class="cr-access-level-row"><div class="cr-label">Access level</div><div class="cr-access-level-wrap"><div class="cr-dd cr-access-level-dd" data-access-dd data-app-key="' + esc(appKey) + '">';
-      html += '<button type="button" class="cr-dd-trigger cr-access-level-trigger" id="' + esc(accessTriggerId) + '" aria-haspopup="listbox" aria-expanded="false" aria-controls="' + esc(accessMenuId) + '">';
-      html += '<span class="cr-dd-value cr-access-level-value">' + esc(accessLevelValueText(appKey, app.levels[0], null)) + '</span>';
-      html += '<svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      html += '</button>';
-      html += '<div class="cr-dd-menu cr-access-level-menu" id="' + esc(accessMenuId) + '" role="listbox" aria-labelledby="' + esc(accessTriggerId) + '" data-app-key="' + esc(appKey) + '">';
-      for (var i = 0; i < app.levels.length; i++) {
-        html += '<div class="cr-dd-option cr-access-level-option' + (i === 0 ? " is-selected" : "") + '" role="option" data-access-level-option="true" data-access-level="' + esc(app.levels[i]) + '" aria-selected="' + (i === 0 ? "true" : "false") + '">' + esc(app.levels[i]) + '</div>';
+      /* Wrap the matrix table so the accordion has a single body
+         element to hide. Checkbox state lives in the inputs and is
+         preserved across collapse/expand. */
+      html += '<div class="cr-app-section-body" id="' + esc(matrixWrapperId) + '">';
+      /* Matrix table.
+
+         Action column headers render a compact select-all checkbox
+         + label (no sort glyph — this is a permission-assignment
+         matrix, not a sortable data table). The first "Functions"
+         column intentionally has NO header checkbox per the brief.
+         Each header checkbox is scoped to its own (app, column)
+         pair: clicking it only toggles cells inside the same
+         `.cr-app-section` and the same `data-column`. The
+         indeterminate state is recomputed from body checkboxes
+         after every change. */
+      html += '<table class="cr-matrix" role="table" aria-label="' + esc(displayLabel) + ' functions matrix">';
+      html += '<thead><tr>';
+      html += '<th class="cr-matrix-th cr-matrix-th-fn"><span class="cr-matrix-th-inner"><span>Functions</span></span></th>';
+      for (var c = 0; c < cols.length; c++) {
+        var colLabel0 = cols[c];
+        var headerInputId = "perm_head_" + appKey + "_" + colLabel0.toLowerCase();
+        var headerTitle = "Select all " + colLabel0 + " actions in " + displayLabel;
+        html += '<th class="cr-matrix-th cr-matrix-th-act">' +
+          '<label class="cr-matrix-th-inner cr-matrix-col-head">' +
+            '<input type="checkbox" class="cr-perm-check cr-matrix-col-toggle" id="' + headerInputId + '"' +
+              ' data-app-key="' + esc(appKey) + '"' +
+              ' data-column="' + esc(colLabel0) + '"' +
+              ' title="' + esc(headerTitle) + '"' +
+              ' aria-label="' + esc(headerTitle) + '">' +
+            '<span class="cr-matrix-col-head-label">' + esc(colLabel0) + '</span>' +
+          '</label>' +
+        '</th>';
       }
-      html += "</div></div></div></div>";
-      html += '<div class="cr-summary-stack">';
-      html += '<div class="cr-access-summary-card">';
-      html += '<div class="cr-access-summary"></div>';
-      html += '<button type="button" class="cr-customize-link cr-summary-cta" data-show-all="true">Show all permissions \u2193</button>';
-      html += '</div></div>';
-      html += '<div class="cr-custom-area">';
-      for (var k = 0; k < app.resources.length; k++) {
-        var resource = app.resources[k];
-        html += '<div class="cr-module" data-module="' + esc(resource.title) + '">' +
-          '<button type="button" class="cr-module-head" data-module-toggle="' + esc(resource.title) + '" aria-expanded="false">' +
-            '<span class="cr-module-head-main">' +
-              CR_MODULE_CHEV_SVG +
-              '<span class="cr-module-title">' + esc(resource.title) + '</span>' +
-            '</span>' +
-            '<span class="cr-module-summary" aria-live="polite">0 permissions selected</span>' +
-          '</button>' +
-          '<div class="cr-module-body" style="display:none">' + renderPermissionGroup(resource, appKey) + '</div>' +
-        '</div>';
+      html += '</tr></thead>';
+      html += '<tbody>';
+      for (var k = 0; k < resources.length; k++) {
+        var resource = resources[k];
+        html += '<tr class="cr-matrix-row">';
+        html += '<td class="cr-matrix-fn">' + esc(resource.title) + '</td>';
+        /* Every cell within an app's column set renders as a real
+           empty checkbox. Matches Figma 924:14107 (Media Plans
+           Create/Update/Delete and similar cells are shown as
+           unchecked checkboxes, not as a disabled tri-state). */
+        for (var cc = 0; cc < cols.length; cc++) {
+          var colLabel = cols[cc];
+          var pmAction = CR_COLUMN_TO_PM_ACTION[colLabel];
+          var slug = resource.title.toLowerCase().replace(/[^a-z0-9]+/g, "_") + "_" + pmAction.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+          var inputId = "perm_" + appKey + "_" + slug;
+          html += '<td class="cr-matrix-cell">' +
+            '<label class="cr-matrix-check-wrap">' +
+              '<input type="checkbox" class="cr-perm-check cr-matrix-check" id="' + inputId + '"' +
+                ' value="' + esc(resource.title + "::" + pmAction) + '"' +
+                ' data-resource="' + esc(resource.title) + '"' +
+                ' data-action="' + esc(pmAction) + '"' +
+                ' data-column="' + esc(colLabel) + '">' +
+              '<span class="cr-matrix-check-visual" aria-hidden="true"></span>' +
+            '</label>' +
+          '</td>';
+        }
+        html += '</tr>';
       }
-      html += '<button type="button" class="cr-customize-link cr-collapse-all-link" data-collapse-all="true">Collapse all permissions \u2191</button>';
-      html += '</div>';
-      html += '</div>';
-      html += '</div>';
+      html += '</tbody></table>';
+      html += '</div>'; /* /.cr-app-section-body */
+      html += '</div>'; /* /.cr-app-section--matrix */
       return html;
     }
 
@@ -7830,7 +8810,10 @@ document.addEventListener("DOMContentLoaded", function () {
       wrapper.innerHTML = buildAppSectionHtml(appKey);
       var section = wrapper.firstChild;
       crPermsContent.appendChild(section);
-      setSectionAccessLevel(section, APP_PERMISSIONS[appKey].levels[0]);
+      /* Figma matrix presentation has no Access Level dropdown — the
+         matrix opens with all checkboxes unchecked so the user
+         deliberately selects each action. Edit Role hydration calls
+         applyCheckedActions() later to restore the persisted state. */
       crPermsContent.style.display = "";
       crSetAppValue("");
       crRefreshAppMenu();
@@ -7906,6 +8889,25 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
+    /* ─── Per-application accordion ─────────────────────────────────
+       Toggle the matrix-wrapper visibility on each app section
+       independently. The toggle target is `.cr-app-head-left`
+       (chevron + app title). The Remove button intentionally sits
+       outside the toggle so deletion never accidentally collapses
+       the section. The accordion is purely visual:
+       - Checkbox state lives on the inputs and is preserved across
+         collapse/expand (CSS uses `display: none`, which keeps
+         checked-state in the DOM).
+       - `snapshotCrState` does not read collapsed state, so toggling
+         can never enable Save Role. */
+    function crToggleAppSection(head) {
+      if (!head) return;
+      var section = head.closest(".cr-app-section--matrix");
+      if (!section) return;
+      var willCollapse = !section.classList.contains("cr-app-section--collapsed");
+      section.classList.toggle("cr-app-section--collapsed", willCollapse);
+      head.setAttribute("aria-expanded", willCollapse ? "false" : "true");
+    }
     crPermsContent.addEventListener("click", function (e) {
       var removeBtn = e.target.closest("[data-remove-app]");
       if (removeBtn) {
@@ -7917,6 +8919,12 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           crRemoveApplication(appKey);
         }
+        return;
+      }
+      var appToggle = e.target.closest("[data-cr-app-toggle]");
+      if (appToggle) {
+        e.preventDefault();
+        crToggleAppSection(appToggle);
         return;
       }
       var levelTrigger = e.target.closest(".cr-access-level-trigger");
@@ -7968,23 +8976,124 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     crPermsContent.addEventListener("keydown", function (e) {
       if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
-      var head = e.target.closest("[data-module-toggle]");
-      if (!head || head !== e.target) return;
-      e.preventDefault();
-      head.click();
+      var moduleHead = e.target.closest("[data-module-toggle]");
+      if (moduleHead && moduleHead === e.target) {
+        e.preventDefault();
+        moduleHead.click();
+        return;
+      }
+      var appHead = e.target.closest("[data-cr-app-toggle]");
+      if (appHead && appHead === e.target) {
+        e.preventDefault();
+        crToggleAppSection(appHead);
+      }
     });
+    /* ─── Column-level select-all (matrix headers) ─────────────────
+       Each action column header has its own `.cr-matrix-col-toggle`
+       checkbox. Clicking it toggles every body checkbox in the same
+       column within the same app section. The native browser
+       indeterminate state is set programmatically by
+       `refreshColumnToggleState` after any body checkbox change
+       (cell-driven or header-driven). Scope is strictly the
+       enclosing `.cr-app-section` — never crosses apps.
+
+       Body checkboxes carry `data-column` so we can target a column
+       cheaply via a single selector; the header checkbox is
+       identified by `.cr-matrix-col-toggle` (it's a `.cr-perm-check`
+       so it inherits EDL hover/focus/checked visuals, but the
+       `.cr-matrix-col-toggle` class is what excludes it from "body
+       cell" queries below). */
+    function getColumnBodyChecks(section, colLabel) {
+      if (!section || !colLabel) return [];
+      var sel = '.cr-matrix tbody .cr-perm-check[data-column="' + colLabel.replace(/"/g, '\\"') + '"]';
+      return section.querySelectorAll(sel);
+    }
+    function refreshColumnToggleState(section, colLabel) {
+      var head = section.querySelector('.cr-matrix-col-toggle[data-column="' + colLabel.replace(/"/g, '\\"') + '"]');
+      if (!head) return;
+      var boxes = getColumnBodyChecks(section, colLabel);
+      if (!boxes.length) {
+        head.checked = false;
+        head.indeterminate = false;
+        return;
+      }
+      var checkedCount = 0;
+      for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) checkedCount++;
+      if (checkedCount === 0) {
+        head.checked = false;
+        head.indeterminate = false;
+      } else if (checkedCount === boxes.length) {
+        head.checked = true;
+        head.indeterminate = false;
+      } else {
+        head.checked = false;
+        head.indeterminate = true;
+      }
+      /* Tooltip reflects current state — "some selected" gets the
+         indeterminate hint, otherwise the standard select/deselect
+         hint based on whether all are checked. */
+      var appTitle = (section.querySelector(".cr-app-title") || {}).textContent || "";
+      var base;
+      if (head.indeterminate) {
+        base = "Some " + colLabel + " actions selected. Click to select all.";
+      } else if (head.checked) {
+        base = "Deselect all " + colLabel + " actions in " + appTitle;
+      } else {
+        base = "Select all " + colLabel + " actions in " + appTitle;
+      }
+      head.setAttribute("title", base);
+    }
+    function refreshAllColumnTogglesForSection(section) {
+      if (!section) return;
+      var heads = section.querySelectorAll(".cr-matrix-col-toggle");
+      for (var i = 0; i < heads.length; i++) {
+        refreshColumnToggleState(section, heads[i].getAttribute("data-column"));
+      }
+    }
+    function refreshAllColumnTogglesEverywhere() {
+      var sections = crPermsContent.querySelectorAll(".cr-app-section--matrix");
+      for (var i = 0; i < sections.length; i++) refreshAllColumnTogglesForSection(sections[i]);
+    }
+    function applyColumnToggle(head) {
+      if (!head) return;
+      var section = head.closest(".cr-app-section");
+      if (!section) return;
+      var colLabel = head.getAttribute("data-column");
+      var boxes = getColumnBodyChecks(section, colLabel);
+      /* "If indeterminate: treat click as select all" — browsers
+         report `head.checked` as `true` immediately after a click on
+         an indeterminate native checkbox, so the post-click state
+         already encodes our desired semantics (indeterminate→true
+         turns into select-all; checked→false turns into clear-all).
+         We don't need extra branching here. */
+      var nextChecked = head.checked;
+      head.indeterminate = false;
+      for (var i = 0; i < boxes.length; i++) {
+        if (boxes[i].checked !== nextChecked) {
+          boxes[i].checked = nextChecked;
+        }
+      }
+      /* Header tooltip + downstream state. The header is its own
+         element; refreshing the column also rewrites its title. */
+      refreshColumnToggleState(section, colLabel);
+    }
     crPermsContent.addEventListener("change", function (e) {
       var sec = e.target.closest(".cr-app-section");
-      if (sec) {
-        if (!isCustomAccessLevel(sec.getAttribute("data-access-level"))) {
-          setSectionAccessLevel(sec, "Custom");
-        } else {
-          updateCrModuleSummaries(sec);
-        }
-        updateAccessLevelValue(sec);
-        updateFunctionsCount();
-        validateCreateRole();
+      if (!sec) return;
+      if (e.target.classList && e.target.classList.contains("cr-matrix-col-toggle")) {
+        /* Header click — bulk-toggle the column within this section
+           only, then update form state. */
+        applyColumnToggle(e.target);
+      } else if (e.target.classList && e.target.classList.contains("cr-perm-check")) {
+        /* Body cell change — recompute the column header state for
+           the affected column only (scope: this section). */
+        var colLabel = e.target.getAttribute("data-column");
+        if (colLabel) refreshColumnToggleState(sec, colLabel);
       }
+      /* Figma matrix has no access-level dropdown — each checkbox
+         change updates the form state directly. */
+      updateFunctionsCount();
+      validateCreateRole();
     });
 
     crAddBtn.addEventListener("click", function () {
@@ -8064,12 +9173,19 @@ document.addEventListener("DOMContentLoaded", function () {
       var sections = crPermsContent.querySelectorAll(".cr-app-section");
       for (var i = 0; i < sections.length; i++) {
         var key = sections[i].getAttribute("data-app-key") || "";
-        var access = sections[i].getAttribute("data-access-level") || "View Only";
-        var count = sections[i].querySelectorAll(".cr-perm-check:checked").length;
+        /* Body cells only — exclude column-header select-all
+           checkboxes (they share `.cr-perm-check` for EDL visual
+           reuse but are not assignment cells). */
+        var count = sections[i].querySelectorAll('.cr-matrix tbody .cr-perm-check:checked').length;
         if (!count) continue;
         var label = APP_KEY_TO_TABLE_LABEL[key] ||
                     (APP_PERMISSIONS[key] && APP_PERMISSIONS[key].label) || key;
-        out.push({ name: label, count: count, access: access });
+        /* `access` retained on the persisted record for backwards
+           compatibility with the Roles list / Edit Role hydration —
+           the Figma Create Role matrix doesn't surface an Access
+           Level dropdown, so we default to "Custom" so existing
+           consumers don't mistake the row for a preset bundle. */
+        out.push({ name: label, count: count, access: "Custom" });
       }
       return out;
     }

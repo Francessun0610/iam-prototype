@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260601idblk2">
+  <link rel="stylesheet" href="styles.css?v=20260609tmaddrow2">
 </head>
 <body>
 
@@ -121,27 +121,20 @@
   </div>
 
   <div class="card">
-    <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032 (three secondary tabs)
-         + Teams tab added 2026-05-29.
-         Order updated 2026-05-29 (Frances QA round 4) to match
-         Tatiana's direction:
-           1. Users     → #usersPanel  (Figma 770:17428)
-           2. Roles     → #rolesPanel  (Figma 770:19301)
-           3. Teams     → #teamsPanel  (read-only browse + Edit Team)
-           4. Functions → #permsPanel  (Permission Catalog — V3-only
-              read-only catalog of registered permission functions;
-              the Functions label replaces the prior "Permissions"
-              label per the same QA pass).
-         Visual treatment is identical across all four (inactive = muted,
-         active = brand text + indigo underline). Internal tab key for
-         #permsPanel remains "perms" — only the user-visible label
-         changed, so existing PM data/filter wiring stays intact. -->
+    <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032
+         Final tab order (2026-06-07 — Tatiana direction, Frances QA):
+           1. Users → #usersPanel  (Figma 770:17428)
+           2. Roles → #rolesPanel  (Figma 770:19301)
+           3. Teams → #teamsPanel  (read-only browse + Edit Team)
+         The standalone Functions / Permission Catalog tab was removed
+         in this phase — the role/permission matrix lives inside Edit
+         Role. Visual treatment is identical across all three
+         (inactive = muted, active = brand text + indigo underline). -->
     <div class="tabs-row">
       <nav>
         <button class="tab-btn on">Users</button>
         <button class="tab-btn">Roles</button>
         <button class="tab-btn">Teams</button>
-        <button class="tab-btn">Functions</button>
       </nav>
     </div>
 
@@ -305,111 +298,19 @@
       </div>
     </div>
 
-    <!-- ═ Permission Catalog (V3 only) ═
-         Reframed Permissions tab. This page is a *read-only catalog* of
-         registered permission functions across applications. Assignment
-         is handled through Roles (Roles tab) — there is no per-row edit
-         path here, no Create Permission CTA, no role/resource matrix,
-         and no custom-permission CRUD.
-
-         Catalog data lives in `PERMISSION_CATALOG_DATA` (V3-specific
-         seed of 8 functions covering Core Planning, IAM, ICM, plus one
-         Future-state row). The table is fully read-only — rows do not
-         open a drawer or detail page (drawer removed 2026-05-29).
-
-         The tab nav label stays "Permissions" (set by the short-nav
-         pass). The page-level title rendered below is "Permission
-         Catalog". -->
-    <div id="permsPanel" style="display:none">
-      <!-- Inner page title/subtitle were removed (Frances QA 2026-05-29):
-           the outer page <h1> "Access Management" already names this
-           IAM section, and the "Permissions" tab label identifies the
-           sub-view. Toolbar now sits flush under the tabs row, matching
-           the Users/Roles tab layout. -->
-      <div class="tbar">
-        <div class="tbar-l">
-          <!-- Filter button — same EDL pattern as Users tab and Roles
-               tab (.btn-std with funnel SVG + "Filter" label). Opens
-               #pmFltDrawer on the left. The previous inline filter
-               dropdowns (Application / Action / Status) were moved
-               into that drawer per Frances QA 2026-05-29 so the
-               toolbar matches Users/Roles. -->
-          <button class="btn-std" id="pmFilterBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Filter
-          </button>
-          <!-- Search — placeholder updated to reflect that the catalog
-               is searchable across permission name, resource, and
-               function key. -->
-          <div class="search" id="pmSearchWrap">
-            <input type="text" id="pmSearchInput" placeholder="Search permission, resource, or function key…" autocomplete="off">
-            <svg class="search-ico" id="pmSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <button type="button" class="search-clear hidden" id="pmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-          </div>
-        </div>
-
-        <!-- No top-right action group. The Permission Catalog is
-             a read-only browse view — Export CSV removed per
-             Frances QA 2026-05-29, no replacement action. -->
-      </div>
-
-      <div class="tbl-wrap">
-        <table class="tbl pm-tbl pm-catalog-tbl" id="pmTable">
-          <colgroup id="pmColgroup">
-            <col data-pm-col="key">
-            <col data-pm-col="name">
-            <col data-pm-col="app">
-            <col data-pm-col="resource">
-            <col data-pm-col="action">
-            <col data-pm-col="used">
-            <col data-pm-col="status">
-          </colgroup>
-          <thead>
-            <tr>
-              <th class="pm-key"      data-pm-sort="key"><div class="th-inner"><span>Function key</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-name"     data-pm-sort="name"><div class="th-inner"><span>Display name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-app"      data-pm-sort="app"><div class="th-inner"><span>Application</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-resource" data-pm-sort="resource"><div class="th-inner"><span>Resource</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-action"   data-pm-sort="action"><div class="th-inner"><span>Action</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-used"     data-pm-sort="usedIn"><div class="th-inner"><span>Used in roles</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-status"   data-pm-sort="status"><div class="th-inner"><span>Status</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-            </tr>
-          </thead>
-          <tbody id="pmTbody"></tbody>
-        </table>
-      </div>
-
-      <div class="pgn" id="pmPgn">
-        <div class="pgn-show">
-          <span class="pgn-lbl">Show</span>
-          <div class="pgn-sel-wrap">
-            <div class="cr-dd pgn-dd" id="pmPageSizeDD">
-              <button type="button" class="cr-dd-trigger" id="pmPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmPageSizeMenu">
-                <span class="cr-dd-value" id="pmPageSizeValue">10</span>
-                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <div class="cr-dd-menu" id="pmPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
-            </div>
-          </div>
-          <span class="pgn-lbl" id="pmItemCount">of 0 items</span>
-        </div>
-        <div class="pgn-pages" id="pmPgnPages">
-          <button class="pg-nav off" data-pm-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
-          <button class="pg-nav off" data-pm-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-          <div class="pg-nums" id="pmPgNums"></div>
-          <button class="pg-nav" data-pm-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          <button class="pg-nav" data-pm-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
-        </div>
-        <div class="pgn-jump">
-          <span class="pgn-lbl" id="pmTotalLabel">Total functions: 0</span>
-        </div>
-      </div>
-
-      <!-- Drawer/flyout removed (Frances QA 2026-05-29): the Permission
-           Catalog is a read-only browse table only. Per-function context
-           is intentionally not surfaced — assignment is managed through
-           the Roles tab. No row click, no overlay, no detail panel. -->
-    </div>
+    <!-- Standalone Permissions / Functions Catalog tab REMOVED 2026-06-07
+         per Tatiana direction (Frances QA): the read-only catalog is
+         not needed in this phase. Permission/role-matrix logic remains
+         intact inside Edit Role. The standalone panel, its filter
+         drawer, and all `pm-`-prefixed table state were removed from
+         markup, JS state, render functions, search/filter wiring, and
+         pagination. Edit Role's `cr-`-namespaced permission UI is
+         unchanged. The PM-token → CR-app-key model layer
+         (`PM_TOKEN_TO_CR_APP`, `pmGroupsForAppToken`,
+         `derivePMResourcesForApp`) is shared infrastructure and is
+         intentionally KEPT — it's named `pm-` for "permission model"
+         but it is not the standalone tab and Edit Role's Access Level
+         bundle derivation depends on it. -->
 
     <!-- ═══ TEAMS PANEL ═══
          Sub-view of Access Management. Read-only browse of team groups;
@@ -425,7 +326,7 @@
            round 4): the tab label "Teams" already names this sub-view,
            and the other tabs do not carry an internal title block.
            The toolbar now sits flush under the tabs row, matching the
-           Users/Roles/Functions tabs. -->
+           Users/Roles tabs. -->
 
       <div class="tbar">
         <div class="tbar-l">
@@ -692,6 +593,20 @@
       </div>
     </section>
 
+    <!-- ═ Access section (Edit User v3 — Figma 788:4348) ═
+         In Edit mode this card carries:
+           • Section title "Access"
+           • Helper copy explaining role assignment is the source of truth
+           • Single "Assigned Role *" dropdown (read+pick from existing
+             ROLES_PERMISSIONS_DATA — drives the effective-access table)
+           • Effective-access table (Application / Access Level / Summary)
+             populated from the selected user's role via the existing
+             `getRoleAppAccessDetails` / `roleAccessLevel` helpers.
+
+         In Add mode this card keeps its original "Roles & Permissions"
+         shell (Assign Roles + role-card stack) so the Add User flow is
+         unchanged. The two modes are split via `.au-edit-only` /
+         `.au-add-only` class toggles inside the section body. -->
     <section class="au-card cr-card au-access-card" id="auRolesCard" aria-labelledby="auRolesPermissionsTitle">
       <div class="cr-section-header" data-au-toggle="roles" role="button" tabindex="0" aria-expanded="true">
         <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
@@ -700,17 +615,54 @@
       </div>
 
       <div class="au-section-body">
+      <!-- Add-mode helper text is hidden by `.au-edit-only` toggle; Edit
+           mode shows this single helper sentence (per brief). -->
+      <p class="au-access-helper au-edit-only" id="auAccessHelper">Role assignment determines this user's effective access. Permission functions are managed in role definitions.</p>
+
       <div class="au-field au-role-field">
-        <label class="au-label" for="auRoleCombo-ctl">Assign Roles<span class="au-req">*</span></label>
+        <label class="au-label" for="auRoleCombo-ctl"><span class="au-add-only">Assign Roles</span><span class="au-edit-only">Assigned Role</span><span class="au-req">*</span></label>
         <div class="au-role-row">
           <div class="au-role-dd-field">
             <div class="edl-combo au-field-dd" id="auRoleCombo" aria-label="Roles"></div>
           </div>
-          <button class="au-btn-add" id="auRoleAdd" type="button">Add</button>
+          <!-- Add Role button is Add-mode only (Edit mode picks one role
+               via the dropdown alone, no separate Add). -->
+          <button class="au-btn-add au-add-only" id="auRoleAdd" type="button">Add</button>
         </div>
       </div>
 
-      <div class="au-role-cards" id="auRoleCards"></div>
+      <!-- Add-mode: per-role permission card stack (unchanged). -->
+      <div class="au-role-cards au-add-only" id="auRoleCards"></div>
+
+      <!-- Edit-mode: effective access table — read-only preview of the
+           applications/resources the selected role can act on. 3 columns:
+           Application / Access Level / Effective access. Round 5 (2026-
+           06-09): the third column now shows compact resource counts
+           ("Orders (3); Media Plans (1); …") so the row stays scannable;
+           full action verbs live in the "View breakdown" modal opened
+           via the right-aligned action above the table. Populated by
+           `renderAuEffectiveAccessTable` in app.js from `AU_EFF_PATTERNS`
+           + `AU_EFF_ACTIONS`. -->
+      <div class="au-eff-wrap au-edit-only" id="auEffWrap">
+        <div class="au-eff-actions">
+          <button type="button" class="au-eff-view-breakdown" id="auEffViewBreakdown" aria-haspopup="dialog" aria-controls="auEffBreakdownBackdrop">View breakdown</button>
+        </div>
+        <table class="au-eff-tbl" id="auEffTable" aria-label="Effective access by application">
+          <colgroup>
+            <col data-aueff-col="app">
+            <col data-aueff-col="level">
+            <col data-aueff-col="summary">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="au-eff-th-app"><span>Application</span></th>
+              <th class="au-eff-th-level"><span>Access Level</span></th>
+              <th class="au-eff-th-summary"><span>Effective access</span></th>
+            </tr>
+          </thead>
+          <tbody id="auEffTbody"></tbody>
+        </table>
+      </div>
       </div>
     </section>
   </div>
@@ -752,7 +704,7 @@
              Save Team (per EDL action-priority hierarchy). -->
         <button type="button" class="au-remove-user-link" id="tmDelete">Delete Team</button>
         <button type="button" class="btn-std" id="tmCancel">Cancel</button>
-        <button type="button" class="au-btn-save" id="tmSave">Save Team</button>
+        <button type="button" class="au-btn-save" id="tmSave" disabled>Save Team</button>
       </div>
     </div>
 
@@ -773,28 +725,36 @@
     </section>
 
     <section class="au-card cr-card tm-members-card" aria-labelledby="tmMembersTitle">
-      <div class="cr-section-header" aria-expanded="true">
+      <div class="cr-section-header tm-members-head" aria-expanded="true">
         <span class="cr-section-title" id="tmMembersTitle">Members</span>
+        <!-- `+ Add members` lives in the card header, right-aligned
+             via .tm-members-head's space-between layout. Uses the
+             EDL outlined .cr-btn-add base visual; this surface
+             intentionally does NOT use the filled-purple #createRolePage
+             override so the Add control reads as a secondary
+             affordance next to the destructive Delete Team. -->
+        <button type="button" class="cr-btn-add tm-add-members-btn" id="tmAddMembersBtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          Add members
+        </button>
       </div>
       <div class="au-section-body tm-members-body">
-        <!-- Helper makes the read-only rule explicit and tells the
-             user where the actual assignment lives. This is the
-             only place we surface "read-only"; the card title is
-             intentionally clean. -->
-        <p class="tm-members-helper">Assign users via the User edit screen.</p>
+        <p class="tm-members-helper">Review and manage users assigned to this team.</p>
 
         <div class="tbl-wrap tm-members-tbl-wrap">
           <table class="tbl tm-members-tbl" id="tmMembersTable">
             <colgroup>
-              <col class="tm-mcol-name">
-              <col class="tm-mcol-email">
-              <col class="tm-mcol-role">
+              <col class="tm-mcol-name"    data-tmm-col="name">
+              <col class="tm-mcol-email"   data-tmm-col="em">
+              <col class="tm-mcol-role"    data-tmm-col="role">
+              <col class="tm-mcol-actions" data-tmm-col="actions">
             </colgroup>
             <thead>
               <tr>
                 <th><div class="th-inner"><span>Name</span></div></th>
                 <th><div class="th-inner"><span>Email</span></div></th>
                 <th><div class="th-inner"><span>Role</span></div></th>
+                <th class="tm-th-actions"><div class="th-inner"><span>Actions</span></div></th>
               </tr>
             </thead>
             <tbody id="tmMembersTbody"></tbody>
@@ -816,7 +776,7 @@
     <div class="cr-header">
       <div class="cr-header-left">
         <h1 class="cr-title">Create Role</h1>
-        <p class="cr-subtitle">Define roles details, assign functions and manage access settings</p>
+        <p class="cr-subtitle">Define role details, assign functions and manage access settings</p>
       </div>
       <div class="cr-header-actions">
         <button class="cr-btn-remove" id="crRemove" type="button" hidden>
@@ -831,7 +791,7 @@
     <div class="cr-card" id="crBasicCard">
       <div class="cr-section-header" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true">
         <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <span class="cr-section-title">Basic Information</span>
+        <span class="cr-section-title">Role details</span>
         <span class="cr-section-summary" id="crBasicSummary" aria-hidden="true"></span>
       </div>
 
@@ -864,16 +824,17 @@
     <div class="cr-card" id="crFuncsCard">
       <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true">
         <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <span class="cr-section-title" id="crFunctionsTitle">Permissions (0 Selected)</span>
+        <span class="cr-section-title" id="crFunctionsTitle">Functions</span>
         <span class="cr-section-summary" id="crFuncsSummary" aria-hidden="true"></span>
       </div>
+      <p class="cr-section-help" id="crFunctionsHelp">Choose which applications this role can access and what actions are allowed.</p>
 
       <div class="cr-field cr-app-row">
         <div class="cr-app-row-field">
           <label class="cr-label">Add application <span class="cr-req">*</span></label>
           <div class="cr-dd" id="crAppDD">
             <button type="button" class="cr-dd-trigger" id="crAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="crAppMenu">
-              <span class="cr-dd-value" id="crAppValue">Select Application</span>
+              <span class="cr-dd-value is-placeholder" id="crAppValue">Select applications</span>
               <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
           </div>
@@ -1114,73 +1075,10 @@
   </div>
 </aside>
 
-<!-- ═══ PERMISSIONS FILTER DRAWER ═══
-     Same EDL slide-out filter panel pattern used by Users (#fltDrawer)
-     and Roles (#rpFltDrawer). Reuses the shared `.flt-*` design system
-     so spacing, typography, footer rhythm, and overlay opacity all
-     match Users/Roles 1:1.
-
-     Fields (per Frances brief, 2026-05-29):
-       • Function key  — text input
-       • Display name  — text input
-       • Application   — EDL combo (mounted by initCombo)
-       • Resource      — text input
-       • Action        — EDL combo
-       • Status        — EDL combo
-     Footer: Reset Filters / Cancel / Apply (apply-on-click model,
-     matching Roles — text inputs ALSO commit on Apply, not live, so
-     the Apply / Cancel split is meaningful). -->
-<div class="flt-overlay" id="pmFltOverlay"></div>
-<aside class="flt-drawer" id="pmFltDrawer">
-  <div class="flt-header">
-    <h2 class="flt-title">Filters</h2>
-    <button class="flt-close" id="pmFltClose" aria-label="Close filters">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="flt-body">
-    <div class="flt-field">
-      <label class="flt-label">Function key</label>
-      <div class="flt-input-wrap">
-        <input type="text" class="flt-input" id="pmFltFnKey" placeholder="Search function key">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear function key" data-for="pmFltFnKey"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-    </div>
-    <div class="flt-field">
-      <label class="flt-label">Display name</label>
-      <div class="flt-input-wrap">
-        <input type="text" class="flt-input" id="pmFltDisplayName" placeholder="Search display name">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear display name" data-for="pmFltDisplayName"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-    </div>
-    <div class="flt-field">
-      <label class="flt-label">Application</label>
-      <div class="edl-combo" id="pmFltAppCombo"></div>
-    </div>
-    <div class="flt-field">
-      <label class="flt-label">Resource</label>
-      <div class="flt-input-wrap">
-        <input type="text" class="flt-input" id="pmFltResource" placeholder="Search resource">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear resource" data-for="pmFltResource"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      </div>
-    </div>
-    <div class="flt-field">
-      <label class="flt-label">Action</label>
-      <div class="edl-combo" id="pmFltActionCombo"></div>
-    </div>
-    <div class="flt-field">
-      <label class="flt-label">Status</label>
-      <div class="edl-combo" id="pmFltStatusCombo"></div>
-    </div>
-  </div>
-  <div class="flt-footer">
-    <button class="flt-btn-reset" id="pmFltReset">Reset Filters</button>
-    <div class="flt-footer-r">
-      <button class="flt-btn-cancel" id="pmFltCancel">Cancel</button>
-      <button class="flt-btn-apply" id="pmFltApply">Apply</button>
-    </div>
-  </div>
-</aside>
+<!-- Standalone Permissions filter drawer (#pmFltOverlay + #pmFltDrawer)
+     was REMOVED 2026-06-07 along with the Permissions tab itself, per
+     Tatiana direction. Users / Roles filter drawers below are
+     unchanged. -->
 
 <!-- EDL toast container — visually matches the EDL Toast component (Figma node 15094:75972).
      Live region so screen readers announce toasts as they appear. -->
@@ -1258,6 +1156,65 @@
   </div>
 </div>
 
-<script src="app.js?v=20260531accessdd1"></script>
+<!-- Edit User: Effective access breakdown (read-only).
+     Round 8 (2026-06-09): restructured to match the EDL Modal component
+     (Figma node 51840:2241) — separate header bar with title + close
+     icon, body region, footer with EDL standard button. The dialog
+     still mounts inside the shared `.cr-confirm-backdrop` overlay (the
+     same overlay used by Remove Role / Add members) so backdrop click
+     + Esc behavior stays consistent across the prototype. The
+     `.au-eff-modal-dialog` variant overrides `.cr-confirm-dialog`
+     padding/radius/shadow to match EDL X-Small/Small light mode
+     specifications. -->
+<div class="cr-confirm-backdrop" id="auEffBreakdownBackdrop" hidden>
+  <div class="cr-confirm-dialog au-eff-modal-dialog edl-modal" role="dialog" aria-modal="true" aria-labelledby="auEffBreakdownTitle" aria-describedby="auEffBreakdownSubtitle">
+    <header class="edl-modal-head">
+      <h2 class="edl-modal-title" id="auEffBreakdownTitle">Effective access breakdown</h2>
+      <button type="button" class="edl-modal-close" id="auEffBreakdownX" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div class="edl-modal-body">
+      <p class="edl-modal-intro" id="auEffBreakdownSubtitle">Access shown is inherited from the assigned role.</p>
+      <div class="au-eff-modal-role">
+        <span class="au-eff-modal-role-label">Assigned role</span>
+        <span class="au-eff-modal-role-value" id="auEffBreakdownRoleName">—</span>
+      </div>
+      <div class="au-eff-modal-scroll" id="auEffBreakdownSections"></div>
+    </div>
+    <footer class="edl-modal-foot">
+      <button class="btn-std" id="auEffBreakdownClose" type="button">Close</button>
+    </footer>
+  </div>
+</div>
+
+<!-- Edit Team: Add members modal. Reuses the EDL `.cr-confirm-*`
+     shell (used by Remove Role / Remove application / Set user as
+     inactive / Remove user / Delete permission group) with a wider
+     `.tm-add-dialog` variant so the search + scrollable internal-user
+     list fits. Strictly scoped to Edit Team — no other surface
+     references `.tm-add-*`. -->
+<div class="cr-confirm-backdrop" id="tmAddMembersBackdrop" hidden>
+  <div class="cr-confirm-dialog tm-add-dialog" role="dialog" aria-modal="true" aria-labelledby="tmAddMembersTitle" aria-describedby="tmAddMembersSubtitle">
+    <h2 class="cr-confirm-title" id="tmAddMembersTitle">Add members</h2>
+    <p class="cr-confirm-body tm-add-subtitle" id="tmAddMembersSubtitle">Search and select internal users to add to this team.</p>
+    <div class="tm-add-search">
+      <svg class="tm-add-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="tm-add-search-input" id="tmAddMembersSearch" placeholder="Search by name, email, or team" autocomplete="off">
+    </div>
+    <div class="tm-add-list-wrap">
+      <div class="tm-add-list" id="tmAddMembersList" role="listbox" aria-multiselectable="true" tabindex="0"></div>
+      <p class="tm-add-empty" id="tmAddMembersEmpty" hidden>No matching users.</p>
+    </div>
+    <div class="cr-confirm-actions tm-add-actions">
+      <span class="tm-add-selected-count" id="tmAddMembersCount" aria-live="polite">0 selected</span>
+      <span class="tm-add-actions-spacer"></span>
+      <button class="btn-std" id="tmAddMembersCancel" type="button">Cancel</button>
+      <button class="au-btn-save" id="tmAddMembersConfirm" type="button" disabled>Add members</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=20260609tmaddrow2"></script>
 </body>
 </html>

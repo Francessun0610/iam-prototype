@@ -1893,13 +1893,39 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .cr-btn-add:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
 
-/* Two application cards per row; each card keeps its own natural height when expanded. */
+/* Create Role / Edit Role override — filled EDL primary visual,
+   same token family as .cr-btn-save (Save Role / Save Permission).
+   Matches Figma 924:14107 ("+ Add" filled-purple) and the latest
+   Create Role brief's "use EDL disabled styling already used
+   elsewhere" instruction. Scoped to #createRolePage so the
+   Permission Management toolbar Add button (.pc-page) keeps its
+   existing outlined visual. */
+#createRolePage .cr-btn-add {
+  border: none;
+  background: var(--brand);
+  color: var(--text-on-brand);
+}
+#createRolePage .cr-btn-add:hover:not(:disabled) { background: var(--brand-hover); }
+#createRolePage .cr-btn-add:active:not(:disabled) { background: var(--indigo-95); }
+#createRolePage .cr-btn-add:disabled {
+  background: var(--brand-disabled-bg);
+  color: var(--brand-disabled-fg);
+  border-color: transparent;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* Figma 924:14107 matrix layout: each added application occupies a
+   single full-width row, with the function/action matrix table
+   rendered beneath the app title. Reverted from the prior 2-column
+   grid because the matrix needs the full content width to land all
+   Read/Create/Update/Delete/Assign columns without wrapping. */
 #createRolePage .cr-perms-content {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  align-items: start;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
 }
 .cr-app-section {
   display: flex;
@@ -2078,6 +2104,239 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-perm-item { display: flex; align-items: flex-start; gap: 8px; }
 .cr-perm-check { margin-top: 3px; }
 .cr-perm-label { min-width: 0; font-family: var(--ff); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--text-primary); cursor: pointer; user-select: none; white-space: normal; overflow-wrap: normal; word-break: normal; }
+
+/* ─── Create Role: Functions matrix (Figma 924:14138) ───────────────
+   Each added application renders a single matrix table beneath an
+   inline app heading: one row per resource, one column per action
+   union (Read / Create / Update / Delete / Assign). The app section
+   lives directly inside the Functions card — no nested borders,
+   no inner card chrome — so visually it reads as a sub-section, not
+   a nested card. Scoped tightly to #createRolePage so we don't leak
+   styles to any other data table in the app.
+
+   Round 9 (2026-06-09): override the base `.cr-app-section`
+   `align-self: start` (which shrinks the section to the matrix's
+   intrinsic width) with `align-self: stretch` + explicit `width:
+   100%`. This is what makes the Remove application action line up
+   on the same right edge across every application — previously,
+   Disney Ads Agent's narrow `Functions | Read` table caused its
+   section (and Remove button) to sit ~268px to the left of Core
+   Planning's. */
+#createRolePage .cr-app-section.cr-app-section--matrix {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  align-self: stretch;
+  width: 100%;
+  /* Override the legacy preset-summary min-height (line ~1732) so the
+     matrix section sizes naturally to its table content. The pre-existing
+     selector at ~1732 uses three :not() pseudo-classes (specificity
+     (1,4,0)) so we double the class (id + class*2 = (1,2,0)) plus the
+     attribute selector below for higher specificity. */
+  min-height: 0;
+}
+#createRolePage .cr-app-section.cr-app-section--matrix:not([data-expanded="true"]):not([data-access-level="Custom"]):not([data-access-level="Custom Access"]) {
+  min-height: 0;
+}
+#createRolePage .cr-app-section--matrix:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+#createRolePage .cr-app-section--matrix .cr-app-title {
+  font-family: var(--ff);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  color: var(--brand-text);
+}
+#createRolePage .cr-app-section--matrix .cr-app-section-head {
+  padding: 16px 0;
+  margin-bottom: 0;
+  align-items: center;
+}
+#createRolePage .cr-app-section--matrix .cr-app-head-chev {
+  color: var(--brand-text);
+  flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+/* The `.cr-app-head-left` (chevron + app title) is the accordion
+   toggle target. Pointer cursor + non-selectable text so clicking
+   it doesn't highlight the label. */
+#createRolePage .cr-app-section--matrix .cr-app-head-left {
+  cursor: pointer;
+  user-select: none;
+}
+#createRolePage .cr-app-section--matrix .cr-app-head-left:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Collapsed state: rotate the chevron from down (default) to
+   right, and hide the matrix wrapper. Checkbox state is preserved
+   because the inputs stay in the DOM. */
+#createRolePage .cr-app-section--matrix.cr-app-section--collapsed .cr-app-head-chev {
+  transform: rotate(-90deg);
+}
+#createRolePage .cr-app-section--matrix.cr-app-section--collapsed .cr-app-section-body {
+  display: none;
+}
+/* Nested indentation: application sections sit one level inside
+   the Functions card content. The Functions card's helper text
+   and "Add application" controls remain aligned with the card's
+   content edge; only the per-app sections receive the indent so
+   the hierarchy reads:
+       Functions
+         Choose which applications...
+         Add application
+           Core Planning
+             matrix
+           IAM
+             matrix
+   Remove stays inside the section head's space-between row, so
+   it naturally aligns with the right edge of the indented section
+   (= right edge of the matrix table). */
+#createRolePage .cr-perms-content {
+  padding-left: 20px;
+}
+#createRolePage .cr-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-family: var(--ff);
+  margin-top: 0;
+}
+#createRolePage .cr-matrix thead th {
+  border-bottom: 1px solid var(--border-default);
+  background: transparent;
+  text-align: left;
+  vertical-align: middle;
+  padding: 8px 16px;
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+#createRolePage .cr-matrix-th-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+#createRolePage .cr-matrix-th-fn {
+  width: auto;
+  padding-left: 32px;
+}
+#createRolePage .cr-matrix-th-act {
+  width: 1%;
+  min-width: 110px;
+  text-align: center;
+}
+#createRolePage .cr-matrix-th-act .cr-matrix-th-inner {
+  justify-content: flex-start;
+}
+/* Column-level select-all in each action header. The checkbox
+   reuses `.cr-perm-check` for EDL visuals (border, hover, focus,
+   checked); the wrapper sets pointer cursor + vertical centering
+   and prevents text-selection so clicking the label doesn't
+   highlight it. */
+#createRolePage .cr-matrix-col-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+#createRolePage .cr-matrix-col-head:hover .cr-matrix-col-head-label {
+  color: var(--text-primary);
+}
+#createRolePage .cr-matrix-col-head-label {
+  font: inherit;
+  color: inherit;
+}
+/* Native indeterminate state — EDL Light didn't previously define
+   a default visual for `.cr-perm-check:indeterminate` (the
+   ads-preview theme has one further down). Scope this purely to
+   the matrix column-header checkbox so we don't accidentally
+   restyle any other `.cr-perm-check` consumer. */
+#createRolePage .cr-matrix-col-toggle:indeterminate {
+  background: var(--brand);
+  border-color: var(--brand-text);
+}
+#createRolePage .cr-matrix-col-toggle:indeterminate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M4 8h8' stroke='white' stroke-width='1.75' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#createRolePage .cr-matrix tbody td {
+  border-bottom: 1px solid var(--border-default);
+  padding: 0;
+  vertical-align: middle;
+  background: var(--bg-surface);
+}
+#createRolePage .cr-matrix-fn {
+  padding: 12px 16px 12px 32px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+#createRolePage .cr-matrix-cell {
+  height: 48px;
+  text-align: left;
+  padding: 0 16px;
+}
+#createRolePage .cr-matrix-cell--empty {
+  background: var(--bg-surface);
+}
+/* The matrix has no disabled / "not available" cell state — every
+   cell within an app's column set renders as a real checkbox (per
+   Figma 924:14107 and the latest Create Role brief). The previous
+   `.cr-matrix-cell--na` / `.cr-matrix-na` em-dash treatment was
+   removed; per-app columns are controlled by the union of each
+   resource's `support` array in `CR_MATRIX_RESOURCES_BY_APP`. */
+#createRolePage .cr-matrix-check-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+#createRolePage .cr-matrix-check {
+  margin: 0;
+}
+#createRolePage .cr-matrix-check-visual {
+  display: none;
+}
+/* Drop the legacy hover shadow on the matrix card — Figma shows a
+   static white card with no elevation lift on hover. */
+#createRolePage .cr-app-section--matrix:hover {
+  border-color: var(--border-default);
+  box-shadow: none;
+}
+
+/* Functions section helper paragraph (Figma copy) */
+#createRolePage .cr-section-help {
+  margin: 4px 0 12px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-muted);
+}
+/* When the Functions card is collapsed via the chevron, hide the
+   helper text in the same pass as the rest of the body. */
+#createRolePage .cr-card.collapsed .cr-section-help { display: none; }
 
 /* ═══ ADD USERS PAGE ═══ */
 .au-page { position: fixed; inset: 0; top: 48px; background: var(--bg-app); z-index: 90; overflow-y: auto; }
@@ -2688,6 +2947,91 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   .au-role-cards.has-roles { margin-top: 16px; }
   .au-role-card { min-height: 176px; }
   #addUsersPage .au-role-card { min-height: 0; }
+}
+
+/* ═══ Users-tab narrow-width responsive cleanup (Frances 2026-06-08) ═══
+   Brief: keep desktop layout unchanged; make the Users tab usable when
+   the browser narrows. All rules below are scoped to #usersPanel so the
+   Roles tab, Teams tab, Edit User, Edit Role, Edit Team, navigation,
+   themes, and older versions are untouched.
+
+   Sub-1100: toolbar wraps (filter + segmented + Add User on row 1, full-
+   width search on row 2); row avatars hide; Last login truncates more.
+   ≤900: Last login column collapses (matches the existing c-em / c-ct
+   hide pattern, so #usersTable's fixed table-layout keeps header/body
+   columns in alignment without restructuring the markup). */
+@media (max-width: 1100px) {
+  #usersPanel .tbar {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    height: auto;
+    min-height: 48px;
+    align-items: center;
+  }
+  /* `.tbar-l` must not grow large enough to push Add User to a new row.
+     `min-width: 0` lets its inline children collapse first; `max-width:
+     calc(100% - <addBtn>px)` keeps Add User pinned to row 1.
+     The Add User button is ~120px wide + 16px gap, so reserve 144px. */
+  #usersPanel .tbar-l {
+    flex: 1 1 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    max-width: calc(100% - 144px);
+  }
+  /* Pin Add User to the TOP of the wrapped toolbar so it visually sits
+     in Row 1 alongside Filter + segmented control (instead of vertically
+     centering against the 2-line `.tbar-l` and floating between rows). */
+  #usersPanel .tbar > .btn-ghost {
+    margin-left: auto;
+    align-self: flex-start;
+    flex: 0 0 auto;
+  }
+  /* Search wraps to its own row, full width of .tbar-l. `order: 99`
+     guarantees it always lands AFTER the Filter button and segmented
+     control regardless of how flex-wrap distributes children. */
+  #usersPanel .tbar-l .search {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: none;
+    order: 99;
+  }
+
+  /* Row avatars/photos only — Edit User's .au-id-avatar (different
+     selector) and the assigned-role chip avatar are untouched. */
+  #usersPanel #tbody .name-avatar { display: none; }
+  /* Reclaim the 40px avatar + 8px flex gap for the Name column. The
+     32px left gutter on .name-cell still anchors the column edge. */
+  #usersPanel #tbody .name-cell { padding-left: 16px; }
+
+  /* Last login: allow tighter truncation. Header already has nowrap;
+     this makes the body cell match so long values ellipsis instead of
+     pushing the table beyond .tbl-wrap. */
+  #usersPanel #usersTable td.c-ll {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ≤900: Last login collapses entirely. This mirrors the c-em / c-ct
+   hide pattern (visibility:hidden + zero width on col + cell padding/
+   border zeroed) so #usersTable's fixed table-layout naturally rebases
+   the remaining columns without the header/body alignment drifting. */
+@media (max-width: 900px) {
+  #usersPanel #usersColgroup col[data-u-col="ll"] { width: 0; }
+  #usersPanel #usersTable th.c-ll,
+  #usersPanel #usersTable td.c-ll {
+    padding: 0 !important;
+    border: 0 !important;
+    width: 0 !important;
+    max-width: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden;
+  }
+  #usersPanel #usersTable th.c-ll > *,
+  #usersPanel #usersTable td.c-ll > * { visibility: hidden; }
 }
 
 /* <768: single-column mobile layout with no clipping/overflow */
@@ -5515,6 +5859,466 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    elements handles initial paint; once .is-edit-mode toggles, JS
    clears `hidden`. The CSS rule below is belt-and-suspenders. */
 #addUsersPage:not(.is-edit-mode) .au-edit-only { display: none !important; }
+/* Mirror rule for Add-mode-only DOM — hide it in Edit mode so the
+   Access section reads as "Assigned Role + effective access table"
+   instead of also showing the Add-mode role-cards stack
+   (Frances QA 2026-06-07, Edit User v3 / Figma 788:4348). */
+#addUsersPage.is-edit-mode .au-add-only { display: none !important; }
+
+/* ─── Edit User v3 — Access section + effective access table ──────
+   Helper sentence under the section header. Same EDL rhythm as the
+   Edit Team Members helper (margin: 0 0 16px; 14/20 secondary text). */
+#addUsersPage.is-edit-mode #auRolesCard .au-access-helper {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-secondary, #526374);
+}
+
+/* Effective-access table layout. Reuses the EDL table rhythm
+   (header 32px, body 48px, 1px Gray-20 dividers, 14/21 body text).
+   3 columns: Application 28% / Access Level 16% / Summary auto.
+   Read-only — no row hover or click. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-wrap {
+  margin-top: 16px;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th {
+  height: 32px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-secondary, #526374);
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border-default, #D4DEE3);
+  white-space: nowrap;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th:first-child {
+  padding-left: 0;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th:last-child {
+  padding-right: 0;
+}
+/* 3-column Access table (Frances UX 2026-06-08 round 3): Application,
+   Access Level, Effective access. The 3rd column carries a read-only
+   single-line "Resource: Actions; … ; +N more" summary (no chips, no
+   pills, no interactive affordance). The Application and Access
+   Level columns are tightened from rounds 1/2 (28%/18% → 22%/14%) to
+   give the summary column the most room — round-3 brief calls out
+   "do not leave excessive empty space on the right" and the single-
+   line format benefits directly from a wider summary column. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th.au-eff-th-app     { width: 22%; }
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th.au-eff-th-level   { width: 14%; }
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th.au-eff-th-summary { width: auto; }
+
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td {
+  /* Vertical padding rather than fixed height so the cell can
+     grow when chips wrap onto a second visual line under the app
+     name. The earlier 44px fixed-height clipped chips at narrow
+     widths. */
+  padding: 12px 8px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary, #171C20);
+  border-bottom: 1px solid var(--border-default, #D4DEE3);
+  vertical-align: middle;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td:first-child {
+  padding-left: 0;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td:last-child {
+  padding-right: 0;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Application cell — single line, plain table text (chips moved out
+   to the new dedicated "Effective access" column on 2026-06-08). */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-app {
+  font-weight: 400;
+  color: var(--text-primary, #171C20);
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-app-name {
+  /* Brief 2026-06-08 round 4: weight reduced 500 → 400 so the
+     Application cell reads as table body content, not a heading. */
+  font-weight: 400;
+  color: var(--text-primary, #171C20);
+  line-height: 21px;
+}
+
+/* Access-level label — plain table text. Round 4 dropped weight
+   500 → 400 per brief ("Do not make Access Level bold. Access Level
+   should read like table body content, not a headline."). Class
+   name still reads "...-pill" for backward compatibility, but no
+   pill chrome — no border, no chip background, no bold. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-level-pill {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary, #171C20);
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-level-pill--no-access {
+  color: var(--text-muted, #6A8095);
+}
+
+/* ─── Effective access — single-line read-only resource/action
+   summary (Frances UX 2026-06-08 round 3). Replaces the previous
+   stacked block. Format:
+       Orders: Read, Create, Update; Media Plans: Read; +2 more
+   Plain table text, semicolon separators, NO chips/pills/links/dots.
+   JS (auEffApplyOverflow) measures the cell after render and trims
+   tail groups until the visible string fits on a single line; the
+   counter `+N more` then carries a native title tooltip listing only
+   the HIDDEN groups (one per line). */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td.au-eff-app,
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td.au-eff-level,
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td.au-eff-summary-cell {
+  /* Single-line summary → vertical-center the level and app name
+     against the summary text again (rounds 1/2 used top because the
+     summary wrapped). */
+  vertical-align: middle;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-cell {
+  color: var(--text-primary, #171C20);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  /* Hide horizontal overflow at the cell boundary; the measure pass
+     should keep the inner span within the cell width, but this is a
+     defensive guard against a single uncollapsed pixel pushing the
+     row width. */
+  overflow: hidden;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  color: var(--text-primary, #171C20);
+  vertical-align: middle;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-group {
+  /* Keep "Resource: Actions" together as one shaped unit so the
+     measure pass can drop whole groups, never mid-group breaks. */
+  white-space: nowrap;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-res {
+  /* Round 4: weight dropped 500 → 400 per brief — the Access table
+     body should read uniformly at 14/21/400. Resource and action
+     text now share the same weight; the colon plus formatting carry
+     the visual structure. */
+  font-weight: 400;
+  color: var(--text-primary, #171C20);
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-acts {
+  /* Brief: "normal table body text color"; resource label leads via
+     a slightly heavier weight but the action verbs sit in the
+     standard primary text color so they never read as a link. */
+  font-weight: 400;
+  color: var(--text-primary, #171C20);
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-sep {
+  /* Semicolon separator. Same color as body text — it reads as
+     punctuation, not as content. */
+  color: var(--text-primary, #171C20);
+  font-weight: 400;
+}
+/* "+N more" — Indigo 70 per brief, no underline, no chip background,
+   no border. Cursor is `help` because the native title tooltip is
+   only revealed on hover; this is the only acceptable affordance
+   exception per brief ("default unless tooltip implementation
+   requires hover behavior"). Padded with a leading space rather than
+   margin so it follows the semicolon-and-space cadence of the rest
+   of the summary. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-more {
+  display: inline;
+  margin-left: 8px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #3611C8;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  text-decoration: none;
+  cursor: help;
+  white-space: nowrap;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary--none {
+  color: var(--text-muted, #6A8095);
+  font-style: italic;
+}
+
+/* Round 6 (2026-06-09): the Access table participates in the shared
+   column-resize helper, so its <th> cells need `position: relative`
+   for the `.col-resize-handle` (anchored at `right:-1px`).
+   Round 8 (2026-06-09): `overflow-x: auto` was painting a phantom
+   bottom scrollbar even when the content fit (sub-pixel
+   `table-layout: fixed` rounding caused `scrollWidth = clientWidth + 1`,
+   which trips the auto scrollbar). Switching to `overflow-x: hidden`
+   suppresses that bar; the Access table is only 3 columns wide and
+   has comfortable min-width floors per <col>, so legitimate overflow
+   is not a concern here. Page-level overflow is also prevented. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th {
+  position: relative;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-wrap {
+  overflow-x: hidden;
+}
+
+/* Round 5 (2026-06-09): summary cell now renders compact counts —
+   "Orders (3); Media Plans (1); …" — instead of verbose "Resource:
+   Actions" strings. The count sits in its own `.au-eff-summary-count`
+   span so we can tone it down without affecting the resource label. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-count {
+  color: var(--text-secondary, #526374);
+  font-weight: 400;
+}
+
+/* ─── Edit User: Assigned Role field width (Edit mode only) ─────────
+   Round 5 (2026-06-09): the assigned-role dropdown previously
+   stretched to (card-width − 24px)/2 to align with the Add-mode
+   role-card grid. In Edit mode there's no card grid below, so the
+   wide dropdown reads as overweight. Cap the row to a role-selector
+   width (~380px) and let the dropdown fill that. Add-mode is
+   unaffected because the rule is class-gated on `.is-edit-mode`. */
+#addUsersPage.is-edit-mode #auRolesCard .au-role-row {
+  max-width: 380px;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-role-row > .au-role-dd-field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ─── Edit User: "View breakdown" action ────────────────────────────
+   Sits above the Access table, right-aligned within the
+   `.au-eff-actions` row. Plain Indigo 70 text link styled per brief:
+   14px, normal weight, no border, no chip background, no underline.
+   Cursor is `pointer` because it opens a modal. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 4px;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-view-breakdown {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  color: var(--brand-text, #3611C8);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-view-breakdown:hover {
+  color: var(--brand-text-hover, #2a0c9a);
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-view-breakdown:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Edit User: Effective access breakdown modal ───────────────────
+   Round 8 (2026-06-09): restyled to match the EDL Modal component
+   (Figma node 51840:2241). Mounts inside the shared
+   `.cr-confirm-backdrop` overlay used by the rest of the prototype,
+   but the dialog shell adopts EDL chrome:
+     • Header bar with title + `×` close icon (no warning glyph — this
+       is an informational modal, not a destructive one).
+     • Body region with consistent 16px gutters.
+     • Footer with right-aligned standard (outlined) Close button.
+     • Border-radius 6px to match EDL "Small" surfaces.
+     • Elevation/30 shadow (0 2 4 #00000029) — much lighter than
+       the previous 0 20 48 rgba(0,0,0,0.24).
+     • Width 560px so the per-resource action list reads comfortably.
+   The `.au-eff-modal-dialog.edl-modal` class chain overrides the
+   `.cr-confirm-dialog` defaults (12px radius, 24px padding all-around,
+   heavy shadow). Other modals using `.cr-confirm-dialog` are
+   untouched. */
+.au-eff-modal-dialog.edl-modal {
+  max-width: 560px;
+  width: 100%;
+  padding: 0;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+  background: var(--bg-surface, #FFFFFF);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  font-family: var(--ff);
+}
+.au-eff-modal-dialog .edl-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-default, #D4DEE3);
+  flex-shrink: 0;
+}
+.au-eff-modal-dialog .edl-modal-title {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary, #171C20);
+  letter-spacing: 0;
+}
+.au-eff-modal-dialog .edl-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--text-secondary, #526374);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.au-eff-modal-dialog .edl-modal-close:hover {
+  background: var(--row-hover, rgba(54, 17, 200, 0.06));
+  color: var(--text-primary, #171C20);
+}
+.au-eff-modal-dialog .edl-modal-close:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+}
+.au-eff-modal-dialog .edl-modal-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.au-eff-modal-dialog .edl-modal-intro {
+  margin: 0 0 16px 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-secondary, #526374);
+}
+.au-eff-modal-dialog .edl-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-default, #D4DEE3);
+  flex-shrink: 0;
+}
+
+/* Assigned role + per-app sections. Typography aligned with EDL
+   body (14/21 Roman) and caption (12/18 muted). Assigned role block
+   has a hairline divider below so it reads as identity metadata
+   sitting above the per-app breakdown. */
+.au-eff-modal-role {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 16px 0;
+  padding: 0 0 16px 0;
+  border-bottom: 1px solid var(--border-default, #D4DEE3);
+}
+.au-eff-modal-role-label {
+  font-family: var(--ff);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-secondary, #526374);
+}
+.au-eff-modal-role-value {
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: var(--text-primary, #171C20);
+}
+.au-eff-modal-scroll {
+  /* Body region already scrolls via `.edl-modal-body`; this wrapper
+     stays in normal flow. Margin removed (previously 16px bottom)
+     because the footer now provides separation. */
+  margin: 0;
+}
+.au-eff-modal-section {
+  padding: 12px 0 16px 0;
+  border-bottom: 1px solid var(--border-default, #D4DEE3);
+}
+.au-eff-modal-section:first-child { padding-top: 0; }
+.au-eff-modal-section:last-child  { padding-bottom: 0; border-bottom: 0; }
+.au-eff-modal-app {
+  margin: 0 0 10px 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  color: var(--text-primary, #171C20);
+}
+.au-eff-modal-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.au-eff-modal-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+.au-eff-modal-res {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: var(--text-primary, #171C20);
+}
+.au-eff-modal-acts {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-secondary, #526374);
+}
+.au-eff-modal-empty {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-muted, #6A8095);
+  font-style: italic;
+}
+@media (max-width: 520px) {
+  .au-eff-modal-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
 
 /* ─── Basic Information edit row (Figma 847:16172) ──────────────────
    Single horizontal row: identity col + 2 field cols. Aligned items
@@ -6315,16 +7119,68 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   color: var(--text-secondary, #526374);
 }
 
+/* Members card header: title left, "+ Add members" action right.
+   `.cr-section-header` is normally a plain flex row; we override
+   only on the Members card so the Add button sits at the right
+   edge of the card content. Scoped to `#editTeamPage` so the
+   shared `.cr-section-header` used by Create Role / Edit User
+   stays untouched. */
+#editTeamPage .tm-members-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+/* The Add members button on Edit Team uses the EDL outlined
+   `.cr-btn-add` base visual (purple border, transparent fill,
+   purple label). This is intentionally NOT the filled-purple
+   variant used inside #createRolePage, because here Add members is
+   a secondary affordance sitting next to a destructive Delete Team
+   ghost link — the secondary visual keeps the action hierarchy
+   correct. Scoped to #editTeamPage so the Create Role override
+   isn't affected. */
+#editTeamPage .tm-add-members-btn {
+  align-self: center;
+  flex-shrink: 0;
+}
+
 /* Members table — re-uses .tbl primitives but pins column widths so
-   Name / Email / Role read in a predictable rhythm and don't reflow
-   when the underlying data changes. Read-only, so no row-hover
-   affordance and no cursor change. */
-#editTeamPage .tm-members-tbl .tm-mcol-name  { width: 30%; }
-#editTeamPage .tm-members-tbl .tm-mcol-email { width: auto; }
-#editTeamPage .tm-members-tbl .tm-mcol-role  { width: 25%; }
+   Name / Email / Role / Actions read in a predictable rhythm and
+   don't reflow when the underlying data changes. The Actions
+   column is a fixed-min cell that hosts the Remove link. */
+#editTeamPage .tm-members-tbl .tm-mcol-name    { width: 28%; }
+#editTeamPage .tm-members-tbl .tm-mcol-email   { width: auto; }
+#editTeamPage .tm-members-tbl .tm-mcol-role    { width: 22%; }
+#editTeamPage .tm-members-tbl .tm-mcol-actions { width: 96px; }
 
 #editTeamPage .tm-members-tbl tbody tr { cursor: default; }
 #editTeamPage .tm-members-tbl tbody tr:hover { background: transparent; }
+
+#editTeamPage .tm-th-actions .th-inner { justify-content: flex-end; }
+#editTeamPage .tm-members-tbl td.tm-cell-actions { text-align: right; }
+#editTeamPage .tm-members-tbl .tm-row-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--brand-text);
+  cursor: pointer;
+}
+#editTeamPage .tm-members-tbl .tm-row-remove:hover {
+  color: var(--brand-text-hover);
+  background: var(--brand-bg-soft);
+}
+#editTeamPage .tm-members-tbl .tm-row-remove:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+}
 
 /* First and last column flush with the card's content edges so the
    header text "Name" lines up under the card title / helper, and
@@ -6341,6 +7197,169 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    the table comfortable breathing room below the last row. */
 #editTeamPage .tm-members-body {
   padding-bottom: 0;
+}
+
+/* ── Edit Team: Add members modal ───────────────────────────────
+   Reuses the EDL `.cr-confirm-backdrop` + `.cr-confirm-dialog`
+   shell so the modal stays visually consistent with Remove Role /
+   Remove application / Set user as inactive / Delete permission
+   group. Overrides:
+     • wider max-width (640px) so the search input + 3-column user
+       rows have breathing room without becoming a full-screen sheet
+     • search row sits right under the subtitle
+     • user list is a fixed-height scrollable region (handles 50+
+       eligible internal users without ballooning the modal)
+     • footer adds a "N selected" status pill on the left so the
+       user sees their selection count without scanning the list
+   Strictly scoped to `.tm-add-dialog` / `#tmAddMembersBackdrop` so
+   no other confirm modal in the app is affected. */
+.tm-add-dialog {
+  max-width: 640px;
+  width: 100%;
+}
+.tm-add-dialog .tm-add-subtitle {
+  margin-bottom: 16px;
+}
+.tm-add-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.tm-add-search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.tm-add-search-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 36px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tm-add-search-input::placeholder { color: var(--text-placeholder); }
+.tm-add-search-input:focus {
+  border-color: var(--brand-text);
+  box-shadow: 0 0 0 2px var(--brand-focus-ring, rgba(54, 17, 200, 0.2));
+}
+.tm-add-list-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+.tm-add-list {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+}
+.tm-add-list:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+}
+.tm-add-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-default);
+  cursor: pointer;
+  user-select: none;
+}
+.tm-add-row:last-child { border-bottom: 0; }
+.tm-add-row:hover { background: var(--row-hover, rgba(54, 17, 200, 0.04)); }
+.tm-add-row.is-selected { background: var(--brand-bg-soft); }
+.tm-add-row-check {
+  flex-shrink: 0;
+  margin: 0;
+}
+.tm-add-row-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.tm-add-row-name {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Email — brief 2026-06-09 round 7 confirms 14/20 muted. Was 13/18. */
+.tm-add-row-meta {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Right-side metadata — single 14/20 muted team-name span.
+   Round 10 (2026-06-09): the repeated "Current team" caption was
+   removed per the brief; the row now reads `Name / Email | Team`
+   with no header chrome and no captions in the list itself. The
+   side block still uses `flex-direction: column` + `align-items:
+   flex-end` so the (now single) value sits flush right, and the
+   parent row's `align-items: center` keeps it vertically centered
+   against the two-line name+email stack on the left. */
+.tm-add-row-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 12px;
+  min-width: 0;
+  /* 220px is wide enough for the longest internal-team string
+     ("Addressable & Programmatic Sales") at 14px without truncation
+     on the 640px modal, while still leaving the left stack (name +
+     email) the dominant column. Values still ellipsis-truncate
+     defensively for any future longer string. */
+  max-width: 220px;
+}
+.tm-add-row-side-value {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Intentionally NOT styled as a link — no cursor: pointer override,
+     no hover color shift, no underline. The brief mandates this can't
+     look clickable. */
+  max-width: 100%;
+}
+.tm-add-empty {
+  margin: 16px 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.tm-add-actions {
+  align-items: center;
+}
+.tm-add-actions-spacer { flex: 1; }
+.tm-add-selected-count {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-secondary);
 }
 
 /* ════════════════════════════════════════════════════════════════════
