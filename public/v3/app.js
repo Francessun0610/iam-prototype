@@ -340,6 +340,26 @@ var ROLE_FUNCTION_MAP = {
   },
   r010: { /* TOM Admin */
     "TOM": FUNCTION_REGISTRY["TOM"].slice()
+  },
+  /* Round 30 (2026-06-09) — external-partner roles. Required so
+     `findRoleIdByRoleName('Agency Admin' | 'External Partner Admin')`
+     resolves and the External Users table → Edit User handoff
+     preserves the assigned role for external users (brief §1). */
+  r015: { /* Agency Admin — agency-side planning lead */
+    "Core Planning": [
+      "planning_order_list","planning_order_get","planning_order_create","planning_order_update",
+      "planning_plan_list","planning_plan_get","planning_plan_create","planning_plan_update",
+      "planning_lineitem_list","planning_lineitem_get","planning_lineitem_create","planning_lineitem_update"
+    ],
+    "Disney Ads Agent": ["media_plan_queries","forecasting_queries","planning_activity_summaries"]
+  },
+  r016: { /* External Partner Admin — partner-side read-leaning admin */
+    "Core Planning": [
+      "planning_order_list","planning_order_get",
+      "planning_plan_list","planning_plan_get",
+      "planning_lineitem_list","planning_lineitem_get"
+    ],
+    "Disney Ads Agent": ["forecasting_queries"]
   }
 };
 
@@ -353,6 +373,8 @@ var ROLE_ACCESS_LEVELS = {
   r013: { "Core Planning": "Edit", "Disney Ads Agent": "Edit" },
   r014: { "Core Planning": "Edit", "Disney Ads Agent": "Full Access", "IAM": "View Only" },
   r008: { "Core Planning": "View Only" },
+  r015: { "Core Planning": "Edit", "Disney Ads Agent": "Edit" },
+  r016: { "Core Planning": "View Only", "Disney Ads Agent": "View Only" },
   r009: { "ICM": "Full Access" },
   r010:{ "TOM": "Full Access" }
 };
@@ -1186,7 +1208,17 @@ var ROLES_PERMISSIONS_DATA = [
   { id: "r014", role: "Ad Operations Specialist", description: "Executes and manages live campaigns, handles trafficking, monitoring, and optimization tasks across active orders.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/09/2026", functions: buildRoleFunctions("r014") },
   { id: "r008", role: "Read-Only Viewer", description: "Provides read-only visibility across planning entities and details.", status: "Standard", createdBy: "Marge Simpson", createDate: "02/10/2026", functions: buildRoleFunctions("r008") },
   { id: "r009", role: "ICM Admin", description: "Maintains Inventory Catalog Manager offerings and sales package access.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/14/2026", functions: buildRoleFunctions("r009") },
-  { id: "r010", role: "TOM Admin", description: "Administers Targeting Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") }
+  { id: "r010", role: "TOM Admin", description: "Administers Targeting Options Manager options, groups, and templates.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/18/2026", functions: buildRoleFunctions("r010") },
+  /* Round 30 (2026-06-09) — canonical entries for external-partner
+     roles surfaced on the External Users table (Agency Admin,
+     External Partner Admin). Required so the Edit User → Assigned
+     Role dropdown can resolve, render, and re-save these roles for
+     external users (brief §3). Mapped to dedicated effective-access
+     classes (`agency_admin`, `partner_admin`) defined in
+     AU_EFF_PATTERNS so the Access table and View breakdown modal
+     produce a reasonable, role-shaped preview. */
+  { id: "r015", role: "Agency Admin",            description: "Agency-side lead managing partner campaigns, plans, and Disney Ads Agent insights.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/22/2026", functions: buildRoleFunctions("r015") },
+  { id: "r016", role: "External Partner Admin",  description: "External partner administrator with read access to shared planning data and forecasting tools.", status: "Standard", createdBy: "Homer Simpson", createDate: "02/26/2026", functions: buildRoleFunctions("r016") }
 ];
 var RP_ORIGINAL_ORDER = ROLES_PERMISSIONS_DATA.slice();
 
@@ -3634,10 +3666,18 @@ document.addEventListener("DOMContentLoaded", function () {
        This block is intentionally read-only (no add/remove member,
        no inline editing) per the brief's guardrails. */
     function buildTeamMembersForName(teamName) {
-      if (!Array.isArray(DATA)) return [];
+      /* Teams is an internal-only surface (per brief §8). Source from
+         the canonical internal snapshot so this helper produces the
+         same result whether the caller is on the Internal or External
+         Users view (`DATA` is view-toggled). Falls back to `DATA` if
+         the snapshot isn't ready yet during very early module init. */
+      var source = Array.isArray(INTERNAL_ORIGINAL_SNAPSHOT) && INTERNAL_ORIGINAL_SNAPSHOT.length
+        ? INTERNAL_ORIGINAL_SNAPSHOT
+        : (Array.isArray(DATA) ? DATA : null);
+      if (!source) return [];
       var rows = [];
-      for (var i = 0; i < DATA.length; i++) {
-        var u = DATA[i];
+      for (var i = 0; i < source.length; i++) {
+        var u = source[i];
         if (!u || u.team !== teamName) continue;
         var role = (u.roles && u.roles.length) ? u.roles[0] : "";
         rows.push({ name: u.name, email: u.email, role: role });
@@ -4225,9 +4265,21 @@ document.addEventListener("DOMContentLoaded", function () {
     function tmBuildEligible() {
       var existing = tmGetExistingKeySet();
       var out = [];
-      if (!Array.isArray(DATA)) return out;
-      for (var i = 0; i < DATA.length; i++) {
-        var u = DATA[i];
+      /* Round 31 (2026-06-09): always source the eligible pool from
+         the canonical internal snapshot (`INTERNAL_ORIGINAL_SNAPSHOT`).
+         Previously this iterated `DATA`, which is view-toggled — when
+         the user was on the External Users view, `DATA` held the
+         external array and the Add Members modal silently rendered an
+         empty list (every external is filtered out by
+         `tmIsInternalUser`). Teams membership is internal-only by
+         spec; the source must not depend on which Users-view tab is
+         currently active. Falls back to `DATA` only as a last resort
+         in case `INTERNAL_ORIGINAL_SNAPSHOT` isn't initialised yet. */
+      var source = Array.isArray(INTERNAL_ORIGINAL_SNAPSHOT) && INTERNAL_ORIGINAL_SNAPSHOT.length
+        ? INTERNAL_ORIGINAL_SNAPSHOT
+        : (Array.isArray(DATA) ? DATA : []);
+      for (var i = 0; i < source.length; i++) {
+        var u = source[i];
         if (!tmIsInternalUser(u)) continue;
         if (u.id && existing[u.id]) continue;
         if (u.email && existing["email:" + u.email]) continue;
@@ -5703,10 +5755,18 @@ document.addEventListener("DOMContentLoaded", function () {
       r014: "ad_ops",           /* Ad Operations Spec.    */
       r008: "viewer",           /* Read-Only Viewer       */
       r009: "icm_admin",        /* ICM Admin              */
-      r010: "tom_admin"         /* TOM Admin              */
+      r010: "tom_admin",        /* TOM Admin              */
       /* (planning_admin class now exists in AU_EFF_PATTERNS so the
          Core Planning Admin row renders the brief's 2-row preview
          instead of falling back to _default.) */
+      /* Round 30 (2026-06-09) — external-partner role classes.
+         These map the new canonical role IDs (r015 Agency Admin,
+         r016 External Partner Admin) to dedicated effective-access
+         patterns scoped to external partners. Distinct classes keep
+         external partner access visibly separate from internal IAM
+         admin patterns. */
+      r015: "agency_admin",     /* Agency Admin           */
+      r016: "partner_admin"     /* External Partner Admin */
     };
 
     /* Effective-access patterns by class. Each entry is an array of
@@ -5797,6 +5857,22 @@ document.addEventListener("DOMContentLoaded", function () {
       ],
       viewer: [
         { app: "Core Planning", level: "View Access", chips: ["Orders"] }
+      ],
+      /* Round 30 (2026-06-09) — external-partner role patterns.
+         Agency Admin = agency-side planner with Disney Ads Agent
+         visibility for forecasting / activity summaries. External
+         Partner Admin = read-leaning partner with Core Planning
+         view + forecasting query access. Both reuse the existing
+         AU_EFF_ACTIONS verbs/aliases (Disney Ads Agent labels are
+         re-aliased in the breakdown modal — see
+         AU_EFF_BREAKDOWN_DAA_RES_LABEL). */
+      agency_admin: [
+        { app: "Core Planning",    level: "Edit Access", chips: [{r:"Orders", a:["Read","Create","Update"]}, {r:"Media Plans", a:["Read","Create","Update"]}, {r:"Line Items", a:["Read","Create","Update"]}] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Forecasting", "Planning Support"] }
+      ],
+      partner_admin: [
+        { app: "Core Planning",    level: "View Access", chips: ["Orders", "Media Plans", "Line Items"] },
+        { app: "Disney Ads Agent", level: "View Access", chips: ["Forecasting"] }
       ],
       /* Fallback for any unmapped / unknown role (per brief §3 fallback). */
       _default: [
