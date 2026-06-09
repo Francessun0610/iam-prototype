@@ -6134,7 +6134,16 @@ document.addEventListener("DOMContentLoaded", function () {
         var r = findRoleById(roleId);
         if (r && r.role) roleName = r.role;
       }
-      var breakdown = { roleName: roleName, sections: [] };
+      /* Round 29: parallel snapshot shape with the multi-role renderer
+         (`renderAuCombinedEffectiveAccess`). `roleCount=1` so the
+         modal pluralization helper picks the singular label/intro
+         when this code path is reached. */
+      var breakdown = {
+        roleName: roleName,
+        roleNames: roleName ? [roleName] : [],
+        roleCount: roleName ? 1 : 0,
+        sections: []
+      };
       var html = "";
       for (var i = 0; i < pattern.length; i++) {
         var spec = pattern[i];
@@ -6291,7 +6300,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       var html = "";
-      var breakdown = { roleName: roleNamesForBreakdown.join(", "), sections: [] };
+      /* Round 29 (2026-06-09 — Effective access breakdown modal
+         pluralization). Capture the role-name LIST and the count
+         alongside the joined string so the modal renderer can:
+           • swap the label between "Assigned role" / "Assigned roles"
+             based on count,
+           • swap the intro between singular / plural copy,
+           • render the value as the full comma-joined name list
+             (already correct — `roleName`).
+         The combined renderer (called for every Edit User mount and
+         every Update access apply) is the authoritative source — the
+         legacy single-role `renderAuEffectiveAccessTable` is no longer
+         called by any code path but is still updated below for
+         symmetry. */
+      var breakdown = {
+        roleName: roleNamesForBreakdown.join(", "),
+        roleNames: roleNamesForBreakdown.slice(),
+        roleCount: roleNamesForBreakdown.length,
+        sections: []
+      };
       for (var oi = 0; oi < order.length; oi++) {
         var appKey = order[oi];
         var merged = byApp[appKey];
@@ -6363,15 +6390,85 @@ document.addEventListener("DOMContentLoaded", function () {
     var auEffViewBtn       = document.getElementById("auEffViewBreakdown");
     var auEffModalLastFocus = null;
 
+    /* Round 29 (2026-06-09 — modal pluralization + DAA labels).
+
+       Disney Ads Agent presentation override.
+         • Resource (row) labels: the modal stores the canonical chip
+           names ("Forecasting", "Planning Support", "Approval
+           Comparisons", "Media Plan Queries") because role-pattern
+           lookups, action lookups, and chip-merging all bind on those.
+           The Functions matrix renders user-facing aliases per Round
+           20/22 (CR_APP_RESOURCE_DISPLAY_LABEL). The brief asks the
+           breakdown modal to read like the matrix — same alias set —
+           so we apply the override at render time only. The data
+           snapshot remains canonical, so future role/preview changes
+           don't drift.
+         • Action verb: DAA is a query/access capability, not CRUD.
+           The matrix renders the column header as "Access" (Round 20
+           CR_APP_COLUMN_DISPLAY_LABEL); we map the underlying "Read"
+           verb to "Access" only for DAA rows so the modal matches.
+       Scoped to this renderer — no other surface is affected. */
+    var AU_EFF_BREAKDOWN_DAA_RES_LABEL = {
+      "Media Plan Queries":   "Plan Queries",
+      "Forecasting":          "Forecast Queries",
+      "Planning Support":     "Team Summary",
+      "Approval Comparisons": "IO Compare"
+    };
+    function auEffBreakdownDisplayResource(appLabel, canonicalResource) {
+      if (appLabel === "Disney Ads Agent") {
+        var alias = AU_EFF_BREAKDOWN_DAA_RES_LABEL[canonicalResource];
+        if (alias) return alias;
+      }
+      return canonicalResource;
+    }
+    function auEffBreakdownDisplayVerbs(appLabel, verbs) {
+      if (!verbs || !verbs.length) return appLabel === "Disney Ads Agent" ? "Access" : "Read";
+      if (appLabel === "Disney Ads Agent") {
+        /* Map any "Read" entry to "Access". Other verbs (none expected
+           for DAA today) pass through verbatim so future expansion
+           doesn't require touching this branch. */
+        var mapped = [];
+        for (var v = 0; v < verbs.length; v++) {
+          mapped.push(verbs[v] === "Read" ? "Access" : verbs[v]);
+        }
+        /* Deduplicate while preserving order (Read+Read → Access). */
+        var seen = {};
+        var out = [];
+        for (var k = 0; k < mapped.length; k++) {
+          if (!seen[mapped[k]]) { seen[mapped[k]] = true; out.push(mapped[k]); }
+        }
+        return out.join(", ");
+      }
+      return verbs.join(", ");
+    }
+
     function auEffRenderBreakdownModal() {
       if (!auEffModalSections) return;
       var b = auEffLastBreakdown;
+      /* Round 29: pluralization based on the role count captured in
+         the breakdown snapshot. Falls back gracefully when older
+         snapshots without `roleCount` are encountered (treat as
+         single-role to preserve current behaviour). */
+      var rc = (b && typeof b.roleCount === "number") ? b.roleCount : ((b && b.roleName) ? 1 : 0);
+      var isMulti = rc > 1;
+      var labelEl = document.querySelector(".au-eff-modal-role-label");
+      if (labelEl) {
+        labelEl.textContent = isMulti ? "Assigned roles" : "Assigned role";
+      }
+      var introEl = document.getElementById("auEffBreakdownSubtitle");
+      if (introEl) {
+        introEl.textContent = isMulti
+          ? "Access shown is inherited from the assigned roles."
+          : "Access shown is inherited from the assigned role.";
+      }
       if (auEffModalRoleName) {
         auEffModalRoleName.textContent = (b && b.roleName) ? b.roleName : "—";
       }
       if (!b || !b.sections || !b.sections.length) {
         auEffModalSections.innerHTML =
-          '<p class="au-eff-modal-empty">No effective access for the assigned role.</p>';
+          '<p class="au-eff-modal-empty">' + (isMulti
+            ? "No effective access for the assigned roles."
+            : "No effective access for the assigned role.") + '</p>';
         return;
       }
       var html = "";
@@ -6385,10 +6482,11 @@ document.addEventListener("DOMContentLoaded", function () {
           html += '<dl class="au-eff-modal-list">';
           for (var j = 0; j < sec.groups.length; j++) {
             var g = sec.groups[j];
-            var verbs = (g.a && g.a.length) ? g.a.join(", ") : "Read";
+            var resourceLabel = auEffBreakdownDisplayResource(sec.app, g.r);
+            var verbs = auEffBreakdownDisplayVerbs(sec.app, g.a);
             html +=
               '<div class="au-eff-modal-row">' +
-                '<dt class="au-eff-modal-res">' + esc(g.r) + '</dt>' +
+                '<dt class="au-eff-modal-res">' + esc(resourceLabel) + '</dt>' +
                 '<dd class="au-eff-modal-acts">' + esc(verbs) + '</dd>' +
               '</div>';
           }
