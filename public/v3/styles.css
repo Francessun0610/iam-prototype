@@ -2126,6 +2126,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   background: transparent;
   border: 0;
   border-radius: 0;
+  /* Round 17 (2026-06-09): match Figma 924:14150 section frame.
+     Each app section is inset 16px on the left and 16px on the right
+     from the parent (.cr-perms-content). The matrix table fills the
+     full content area between these insets — same left edge, same
+     right edge, same width across every application (Core Planning,
+     Identity and Access Management, Inventory Catalog Manager,
+     Targeting Options Manager, Disney Ads Agent). Chevron + app
+     name + Remove application all sit on the same 16/16 inset rails
+     as the table below. Replaces the previous asymmetric `padding: 0`
+     + 32px body indent which made the matrix start at section.left+32
+     and end at section.right (asymmetric).
+
+     Round 24 (2026-06-09 — nested-accordion alignment QA): the
+     `padding: 0 16px` is dropped so the per-app section frame sits
+     flush with the parent `.cr-perms-content` content edge. Combined
+     with the tightened `.cr-matrix-fn` / `.cr-matrix-th-fn` left
+     padding (16 → 4) below, this brings the matrix row labels into
+     the same x-position as the parent "Functions" title text instead
+     of 28px to its right. App headers receive their own
+     `padding-left` rule below so chevron + app title + Remove
+     application stay visually nested under the parent section, while
+     the table content lines up with the parent grid. The Remove
+     button's right edge now sits flush with the table's right edge
+     (1242 ≈ parent content right edge), keeping the cross-app
+     right-alignment that Round 9 first established. */
   padding: 0;
   align-self: stretch;
   width: 100%;
@@ -2144,15 +2169,35 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   border-color: transparent;
   box-shadow: none;
 }
+/* Round 11 (2026-06-09): lighter app title — 16/600 Indigo 70 reads
+   as a sub-section heading (not a card heading), which calms the
+   visual weight of having 5 stacked sections inside the Functions
+   card. Color and Indigo-70 affordance preserved per brief. */
 #createRolePage .cr-app-section--matrix .cr-app-title {
   font-family: var(--ff);
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 22px;
   color: var(--brand-text);
 }
+/* Section head padding tightened so each app block reads as a
+   compact subsection rather than a card. The first section gets a
+   slightly smaller top padding; subsequent sections inherit the
+   hairline separator from `.cr-app-section--matrix + .cr-app-section--matrix`
+   below. */
 #createRolePage .cr-app-section--matrix .cr-app-section-head {
-  padding: 16px 0;
+  /* Round 24 (2026-06-09 — nested-accordion alignment QA): the
+     app-header lives on the same horizontal grid as the matrix
+     table — chevron + app title at the section's left edge, Remove
+     application at the section's right edge. This satisfies the
+     brief's rule "Remove application should remain aligned to the
+     right edge of the table/application area" while letting the
+     table sit flush at the parent content grid. The "slightly
+     nested" hierarchy the brief calls for (§3) comes from the
+     parent Functions section's own 20px content padding (see
+     `.cr-perms-content { padding-left: 20px }`), not from a second
+     inset inside each app section. */
+  padding: 12px 0 8px;
   margin-bottom: 0;
   align-items: center;
 }
@@ -2182,6 +2227,18 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #createRolePage .cr-app-section--matrix.cr-app-section--collapsed .cr-app-section-body {
   display: none;
 }
+/* Round 17 (2026-06-09): matrix body flush with section content
+   area. The section itself owns the 16px left/right insets (see
+   `.cr-app-section--matrix { padding: 0 16px }` above), so the body
+   no longer needs its own left padding. This matches Figma 924:14150
+   where the table sits at the same left x-position as the chevron +
+   app name in the section header — both inset 16px from the section
+   frame edge. Was `padding-left: 32px` in Round 14 (a different,
+   nested-indent treatment that placed the matrix 32px to the right
+   of the chevron, which is not the Figma 924:14138 spec). */
+#createRolePage .cr-app-section--matrix .cr-app-section-body {
+  padding-left: 0;
+}
 /* Nested indentation: application sections sit one level inside
    the Functions card content. The Functions card's helper text
    and "Add application" controls remain aligned with the card's
@@ -2200,24 +2257,103 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #createRolePage .cr-perms-content {
   padding-left: 20px;
 }
+/* Round 13 (2026-06-09): section spacing only — the duplicate
+   horizontal-divider artifact (last row `border-bottom` stacked
+   against the section `border-top`) is replaced with vertical
+   spacing alone. The end of each table's last `<tr>` already has a
+   `1px var(--border-default)` bottom border, which provides the
+   single hairline that separates one application section from the
+   next. The first section has neither, keeping the very top of the
+   matrix clean below "Add application".
+
+   Round 19 (2026-06-09 — layout-only QA pass for Figma 924:14138):
+   the previous `padding-top: 4px` here made the asymmetric padding
+   inspection (first section `0px 16px`, the rest `4px 16px 0px`)
+   that does not exist in Figma — every app section in the Figma
+   frame uses `px-[16px]` only, no vertical padding. We replace the
+   4px padding-top with pure margin so every section has the same
+   structural insets and the vertical rhythm comes from one source
+   (margin) instead of two (margin + padding). Visual gap between
+   sections stays ~16px (was margin 12 + padding 4 = 16 before; now
+   pure margin: 16). */
+#createRolePage .cr-perms-content .cr-app-section--matrix + .cr-app-section--matrix {
+  margin-top: 16px;
+}
+/* Round 13: every matrix table spans the section width — same left
+   edge, same right edge, same total width across all five
+   applications. Column widths are still locked via <colgroup>:
+     - `.cr-mcol-fn { width: 240px; }` — Functions column. Same
+       column width across every app; first row labels (Orders,
+       Users, Offerings, Targeting Options, Forecasting) all start
+       at the same x-position.
+     - `.cr-mcol-act { width: 100px; }` — every action column. Same
+       column width whether the app has 1 action (Disney Ads Agent)
+       or 5 actions (IAM, TOM).
+     - `.cr-mcol-spacer { width: auto; }` — trailing column with no
+       explicit width. With `table-layout: fixed; width: 100%;` the
+       browser distributes the remaining section width entirely to
+       this column. That's what lets Disney Ads Agent end at the
+       same right edge as the wider apps without distorting the
+       Functions / Read columns and without adding fake disabled
+       action columns. */
 #createRolePage .cr-matrix {
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto;
+  table-layout: fixed;
   font-family: var(--ff);
   margin-top: 0;
+}
+#createRolePage .cr-matrix .cr-mcol-fn     { width: 240px; }
+/* Round 17 (2026-06-09): same 136px action column width. After moving
+   the 16/16 inset onto the section (instead of a one-sided 32px body
+   indent), the matrix table fills the section content area:
+     section.width 964 − padding 16×2 = 932px available
+       5 × 136 + 240 = 920px →  12px spacer for IAM, TOM
+       4 × 136 + 240 = 784px → 148px spacer for Core Planning, ICM
+       1 × 136 + 240 = 376px → 556px spacer for Disney Ads Agent
+   The spacer column absorbs the remainder so every app's table ends
+   at the same right edge (section.right − 16). */
+#createRolePage .cr-matrix .cr-mcol-act    { width: 136px; }
+#createRolePage .cr-matrix .cr-mcol-spacer { width: auto; }
+/* Spacer <th> / <td> — render empty space with the same row borders
+   so the trailing whitespace continues the table's visual grid
+   (single hairline at the row bottom, no checkbox, no label). */
+#createRolePage .cr-matrix .cr-matrix-th-spacer {
+  padding: 0;
+  border-bottom: 1px solid var(--border-default);
+  background: transparent;
+}
+#createRolePage .cr-matrix .cr-matrix-cell-spacer {
+  padding: 0;
+  height: inherit;
+  background: var(--bg-surface);
 }
 #createRolePage .cr-matrix thead th {
   border-bottom: 1px solid var(--border-default);
   background: transparent;
   text-align: left;
   vertical-align: middle;
-  padding: 8px 16px;
+  /* Round 11: thinner header (~36-40px target). Was 8px 16px (~42px). */
+  padding: 6px 16px;
   font-family: var(--ff);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  color: var(--text-muted);
+  /* Round 26 (2026-06-09 — header typography): bumped from 12px/18px
+     to 14px/20px so the header labels (Functions, Read, Create,
+     Update, Delete, Assign, Access) read as peer-level table chrome
+     instead of getting visually overpowered by the larger row
+     checkboxes and 14px body row labels. Weight stays at 500 so the
+     header still reads as a header — heavier than the 400 body row
+     labels — without crossing into the bold/heavy territory used by
+     the application titles (16px / 600).
+     Letter-spacing 0.02em (a small-caps-style tweak that made sense
+     at 12px) is dropped at 14px where it would only loosen the label
+     and undermine the "clearly readable" goal in the brief. Color
+     stays Gray 70 / `--text-secondary` per Figma 924:14138 so the
+     header remains muted readable rather than competing with row
+     content. */
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 #createRolePage .cr-matrix-th-inner {
@@ -2225,13 +2361,32 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: center;
   gap: 8px;
 }
-#createRolePage .cr-matrix-th-fn {
-  width: auto;
-  padding-left: 32px;
+#createRolePage .cr-matrix thead th.cr-matrix-th-fn {
+  /* Width is driven by <col class="cr-mcol-fn">; this rule owns the
+     left padding so the "Functions" header label lines up with the
+     row label's left padding (`.cr-matrix-fn { padding-left: 4px }`).
+
+     Round 24 (2026-06-09 — nested-accordion alignment QA): reduced
+     from 16px to 4px because the section frame no longer carries
+     its own 16px left inset (Round 24 removed
+     `.cr-app-section.cr-app-section--matrix { padding: 0 16px }`).
+     With section padding 0 + table padding 4, the Functions header
+     text lands at the same x-position as the parent Functions
+     title text in `.cr-perms-card`, satisfying the "align row
+     labels with the main Functions content grid" rule.
+
+     Selector promoted to `.cr-matrix thead th.cr-matrix-th-fn` to
+     out-specify the more-specific
+     `#createRolePage .cr-matrix thead th { padding: 6px 16px }`
+     rule above (same specificity trap that R23 had to fix on the
+     row-label side). Without the promotion the 16px would silently
+     win and the Functions header text would render at x=294 while
+     the row labels rendered at x=282. */
+  padding-left: 4px;
 }
 #createRolePage .cr-matrix-th-act {
-  width: 1%;
-  min-width: 110px;
+  /* Round 11: width is driven by <col class="cr-mcol-act">; remove
+     the legacy `min-width: 110px` so the colgroup wins. */
   text-align: center;
 }
 #createRolePage .cr-matrix-th-act .cr-matrix-th-inner {
@@ -2256,22 +2411,74 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   font: inherit;
   color: inherit;
 }
-/* Native indeterminate state — EDL Light didn't previously define
-   a default visual for `.cr-perm-check:indeterminate` (the
-   ads-preview theme has one further down). Scope this purely to
-   the matrix column-header checkbox so we don't accidentally
-   restyle any other `.cr-perm-check` consumer. */
-#createRolePage .cr-matrix-col-toggle:indeterminate {
-  background: var(--brand);
+/* Round 12 (2026-06-09 header checkbox quieting):
+   the column-header select-all checkbox is a *table control*, not
+   a selected-data indicator. Previously it inherited the full
+   `.cr-perm-check` visual — solid Indigo 70 fill in `:checked` and
+   `:indeterminate` — which made every fully-selected column show
+   another purple square in the header row, reading as "a wall of
+   purple boxes" on top of the already-purple row cells.
+   The new treatment keeps EDL semantics (Indigo 70 affordance,
+   accessible focus ring, hover hint) but switches every state to a
+   subtle outlined / tinted look that's lighter than row cells:
+     • Unchecked: white bg, Gray 40 outline, 14×14 (vs row 16×16).
+     • Hover (unchecked): Gray 70 outline only.
+     • Checked: Indigo 70 outline + Indigo 5 tinted bg + small
+       Indigo 70 check — no solid fill.
+     • Indeterminate: white bg + Gray 40 outline + Indigo 70 dash.
+     • Focus: keeps the EDL focus ring from `.cr-perm-check`.
+   All selectors are anchored to `#createRolePage .cr-matrix-col-toggle`
+   so row `.cr-perm-check` cells inside the same matrix are untouched
+   and continue to render the original loud, clear selected style. */
+
+/* Default unchecked + size — overrides `.cr-perm-check` base only
+   for the column-header toggle. */
+#createRolePage .cr-matrix-col-toggle {
+  width: 14px;
+  height: 14px;
+  border-color: var(--gray-40, #9EB0BD);
+  background: var(--bg-surface);
+}
+#createRolePage .cr-matrix-col-toggle:hover:not(:checked):not(:indeterminate):not(:disabled) {
+  border-color: var(--text-muted);
+}
+
+/* Checked — tinted, not solid. Indigo 70 outline + Indigo 05 wash +
+   Indigo 70 check so the affordance reads "selected" but at a
+   lower visual weight than the row cells' solid Indigo 70 fill.
+   The SVG check is recoloured to Indigo 70 to match the outline
+   instead of the previous white-on-purple combination. */
+#createRolePage .cr-matrix-col-toggle:checked {
+  background: var(--indigo-05);
   border-color: var(--brand-text);
+}
+#createRolePage .cr-matrix-col-toggle:checked::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none'><path d='M3.5 8.2 L6.6 11.3 L12.5 5.2' stroke='%233611C8' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+
+/* Indeterminate — keep the table-control feel: white bg, muted
+   outline, Indigo 70 dash. Explicitly overrides the previous
+   purple-fill rule for this selector. */
+#createRolePage .cr-matrix-col-toggle:indeterminate {
+  background: var(--bg-surface);
+  border-color: var(--gray-40, #9EB0BD);
 }
 #createRolePage .cr-matrix-col-toggle:indeterminate::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M4 8h8' stroke='white' stroke-width='1.75' stroke-linecap='round'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none'><path d='M4 8h8' stroke='%233611C8' stroke-width='1.75' stroke-linecap='round'/></svg>");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+/* Vertical alignment: the global `.cr-perm-check { margin-top: 3px }`
+   rule was sized for `.cr-perm-item` flex layouts; inside the matrix
+   header label this would push the smaller 14×14 box slightly off the
+   text baseline. Reset to 0 so the checkbox sits centered next to the
+   muted action label. */
+#createRolePage .cr-matrix-th .cr-matrix-col-toggle {
+  margin-top: 0;
 }
 #createRolePage .cr-matrix tbody td {
   border-bottom: 1px solid var(--border-default);
@@ -2279,17 +2486,49 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   vertical-align: middle;
   background: var(--bg-surface);
 }
-#createRolePage .cr-matrix-fn {
-  padding: 12px 16px 12px 32px;
+#createRolePage .cr-matrix tbody td.cr-matrix-fn {
+  /* Round 17 (2026-06-09): 11px vertical padding → 44px row height
+     to land at the upper end of the brief's 40–44px range, moving
+     closer to the Figma 48px row without exceeding the brief.
+
+     Round 23 (2026-06-09 — alignment QA): selector promoted from
+     `#createRolePage .cr-matrix-fn` to
+     `#createRolePage .cr-matrix tbody td.cr-matrix-fn` so it can
+     out-specify the more-specific
+     `#createRolePage .cr-matrix tbody td { padding: 0; }` rule above
+     (which carries one extra type-selector and was silently zeroing
+     out the intended 16px inset). Without that promotion the row
+     labels collapsed to x=294 while the Functions header sat at
+     x=310, visibly misaligned across every app section.
+
+     Round 24 (2026-06-09 — nested-accordion alignment QA): left
+     padding reduced from 16px to 4px (paired with the matching
+     `.cr-matrix-th-fn { padding-left: 4px }` change above and the
+     `.cr-app-section--matrix { padding: 0 }` change above) so the
+     "Functions" header and every row label (Orders, Users,
+     Offerings, Targeting Options, Plan Queries, …) land at the
+     same x-position as the parent Functions title text in
+     `.cr-perms-card`. This collapses the 28px drift between the
+     parent Functions title and the per-app row labels that the
+     brief screenshot flagged via the green guide. Vertical padding
+     (11px top + 11px bottom) is unchanged so row height stays at
+     44px. */
+  padding: 11px 4px;
   font-family: var(--ff);
   font-size: 14px;
   font-weight: 400;
   line-height: 21px;
   color: var(--text-primary);
   white-space: nowrap;
+  /* Defensive: truncate long resource names rather than expand the
+     locked-width Functions column. */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #createRolePage .cr-matrix-cell {
-  height: 48px;
+  /* Round 14 (2026-06-09): 44px row height matches `.cr-matrix-fn`
+     padding above (11px top + 22px line + 11px bottom). */
+  height: 44px;
   text-align: left;
   padding: 0 16px;
 }
@@ -6090,12 +6329,295 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    wide dropdown reads as overweight. Cap the row to a role-selector
    width (~380px) and let the dropdown fill that. Add-mode is
    unaffected because the rule is class-gated on `.is-edit-mode`. */
+/* Round 18 (2026-06-09): Edit User Assigned Role row now hosts the
+   dropdown AND the EDL "Add" button on the same line (the button used
+   to be Add-mode only). The combo keeps a stable ~380px width per
+   brief §2 ("dropdown width around 360–420px"); the row total grows
+   to fit the button + 8px gap. Without this cap relaxation the row
+   would still clamp at 380px and the button would wrap to a second
+   line on common viewports. */
 #addUsersPage.is-edit-mode #auRolesCard .au-role-row {
-  max-width: 380px;
+  max-width: 480px;
+  gap: 8px;
 }
 #addUsersPage.is-edit-mode #auRolesCard .au-role-row > .au-role-dd-field {
+  flex: 0 0 380px;
+  min-width: 0;
+  max-width: 380px;
+}
+#addUsersPage.is-edit-mode #auRolesCard .au-role-row > .au-btn-add {
+  flex: 0 0 auto;
+  /* Round 21 (2026-06-09): the "Update access" button sits next to
+     the EDL multi-select trigger (40px tall), so the button height
+     matches the trigger per brief §6 ("Button height matches
+     dropdown height"). The global `.au-btn-add` stays 32px so Add
+     User's row (which sits next to a 40px combo but is sized for
+     the historical Add-mode rhythm) is untouched. */
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+}
+/* Round 18 (2026-06-09): assigned-role chips list (edit-mode only).
+   Sits directly below the role row with 12px vertical rhythm so it
+   reads as the "currently assigned" cluster paired with the picker.
+   Each chip mirrors EDL chip styling (soft brand background, 1px
+   border) and exposes a small `×` remove control. Chips stay
+   read-only-looking (no underline, no link blue) — the only
+   interactive affordance inside the chip is the remove button.
+
+   Round 21 (2026-06-09): the chip list is hidden permanently — the
+   new EDL-style multi-select dropdown manages selection state inside
+   the closed trigger, so the external chip cluster is visually
+   redundant. The container stays in the DOM only so existing app.js
+   references stay safe; nothing renders into it. The other rules
+   below remain dormant. */
+#auAssignedRolesList {
+  display: none !important;
+}
+#auAssignedRolesList[hidden] { display: none; }
+.au-assigned-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 4px 0 10px;
+  background: var(--brand-bg-soft);
+  border: 1px solid var(--brand-text-soft, var(--brand-bg-selected));
+  border-radius: 14px;
+  color: var(--brand-text);
+  font-family: var(--ff);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: default;
+}
+.au-assigned-role-chip-label { cursor: default; }
+.au-assigned-role-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  color: var(--brand-text);
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.au-assigned-role-chip-remove:hover { background: var(--brand-bg-selected); }
+.au-assigned-role-chip-remove:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 1px;
+}
+.au-assigned-role-chip-remove svg { display: block; width: 12px; height: 12px; }
+
+/* ─── Edit User: assigned-role multi-select dropdown (Round 21) ─────
+   EDL "checkbox dropdown" pattern (Figma EDL Component Library node
+   13065:14610). Implemented WITHOUT the search input per the brief —
+   the role list is short and search adds unnecessary complexity. The
+   trigger height/border/radius/typography deliberately mirror the
+   existing `.edl-combo-input` so the dropdown sits flush in the
+   `.au-role-row` next to the `.au-btn-add` ("Update access") and
+   matches the 40px field rhythm used elsewhere in Add/Edit User.
+
+   Visible in Edit mode only. Add mode keeps the single-select EDL
+   combo (`#auRoleCombo` with `.au-add-only`). */
+#addUsersPage .au-role-multi {
+  position: relative;
+  display: none;          /* shown by `.is-edit-mode` rule below */
+  width: 100%;
+}
+#addUsersPage.is-edit-mode .au-role-multi { display: block; }
+
+#addUsersPage .au-role-multi-trigger {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 36px 0 16px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 40px;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  outline: none;
+  transition: border-color 0.15s ease, border-radius 0.1s ease;
+}
+#addUsersPage .au-role-multi-trigger:hover { border-color: var(--text-muted); }
+#addUsersPage .au-role-multi-trigger:focus-visible {
+  border-color: var(--brand-text);
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 1px;
+}
+#addUsersPage .au-role-multi.is-open .au-role-multi-trigger {
+  border-color: var(--brand-text);
+  border-radius: 8px 8px 0 0;
+  border-bottom-color: var(--border-default);
+}
+#addUsersPage .au-role-multi-value {
   flex: 1 1 auto;
   min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Empty / placeholder state — matches `.edl-combo-input::placeholder`. */
+#addUsersPage .au-role-multi-value.is-placeholder {
+  color: var(--text-placeholder);
+  font-weight: 400;
+}
+#addUsersPage .au-role-multi-chev {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-placeholder);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+#addUsersPage .au-role-multi.is-open .au-role-multi-chev {
+  transform: translateY(-50%) rotate(180deg);
+}
+/* Disabled state (parity with `.edl-combo.is-au-roles-locked`). */
+#addUsersPage .au-role-multi.is-disabled .au-role-multi-trigger {
+  background: var(--bg-readonly, #f6f8fa);
+  color: var(--text-placeholder);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Menu — positioned via JS (`fixed`) so it can overflow card edges.
+   Same shell as `.edl-combo-menu`: brand border, no top border (the
+   trigger's bottom border doubles as the menu's top border), soft
+   shadow, no transitions. Scrollbar styled to match the rest of EDL. */
+.au-role-multi-menu {
+  position: fixed;
+  background: var(--bg-surface);
+  border: 1px solid var(--brand-text);
+  border-top: 1px solid var(--border-default);
+  border-radius: 0 0 8px 8px;
+  box-shadow: var(--shadow-pop);
+  z-index: 9998;
+  padding: 6px 0;
+  max-height: min(50vh, 360px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(158, 176, 189, 0.8) transparent;
+}
+.au-role-multi-menu[hidden] { display: none; }
+.au-role-multi-menu::-webkit-scrollbar { width: 6px; height: 6px; }
+.au-role-multi-menu::-webkit-scrollbar-track { background: transparent; }
+.au-role-multi-menu::-webkit-scrollbar-thumb {
+  background: rgba(158, 176, 189, 0.8);
+  border-radius: 999px;
+  border: none;
+}
+.au-role-multi-menu::-webkit-scrollbar-thumb:hover { background: var(--gray-50); }
+
+/* Each option row — EDL checkbox dropdown spacing (Figma 13065:14610
+   item rows). Checkbox sits 16px from the menu's left edge and the
+   label follows with a 12px gap. Row height ~40px matches the EDL
+   `--add-user` density used by the role combo in Add mode. */
+.au-role-multi-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 16px;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.1s ease;
+}
+.au-role-multi-option:hover,
+.au-role-multi-option.kb-highlight {
+  background: var(--bg-hover-soft);
+}
+.au-role-multi-option.is-selected {
+  background: var(--brand-bg-soft);
+  font-weight: 500;
+}
+.au-role-multi-option.is-selected:hover,
+.au-role-multi-option.is-selected.kb-highlight {
+  background: var(--brand-bg-selected);
+}
+.au-role-multi-option:focus-visible {
+  outline: 2px solid var(--brand-text);
+  outline-offset: -2px;
+}
+
+/* Checkbox visual — sits in front of the native input which is
+   `position: absolute; opacity: 0` for hit-test only. Indigo 70 fill
+   when selected (matches Figma EDL Palette/Indigo/70 #3611C8), white
+   tick. Gray 30 border (matches EDL Palette/Gray/30 #B8C7D0) when
+   not selected. */
+.au-role-multi-option-cb {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+}
+.au-role-multi-option-cb input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.au-role-multi-option-cb-visual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--gray-30, #B8C7D0);
+  border-radius: 2px;
+  background: var(--bg-surface);
+  color: #fff;
+  transition: background-color 0.1s ease, border-color 0.1s ease;
+}
+.au-role-multi-option-cb-visual svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.1s ease, transform 0.1s ease;
+}
+.au-role-multi-option.is-selected .au-role-multi-option-cb-visual {
+  background: var(--brand-text);
+  border-color: var(--brand-text);
+}
+.au-role-multi-option.is-selected .au-role-multi-option-cb-visual svg {
+  opacity: 1;
+  transform: scale(1);
+}
+.au-role-multi-option-cb input[type="checkbox"]:focus-visible + .au-role-multi-option-cb-visual {
+  box-shadow: 0 0 0 2px var(--brand-focus-ring);
+  border-color: var(--brand-text);
+}
+.au-role-multi-option-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ─── Edit User: "View breakdown" action ────────────────────────────
@@ -6151,11 +6673,26 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    `.cr-confirm-dialog` defaults (12px radius, 24px padding all-around,
    heavy shadow). Other modals using `.cr-confirm-dialog` are
    untouched. */
+/* Round 15 (2026-06-09): tightened to EDL Modal Medium / Light mode
+   (Figma 51840:2268). Brings the dialog container, header, body, and
+   footer in line with the EDL component specifications:
+     • Border-radius 8px (EDL Medium surfaces; was 6px).
+     • Width 640px so the role + per-app breakdown reads spaciously
+       without becoming a wall (was 560px). Still inside the EDL
+       Medium guideline.
+     • Drop shadow Elevation/30 token: 0 2 4 #00000029. (Already
+       equivalent to the prior 0 2 4 rgba(0,0,0,0.16) — kept.)
+     • Header 20px / 24px so the larger title doesn't feel cramped.
+     • Body 24px gutter for a less dense read.
+     • Footer 16px / 24px to match header gutter and EDL footer.
+   The `.au-eff-modal-dialog.edl-modal` class chain still overrides
+   the `.cr-confirm-dialog` defaults; other modals using the shared
+   shell are untouched. */
 .au-eff-modal-dialog.edl-modal {
-  max-width: 560px;
+  max-width: 640px;
   width: 100%;
   padding: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
   background: var(--bg-surface, #FFFFFF);
   display: flex;
@@ -6169,16 +6706,22 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 16px;
+  /* Round 15: 20px / 24px — was 14px / 16px. EDL Medium uses a
+     roomier header gutter so the heavier title gets breathing room
+     and the close × icon doesn't sit on the corner. */
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border-default, #D4DEE3);
   flex-shrink: 0;
 }
 .au-eff-modal-dialog .edl-modal-title {
   margin: 0;
   font-family: var(--ff);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 22px;
+  /* Round 15: Inspire Heavy 24/30 (EDL T50 token) per Figma EDL
+     Modal Medium 51840:2268. Was 16/22/600. The brief explicitly
+     calls for a stronger, larger title hierarchy. */
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
   color: var(--text-primary, #171C20);
   letter-spacing: 0;
 }
@@ -6186,8 +6729,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  /* Round 15: 32×32 hit area (EDL modal close icon spec). Was 28×28. */
+  width: 32px;
+  height: 32px;
   padding: 0;
   background: transparent;
   border: 0;
@@ -6206,7 +6750,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   outline-offset: 2px;
 }
 .au-eff-modal-dialog .edl-modal-body {
-  padding: 16px;
+  /* Round 15: 20px / 24px gutter to match EDL body padding and the
+     new header/footer gutters. Was 16px all sides. */
+  padding: 20px 24px;
   overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
@@ -6217,6 +6763,8 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   font-size: 14px;
   font-weight: 400;
   line-height: 21px;
+  /* Round 15: Gray-70 (#526374) per EDL T20 muted body — kept;
+     this already matches the EDL spec. */
   color: var(--text-secondary, #526374);
 }
 .au-eff-modal-dialog .edl-modal-foot {
@@ -6224,7 +6772,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding: 12px 16px;
+  /* Round 15: 16px / 24px footer padding (was 12px / 16px). Matches
+     the header horizontal gutter so the modal reads as a coherent
+     EDL container. */
+  padding: 16px 24px;
   border-top: 1px solid var(--border-default, #D4DEE3);
   flex-shrink: 0;
 }
@@ -7356,10 +7907,25 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .tm-add-actions-spacer { flex: 1; }
 .tm-add-selected-count {
-  font-size: 13px;
-  font-weight: 500;
+  /* Round 25 (2026-06-09 — Add members footer typography):
+     selected-count text upgraded from 13px/500 → 14px/400 to match
+     EDL body small / secondary text spec referenced in the brief
+     (14px size, 20px line-height, regular weight, Gray 70 color).
+     The existing `.cr-confirm-actions { align-items: center }` rule
+     handles flex-axis centering, but the smaller line-box previously
+     paired with the 32px button row produced a subtle optical drop
+     (the count looked low next to the buttons' upper-cap baseline).
+     The 2px top padding nudges the glyph baseline up by the same
+     amount the EDL Promoted button uses for its own optical
+     centering (`.au-btn-save { padding: 2px 16px 0 }`), so the
+     "0 selected" baseline now sits on the same optical horizon as
+     the Cancel and Add members labels. */
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
   line-height: 20px;
   color: var(--text-secondary);
+  padding: 2px 0 0;
 }
 
 /* ════════════════════════════════════════════════════════════════════

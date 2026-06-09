@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260609tmaddrow2">
+  <link rel="stylesheet" href="styles.css?v=20260609r28">
 </head>
 <body>
 
@@ -46,7 +46,7 @@
   <div class="nav-l">
     <div class="nav-mod">
       <div class="nav-logo-group">
-        <a href="../slides.html" class="nav-logo-link" aria-label="Open IAM executive introduction (slides)">
+        <a href="../slides.html" class="nav-logo-link" aria-label="Open Identity and Access Management executive introduction (slides)">
           <img src="../nav/logo.svg" alt="Disney Advertising" class="nav-logo-img">
         </a>
         <span class="nav-divider"></span>
@@ -525,9 +525,27 @@
         </div>
 
         <div class="au-field au-field-team">
+          <!-- Round 28 (2026-06-09 — Add User external-user field swap).
+               When the Add User page opens for the External Users view
+               (`userView === 'external'`), JS swaps this slot to show
+               the Company name text input below instead of the Team
+               EDL combo. Internal Add User keeps the combo. Edit User
+               retains the read-only Company line for external users
+               (Round 13 cleanup pass) via the same DOM slot. The
+               label, input visibility, and required-asterisk are all
+               managed by `applyAuBasicInfoCompanyOrTeam()` in app.js
+               so this DOM block stays a single grid cell — no layout
+               changes. -->
           <label class="au-label" for="auTeamCombo-ctl">Team</label>
           <input type="hidden" id="auTeam" value="">
           <div class="edl-combo au-field-dd" id="auTeamCombo" aria-label="Team"></div>
+          <!-- External-user Company name text input (Add mode only).
+               Hidden by default; JS shows it when `userView` is
+               external. Required when shown — `applyAuBasicInfoCompanyOrTeam`
+               toggles the `required` attribute in sync with the
+               required-asterisk on the label. -->
+          <input type="text" class="au-input au-field-company-input" id="auCompany" value=""
+                 placeholder="Enter company name" autocomplete="off" maxlength="120" hidden>
         </div>
         <div class="au-field au-field-status">
           <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
@@ -623,12 +641,43 @@
         <label class="au-label" for="auRoleCombo-ctl"><span class="au-add-only">Assign Roles</span><span class="au-edit-only">Assigned Role</span><span class="au-req">*</span></label>
         <div class="au-role-row">
           <div class="au-role-dd-field">
-            <div class="edl-combo au-field-dd" id="auRoleCombo" aria-label="Roles"></div>
+            <!-- Add-mode: single-select EDL combo (unchanged). The
+                 existing initCombo wiring still drives this in Add mode
+                 only; in Edit mode this element is hidden via
+                 `.au-add-only`. -->
+            <div class="edl-combo au-field-dd au-add-only" id="auRoleCombo" aria-label="Roles"></div>
+            <!-- Round 21 (2026-06-09 — Edit User multi-select role
+                 dropdown). The EDL "checkbox dropdown" component
+                 (Figma EDL Component Library node 13065:14610) but
+                 with the search box intentionally omitted per the
+                 brief. The trigger shows a Users-table-style role
+                 summary (e.g. "Read-Only Viewer" or "Read-Only Viewer
+                 +1 role"); the open menu lists every role with a
+                 checkbox aligned left. Visible in edit mode only;
+                 driven by `initAuRoleMultiCombo()` in app.js. -->
+            <div class="au-role-multi au-edit-only" id="auRoleMultiCombo" aria-label="Assigned roles">
+              <button type="button" class="au-role-multi-trigger" id="auRoleMultiTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRoleMultiMenu">
+                <span class="au-role-multi-value" id="auRoleMultiValue">Select roles</span>
+                <svg class="au-role-multi-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="au-role-multi-menu" id="auRoleMultiMenu" role="listbox" aria-multiselectable="true" hidden></div>
+            </div>
           </div>
-          <!-- Add Role button is Add-mode only (Edit mode picks one role
-               via the dropdown alone, no separate Add). -->
-          <button class="au-btn-add au-add-only" id="auRoleAdd" type="button">Add</button>
+          <!-- Round 21 (2026-06-09): in Edit mode this button reads
+               "Update access" and applies the dropdown's pending role
+               selection to `auState.selectedRoleIds`, which is what
+               drives the Access table + View breakdown modal. In Add
+               mode it stays as "Add" with the original single-role
+               append behavior (Add User flow unchanged). -->
+          <button class="au-btn-add" id="auRoleAdd" type="button"><span class="au-add-only">Add</span><span class="au-edit-only">Update access</span></button>
         </div>
+        <!-- Round 21 (2026-06-09): external chip list removed per
+             brief — assigned-role state now lives inside the dropdown
+             via checkboxes, and the closed dropdown summary stands in
+             for the chip list. The container is kept in the DOM
+             (display:none) so existing references in app.js stay safe;
+             it never receives content. -->
+        <div class="au-assigned-roles au-edit-only" id="auAssignedRolesList" role="list" aria-label="Assigned roles" hidden></div>
       </div>
 
       <!-- Add-mode: per-role permission card stack (unchanged). -->
@@ -1215,6 +1264,29 @@
   </div>
 </div>
 
-<script src="app.js?v=20260609tmaddrow2"></script>
+<!-- Edit Team: confirm dialog before removing a member from the
+     Members table. Reuses the shared `.cr-confirm-backdrop` /
+     `.cr-confirm-dialog` EDL shell (already used by Remove role,
+     Remove application, Set inactive, Remove user) so spacing,
+     overlay, border-radius, shadow, title typography, body
+     typography, and Cancel/primary button alignment match every
+     other V3 IAM confirmation dialog. The primary action uses
+     `.cr-btn-danger-solid` — the same destructive-confirm style
+     wired into Remove user — so a single click reads as the
+     final, destructive step. Title + body are filled in by
+     `openTmRemoveMemberConfirm()` so the dialog can name the
+     specific member and team. Strictly scoped to Edit Team. -->
+<div class="cr-confirm-backdrop" id="tmRemoveMemberBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="tmRemoveMemberTitle" aria-describedby="tmRemoveMemberBody">
+    <h2 class="cr-confirm-title" id="tmRemoveMemberTitle">Remove member from team?</h2>
+    <p class="cr-confirm-body" id="tmRemoveMemberBody">This will remove this user from the team. The user account and assigned role will remain unchanged.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="tmRemoveMemberCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="tmRemoveMemberConfirm" type="button">Remove member</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=20260609r28"></script>
 </body>
 </html>

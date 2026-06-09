@@ -4073,24 +4073,124 @@ document.addEventListener("DOMContentLoaded", function () {
     if (tmDesc) tmDesc.addEventListener("input", tmRefreshDirty);
 
     /* Row-remove delegate — clicking the Remove button in a member
-       row drops the user from the working set, re-renders, and
-       updates the dirty state. */
+       row no longer immediately splices the working set. Instead we
+       open the EDL confirmation dialog
+       (`#tmRemoveMemberBackdrop`) named for the specific member and
+       team. The actual splice + re-render + dirty refresh happens
+       only when the user confirms (see `confirmTmRemoveMember` near
+       the modal wiring further down). Cancel / Esc / backdrop click
+       all leave the working set untouched. */
+    var tmRemoveMemberBackdrop = document.getElementById("tmRemoveMemberBackdrop");
+    var tmRemoveMemberTitle    = document.getElementById("tmRemoveMemberTitle");
+    var tmRemoveMemberBody     = document.getElementById("tmRemoveMemberBody");
+    var tmRemoveMemberCancel   = document.getElementById("tmRemoveMemberCancel");
+    var tmRemoveMemberConfirm  = document.getElementById("tmRemoveMemberConfirm");
+    /* Pending state. `tmPendingRemoveKey` is the data-tm-remove key
+       (userId / email / name) of the row clicked, captured at open
+       time so re-renders between open and confirm can't shift the
+       target. `tmPendingRemoveName` and `tmPendingTeamName` are
+       captured at open time and used to build the dialog body — both
+       are also re-computed at confirm time only to find the row, not
+       to label it. `tmRemoveMemberLastFocus` is the focus target we
+       restore on close, mirroring the Remove user confirm pattern. */
+    var tmPendingRemoveKey = null;
+    var tmPendingRemoveName = "";
+    var tmRemoveMemberLastFocus = null;
+
+    function tmFindMemberByKey(key) {
+      if (!key || !Array.isArray(tmWorkingMembers)) return null;
+      for (var i = 0; i < tmWorkingMembers.length; i++) {
+        var m = tmWorkingMembers[i];
+        if ((m.userId && m.userId === key) || m.email === key || m.name === key) {
+          return { idx: i, member: m };
+        }
+      }
+      return null;
+    }
+
+    function openTmRemoveMemberConfirm(key, triggerEl) {
+      if (!tmRemoveMemberBackdrop) return;
+      var hit = tmFindMemberByKey(key);
+      if (!hit) return;
+      tmPendingRemoveKey = key;
+      tmPendingRemoveName = (hit.member && hit.member.name) ? hit.member.name : "this user";
+      tmRemoveMemberLastFocus = triggerEl || document.activeElement;
+      /* Live team name: prefer the editable Team Name input if the
+         user has typed there (so the dialog reflects the on-screen
+         value); fall back to the original team record. */
+      var teamName = "";
+      if (tmName && typeof tmName.value === "string") teamName = tmName.value.trim();
+      if (!teamName && tmCurrentTeamId) {
+        var t = getTeamById(tmCurrentTeamId);
+        if (t && t.name) teamName = t.name;
+      }
+      if (!teamName) teamName = "this team";
+      if (tmRemoveMemberTitle) {
+        tmRemoveMemberTitle.textContent = "Remove member from team?";
+      }
+      if (tmRemoveMemberBody) {
+        tmRemoveMemberBody.textContent =
+          "This will remove " + tmPendingRemoveName + " from " + teamName +
+          ". The user account and assigned role will remain unchanged.";
+      }
+      tmRemoveMemberBackdrop.removeAttribute("hidden");
+      setTimeout(function () {
+        if (tmRemoveMemberCancel) tmRemoveMemberCancel.focus();
+      }, 0);
+    }
+
+    function closeTmRemoveMemberConfirm() {
+      if (!tmRemoveMemberBackdrop) return;
+      tmRemoveMemberBackdrop.setAttribute("hidden", "");
+      var restore = tmRemoveMemberLastFocus;
+      tmRemoveMemberLastFocus = null;
+      tmPendingRemoveKey = null;
+      tmPendingRemoveName = "";
+      if (restore && typeof restore.focus === "function") {
+        try { restore.focus(); } catch (_) {}
+      }
+    }
+
+    function confirmTmRemoveMember() {
+      var key = tmPendingRemoveKey;
+      if (key) {
+        var hit = tmFindMemberByKey(key);
+        if (hit) {
+          tmWorkingMembers.splice(hit.idx, 1);
+          renderTeamMembers();
+          tmRefreshDirty();
+        }
+      }
+      closeTmRemoveMemberConfirm();
+    }
+
     if (tmMembersTbody) {
       tmMembersTbody.addEventListener("click", function (e) {
         var btn = e.target.closest("[data-tm-remove]");
         if (!btn) return;
         var key = btn.getAttribute("data-tm-remove");
-        for (var i = 0; i < tmWorkingMembers.length; i++) {
-          var m = tmWorkingMembers[i];
-          if ((m.userId && m.userId === key) || m.email === key || m.name === key) {
-            tmWorkingMembers.splice(i, 1);
-            break;
-          }
-        }
-        renderTeamMembers();
-        tmRefreshDirty();
+        openTmRemoveMemberConfirm(key, btn);
       });
     }
+    if (tmRemoveMemberCancel) {
+      tmRemoveMemberCancel.addEventListener("click", closeTmRemoveMemberConfirm);
+    }
+    if (tmRemoveMemberConfirm) {
+      tmRemoveMemberConfirm.addEventListener("click", confirmTmRemoveMember);
+    }
+    if (tmRemoveMemberBackdrop) {
+      tmRemoveMemberBackdrop.addEventListener("click", function (e) {
+        if (e.target === tmRemoveMemberBackdrop) closeTmRemoveMemberConfirm();
+      });
+    }
+    /* Expose a tiny close hook so the cascading global Esc handler
+       (added near the Create Role confirms) can dismiss this dialog
+       without depending on V3-IIFE-local symbols. */
+    window.__closeTmRemoveMemberModal = function () {
+      if (tmRemoveMemberBackdrop && !tmRemoveMemberBackdrop.hasAttribute("hidden")) {
+        closeTmRemoveMemberConfirm();
+      }
+    };
 
     /* ─── Add members modal ─────────────────────────────────────────
        Opens a compact searchable multi-select dialog of internal
@@ -4305,6 +4405,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var auRoleComboEl = document.getElementById("auRoleCombo");
     var auRoleAdd = document.getElementById("auRoleAdd");
     var auRoleCards = document.getElementById("auRoleCards");
+    /* Round 18 (2026-06-09): Edit User assigned-roles chip list. The
+       chip list sits below the Assigned Role row and is the visible
+       roster of `auState.selectedRoleIds` in edit mode. It is hidden
+       in Add mode (the existing role-cards stack handles that flow). */
+    var auAssignedRolesList = document.getElementById("auAssignedRolesList");
 
     /* Edit-mode identity block + Permission Options card refs (V3 only).
        These DOM nodes only render when the page is in edit mode
@@ -4331,6 +4436,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var auRegion = document.getElementById("auRegion");
     var auTimezone = document.getElementById("auTimezone");
     var auTeam = document.getElementById("auTeam");
+    /* Round 28 (2026-06-09 — Add User external-user field swap):
+       sibling text input that replaces the Team EDL combo when the
+       Add User page is opened against the External Users view.
+       `applyAuBasicInfoCompanyOrTeam()` toggles visibility, label
+       text, and the required-asterisk; `handleSaveUser` reads from
+       this input (not `auTeam`) when the new record is external. */
+    var auCompany = document.getElementById("auCompany");
     var auStatusValue = document.getElementById("auStatusValue");
     var auStatusSeg = document.getElementById("auStatusSeg");
     var auStatusReadonly = document.getElementById("auStatusReadonly");
@@ -4354,7 +4466,18 @@ document.addEventListener("DOMContentLoaded", function () {
     var auState = {
       selectedRoleId: "",
       selectedRoleIds: [],
-      expandedRoleId: null
+      expandedRoleId: null,
+      /* Round 21 (2026-06-09): Edit User assigned-role multi-select
+         dropdown. `pendingRoleIds` is the dropdown's *draft* set —
+         what the admin has checked/unchecked inside the open menu
+         but not yet applied. The "Update access" button copies this
+         into `selectedRoleIds` (the *applied* set that actually
+         drives the Access table, breakdown modal, dirty state, and
+         eventual save). The two arrays diverge while the dropdown is
+         open and the admin is making changes; they re-sync on apply
+         and whenever Edit User reopens. Add User mode does not use
+         this — Add still uses the single-select `auRoleCombo`. */
+      pendingRoleIds: []
     };
 
     var auComboState = {
@@ -4501,6 +4624,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (setAuTimezoneCombo && setAuTimezoneCombo.close) setAuTimezoneCombo.close();
       if (setAuTeamCombo && setAuTeamCombo.close) setAuTeamCombo.close();
       if (setAuRoleCombo && setAuRoleCombo.close) setAuRoleCombo.close();
+      /* Round 21 (2026-06-09): also close the Edit User assigned-role
+         multi-select dropdown so collapsing the Roles & Permissions
+         card / cancelling out of Edit User doesn't leave it open. */
+      if (typeof auRoleMultiClose === "function") auRoleMultiClose();
     }
 
     function buildAuRegionOptions() {
@@ -4593,14 +4720,15 @@ document.addEventListener("DOMContentLoaded", function () {
         auState.selectedRoleId = auComboState.addUserRolePick || "";
         syncAuRoleChrome();
         updateAuSummaries();
-        /* Edit User v3 — when the role picker changes, also re-render
-           the effective-access table so the Application/Access/Summary
-           rows update to match the newly chosen role. Add-mode is
-           unaffected (the table only renders in edit mode anyway). */
-        if (auPageMode === "edit") {
-          auState.editPrimaryRoleId = auState.selectedRoleId || "";
-          renderAuEffectiveAccessTable(auState.editPrimaryRoleId);
-        }
+        /* Round 18 (2026-06-09): Edit User no longer re-renders the
+           effective-access table when the picker selection changes.
+           In the new model the table reflects the *currently assigned*
+           role set (`auState.selectedRoleIds`), not the pending pick.
+           The table re-renders only after the admin clicks Add (or
+           removes a chip), which mutates `selectedRoleIds` and then
+           calls `renderAuCombinedEffectiveAccess()`. The pending pick
+           still drives the Add button's enabled state via
+           `syncAuRoleChrome`. */
       },
       "edl-combo-menu--add-user"
     );
@@ -4625,6 +4753,269 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.__closeAllAddUserCombos = closeAllAddUserCombos;
+
+    /* ─── Round 21 (2026-06-09) ─── Edit User assigned-role multi-select
+       dropdown.
+
+       Wires the `#auRoleMultiCombo` element (declared in index.html)
+       to a self-contained checkbox-list controller. Visible in Edit
+       mode only; Add mode keeps the single-select `#auRoleCombo` and
+       its `initCombo` instance, both untouched.
+
+       Behavioural notes (per brief):
+         • The dropdown manages a *draft* set (`auState.pendingRoleIds`).
+           Checking/unchecking inside the open menu mutates the draft
+           only — the applied set (`auState.selectedRoleIds`) and the
+           Access table are left alone until the admin presses
+           "Update access". This is what makes the interaction a
+           "managing the selected role set" gesture rather than the
+           Add-style one-at-a-time append the brief explicitly rejects.
+         • The trigger label shows the applied set (so admins see what
+           access is *currently* in effect even while drafting changes).
+         • Search is intentionally omitted (brief §7). No search input,
+           no filter, no icon.
+         • Keyboard support mirrors EDL combo conventions: Enter/Space
+           toggles the highlighted option, ArrowUp/Down moves the
+           highlight, Esc closes, Home/End jumps. */
+    var auRoleMulti = document.getElementById("auRoleMultiCombo");
+    var auRoleMultiTrigger = document.getElementById("auRoleMultiTrigger");
+    var auRoleMultiValue = document.getElementById("auRoleMultiValue");
+    var auRoleMultiMenu = document.getElementById("auRoleMultiMenu");
+    var auRoleMultiKbIndex = -1;
+
+    /* Lookup map: roleId → role record, kept fresh by setOptions. */
+    var auRoleMultiOptions = [];
+
+    /* Format the closed-trigger summary using the Users-table
+       convention ("Primary, Second" if it still fits the trigger,
+       else "Primary +N role(s)"). The brief explicitly accepts both
+       shapes and references the Users table as the canonical
+       pattern. We measure overflow by comparing scrollWidth to
+       clientWidth after rendering the long form; if it overflows we
+       fall back to the compact "+N" form. */
+    function auFormatRoleMultiSummary(ids) {
+      var names = [];
+      for (var i = 0; i < ids.length; i++) {
+        var rec = (typeof findRoleById === "function") ? findRoleById(ids[i]) : null;
+        if (rec && rec.role) names.push(rec.role);
+      }
+      if (!names.length) return { text: "Select roles", placeholder: true };
+      if (names.length === 1) return { text: names[0], placeholder: false };
+      var extra = names.length - 1;
+      var compact = names[0] + " +" + extra + " role" + (extra > 1 ? "s" : "");
+      var full = names.join(", ");
+      return { text: full, fallback: compact, placeholder: false };
+    }
+
+    function auRoleMultiRenderTrigger() {
+      if (!auRoleMultiValue) return;
+      var summary = auFormatRoleMultiSummary(auState.selectedRoleIds || []);
+      auRoleMultiValue.classList.toggle("is-placeholder", !!summary.placeholder);
+      auRoleMultiValue.textContent = summary.text;
+      if (summary.fallback && auRoleMultiValue.scrollWidth > auRoleMultiValue.clientWidth) {
+        auRoleMultiValue.textContent = summary.fallback;
+      }
+    }
+
+    function auRoleMultiRenderMenu() {
+      if (!auRoleMultiMenu) return;
+      auRoleMultiOptions = getAURoleOptions();
+      var pending = auState.pendingRoleIds || [];
+      var html = "";
+      for (var i = 0; i < auRoleMultiOptions.length; i++) {
+        var opt = auRoleMultiOptions[i];
+        var selected = pending.indexOf(opt.id) !== -1;
+        var optId = "auRoleMultiOpt_" + opt.id;
+        html += '<label class="au-role-multi-option' + (selected ? " is-selected" : "") + '" role="option" data-au-role-id="' + esc(opt.id) + '" aria-selected="' + (selected ? "true" : "false") + '" tabindex="-1">' +
+                  '<span class="au-role-multi-option-cb">' +
+                    '<input type="checkbox" id="' + esc(optId) + '" data-au-role-id="' + esc(opt.id) + '"' + (selected ? ' checked' : '') + ' aria-label="' + esc(opt.name) + '">' +
+                    '<span class="au-role-multi-option-cb-visual" aria-hidden="true">' +
+                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
+                    '</span>' +
+                  '</span>' +
+                  '<span class="au-role-multi-option-label">' + esc(opt.name) + '</span>' +
+                '</label>';
+      }
+      auRoleMultiMenu.innerHTML = html;
+      auRoleMultiKbIndex = -1;
+    }
+
+    function auRoleMultiPositionMenu() {
+      if (!auRoleMultiTrigger || !auRoleMultiMenu) return;
+      var r = auRoleMultiTrigger.getBoundingClientRect();
+      auRoleMultiMenu.style.left = r.left + "px";
+      auRoleMultiMenu.style.top  = r.bottom + "px";
+      auRoleMultiMenu.style.width = r.width + "px";
+      auRoleMultiMenu.style.minWidth = r.width + "px";
+    }
+
+    function auRoleMultiIsOpen() {
+      return auRoleMulti && auRoleMulti.classList.contains("is-open");
+    }
+
+    function auRoleMultiOpen() {
+      if (!auRoleMulti || !auRoleMultiMenu || auRoleMulti.classList.contains("is-disabled")) return;
+      /* The draft (`pendingRoleIds`) is seeded from the applied set
+         whenever the dropdown opens so the menu's checkboxes always
+         start in sync with the closed-trigger summary. Any unsaved
+         draft from a previous open-and-cancel is discarded — matches
+         the EDL combo expectation that re-opening shows the current
+         state. */
+      auState.pendingRoleIds = (auState.selectedRoleIds || []).slice();
+      auRoleMultiRenderMenu();
+      auRoleMultiPositionMenu();
+      auRoleMultiMenu.removeAttribute("hidden");
+      auRoleMulti.classList.add("is-open");
+      auRoleMultiTrigger.setAttribute("aria-expanded", "true");
+      auSyncRoleApplyButton();
+    }
+
+    function auRoleMultiClose() {
+      if (!auRoleMulti || !auRoleMultiMenu) return;
+      auRoleMultiMenu.setAttribute("hidden", "");
+      auRoleMulti.classList.remove("is-open");
+      if (auRoleMultiTrigger) auRoleMultiTrigger.setAttribute("aria-expanded", "false");
+      /* Reset the draft back to the applied set if the admin closed
+         without applying. Keeps the dropdown's open-state predictable
+         and the Update access button correctly disabled when nothing
+         is pending. */
+      auState.pendingRoleIds = (auState.selectedRoleIds || []).slice();
+      auSyncRoleApplyButton();
+    }
+
+    function auRoleMultiToggle() {
+      if (auRoleMultiIsOpen()) auRoleMultiClose();
+      else auRoleMultiOpen();
+    }
+
+    function auRoleMultiSetDisabled(disabled) {
+      if (!auRoleMulti) return;
+      auRoleMulti.classList.toggle("is-disabled", !!disabled);
+      if (auRoleMultiTrigger) auRoleMultiTrigger.disabled = !!disabled;
+      if (disabled && auRoleMultiIsOpen()) auRoleMultiClose();
+    }
+
+    /* Apply-button (re-purposed `#auRoleAdd` in edit mode → "Update
+       access") enabled state: enabled iff the dropdown's draft set
+       differs from the applied set AND the user is not inactive. */
+    function auRoleMultiPendingDiffers() {
+      var applied = (auState.selectedRoleIds || []).slice().sort().join("\u001f");
+      var pending = (auState.pendingRoleIds   || []).slice().sort().join("\u001f");
+      return applied !== pending;
+    }
+
+    function auSyncRoleApplyButton() {
+      if (!auRoleAdd) return;
+      if (auPageMode !== "edit") return;          /* Add mode handled by syncAuRoleChrome */
+      if (selectedStatus() === "Inactive") {
+        auRoleAdd.disabled = true;
+        return;
+      }
+      /* In edit mode the button is "Update access" and tracks the
+         dropdown's pending diff, not the single-pick combo. */
+      auRoleAdd.disabled = !auRoleMultiPendingDiffers();
+    }
+
+    if (auRoleMultiTrigger) {
+      auRoleMultiTrigger.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (auRoleMulti.classList.contains("is-disabled")) return;
+        auRoleMultiToggle();
+      });
+      auRoleMultiTrigger.addEventListener("keydown", function (e) {
+        if (auRoleMulti.classList.contains("is-disabled")) return;
+        if (e.key === "ArrowDown" || e.key === "Down") {
+          e.preventDefault();
+          if (!auRoleMultiIsOpen()) auRoleMultiOpen();
+          auRoleMultiMoveHighlight(1);
+        } else if (e.key === "ArrowUp" || e.key === "Up") {
+          e.preventDefault();
+          if (!auRoleMultiIsOpen()) auRoleMultiOpen();
+          auRoleMultiMoveHighlight(-1);
+        } else if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+          e.preventDefault();
+          auRoleMultiToggle();
+        } else if (e.key === "Escape" || e.key === "Esc") {
+          if (auRoleMultiIsOpen()) { e.preventDefault(); auRoleMultiClose(); }
+        }
+      });
+    }
+
+    function auRoleMultiMoveHighlight(delta) {
+      var items = auRoleMultiMenu ? auRoleMultiMenu.querySelectorAll(".au-role-multi-option") : [];
+      if (!items.length) return;
+      var next = auRoleMultiKbIndex + delta;
+      if (next < 0) next = items.length - 1;
+      if (next >= items.length) next = 0;
+      auRoleMultiKbIndex = next;
+      for (var i = 0; i < items.length; i++) items[i].classList.toggle("kb-highlight", i === next);
+      var el = items[next];
+      if (el && typeof el.scrollIntoView === "function") {
+        el.scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    if (auRoleMultiMenu) {
+      /* Toggling an option mutates the draft only; the applied set is
+         left alone until "Update access" is pressed. We re-render the
+         visual selection state inline so the menu doesn't have to be
+         fully rebuilt on every check (which would scroll the menu
+         back to the top on each click). */
+      auRoleMultiMenu.addEventListener("click", function (e) {
+        var opt = e.target.closest(".au-role-multi-option");
+        if (!opt) return;
+        var roleId = opt.getAttribute("data-au-role-id");
+        if (!roleId) return;
+        /* If the click landed on the native checkbox input the browser
+           toggles its `checked` state before this listener runs; for
+           any other click target we want the same toggle behavior. */
+        var input = opt.querySelector('input[type="checkbox"]');
+        if (input && e.target !== input) {
+          input.checked = !input.checked;
+        }
+        var idx = auState.pendingRoleIds.indexOf(roleId);
+        if (input && input.checked) {
+          if (idx === -1) auState.pendingRoleIds.push(roleId);
+        } else {
+          if (idx !== -1) auState.pendingRoleIds.splice(idx, 1);
+        }
+        var nowSelected = auState.pendingRoleIds.indexOf(roleId) !== -1;
+        opt.classList.toggle("is-selected", nowSelected);
+        opt.setAttribute("aria-selected", nowSelected ? "true" : "false");
+        if (input) input.checked = nowSelected;
+        auSyncRoleApplyButton();
+        /* Stop the label-click from propagating to the document
+           outside-click handler (which would close the menu). */
+        e.stopPropagation();
+        e.preventDefault();
+      });
+      auRoleMultiMenu.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" || e.key === "Esc") {
+          e.preventDefault();
+          auRoleMultiClose();
+          if (auRoleMultiTrigger) auRoleMultiTrigger.focus();
+        }
+      });
+    }
+
+    /* Outside click → close. Scoped so Add-mode combos and other
+       open UI keep working. Listens for both `mousedown` (real-user
+       clicks) and `click` (programmatic dispatchEvent and synthetic
+       clicks from automation) so the dropdown closes regardless of
+       which event reaches the document first. */
+    function auRoleMultiHandleOutside(e) {
+      if (!auRoleMultiIsOpen()) return;
+      if (auRoleMulti.contains(e.target) || (auRoleMultiMenu && auRoleMultiMenu.contains(e.target))) return;
+      auRoleMultiClose();
+    }
+    document.addEventListener("mousedown", auRoleMultiHandleOutside);
+    document.addEventListener("click", auRoleMultiHandleOutside);
+    window.addEventListener("resize", function () {
+      if (auRoleMultiIsOpen()) auRoleMultiPositionMenu();
+    });
+    window.addEventListener("scroll", function () {
+      if (auRoleMultiIsOpen()) auRoleMultiPositionMenu();
+    }, true);
 
     renderAURolePicker();
 
@@ -4654,9 +5045,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (inactive && setAuRoleCombo && setAuRoleCombo.close) setAuRoleCombo.close();
       }
       if (setAuRoleCombo && setAuRoleCombo.setDisabled) setAuRoleCombo.setDisabled(inactive);
+      /* Round 21 (2026-06-09): edit-mode Assigned Role uses the
+         multi-select dropdown + "Update access" button, which has
+         different disabled logic than Add mode's "Add" button. We
+         delegate edit mode to `auSyncRoleApplyButton` and only do
+         the Add-mode Add-button gating here. */
+      if (typeof auRoleMultiSetDisabled === "function") auRoleMultiSetDisabled(inactive);
       if (auRoleAdd) {
-        if (inactive) auRoleAdd.disabled = true;
-        else auRoleAdd.disabled = !auState.selectedRoleId || auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1;
+        if (auPageMode === "edit") {
+          auSyncRoleApplyButton();
+        } else if (inactive) {
+          auRoleAdd.disabled = true;
+        } else {
+          auRoleAdd.disabled = !auState.selectedRoleId || auState.selectedRoleIds.indexOf(auState.selectedRoleId) !== -1;
+        }
       }
     }
 
@@ -4687,10 +5089,13 @@ document.addEventListener("DOMContentLoaded", function () {
       closeAuInactiveConfirm();
       auState.selectedRoleId = "";
       auState.selectedRoleIds = [];
+      auState.pendingRoleIds = [];
       auState.expandedRoleId = null;
       setAUStatus("Inactive");
       renderAURolePicker();
       renderAURoleCards();
+      if (typeof auRoleMultiClose === "function") auRoleMultiClose();
+      if (typeof auRoleMultiRenderTrigger === "function") auRoleMultiRenderTrigger();
     }
 
     function auExpandSections() {
@@ -4709,6 +5114,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function resetAddUsersState() {
       auState.selectedRoleId = "";
       auState.selectedRoleIds = [];
+      auState.pendingRoleIds = [];
       auState.expandedRoleId = null;
       auFirstName.value = "";
       auLastName.value = "";
@@ -4718,6 +5124,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (auRegion) auRegion.value = "NA";
       if (auTimezone) auTimezone.value = "America/New_York";
       if (auTeam) auTeam.value = "";
+      /* Round 28: also clear the Company name text input so re-opens
+         of the Add User page start blank regardless of `userView`. The
+         `data-au-last-mode` reset is what tells
+         applyAuBasicInfoCompanyOrTeam to treat the next mount as a
+         fresh switch (and thus to clear any stale value when toggling
+         between internal/external user types). */
+      if (auCompany) {
+        auCompany.value = "";
+        auCompany.removeAttribute("data-au-last-mode");
+      }
       auComboState.addUserRegion = "NA";
       auComboState.addUserTimezone = "America/New_York";
       auComboState.addUserTeam = "";
@@ -4727,13 +5143,18 @@ document.addEventListener("DOMContentLoaded", function () {
       if (setAuTeamCombo) setAuTeamCombo("");
       if (setAuRoleCombo) setAuRoleCombo("");
       setAUStatus("Active");
-      /* Always restore the Team combo (not Company readonly) on
-         reset — Add User mode is always internal-team only; the
-         readonly Company display only exists while editing an
-         external user. */
+      /* Resolve Team-vs-Company field state based on current mode:
+         Edit mode reads from the user record; Add mode reads from
+         the global `userView` (Internal/External Users segmented
+         toggle on the Users page). The unified
+         `applyAuBasicInfoCompanyOrTeam` helper handles both. */
       if (typeof applyAuBasicInfoCompanyOrTeam === "function") applyAuBasicInfoCompanyOrTeam(null);
       renderAURolePicker();
       renderAURoleCards();
+      /* Round 18: clear the Edit-mode chip list when resetting (Add
+         User has no chip list — `renderAuAssignedRolesChips` hides
+         itself when `auPageMode !== "edit"`). */
+      if (typeof renderAuAssignedRolesChips === "function") renderAuAssignedRolesChips();
       auExpandSections();
       updateAuSummaries();
     }
@@ -4997,46 +5418,90 @@ document.addEventListener("DOMContentLoaded", function () {
       if (setAuPermsAppCombo) setAuPermsAppCombo("");
     }
 
-    /* Internal/External Basic Info field swap (Frances QA 2026-06-08
-       cleanup pass).
+    /* Internal/External Basic Info field swap.
 
-       The `.au-field-team` slot holds either:
-         • Internal user → label "Team" + editable EDL combo (existing).
-         • External user → label "Company" + read-only static value
-           (the company string from `user.organization`).
+       The `.au-field-team` grid slot resolves to one of three states:
 
-       The DOM structure stays identical (same `.au-field` grid slot,
-       same label element, same combo container) so no CSS layout
-       changes are needed. The combo's `<div>` shell stays in the DOM
-       so initCombo's wiring keeps working when the next user is
-       internal; we just hide its `.edl-combo-input-wrap` (the
-       interactive trigger) and inject a sibling read-only display
-       node when external. Switching back to an internal user
-       removes the read-only node and unhides the combo trigger. */
+         Edit mode + Internal user
+           → Label "Team" + editable EDL Team combo (existing).
+         Edit mode + External user
+           → Label "Company" + read-only static value (`user.organization`).
+             This is the Round 13 cleanup-pass behavior — external user
+             companies are tenant-managed, not editable inside Atlas.
+         Add mode + Internal view (`userView === 'internal'`)
+           → Label "Team" + editable EDL Team combo.
+         Add mode + External view (`userView === 'external'`)
+           → Label "Company name" + editable text input (Round 28).
+             The brief explicitly disallows the Team dropdown for
+             external Add User and requires Company name as a free-text
+             input so the admin can capture an arbitrary external
+             organization (Omnicom Media Group, GroupM, etc.).
+
+       The DOM stays a single `.au-field-team` grid slot. Visibility
+       and labels are managed here so no CSS layout changes are needed.
+       Children that aren't relevant to the current state are hidden
+       via `style.display = 'none'` (combo trigger) or the `hidden`
+       attribute (Company input) instead of being removed, so the
+       initCombo wiring and form references stay intact across mode
+       switches. */
     function applyAuBasicInfoCompanyOrTeam(user) {
       var fieldEl  = document.querySelector("#addUsersPage .au-field-team");
       var labelEl  = fieldEl ? fieldEl.querySelector(".au-label") : null;
       var comboEl  = document.getElementById("auTeamCombo");
       if (!fieldEl || !labelEl || !comboEl) return;
-      var external = isAuUserExternal(user);
-      /* The interactive trigger lives at `.edl-combo-input-wrap` inside
-         the combo shell. The combo's menu/options sit elsewhere
-         (rendered into body for layered combos), so hiding the
-         trigger is sufficient to hide all interactive surface area. */
+      /* Mode resolution (Round 28):
+           • Edit mode → external iff the user record itself is
+             external (Round 13 logic).
+           • Add mode  → external iff the page was opened against the
+             External Users view (`window.userView === 'external'`).
+         The two branches stay separate so the Edit-mode read-only
+         Company display and the Add-mode editable Company input
+         never collide. */
+      var inEditMode = (auPageMode === "edit");
+      var external;
+      if (inEditMode) {
+        external = isAuUserExternal(user);
+      } else {
+        /* `userView` lives at module scope (top of app.js, line ~169).
+           Default to internal when the global hasn't been initialized
+           (defensive — the Users page sets it during DOMContentLoaded
+           before Add User can be opened). */
+        external = (typeof userView === "string" && userView === "external");
+      }
       var triggerEl = comboEl.querySelector(".edl-combo-input-wrap");
       var roEl = fieldEl.querySelector(".au-field-team-readonly");
-      if (external) {
-        labelEl.textContent = "Company";
+      var companyInput = document.getElementById("auCompany");
+      /* Required-asterisk: the original DOM omitted the asterisk on
+         the Team label (Team is optional for internal users). The
+         brief makes Company name required for external Add User. We
+         render the asterisk only when external + add-mode so internal
+         Add User and Edit User behaviour are untouched. */
+      function setLabel(text, withAsterisk) {
+        labelEl.textContent = "";
+        labelEl.appendChild(document.createTextNode(text));
+        if (withAsterisk) {
+          var req = document.createElement("span");
+          req.className = "au-req";
+          req.textContent = "*";
+          labelEl.appendChild(document.createTextNode(" "));
+          labelEl.appendChild(req);
+        }
+      }
+
+      if (external && inEditMode) {
+        /* === Edit + External: read-only Company display === */
+        setLabel("Company", false);
         labelEl.removeAttribute("for");
         if (triggerEl) triggerEl.style.display = "none";
+        if (companyInput) {
+          companyInput.hidden = true;
+          companyInput.required = false;
+          companyInput.value = "";
+        }
         var companyText = (user && user.organization) ? String(user.organization) : "";
         if (!roEl) {
           roEl = document.createElement("div");
           roEl.className = "au-field-team-readonly au-input";
-          /* Inline styles only — no `styles.css` changes per the
-             cleanup-pass guardrails. Match the existing read-only
-             email field's visual rhythm: same border / padding /
-             color tokens used by `.au-input[readonly]`. */
           roEl.style.background = "var(--bg-readonly, #F6F8FA)";
           roEl.style.border     = "1px solid var(--border-input, #D8DEE5)";
           roEl.style.borderRadius = "6px";
@@ -5051,13 +5516,50 @@ document.addEventListener("DOMContentLoaded", function () {
           roEl.setAttribute("aria-readonly", "true");
           comboEl.parentNode.insertBefore(roEl, comboEl.nextSibling);
         }
+        roEl.style.display = "flex";
         roEl.textContent = companyText;
         roEl.setAttribute("aria-label", "Company");
+      } else if (external && !inEditMode) {
+        /* === Add + External: editable Company name text input === */
+        setLabel("Company name", true);
+        labelEl.setAttribute("for", "auCompany");
+        if (triggerEl) triggerEl.style.display = "none";
+        if (roEl) roEl.style.display = "none";
+        if (companyInput) {
+          companyInput.hidden = false;
+          companyInput.required = true;
+          companyInput.setAttribute("aria-required", "true");
+          companyInput.setAttribute("placeholder", "Enter company name");
+          /* Field-clear-on-switch (brief §3): never preserve an
+             internal Team value as Company name. `resetAddUsersState`
+             already clears `auTeam.value`; here we make sure the
+             company input is fresh when switching from internal to
+             external while the page is open. We only clear when the
+             input was previously hidden (so re-opens within the
+             external flow keep any typed-in value). */
+          if (companyInput.getAttribute("data-au-last-mode") !== "external-add") {
+            companyInput.value = "";
+            companyInput.setAttribute("data-au-last-mode", "external-add");
+          }
+        }
       } else {
-        labelEl.textContent = "Team";
+        /* === Internal (Add or Edit): EDL Team combo === */
+        setLabel("Team", false);
         labelEl.setAttribute("for", "auTeamCombo-ctl");
         if (triggerEl) triggerEl.style.display = "";
-        if (roEl && roEl.parentNode) roEl.parentNode.removeChild(roEl);
+        if (roEl) roEl.style.display = "none";
+        if (companyInput) {
+          /* Brief §3: never preserve a Company name as Team.
+             Clear when transitioning away from the external Add flow
+             so the next external open starts fresh. */
+          if (companyInput.getAttribute("data-au-last-mode") === "external-add") {
+            companyInput.value = "";
+          }
+          companyInput.hidden = true;
+          companyInput.required = false;
+          companyInput.removeAttribute("aria-required");
+          companyInput.setAttribute("data-au-last-mode", "internal");
+        }
       }
     }
 
@@ -5118,19 +5620,40 @@ document.addEventListener("DOMContentLoaded", function () {
       seedAuPermsAssignments();
       renderAUPermsAppPicker();
       renderAUPermsCards();
-      /* Edit User v3 — Figma 788:4348 (Frances QA 2026-06-07).
-         Pick the user's first role (the same one Users-table displays
-         on the row) and seed the single Assigned Role dropdown +
-         effective access table. The user's full role list still feeds
-         the Add-mode role-cards stack above (which is hidden in edit
-         mode but kept in DOM for Add User compatibility). */
+      /* Round 18 (2026-06-09): Edit User now treats every entry in
+         `user.roles` as part of the assigned-roles set. The Assigned
+         Role dropdown is the picker for *adding* more roles, not for
+         displaying the primary one — that role goes into the chip
+         list below. This matches the brief's "consistency with the
+         Users table" rule: whatever the Users table shows is exactly
+         what the chip list shows on Edit User open.
+         `editPrimaryRoleId` is retained for legacy callers but no
+         longer drives the table. */
       var primaryRoleName = (user.roles && user.roles.length) ? user.roles[0] : "";
       var primaryRoleId = primaryRoleName ? findRoleIdByRoleName(primaryRoleName) : "";
       auState.editPrimaryRoleId = primaryRoleId || "";
-      if (setAuRoleCombo && primaryRoleId) setAuRoleCombo(primaryRoleId);
-      /* Pass the full user record so the effective-access renderer
-         can route via role + team (Frances QA 2026-06-07 round 4). */
-      renderAuEffectiveAccessTable(primaryRoleId, user);
+      /* Clear the combo to its placeholder so admins see the picker
+         in its empty state, ready to add another role. */
+      auComboState.addUserRolePick = "";
+      auState.selectedRoleId = "";
+      if (setAuRoleCombo) setAuRoleCombo("");
+      renderAURolePicker();
+      /* Round 21 (2026-06-09): Edit User no longer renders external
+         chips below the dropdown — the multi-select trigger summary
+         + open-menu checkboxes are the role-management UI. The chip
+         list element stays in the DOM (hidden via CSS) for safety;
+         we still call the renderer so legacy callers don't break,
+         but it's now a no-op in Edit mode (see implementation). */
+      renderAuAssignedRolesChips();
+      /* Seed the dropdown's draft state from the applied set so the
+         menu reflects current assignment on first open, and refresh
+         the trigger label to show the current role summary. The
+         applied set is already populated above via `auState.selectedRoleIds = ids`. */
+      auState.pendingRoleIds = (auState.selectedRoleIds || []).slice();
+      if (typeof auRoleMultiRenderMenu === "function") auRoleMultiRenderMenu();
+      if (typeof auRoleMultiRenderTrigger === "function") auRoleMultiRenderTrigger();
+      if (typeof auSyncRoleApplyButton === "function") auSyncRoleApplyButton();
+      renderAuCombinedEffectiveAccess(auState.selectedRoleIds, user);
       updateAuSummaries();
     }
 
@@ -5482,6 +6005,62 @@ document.addEventListener("DOMContentLoaded", function () {
             else sales if on sales team else viewer
        The function is conservative: only signal-driven mappings, no
        random surprises. Unknown user → _default. */
+    /* Round 27 (2026-06-09 — multi-role classification bug fix):
+       classify a single role by its ID for the combined effective-access
+       renderer. The legacy `auEffClassifyForUser` below was written for
+       the single-role table and intentionally folds in
+       `userRecord.roles` (the user's saved role array) so a Read-Only
+       Viewer on a sales team still surfaces the sales pattern. That
+       fold is correct for the Add-User single-role preview but actively
+       wrong for the multi-role merge: every role added in the dropdown
+       was being re-classified through Homer's saved Core Planning Admin
+       array, so the merge produced no new applications or rows ("the
+       Access table does not clearly add/update rows for the newly
+       selected role's effective access" — brief).
+
+       This helper resolves a role to its own class:
+         1. Use `AU_EFF_ROLE_CLASS[roleId]` as the authoritative source.
+         2. For team-context-dependent classes (planner / planning_manager
+            / viewer / planning_admin), allow the user's team to nudge a
+            generic role onto the matching sales / programmatic /
+            revenue_yield / ad_ops pattern — the same routing the
+            single-role classifier uses, just without the
+            `userRecord.roles` scan that was overriding the per-role
+            identity. Atlas Admin / ICM Admin / TOM Admin / Ad Ops
+            classes are always honoured as-is regardless of team.
+
+       Net effect: adding Read-Only Viewer to Homer (Core Planning Admin
+       / National Ad Sales) now resolves to the `sales` class (per
+       team-aware viewer routing), which merges in Core Planning Edit
+       Access + Disney Ads Agent View Access on top of the existing
+       Core Planning Full Access — exactly what the brief's role-add
+       example calls for. Adding Atlas Admin promotes the row to
+       Full Access and adds IAM / ICM / TOM / DAA rows. Removing the
+       last contributor for an app drops the row.
+
+       The legacy `auEffClassifyForUser` is left untouched so the
+       Add-User single-role renderer keeps its original behavior. */
+    function auEffClassifyById(roleId, teamName) {
+      if (!roleId) return "_default";
+      var byRole = AU_EFF_ROLE_CLASS[roleId];
+      if (byRole === "admin" || byRole === "icm_admin" || byRole === "tom_admin" || byRole === "ad_ops") {
+        return byRole;
+      }
+      var t = teamName || "";
+      if (byRole === "planner" || byRole === "planning_admin" || byRole === "viewer") {
+        if (t === "Revenue & Yield Management") return "revenue_yield";
+        if (t === "Addressable & Programmatic Sales") return "programmatic";
+        if (t === "Ad Operations") return "ad_ops";
+        if (AU_EFF_SALES_TEAMS[t] && byRole !== "planning_admin") return "sales";
+        return byRole;
+      }
+      if (byRole === "planning_manager") {
+        if (t === "Revenue & Yield Management") return "revenue_yield";
+        return "planning_manager";
+      }
+      return byRole || "_default";
+    }
+
     function auEffClassifyForUser(roleId, teamName, userRecord) {
       /* Honour explicit admin role IDs first. */
       if (roleId && AU_EFF_ROLE_CLASS[roleId]) {
@@ -5562,11 +6141,19 @@ document.addEventListener("DOMContentLoaded", function () {
         var chipKeys = auEffResolveChips(spec.app, spec.chips);
         var levelClass = "au-eff-level-pill--" + (spec.level || "").toLowerCase().replace(/\s+/g, "-");
         var groups = auEffBuildGroups(spec.app, spec.level, chipKeys);
-        breakdown.sections.push({ app: spec.app, level: spec.level, groups: groups });
+        /* Round 12 (2026-06-09 copy refresh): the data key stays
+           `"IAM"` so every downstream lookup (auEffBuildGroups,
+           auEffResolveChips, AU_EFF_ACTIONS, AU_EFF_RESOURCES) keeps
+           working unchanged. We translate to the full user-facing
+           label *only* at render time and capture that same display
+           label into the breakdown snapshot so the modal H3 matches
+           the table row. */
+        var appLabel = (spec.app === "IAM") ? "Identity and Access Management" : spec.app;
+        breakdown.sections.push({ app: appLabel, level: spec.level, groups: groups });
         var groupsAttr = esc(JSON.stringify(groups)).replace(/"/g, "&quot;");
         html += '<tr>' +
           '<td class="au-eff-app">' +
-            '<span class="au-eff-app-name">' + esc(spec.app) + '</span>' +
+            '<span class="au-eff-app-name">' + esc(appLabel) + '</span>' +
           '</td>' +
           '<td class="au-eff-level"><span class="au-eff-level-pill ' + levelClass + '">' + esc(spec.level) + '</span></td>' +
           '<td class="au-eff-summary-cell" data-eff-groups="' + groupsAttr + '">' +
@@ -5577,6 +6164,184 @@ document.addEventListener("DOMContentLoaded", function () {
       auEffTbody.innerHTML = html;
       auEffLastBreakdown = breakdown;
       auEffApplyOverflow();
+    }
+
+    /* ─── Round 18 (2026-06-09) ──────────────────────────────────────
+       Combined effective access across multiple assigned roles.
+
+       The single-role renderer above (`renderAuEffectiveAccessTable`)
+       drives off one `roleId`. In Edit User the admin can now assign
+       multiple roles, so the table needs to show the *union* of every
+       assigned role's pattern, merged per application:
+         • If two roles both grant an app, take the higher level
+           (Full > Edit > View).
+         • Combine the chip resource lists (de-duped, preserving
+           AU_EFF_APP_CHIPS order so the most important resources
+           still render first).
+
+       This function mirrors `renderAuEffectiveAccessTable`'s output
+       contract — same DOM, same chip rendering, same breakdown
+       snapshot for the "View breakdown" modal — so the rest of the
+       page stays untouched. The single-role function is kept intact
+       for Add-User and any future single-role callers.
+
+       Scope: Edit User only. Add-User flow does not call this. */
+    var AU_EFF_LEVEL_RANK = { "View Access": 1, "Edit Access": 2, "Full Access": 3 };
+    var AU_EFF_LEVEL_BY_RANK = { 1: "View Access", 2: "Edit Access", 3: "Full Access" };
+
+    function auEffMergeLevel(levelA, levelB) {
+      var rA = AU_EFF_LEVEL_RANK[levelA] || 0;
+      var rB = AU_EFF_LEVEL_RANK[levelB] || 0;
+      var rMax = rA > rB ? rA : rB;
+      return AU_EFF_LEVEL_BY_RANK[rMax] || levelA || levelB;
+    }
+
+    function auEffMergeChipEntries(app, existingEntries, addEntries) {
+      /* Each entry is the `{r, a}` shape returned by auEffResolveChips —
+         `r` is the resource name (always present), `a` is either null
+         (caller wants the default action list at the row's level) or
+         an explicit verb override array.
+         Merge rule (Round 18): de-dupe by `r`; if either side has
+         `a: null` we keep `null` (defer verb resolution to the row's
+         merged level); otherwise we union the action arrays so the
+         caller never loses a verb that a contributing role granted.
+         Preserve AU_EFF_APP_CHIPS canonical order so the most-important
+         resources still render first in the truncated cell. */
+      var canon = AU_EFF_APP_CHIPS[app] || null;
+      var seen = {};
+      var i, ent, key;
+      for (i = 0; i < existingEntries.length; i++) {
+        ent = existingEntries[i];
+        if (!ent || !ent.r) continue;
+        key = ent.r;
+        seen[key] = { r: key, a: ent.a ? ent.a.slice() : null };
+      }
+      for (i = 0; i < addEntries.length; i++) {
+        ent = addEntries[i];
+        if (!ent || !ent.r) continue;
+        key = ent.r;
+        if (!seen[key]) {
+          seen[key] = { r: key, a: ent.a ? ent.a.slice() : null };
+        } else {
+          var prev = seen[key];
+          /* If either contributor wanted default verbs at the row's
+             level (`a: null`), prefer null so the renderer resolves the
+             correct verb list at the *merged* level — never silently
+             clamp to an explicit-verb override that was correct only at
+             the lower-level contributing role. */
+          if (prev.a === null || ent.a === null) {
+            seen[key] = { r: key, a: null };
+          } else {
+            var union = prev.a.slice();
+            for (var j = 0; j < ent.a.length; j++) {
+              if (union.indexOf(ent.a[j]) === -1) union.push(ent.a[j]);
+            }
+            seen[key] = { r: key, a: union };
+          }
+        }
+      }
+      var out = [];
+      if (canon) {
+        for (i = 0; i < canon.length; i++) {
+          if (seen[canon[i]]) { out.push(seen[canon[i]]); delete seen[canon[i]]; }
+        }
+      }
+      for (var k in seen) {
+        if (Object.prototype.hasOwnProperty.call(seen, k)) out.push(seen[k]);
+      }
+      return out;
+    }
+
+    function renderAuCombinedEffectiveAccess(roleIds, userRecord) {
+      if (!auEffTbody) return;
+      var u = userRecord;
+      if (!u && typeof findUserInOriginalById === "function" && auEditingUserId) {
+        u = findUserInOriginalById(auEditingUserId);
+      }
+      var teamName = u ? (u.team || "") : "";
+      var ids = roleIds || [];
+      /* Per-app merged state: { app, level, chipKeys, contributingRoleNames } */
+      var byApp = {};
+      var order = [];
+      var roleNamesForBreakdown = [];
+      for (var i = 0; i < ids.length; i++) {
+        var rid = ids[i];
+        /* Round 27 (2026-06-09): classify *this* role by its own ID
+           (with team context but without the legacy `userRecord.roles`
+           scan that was collapsing every freshly-added role onto the
+           user's primary saved role class — see `auEffClassifyById`
+           comment for full diagnosis). */
+        var roleClass = auEffClassifyById(rid, teamName);
+        var pattern = AU_EFF_PATTERNS[roleClass] || AU_EFF_PATTERNS._default;
+        var rRec = (typeof findRoleById === "function") ? findRoleById(rid) : null;
+        if (rRec && rRec.role) roleNamesForBreakdown.push(rRec.role);
+        for (var j = 0; j < pattern.length; j++) {
+          var spec = pattern[j];
+          /* auEffResolveChips returns the `{r, a}` entry shape, which
+             is exactly what the merger and the renderer downstream
+             expect. */
+          var resEntries = auEffResolveChips(spec.app, spec.chips);
+          if (!byApp[spec.app]) {
+            byApp[spec.app] = { app: spec.app, level: spec.level, entries: resEntries.slice() };
+            order.push(spec.app);
+          } else {
+            byApp[spec.app].level = auEffMergeLevel(byApp[spec.app].level, spec.level);
+            byApp[spec.app].entries = auEffMergeChipEntries(spec.app, byApp[spec.app].entries, resEntries);
+          }
+        }
+      }
+      var html = "";
+      var breakdown = { roleName: roleNamesForBreakdown.join(", "), sections: [] };
+      for (var oi = 0; oi < order.length; oi++) {
+        var appKey = order[oi];
+        var merged = byApp[appKey];
+        var levelClass = "au-eff-level-pill--" + (merged.level || "").toLowerCase().replace(/\s+/g, "-");
+        var groups = auEffBuildGroups(merged.app, merged.level, merged.entries);
+        /* Same "IAM" → "Identity and Access Management" copy translation
+           as the single-role renderer (Round 12). */
+        var appLabel = (merged.app === "IAM") ? "Identity and Access Management" : merged.app;
+        breakdown.sections.push({ app: appLabel, level: merged.level, groups: groups });
+        var groupsAttr = esc(JSON.stringify(groups)).replace(/"/g, "&quot;");
+        html += '<tr>' +
+          '<td class="au-eff-app">' +
+            '<span class="au-eff-app-name">' + esc(appLabel) + '</span>' +
+          '</td>' +
+          '<td class="au-eff-level"><span class="au-eff-level-pill ' + levelClass + '">' + esc(merged.level) + '</span></td>' +
+          '<td class="au-eff-summary-cell" data-eff-groups="' + groupsAttr + '">' +
+            auEffSummaryTextHtml(merged.app, merged.level, merged.entries) +
+          '</td>' +
+        '</tr>';
+      }
+      if (!html) {
+        html = '<tr><td colspan="3" class="au-eff-empty">No effective access for the assigned roles.</td></tr>';
+      }
+      auEffTbody.innerHTML = html;
+      auEffLastBreakdown = breakdown;
+      auEffApplyOverflow();
+    }
+
+    /* Build/refresh the chip list of currently assigned roles below the
+       Assigned Role row. Each chip exposes a small Remove `×` that
+       splices the role from `auState.selectedRoleIds`, refreshes the
+       combined effective access table, refreshes the dropdown's
+       disabled set, and re-evaluates Save Dirty.
+
+       Edit User only. Add User (which uses the per-role card stack
+       above) is untouched. */
+    function renderAuAssignedRolesChips() {
+      /* Round 21 (2026-06-09): external assigned-role chips removed
+         per brief — the multi-select dropdown's closed-trigger summary
+         (rendered by `auRoleMultiRenderTrigger`) now stands in for
+         the chip cluster. The container stays in the DOM (hidden via
+         CSS `display: none !important`) so existing callers can keep
+         invoking this function safely without conditional checks.
+         We also refresh the trigger label here so any code path that
+         used to call `renderAuAssignedRolesChips()` to reflect a new
+         assigned-role set keeps producing a visible UI update. */
+      if (!auAssignedRolesList) return;
+      auAssignedRolesList.setAttribute("hidden", "");
+      auAssignedRolesList.innerHTML = "";
+      if (typeof auRoleMultiRenderTrigger === "function") auRoleMultiRenderTrigger();
     }
 
     /* ─── Effective access breakdown modal ──────────────────────────
@@ -6287,6 +7052,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return;
       }
+      /* Round 28 (2026-06-09): determine whether the Add User flow is
+         producing an internal or external user. Mirrors the global
+         Users-page Internal/External segmented toggle (`userView`).
+         External users carry `organization` (free-text from the
+         Company name input) and never carry `team`; internal users
+         carry `team` and never `organization`. The Users table render
+         path (line ~1483) already prefers `organization` for external
+         and `team` for internal — by keeping each record one-or-the-
+         other we avoid stale fields leaking into the wrong view. */
+      var isExternalAdd = (typeof userView === "string" && userView === "external");
+      if (isExternalAdd) {
+        var companyVal = auCompany && auCompany.value ? auCompany.value.trim() : "";
+        if (!companyVal) {
+          showEdlToast({
+            type: "warning",
+            title: "Company name required",
+            body: "Enter the external user's company name."
+          });
+          if (auCompany) {
+            try { auCompany.focus(); } catch (_) {}
+          }
+          return;
+        }
+      }
       var assignedRoleNames = [];
       if (selectedStatus() !== "Inactive") {
         for (var i = 0; i < auState.selectedRoleIds.length; i++) {
@@ -6295,22 +7084,53 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
+      /* New-user ID prefix encodes the user type so downstream helpers
+         (`isAuUserExternal`, search field weighting) classify the
+         locally-added user the same way as seeded external records
+         (which use `e###`). External Add → `u_local_e_…`; internal
+         Add → `u_local_…` (unchanged). */
+      var newUserId = (isExternalAdd ? "u_local_e_" : "u_local_") + Date.now();
       var newUser = {
-        id: "u_local_" + Date.now(),
+        id: newUserId,
         avatar: DEFAULT_ADD_USER_AVATAR,
         name: first + " " + last,
         email: email,
         roles: assignedRoleNames,
         status: selectedStatus(),
-        team: auTeam && auTeam.value && auTeam.value.trim() ? auTeam.value.trim() : "Unassigned",
         title: auPreferredName.value.trim() ? ("Preferred: " + auPreferredName.value.trim()) : "Atlas User",
         region: selectedRegionCode()
       };
-      ORIGINAL_ORDER.unshift(newUser);
+      if (isExternalAdd) {
+        newUser.organization = auCompany.value.trim();
+      } else {
+        newUser.team = auTeam && auTeam.value && auTeam.value.trim() ? auTeam.value.trim() : "Unassigned";
+      }
+      /* Append to the correct dataset so the new record shows up in
+         the right view (Internal vs External Users table). */
+      if (isExternalAdd) {
+        EXTERNAL_DATA_ARRAY.unshift(newUser);
+        EXTERNAL_TOTAL += 1;
+        /* If the user is currently looking at the External view, also
+           refresh the live `DATA`/`ORIGINAL_ORDER` arrays so the
+           visible table updates. (When they're on the Internal view,
+           the new external user will be visible the next time they
+           flip the segmented toggle to External.) */
+        if (userView === "external") {
+          ORIGINAL_ORDER.unshift(newUser);
+          DATA = ORIGINAL_ORDER.slice();
+          TOTAL_ITEMS = EXTERNAL_TOTAL;
+        }
+      } else {
+        ORIGINAL_ORDER.unshift(newUser);
+        DATA = ORIGINAL_ORDER.slice();
+        if (typeof INTERNAL_ORIGINAL_SNAPSHOT !== "undefined" && INTERNAL_ORIGINAL_SNAPSHOT && INTERNAL_ORIGINAL_SNAPSHOT.unshift) {
+          INTERNAL_ORIGINAL_SNAPSHOT.unshift(newUser);
+        }
+        if (typeof INTERNAL_TOTAL !== "undefined") INTERNAL_TOTAL += 1;
+        TOTAL_ITEMS += 1;
+      }
       sortKey = null;
       sortDir = null;
-      DATA = ORIGINAL_ORDER.slice();
-      TOTAL_ITEMS += 1;
       currentPage = 1;
       updateSortHeaders();
       renderTable();
@@ -6348,14 +7168,71 @@ document.addEventListener("DOMContentLoaded", function () {
 
     auRoleAdd.addEventListener("click", function () {
       if (selectedStatus() === "Inactive" || auRoleAdd.disabled) return;
+      /* Round 21 (2026-06-09): in Edit mode the button reads
+         "Update access" and applies the dropdown's pending selection
+         (`auState.pendingRoleIds`) to the applied set
+         (`auState.selectedRoleIds`). The Add-mode single-role append
+         path (single-select combo) is preserved unchanged below. */
+      if (auPageMode === "edit") {
+        var nextIds = (auState.pendingRoleIds || []).slice();
+        /* De-duplicate defensively even though the multi-select can't
+           produce dupes; keeps the data shape invariant the same as
+           Round 18. */
+        var seen = {};
+        var deduped = [];
+        for (var di = 0; di < nextIds.length; di++) {
+          var id = nextIds[di];
+          if (!seen[id]) { seen[id] = true; deduped.push(id); }
+        }
+        auState.selectedRoleIds = deduped;
+        auState.pendingRoleIds = auState.selectedRoleIds.slice();
+        if (typeof auRoleMultiClose === "function") auRoleMultiClose();
+        if (typeof auRoleMultiRenderTrigger === "function") auRoleMultiRenderTrigger();
+        renderAuCombinedEffectiveAccess(auState.selectedRoleIds);
+        /* Effective-access breakdown modal pulls from the same
+           snapshot the table just built (`auEffLastBreakdown`), so
+           re-opening "View breakdown" after Update access will show
+           the merged role list. */
+        refreshAuSaveDirty();
+        return;
+      }
       var roleId = auState.selectedRoleId;
       if (!roleId) return;
       if (auState.selectedRoleIds.indexOf(roleId) !== -1) return;
       auState.selectedRoleIds.push(roleId);
       auState.selectedRoleId = "";
+      /* Clear the picker so it returns to its empty/placeholder state
+         and the admin can immediately pick a *different* role to add
+         next. The combo's internal pending pick is in `auComboState`,
+         not `auState`, so we reset both. */
+      auComboState.addUserRolePick = "";
+      if (setAuRoleCombo) setAuRoleCombo("");
       renderAURolePicker();
       renderAURoleCards();
     });
+
+    /* Round 18 (2026-06-09): assigned-role chip remove handler. The
+       chip list is delegate-listened from the list container so each
+       chip's `×` button can splice its role out of the assigned set,
+       reflow the combined effective access table, and re-enable Save
+       once the form differs from baseline. */
+    if (auAssignedRolesList) {
+      auAssignedRolesList.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-au-remove-role-id]");
+        if (!btn) return;
+        if (auPageMode !== "edit") return;
+        if (selectedStatus() === "Inactive") return;
+        var removeId = btn.getAttribute("data-au-remove-role-id");
+        if (!removeId) return;
+        var idx = auState.selectedRoleIds.indexOf(removeId);
+        if (idx === -1) return;
+        auState.selectedRoleIds.splice(idx, 1);
+        renderAuAssignedRolesChips();
+        renderAURolePicker();
+        renderAuCombinedEffectiveAccess(auState.selectedRoleIds);
+        refreshAuSaveDirty();
+      });
+    }
 
     /* V3 Edit User — Permission Options interactions. The Add button
        inserts the picked predefined application as a new assigned-app
@@ -7787,14 +8664,16 @@ document.addEventListener("DOMContentLoaded", function () {
        data source (not just visually hidden). APP_PERMISSIONS mirrors
        this set — any key not present below has no permissions definition
        and cannot be selected, preselected, or searched. */
-    /* Round 9 (2026-06-09): the brief's Application Names list for
-       Create/Edit Role uses "IAM" (matches Figma node 924:14138). The
-       dropdown option label is updated here to match the matrix
-       section title (`CR_APP_DISPLAY_LABEL.identity_access_management
-       = "IAM"`). The underlying `value` is unchanged so all data
-       hydration / persistence keys remain stable. */
+    /* Round 12 (2026-06-09 copy refresh): user-facing visible labels
+       now spell out "Identity and Access Management" in full. The
+       internal `value` token (`identity_access_management`) is
+       unchanged so all data hydration / persistence keys remain
+       stable. Companion override lives in
+       `CR_APP_DISPLAY_LABEL.identity_access_management` below — both
+       must stay in sync so the picker option and the rendered
+       Functions section header always agree. */
     var CR_APP_OPTIONS = [
-      { value: "identity_access_management", label: "IAM" },
+      { value: "identity_access_management", label: "Identity and Access Management" },
       { value: "core_planning",              label: "Core Planning" },
       { value: "disney_ads_agent",           label: "Disney Ads Agent" },
       { value: "inventory_catalog_manager",  label: "Inventory Catalog Manager" },
@@ -7966,8 +8845,8 @@ document.addEventListener("DOMContentLoaded", function () {
           "Approvals":   ["Read"]
         },
         disney_ads_agent: {
-          "Forecasting":      ["Read"],
-          "Planning Support": ["Read"]
+          "Forecasting":        ["Read"],
+          "Planning Support":   ["Read"]
         }
       },
       /* F. Ad Operations Specialist (also Operations Admin) */
@@ -8632,29 +9511,90 @@ document.addEventListener("DOMContentLoaded", function () {
         { title: "Targeting Templates", pmGroup: "Targeting Templates", support: ["Read", "Create", "Update", "Assign"] }
       ],
       disney_ads_agent: [
-        /* Disney Ads Agent in PM is a single group named "Disney Ads
-           Agent" containing four function keys. The brief asks us to
-           surface three sub-resources in the matrix
-           (Forecasting / Planning Support / Approval Comparisons),
-           each read-only. We honor that here while leaving PM
-           untouched — the matrix is a presentation layer over the
-           same underlying function keys, identified via `pmKey`. */
+        /* Disney Ads Agent in PM is a single group containing four
+           function keys. PM (Permission Capabilities) is unchanged —
+           the matrix is a presentation layer over the same underlying
+           function keys, identified via `pmKey`.
+
+           Round 20 (2026-06-09): per the latest brief, the matrix
+           surfaces all four DAA capabilities (one row per pmKey) so
+           the table visually aligns with the row count of the other
+           application sections. The internal `title` strings are kept
+           on the canonical names (`Media Plan Queries`,
+           `Planning Support`, `Approval Comparisons`) so role data
+           keyed off `data-resource` (CR_ROLE_MATRIX, applyRoleMatrixToSection)
+           continues to bind correctly; display labels are overridden
+           per-app in CR_APP_RESOURCE_DISPLAY_LABEL (see below).
+
+           History note: Round 13 added "Media Plan Queries" briefly;
+           Round 16 removed it; this round restores it because the
+           brief explicitly enumerates four DAA row labels. The
+           display-label override map keeps the underlying data keys
+           stable across all rounds. */
+        { title: "Media Plan Queries",  pmGroup: "Disney Ads Agent", pmKey: "media_plan_queries",          support: ["Read"] },
         { title: "Forecasting",         pmGroup: "Disney Ads Agent", pmKey: "forecasting_queries",         support: ["Read"] },
         { title: "Planning Support",    pmGroup: "Disney Ads Agent", pmKey: "planning_activity_summaries", support: ["Read"] },
         { title: "Approval Comparisons",pmGroup: "Disney Ads Agent", pmKey: "approval_io_comparisons",     support: ["Read"] }
       ]
     };
 
+    /* Round 20 (2026-06-09): per-app, per-resource display-label
+       override for the Functions matrix. Keys are the canonical
+       `title` strings stored in CR_MATRIX_RESOURCES_BY_APP and
+       referenced as `data-resource` by CR_ROLE_MATRIX /
+       applyRoleMatrixToSection / serialize logic; values are the
+       shorter strings the user sees in the Functions column. This
+       lets us match the brief's request for shorter Disney Ads Agent
+       row labels (Plan Queries / Forecasting / Team Summary /
+       IO Compare) WITHOUT renaming any data keys, so checked-state
+       hydration, dirty-state tracking, role serialization, and
+       effective-access patterns all continue to bind off the
+       canonical names. Only `buildAppSectionHtml` consults this map
+       when emitting the `<td class="cr-matrix-fn">` text — every
+       other code path keeps using `resource.title`. */
+    var CR_APP_RESOURCE_DISPLAY_LABEL = {
+      disney_ads_agent: {
+        /* Round 22 (2026-06-09): updated DAA display labels per brief.
+           "Forecasting" → "Forecast Queries" reads as a sibling of
+           "Plan Queries" and frames the row as an access/query
+           capability rather than a CRUD verb. The other three display
+           labels are unchanged from Round 20. The canonical data keys
+           ("Media Plan Queries", "Forecasting", "Planning Support",
+           "Approval Comparisons") in CR_MATRIX_RESOURCES_BY_APP are
+           UNTOUCHED, so role hydration, checked-state binding,
+           CR_ROLE_MATRIX lookups, dirty-state, and serialization all
+           continue to bind correctly — only the visible row label
+           changes. */
+        "Media Plan Queries":   "Plan Queries",
+        "Forecasting":          "Forecast Queries",
+        "Planning Support":     "Team Summary",
+        "Approval Comparisons": "IO Compare"
+      }
+    };
+
+    /* Round 20 (2026-06-09): per-app column-header display override
+       for the Functions matrix. Disney Ads Agent is a query/access
+       capability (not CRUD), so its single "Read" column reads as
+       "Access" per the brief. Internal column identity stays "Read"
+       so column-toggle wiring, CR_COLUMN_TO_PM_ACTION lookups, and
+       checkbox `data-column` continue to work unchanged. */
+    var CR_APP_COLUMN_DISPLAY_LABEL = {
+      disney_ads_agent: {
+        "Read": "Access"
+      }
+    };
+
     /* Optional Create-Role display label override per app (does NOT
        change `APP_PERMISSIONS[k].label` — used elsewhere).
-       Round 9 (2026-06-09): the brief's application-name list for
-       Create/Edit Role uses "IAM" (matches Figma node 924:14138).
-       Override here so the Functions matrix section header reads
-       "IAM" without disturbing the dropdown option list, the Roles
-       list summary, or any other surface that consumes
-       `APP_PERMISSIONS.identity_access_management.label`. */
+       Round 12 (2026-06-09 copy refresh): user-facing app label now
+       reads "Identity and Access Management" in full to align with
+       the rest of V3 (Edit User effective access table, breakdown
+       modal, picker option). The internal app key
+       (`identity_access_management`) is unchanged, so all data
+       lookups, role hydration, dirty-state snapshots, and persistence
+       paths remain stable. */
     var CR_APP_DISPLAY_LABEL = {
-      identity_access_management: "IAM"
+      identity_access_management: "Identity and Access Management"
     };
 
     function crResourcesForApp(appKey) {
@@ -8751,11 +9691,50 @@ document.addEventListener("DOMContentLoaded", function () {
          `.cr-app-section` and the same `data-column`. The
          indeterminate state is recomputed from body checkboxes
          after every change. */
-      html += '<table class="cr-matrix" role="table" aria-label="' + esc(displayLabel) + ' functions matrix">';
+      /* Round 11 (2026-06-09): emit a <colgroup> so the Functions
+         column and every action column have explicit, locked widths.
+         Combined with `table-layout: fixed` on `.cr-matrix`, this
+         guarantees the Functions column starts at the same x-position
+         and renders at the same width across every application
+         section regardless of how many action columns the app
+         supports. Disney Ads Agent (1 action) renders a short table
+         that still anchors to the same left edge, while IAM/TOM
+         (5 actions) extend further to the right — no fakes, no
+         shifting. The `data-action` attribute lets us key any future
+         per-action override off the column without re-walking the
+         <th> tree. */
+      /* Round 13 (2026-06-09): every matrix table now spans the full
+         section width (`width: 100%` in CSS) so all five application
+         tables share the same left AND right edges. Functions column
+         is still locked to 240px and each supported action column is
+         still locked to 100px via <col class="cr-mcol-act">. A
+         trailing **spacer column** (no width) absorbs any remaining
+         width — that's how Disney Ads Agent (1 action) ends up as
+         wide as Core Planning (4 actions) and IAM (5 actions) without
+         distorting any action-column width and without adding fake
+         disabled action columns. The spacer column also gives the
+         section-level "Remove application" button a real right edge
+         to anchor against. */
+      html += '<table class="cr-matrix" role="table" aria-label="' + esc(displayLabel) + ' functions matrix" data-action-count="' + cols.length + '">';
+      html += '<colgroup>';
+      html += '<col class="cr-mcol-fn">';
+      for (var cg = 0; cg < cols.length; cg++) {
+        html += '<col class="cr-mcol-act" data-action="' + esc(cols[cg]) + '">';
+      }
+      html += '<col class="cr-mcol-spacer">';
+      html += '</colgroup>';
       html += '<thead><tr>';
       html += '<th class="cr-matrix-th cr-matrix-th-fn"><span class="cr-matrix-th-inner"><span>Functions</span></span></th>';
+      /* Round 20 (2026-06-09): per-app column-header display override
+         (CR_APP_COLUMN_DISPLAY_LABEL). DAA's "Read" column reads as
+         "Access" per the brief, but the column's internal identity
+         (`data-column`, input id slug, CR_COLUMN_TO_PM_ACTION lookup,
+         "Select all X actions in Y" tooltip) stays on the canonical
+         column key — only the visible `<span>` label is overridden. */
+      var colDisplay = CR_APP_COLUMN_DISPLAY_LABEL[appKey] || {};
       for (var c = 0; c < cols.length; c++) {
         var colLabel0 = cols[c];
+        var colLabelDisplay = colDisplay[colLabel0] || colLabel0;
         var headerInputId = "perm_head_" + appKey + "_" + colLabel0.toLowerCase();
         var headerTitle = "Select all " + colLabel0 + " actions in " + displayLabel;
         html += '<th class="cr-matrix-th cr-matrix-th-act">' +
@@ -8765,16 +9744,29 @@ document.addEventListener("DOMContentLoaded", function () {
               ' data-column="' + esc(colLabel0) + '"' +
               ' title="' + esc(headerTitle) + '"' +
               ' aria-label="' + esc(headerTitle) + '">' +
-            '<span class="cr-matrix-col-head-label">' + esc(colLabel0) + '</span>' +
+            '<span class="cr-matrix-col-head-label">' + esc(colLabelDisplay) + '</span>' +
           '</label>' +
         '</th>';
       }
+      /* Trailing spacer <th> — intentionally empty (no label, no
+         control). aria-hidden + presentation role so screen readers
+         don't announce a phantom column header. */
+      html += '<th class="cr-matrix-th cr-matrix-th-spacer" aria-hidden="true" role="presentation"></th>';
       html += '</tr></thead>';
       html += '<tbody>';
+      /* Round 20 (2026-06-09): per-app, per-resource display-label
+         override (CR_APP_RESOURCE_DISPLAY_LABEL). The visible row
+         label may be a shorter alias (DAA: Plan Queries / Forecasting /
+         Team Summary / IO Compare) but `data-resource` and the
+         checkbox `value` stay on the canonical `resource.title` so
+         CR_ROLE_MATRIX hydration, dirty-state, and serialization
+         keep working unchanged. */
+      var resourceDisplay = CR_APP_RESOURCE_DISPLAY_LABEL[appKey] || {};
       for (var k = 0; k < resources.length; k++) {
         var resource = resources[k];
+        var rowDisplayLabel = resourceDisplay[resource.title] || resource.title;
         html += '<tr class="cr-matrix-row">';
-        html += '<td class="cr-matrix-fn">' + esc(resource.title) + '</td>';
+        html += '<td class="cr-matrix-fn">' + esc(rowDisplayLabel) + '</td>';
         /* Every cell within an app's column set renders as a real
            empty checkbox. Matches Figma 924:14107 (Media Plans
            Create/Update/Delete and similar cells are shown as
@@ -8795,6 +9787,9 @@ document.addEventListener("DOMContentLoaded", function () {
             '</label>' +
           '</td>';
         }
+        /* Trailing spacer <td> — intentionally empty so the table
+           width matches the section. */
+        html += '<td class="cr-matrix-cell cr-matrix-cell-spacer" aria-hidden="true"></td>';
         html += '</tr>';
       }
       html += '</tbody></table>';
@@ -9344,6 +10339,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     document.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
+      /* Edit Team — Remove member confirm sits above any role/user
+         confirms in the V3 modal stack because it can be opened while
+         on the Edit Team page. Close it first so Esc behaves the
+         same as Cancel for this dialog. */
+      var tmRb = document.getElementById("tmRemoveMemberBackdrop");
+      if (tmRb && !tmRb.hasAttribute("hidden") && typeof window.__closeTmRemoveMemberModal === "function") {
+        window.__closeTmRemoveMemberModal();
+        return;
+      }
       var auRb = document.getElementById("auRemoveUserBackdrop");
       if (auRb && !auRb.hasAttribute("hidden") && typeof window.__closeAuRemoveUserModal === "function") {
         window.__closeAuRemoveUserModal();
