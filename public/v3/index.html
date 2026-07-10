@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260609r31">
+  <link rel="stylesheet" href="styles.css?v=20260710r43ext">
 </head>
 <body>
 
@@ -539,13 +539,21 @@
           <label class="au-label" for="auTeamCombo-ctl">Team</label>
           <input type="hidden" id="auTeam" value="">
           <div class="edl-combo au-field-dd" id="auTeamCombo" aria-label="Team"></div>
-          <!-- External-user Company name text input (Add mode only).
+          <!-- External-user Agency text input (Add mode only).
                Hidden by default; JS shows it when `userView` is
-               external. Required when shown — `applyAuBasicInfoCompanyOrTeam`
-               toggles the `required` attribute in sync with the
-               required-asterisk on the label. -->
+               external. R42 (2026-07-10): label is now the singular
+               "Agency" (was "Agency / Vendor" in R39/R40) per
+               Tatiana's current terminology. The field is optional
+               and never carries a required asterisk. Long values
+               truncate with an ellipsis inside the standard
+               one-column input width; the full value is surfaced
+               via the shared EDL tooltip on hover / keyboard
+               focus (wiring in app.js). `applyAuBasicInfoCompanyOrTeam`
+               in app.js toggles visibility, label, and placeholder
+               for this input based on Add/Edit mode and
+               internal/external user view. -->
           <input type="text" class="au-input au-field-company-input" id="auCompany" value=""
-                 placeholder="Enter company name" autocomplete="off" maxlength="120" hidden>
+                 placeholder="Enter agency name" autocomplete="off" maxlength="120" hidden>
         </div>
         <div class="au-field au-field-status">
           <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
@@ -633,6 +641,21 @@
       </div>
 
       <div class="au-section-body">
+      <!-- Round 43 (2026-07-10): external-Add scope note sits at the
+           TOP of the section body — directly under the "Roles &
+           Permissions" accordion header and above the Assign Roles
+           label — so the guidance is read BEFORE the admin picks a
+           role. Previously rendered below the assigned-role cards,
+           which put the guidance in the wrong reading order. Hidden
+           by default; JS clears the `hidden` attribute when entering
+           external Add mode (see `applyAuBasicInfoCompanyOrTeam`).
+           Uses the standard `.au-access-helper` supporting-text
+           style — no banner, no border, no icon, no colored
+           background. -->
+      <p class="au-access-helper au-external-only-add au-role-scope-note" id="auRoleScopeNote" hidden>
+        Roles define what this external user can do. Account assignments below define what data they can access.
+      </p>
+
       <!-- Add-mode helper text is hidden by `.au-edit-only` toggle; Edit
            mode shows this single helper sentence (per brief). -->
       <p class="au-access-helper au-edit-only" id="auAccessHelper">Role assignment determines this user's effective access. Permission functions are managed in role definitions.</p>
@@ -712,6 +735,87 @@
           <tbody id="auEffTbody"></tbody>
         </table>
       </div>
+      </div>
+    </section>
+
+    <!-- ═ Account Assignments card (External Users only — Add mode)
+         New in Round 39 (2026-07-10 external polish pass).
+
+         Rendered on the Add User page ONLY when the page is opened
+         against the External Users view. Internal Add User and the
+         entire Edit User flow (both internal + external) never
+         render this section — visibility is toggled at runtime by
+         `applyAuExternalPageMode()` in app.js.
+
+         Why it exists: external users don't have a team, so their
+         data-scope is defined by which parent accounts / advertisers
+         they can see. Each assignment is a bordered EDL card with
+         parent → child hierarchy (EDL checkboxes, indeterminate
+         parent state), included-account summary, and a lightweight
+         Remove action. Multiple parent accounts stack vertically.
+
+         Reuses the existing `.cr-card` / `.cr-section-header`
+         accordion shell + `.au-role-row` / `.au-btn-add` control row
+         used by Roles & Permissions so the visual language is
+         native to the page. Sample data + hierarchy state live in
+         `ATLAS_ACCOUNTS` + `auState.assignedAccounts` in app.js.  -->
+    <section class="au-card cr-card au-external-only-add" id="auAccountsCard" aria-labelledby="auAccountsTitle" hidden>
+      <div class="cr-section-header" data-au-toggle="accounts" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auAccountsTitle">Account Assignments</span>
+        <span class="cr-section-summary" id="auAccountsSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="au-section-body">
+        <p class="au-access-helper" id="auAccountsHelper">Assigned accounts determine which orders, advertisers, and related data this external user can access.</p>
+
+        <div class="au-field au-accounts-search-field">
+          <label class="au-label" for="auAccountsSearchCombo-ctl">Search accounts</label>
+          <div class="au-role-row">
+            <div class="au-role-dd-field">
+              <input type="hidden" id="auAccountsSearchPick" value="">
+              <div class="edl-combo au-field-dd" id="auAccountsSearchCombo" aria-label="Search accounts"></div>
+            </div>
+            <button class="au-btn-add" id="auAccountsAdd" type="button" disabled>Add account</button>
+          </div>
+        </div>
+
+        <!-- Inline validation error slot (Round 40 placement) — sits
+             directly under Search accounts so the error appears next
+             to the control the admin must interact with next. Never
+             shown before Add User is clicked (brief §10). -->
+        <div class="au-accounts-error" id="auAccountsError" role="alert" hidden>
+          <svg class="au-accounts-error-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span class="au-accounts-error-text" id="auAccountsErrorText">Assign at least one account before adding this external user.</span>
+        </div>
+
+        <!-- Empty state — Round 40+ (2026-07-10): reduced to a
+             lightweight EDL status row. One info icon (EDL blue) +
+             one line of supporting text, no card container, no
+             decorative grid icon, no secondary sentence. Renders
+             only when no accounts are assigned. `role="status"`
+             preserves the semantics without shouting like an
+             alert. -->
+        <div class="au-accounts-empty" id="auAccountsEmpty" role="status" aria-live="polite">
+          <svg class="au-accounts-empty-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <circle cx="12" cy="8" r="0.5" fill="currentColor" stroke="none"/>
+          </svg>
+          <span class="au-accounts-empty-text">No accounts assigned yet</span>
+        </div>
+
+        <!-- Assignment cards render here via `renderAuAccountsList()`.
+             Live region lets AT users hear the summary refresh after
+             each toggle. Round 41 (2026-07-10): the Access Summary
+             block that used to live below this list was removed
+             entirely per brief §13. The included-account count in
+             each parent card header is now the sole summary. -->
+        <div class="au-accounts-list" id="auAccountsList" aria-live="polite"></div>
       </div>
     </section>
   </div>
@@ -1287,6 +1391,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260609r31"></script>
+<script src="app.js?v=20260710r43ext"></script>
 </body>
 </html>

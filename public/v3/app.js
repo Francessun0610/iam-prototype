@@ -4529,7 +4529,31 @@ document.addEventListener("DOMContentLoaded", function () {
          open and the admin is making changes; they re-sync on apply
          and whenever Edit User reopens. Add User mode does not use
          this — Add still uses the single-select `auRoleCombo`. */
-      pendingRoleIds: []
+      pendingRoleIds: [],
+      /* Round 39 (2026-07-10): External Add User account-based access.
+         `assignedAccounts` is an array of assignment records, one per
+         parent account. Each record:
+           { parentId:  string  — ATLAS_ACCOUNTS[i].id
+             excluded:  object  — child-id → true map of children the
+                                  admin deselected. Absence of a key
+                                  means "included by default" (matches
+                                  brief §11: adding a parent selects
+                                  all children by default).
+             expanded:  boolean — card open/closed state
+             showAll:   boolean — true → render full child list; false
+                                  → collapse to ATLAS_ACCOUNT_CHILD_PREVIEW.
+                                  Only surfaces the "Show N more" control
+                                  when the child count exceeds preview. }
+         Only populated on the External Add flow — internal Add and
+         both Edit modes never touch this. */
+      assignedAccounts: [],
+      /* Draft pick from the account search combo. Copied into the
+         assignment list when the admin clicks Add account. */
+      accountsSearchPickId: "",
+      /* Set to true once a validation error has fired so subsequent
+         edits can hide the error automatically as soon as the user
+         resolves the missing state. */
+      accountsErrorShown: false
     };
 
     var auComboState = {
@@ -4554,6 +4578,87 @@ document.addEventListener("DOMContentLoaded", function () {
     var auEditingDisplayName = "";
     var AU_PAGE_TITLE_ADD = "Add user";
     var AU_PAGE_SUB_ADD = "Capture user details and assign access for Atlas";
+
+    /* ═ Account Assignments — External Add User (Round 39, 2026-07-10) ═
+       Sample parent → child hierarchy used to demonstrate the External
+       Add User account-based access model. Each parent record contains:
+         • id     — stable identifier (used as the assignment key)
+         • name   — display label
+         • type   — small tag rendered in menus + card headers
+                    ("Holding Company", "Agency", "Advertiser", …)
+         • children — array of { id, name, advertisers? } records.
+                      A child may optionally carry an `advertisers`
+                      array so search matches brand-level queries too.
+       The structure is intentionally shallow-JSON — no backend calls,
+       no dependency on IAM's other datasets — so the component
+       architecture stays reusable once real API data is available. */
+    var ATLAS_ACCOUNTS = [
+      {
+        id: "omg",
+        name: "Omnicom Media Group",
+        type: "Holding Company",
+        children: [
+          { id: "omg-omd",       name: "OMD USA",           advertisers: ["McDonald's", "State Farm", "Apple"] },
+          { id: "omg-phd",       name: "PHD USA",           advertisers: ["Volkswagen", "HP"] },
+          { id: "omg-hearts",    name: "Hearts & Science",  advertisers: ["AT&T", "P&G"] },
+          { id: "omg-resolution",name: "Resolution Agency", advertisers: ["Chase", "Nissan"] }
+        ]
+      },
+      {
+        id: "wpp",
+        name: "WPP",
+        type: "Holding Company",
+        children: [
+          { id: "wpp-groupm",       name: "GroupM",         advertisers: ["Google", "Ford", "L'Oréal"] },
+          { id: "wpp-mindshare",    name: "Mindshare",      advertisers: ["Unilever", "American Express"] },
+          { id: "wpp-wavemaker",    name: "Wavemaker",      advertisers: ["Colgate-Palmolive", "Paramount"] },
+          { id: "wpp-essence",      name: "EssenceMediacom",advertisers: ["Adobe", "Coca-Cola"] }
+        ]
+      },
+      {
+        id: "publicis",
+        name: "Publicis Groupe",
+        type: "Holding Company",
+        children: [
+          { id: "pub-starcom",      name: "Starcom",         advertisers: ["Bank of America", "Airbnb"] },
+          { id: "pub-zenith",       name: "Zenith",          advertisers: ["Verizon", "Lancôme"] },
+          { id: "pub-spark",        name: "Spark Foundry",   advertisers: ["Kraft Heinz", "Dyson"] },
+          { id: "pub-digitas",      name: "Digitas",         advertisers: ["Delta Air Lines", "General Motors"] }
+        ]
+      },
+      /* Long-name parent card — demonstrates truncation + wrapping in
+         the assignment card header. Only one large hierarchy so the
+         page doesn't blow out; progressive disclosure kicks in past
+         the first 5 rows. */
+      {
+        id: "ipg",
+        name: "Interpublic Group of Companies (Long-Name Holdco Reference)",
+        type: "Holding Company",
+        children: [
+          { id: "ipg-initiative", name: "Initiative",     advertisers: ["Amazon", "T-Mobile"] },
+          { id: "ipg-mediahub",   name: "Mediahub",       advertisers: ["Peacock", "New Balance"] },
+          { id: "ipg-ubm",        name: "UM",             advertisers: ["BMW", "Sony"] },
+          { id: "ipg-orion",      name: "Orion Holdings", advertisers: ["Johnson & Johnson"] },
+          { id: "ipg-magna",      name: "Magna Global",   advertisers: ["Bayer"] },
+          { id: "ipg-kinesso",    name: "Kinesso",        advertisers: ["Netflix"] },
+          { id: "ipg-reprise",    name: "Reprise Digital",advertisers: ["LEGO"] },
+          { id: "ipg-jack",       name: "Jack Morton Worldwide", advertisers: [] }
+        ]
+      },
+      /* Standalone advertiser — no children. Included so that Search
+         Accounts can also return direct advertisers (search results
+         distinguish "Advertiser" from "Parent"/"Child"). */
+      {
+        id: "direct-cocacola",
+        name: "The Coca-Cola Company",
+        type: "Direct Advertiser",
+        children: []
+      }
+    ];
+    /* Progressive disclosure — collapse child lists to this many rows
+       when the total exceeds it. Applied per-card in
+       `renderAuAccountCard`. */
+    var ATLAS_ACCOUNT_CHILD_PREVIEW = 5;
 
     var AU_REGION_TIMEZONES = {
       NA: [
@@ -5201,6 +5306,10 @@ document.addEventListener("DOMContentLoaded", function () {
          toggle on the Users page). The unified
          `applyAuBasicInfoCompanyOrTeam` helper handles both. */
       if (typeof applyAuBasicInfoCompanyOrTeam === "function") applyAuBasicInfoCompanyOrTeam(null);
+      /* Round 39 (2026-07-10): clear External Add User account
+         assignments + validation state on every reset so re-open of
+         Add User starts with an empty Account Assignments section. */
+      if (typeof auResetAccountsState === "function") auResetAccountsState();
       renderAURolePicker();
       renderAURoleCards();
       /* Round 18: clear the Edit-mode chip list when resetting (Add
@@ -5572,20 +5681,30 @@ document.addEventListener("DOMContentLoaded", function () {
         roEl.textContent = companyText;
         roEl.setAttribute("aria-label", "Company");
       } else if (external && !inEditMode) {
-        /* === Add + External: editable Company name text input === */
-        setLabel("Company name", true);
+        /* === Add + External: optional Agency text input ===
+             Round 42 (2026-07-10): Label is now the singular
+             "Agency" (was "Agency / Vendor" in R39/R40) per
+             Tatiana's current terminology. The field remains
+             OPTIONAL — no asterisk, no `required` attribute, no
+             aria-required, no client-side validation. Access scope
+             for external users is defined by the Account Assignments
+             section below. The value is still preserved in form
+             state and included in the new-user payload as both
+             `organization` (for continuity with the existing Users
+             table) and `agencyVendor` (audit-friendly field name). */
+        setLabel("Agency", false);
         labelEl.setAttribute("for", "auCompany");
         if (triggerEl) triggerEl.style.display = "none";
         if (roEl) roEl.style.display = "none";
         if (companyInput) {
           companyInput.hidden = false;
-          companyInput.required = true;
-          companyInput.setAttribute("aria-required", "true");
-          companyInput.setAttribute("placeholder", "Enter company name");
+          companyInput.required = false;
+          companyInput.removeAttribute("aria-required");
+          companyInput.setAttribute("placeholder", "Enter agency name");
           /* Field-clear-on-switch (brief §3): never preserve an
              internal Team value as Company name. `resetAddUsersState`
              already clears `auTeam.value`; here we make sure the
-             company input is fresh when switching from internal to
+             agency input is fresh when switching from internal to
              external while the page is open. We only clear when the
              input was previously hidden (so re-opens within the
              external flow keep any typed-in value). */
@@ -5612,6 +5731,742 @@ document.addEventListener("DOMContentLoaded", function () {
           companyInput.removeAttribute("aria-required");
           companyInput.setAttribute("data-au-last-mode", "internal");
         }
+      }
+      /* Round 39 (2026-07-10) — External Add page-mode class.
+         Drives the CSS rules that:
+           • Hide the profile-picture cell in Basic Information
+           • Reflow the Basic Information grid (Agency/Vendor spans 2)
+           • Reveal `#auAccountsCard` + the Roles scope note
+         Attached to `#addUsersPage` (not the individual card) so a
+         single class powers all the reflow rules and the section
+         reveal without any elements individually toggling `hidden`.
+         Edit mode never receives this class. The `hidden` attribute
+         is *also* toggled explicitly on the section root because
+         the HTML default carries `hidden` for pre-init safety —
+         author-CSS specificity can't override the UA rule for
+         `[hidden]` reliably in every browser, so JS ownership wins. */
+      var isExternalAdd = (external && !inEditMode);
+      addUsersPage.classList.toggle("is-external-add-mode", isExternalAdd);
+      var accountsCardEl = document.getElementById("auAccountsCard");
+      if (accountsCardEl) {
+        if (isExternalAdd) accountsCardEl.removeAttribute("hidden");
+        else accountsCardEl.setAttribute("hidden", "");
+      }
+      /* Roles scope note (external Add only). Same treatment — the
+         HTML default is not `hidden` but adding the attribute in
+         non-external states keeps the note out of the accessibility
+         tree and out of layout entirely. */
+      var scopeNoteEl = document.getElementById("auRoleScopeNote");
+      if (scopeNoteEl) {
+        if (isExternalAdd) scopeNoteEl.removeAttribute("hidden");
+        else scopeNoteEl.setAttribute("hidden", "");
+      }
+      if (typeof onAuExternalModeChange === "function") onAuExternalModeChange(isExternalAdd);
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       External Add User — Account Assignments logic (Round 39)
+       ────────────────────────────────────────────────────────────────
+       All of the following functions are Add-mode only and gated by
+       `#addUsersPage.is-external-add-mode`. Internal Add and both
+       Edit User modes never call these. Wiring for click / keyboard
+       events is registered once (on the shared `addUsersPage` root)
+       further below where the rest of the Add User events live.  */
+
+    function auFindAccountById(parentId) {
+      if (!parentId) return null;
+      for (var i = 0; i < ATLAS_ACCOUNTS.length; i++) {
+        if (ATLAS_ACCOUNTS[i].id === parentId) return ATLAS_ACCOUNTS[i];
+      }
+      return null;
+    }
+
+    function auAssignmentIncludedChildIds(assignment) {
+      var acct = auFindAccountById(assignment.parentId);
+      if (!acct) return [];
+      var included = [];
+      for (var i = 0; i < acct.children.length; i++) {
+        var cid = acct.children[i].id;
+        if (!assignment.excluded[cid]) included.push(cid);
+      }
+      return included;
+    }
+
+    function auAssignmentSummary(assignment) {
+      var acct = auFindAccountById(assignment.parentId);
+      if (!acct) return "";
+      var total = acct.children.length;
+      if (total === 0) {
+        /* Round 40 (2026-07-10): direct-advertiser cards now surface a
+           binary inclusion state via the parent checkbox in the header.
+           `assignment.directIncluded` defaults to true when the card
+           is created (mirrors "all children included" semantics for
+           parent-with-children cards). Card stays visible either way
+           until the admin explicitly removes it. */
+        return assignment.directIncluded === false ? "Account not included" : "Account included";
+      }
+      var included = auAssignmentIncludedChildIds(assignment).length;
+      if (included === 0) return "No child accounts included";
+      return included + " of " + total + " accounts included";
+    }
+
+    /* True when the assignment contributes ≥ 1 included row toward the
+       External User's access. Used by Access Summary counting +
+       Add-User validation. */
+    function auAssignmentHasInclusion(assignment) {
+      var acct = auFindAccountById(assignment.parentId);
+      if (!acct) return false;
+      if (acct.children.length === 0) return assignment.directIncluded !== false;
+      return auAssignmentIncludedChildIds(assignment).length > 0;
+    }
+
+    function auAvailableAccountResults(query) {
+      /* Search across parents, children, and advertiser names.
+         Results include a `kind` field for parent/child/advertiser
+         so `renderAuAccountSearchMenu` can distinguish them
+         visually. Already-assigned parents are still surfaced but
+         flagged `disabled` with an "Assigned" badge (parity with
+         standard EDL disabled-item treatment). */
+      var q = (query || "").toLowerCase().trim();
+      var results = [];
+      var assignedParents = {};
+      for (var a = 0; a < auState.assignedAccounts.length; a++) {
+        assignedParents[auState.assignedAccounts[a].parentId] = true;
+      }
+      for (var p = 0; p < ATLAS_ACCOUNTS.length; p++) {
+        var acct = ATLAS_ACCOUNTS[p];
+        var isAssigned = !!assignedParents[acct.id];
+        var parentMatch = !q || acct.name.toLowerCase().indexOf(q) !== -1;
+        if (parentMatch) {
+          results.push({
+            id: acct.id,
+            kind: "parent",
+            name: acct.name,
+            type: acct.type || "Parent",
+            path: acct.children.length
+              ? acct.children.length + " child accounts"
+              : "Direct advertiser",
+            disabled: isAssigned,
+            badge: isAssigned ? "Already assigned" : ""
+          });
+        }
+        /* Child accounts return the PARENT id — adding a child adds
+           its parent hierarchy, then selects the specific child. */
+        for (var c = 0; c < acct.children.length; c++) {
+          var child = acct.children[c];
+          var childMatch = !q || child.name.toLowerCase().indexOf(q) !== -1;
+          if (childMatch) {
+            results.push({
+              id: acct.id,
+              kind: "child",
+              focusChildId: child.id,
+              name: child.name,
+              type: "Child",
+              path: acct.name,
+              disabled: isAssigned,
+              badge: isAssigned ? "Already assigned" : ""
+            });
+          }
+          /* Advertiser sub-search (brief §8: search by advertiser
+             name where supported). Adding an advertiser result adds
+             the parent hierarchy the same way a child does. */
+          if (q && child.advertisers && child.advertisers.length) {
+            for (var v = 0; v < child.advertisers.length; v++) {
+              var adv = child.advertisers[v];
+              if (adv.toLowerCase().indexOf(q) === -1) continue;
+              results.push({
+                id: acct.id,
+                kind: "advertiser",
+                focusChildId: child.id,
+                name: adv,
+                type: "Advertiser",
+                path: acct.name + " — " + child.name,
+                disabled: isAssigned,
+                badge: isAssigned ? "Already assigned" : ""
+              });
+            }
+          }
+        }
+      }
+      /* Cap the visible result count so the menu doesn't grow past
+         a reasonable EDL popover height. Callers can still show all
+         via keyboard-nav; we just limit the render pass. */
+      return results.slice(0, 60);
+    }
+
+    /* Track the last-picked search item so `Add account` knows what
+       to assign. The picker also feeds this via keyboard Enter. */
+    function auSetAccountsSearchPick(pick) {
+      auState.accountsSearchPickId = pick ? pick.id : "";
+      auState.accountsSearchPickFocusChild = pick ? (pick.focusChildId || "") : "";
+      var addBtn = document.getElementById("auAccountsAdd");
+      if (addBtn) addBtn.disabled = !pick || !!pick.disabled;
+      var hidden = document.getElementById("auAccountsSearchPick");
+      if (hidden) hidden.value = auState.accountsSearchPickId;
+    }
+
+    /* Handles picking an item from the search dropdown, but does NOT
+       add the assignment yet (Add account button is separate — brief
+       §8: "Disable Add account until a valid result is selected"). */
+    function auHandleAccountsSearchPick(picked, comboInput) {
+      auSetAccountsSearchPick(picked);
+      if (comboInput && picked) comboInput.value = picked.name;
+    }
+
+    function auHandleAddAccountClick() {
+      if (!auState.accountsSearchPickId) return;
+      var parentId = auState.accountsSearchPickId;
+      /* Duplicate-parent guard (brief §8). Also caught upstream by
+         disabling matching search results, but we belt-and-brace
+         here in case the pick was stale (e.g. after a search field
+         re-open). */
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        if (auState.assignedAccounts[i].parentId === parentId) {
+          auSetAccountsSearchPick(null);
+          auClearAccountsSearchField();
+          return;
+        }
+      }
+      var acct = auFindAccountById(parentId);
+      if (!acct) return;
+      auState.assignedAccounts.push({
+        parentId: parentId,
+        excluded: {},           /* empty = all children included */
+        directIncluded: true,   /* direct-advertiser cards default to included */
+        expanded: true,
+        showAll: acct.children.length <= ATLAS_ACCOUNT_CHILD_PREVIEW
+      });
+      auSetAccountsSearchPick(null);
+      auClearAccountsSearchField();
+      renderAuAccountsList();
+      auMaybeClearAccountsError();
+      updateAuSummaries();
+      refreshAuSaveDirty();
+    }
+
+    function auHandleRemoveAccount(parentId) {
+      auState.assignedAccounts = auState.assignedAccounts.filter(function (a) {
+        return a.parentId !== parentId;
+      });
+      renderAuAccountsList();
+      /* Removing a parent frees it up in the search menu; if the
+         search input is open, re-render so it shows immediately. */
+      if (typeof renderAuAccountSearchMenu === "function") {
+        var input = document.querySelector("#auAccountsSearchCombo .edl-combo-input");
+        renderAuAccountSearchMenu(input ? input.value : "");
+      }
+      updateAuSummaries();
+      refreshAuSaveDirty();
+    }
+
+    function auHandleToggleChild(parentId, childId, willBeChecked) {
+      var assignment = null;
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        if (auState.assignedAccounts[i].parentId === parentId) {
+          assignment = auState.assignedAccounts[i];
+          break;
+        }
+      }
+      if (!assignment) return;
+      if (willBeChecked) delete assignment.excluded[childId];
+      else assignment.excluded[childId] = true;
+      renderAuAccountCard(assignment);
+      auMaybeClearAccountsError();
+      updateAuSummaries();
+      refreshAuSaveDirty();
+    }
+
+    function auHandleToggleParent(parentId, willBeChecked) {
+      var assignment = null;
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        if (auState.assignedAccounts[i].parentId === parentId) {
+          assignment = auState.assignedAccounts[i];
+          break;
+        }
+      }
+      if (!assignment) return;
+      var acct = auFindAccountById(parentId);
+      if (!acct) return;
+      if (acct.children.length === 0) {
+        /* Round 40: direct advertiser — parent checkbox drives the
+           card's binary inclusion state instead of toggling a child set. */
+        assignment.directIncluded = !!willBeChecked;
+      } else if (willBeChecked) {
+        /* Select-all → clear the excluded map */
+        assignment.excluded = {};
+      } else {
+        /* Deselect-all → exclude every child */
+        assignment.excluded = {};
+        for (var c = 0; c < acct.children.length; c++) {
+          assignment.excluded[acct.children[c].id] = true;
+        }
+      }
+      renderAuAccountCard(assignment);
+      auMaybeClearAccountsError();
+      updateAuSummaries();
+      refreshAuSaveDirty();
+    }
+
+    function auHandleCardCollapse(parentId) {
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        if (auState.assignedAccounts[i].parentId === parentId) {
+          auState.assignedAccounts[i].expanded = !auState.assignedAccounts[i].expanded;
+          /* Round 41 (2026-07-10): the toggle lives on the header row
+             now, and `renderAuAccountCard` rewrites the card's
+             innerHTML — which destroys the button the user just
+             clicked/pressed. Track whether that button was focused
+             going in so we can restore focus post-render and keep
+             keyboard navigation coherent. */
+          var card = auAccountCardEl(parentId);
+          var hadFocus = !!(card && card.contains(document.activeElement) &&
+                            document.activeElement &&
+                            document.activeElement.classList &&
+                            document.activeElement.classList.contains("au-account-card-header-toggle"));
+          renderAuAccountCard(auState.assignedAccounts[i]);
+          if (hadFocus) {
+            var freshToggle = card && card.querySelector(".au-account-card-header-toggle");
+            if (freshToggle) freshToggle.focus();
+          }
+          return;
+        }
+      }
+    }
+
+    function auHandleShowMoreChildren(parentId) {
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        if (auState.assignedAccounts[i].parentId === parentId) {
+          auState.assignedAccounts[i].showAll = !auState.assignedAccounts[i].showAll;
+          renderAuAccountCard(auState.assignedAccounts[i]);
+          return;
+        }
+      }
+    }
+
+    function auAccountCardEl(parentId) {
+      return document.querySelector('.au-account-card[data-parent-id="' + CSS.escape(parentId) + '"]');
+    }
+
+    function renderAuAccountsList() {
+      var list = document.getElementById("auAccountsList");
+      var empty = document.getElementById("auAccountsEmpty");
+      if (!list || !empty) return;
+      list.innerHTML = "";
+      if (!auState.assignedAccounts.length) {
+        empty.style.display = "";
+        return;
+      }
+      empty.style.display = "none";
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        var assignment = auState.assignedAccounts[i];
+        var acct = auFindAccountById(assignment.parentId);
+        if (!acct) continue;
+        var card = document.createElement("div");
+        card.className = "au-account-card" + (assignment.expanded ? " expanded" : "");
+        card.setAttribute("data-parent-id", assignment.parentId);
+        list.appendChild(card);
+        renderAuAccountCard(assignment);
+      }
+    }
+
+    /* Round 41 (2026-07-10): the Access Summary render function that
+       used to live here was removed entirely per brief §13. The
+       per-card `N of N accounts included` count is now the sole
+       summary — no redundant footer block. */
+
+    function renderAuAccountCard(assignment) {
+      var card = auAccountCardEl(assignment.parentId);
+      if (!card) return;
+      var acct = auFindAccountById(assignment.parentId);
+      if (!acct) return;
+      var total = acct.children.length;
+      var isDirect = total === 0;
+      var includedCount = isDirect ? 0 : auAssignmentIncludedChildIds(assignment).length;
+      var allChecked, noneChecked, indeterminate;
+      if (isDirect) {
+        allChecked = assignment.directIncluded !== false;
+        noneChecked = !allChecked;
+        indeterminate = false;
+      } else {
+        allChecked   = includedCount === total;
+        noneChecked  = includedCount === 0;
+        indeterminate = !allChecked && !noneChecked;
+      }
+      /* Direct-advertiser cards need no expand/collapse, so force
+         expanded=false and add the .is-direct hook that hides the
+         chevron + body via CSS. */
+      card.classList.toggle("expanded", !isDirect && !!assignment.expanded);
+      card.classList.toggle("is-direct", isDirect);
+      var summary = auAssignmentSummary(assignment);
+
+      var childrenHtml = "";
+      if (!isDirect) {
+        var visibleCount = assignment.showAll ? total : Math.min(ATLAS_ACCOUNT_CHILD_PREVIEW, total);
+        childrenHtml += '<ul class="au-account-children" role="group" aria-label="' + esc(acct.name) + ' child accounts">';
+        for (var c = 0; c < visibleCount; c++) {
+          var child = acct.children[c];
+          var checked = !assignment.excluded[child.id];
+          childrenHtml +=
+            '<li>' +
+              '<label class="au-account-child-row">' +
+                '<input type="checkbox" class="au-account-check"' +
+                  ' data-au-child-parent="' + esc(acct.id) + '"' +
+                  ' data-au-child-id="' + esc(child.id) + '"' +
+                  (checked ? " checked" : "") + '>' +
+                '<span class="au-account-child-label">' + esc(child.name) + '</span>' +
+              '</label>' +
+            '</li>';
+        }
+        if (total > ATLAS_ACCOUNT_CHILD_PREVIEW) {
+          var more = total - ATLAS_ACCOUNT_CHILD_PREVIEW;
+          var isExpanded = !!assignment.showAll;
+          var moreLabel = isExpanded ? "Show fewer accounts" : ("Show " + more + " more accounts");
+          childrenHtml +=
+            '<li class="au-account-show-more">' +
+              '<button type="button" class="au-account-show-more-btn"' +
+                ' data-au-show-more="' + esc(acct.id) + '"' +
+                ' aria-expanded="' + (isExpanded ? "true" : "false") + '">' +
+                '<span>' + esc(moreLabel) + '</span>' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>' +
+              '</button>' +
+            '</li>';
+        }
+        childrenHtml += '</ul>';
+      }
+
+      var bodyId = "auAccountCardBody-" + acct.id;
+      var parentCheckAria = isDirect
+        ? ('aria-label="Include ' + esc(acct.name) + '"')
+        : ('aria-label="Include all ' + esc(acct.name) + ' accounts"');
+
+      /* Round 41 (2026-07-10) — final PM-review header layout:
+           [checkbox] [name / type + count       ─ clickable row ─]  [Remove]
+         The far-right dropdown chevron was removed (brief §9). The
+         parent header row itself is now the expand/collapse trigger
+         via a native <button> wrapper around the title area — this
+         keeps native keyboard semantics (Enter/Space) without a
+         hand-rolled role="button" role. The parent checkbox and the
+         Remove button sit outside the toggle so their click targets
+         never overlap (see the `stopPropagation` guards in the
+         event delegation below). Direct-advertiser cards render the
+         same title area as a non-interactive `<span>` — there is
+         nothing to expand. */
+      var titleHtml =
+        '<span class="au-account-card-name" title="' + esc(acct.name) + '">' + esc(acct.name) + '</span>' +
+        '<span class="au-account-card-meta">' +
+          (acct.type ? '<span class="au-account-card-type">' + esc(acct.type) + '</span>' : '') +
+          '<span class="au-account-card-count">' + esc(summary) + '</span>' +
+        '</span>';
+
+      var toggleEl;
+      if (isDirect) {
+        toggleEl =
+          '<span class="au-account-card-title" data-au-card-title-static="' + esc(acct.id) + '">' +
+            titleHtml +
+          '</span>';
+      } else {
+        toggleEl =
+          '<button type="button" class="au-account-card-title au-account-card-header-toggle"' +
+            ' data-au-card-toggle="' + esc(acct.id) + '"' +
+            ' aria-expanded="' + (assignment.expanded ? "true" : "false") + '"' +
+            ' aria-controls="' + esc(bodyId) + '"' +
+            ' aria-label="' + (assignment.expanded ? "Collapse " : "Expand ") + esc(acct.name) + '">' +
+            titleHtml +
+          '</button>';
+      }
+
+      card.innerHTML =
+        '<div class="au-account-card-header">' +
+          '<input type="checkbox" class="au-account-check au-account-parent-check"' +
+            ' data-au-parent="' + esc(acct.id) + '"' +
+            (allChecked ? " checked" : "") +
+            ' ' + parentCheckAria + '>' +
+          toggleEl +
+          '<button type="button" class="au-account-remove"' +
+            ' data-au-account-remove="' + esc(acct.id) + '"' +
+            ' aria-label="Remove ' + esc(acct.name) + ' from account assignments">' +
+            'Remove' +
+          '</button>' +
+        '</div>' +
+        (isDirect
+          ? ''
+          : ('<div class="au-account-card-body" id="' + esc(bodyId) + '">' + childrenHtml + '</div>')
+        );
+
+      /* Wire the parent indeterminate state (checkboxes can only
+         receive `indeterminate` via JS — no HTML attribute). */
+      var parentCheck = card.querySelector('input.au-account-parent-check');
+      if (parentCheck) parentCheck.indeterminate = indeterminate;
+    }
+
+    /* ── Custom account-search combobox ──
+       Reuses the same DOM classes as the standard EDL combo so the
+       input, chevron, clear button, and popover styling match every
+       other combo on the page. Menu items carry rich content (name,
+       parent path, type tag) — that's why we can't use the shared
+       `initCombo` factory (which renders a single `<span>` per item). */
+    function initAuAccountsSearch() {
+      var container = document.getElementById("auAccountsSearchCombo");
+      if (!container || container.getAttribute("data-au-accounts-init") === "1") return;
+      container.setAttribute("data-au-accounts-init", "1");
+      var inputId = "auAccountsSearchCombo-ctl";
+      container.innerHTML =
+        '<div class="edl-combo-input-wrap">' +
+          '<input type="text" id="' + inputId + '" class="edl-combo-input" placeholder="Search by account or advertiser name" autocomplete="off">' +
+          '<button type="button" class="edl-combo-clear hidden" aria-label="Clear">' + CLEAR_SVG + '</button>' +
+          '<button type="button" class="edl-combo-toggle" aria-label="Toggle dropdown">' + CHEV_SVG + '</button>' +
+        '</div>';
+      var menu = document.createElement("div");
+      menu.className = "edl-combo-menu edl-combo-menu--au-accounts";
+      document.body.appendChild(menu);
+
+      var input     = container.querySelector(".edl-combo-input");
+      var clearBtn  = container.querySelector(".edl-combo-clear");
+      var toggleBtn = container.querySelector(".edl-combo-toggle");
+      var isOpen    = false;
+      var kbIndex   = -1;
+
+      function positionMenu() {
+        var rect = input.getBoundingClientRect();
+        menu.style.left = rect.left + "px";
+        menu.style.top = rect.bottom + "px";
+        menu.style.width = rect.width + "px";
+      }
+      function getVisibleItems() {
+        return menu.querySelectorAll(".edl-combo-menu-item:not([aria-disabled='true'])");
+      }
+      function updateKbHighlight() {
+        var items = getVisibleItems();
+        for (var i = 0; i < items.length; i++) {
+          items[i].classList.toggle("kb-highlight", i === kbIndex);
+          if (i === kbIndex) items[i].scrollIntoView({ block: "nearest" });
+        }
+      }
+      function renderMenu(query) {
+        var results = auAvailableAccountResults(query);
+        if (!results.length) {
+          /* Round 40 (2026-07-10) copy: match brief §24 wording. */
+          menu.innerHTML = '<div class="edl-combo-empty">No matching accounts found.</div>';
+          kbIndex = -1;
+          return;
+        }
+        var html = "";
+        for (var i = 0; i < results.length; i++) {
+          var r = results[i];
+          var kindLabel = r.kind === "parent" ? (r.type || "Parent") :
+                          r.kind === "child" ? "Child" : "Advertiser";
+          html +=
+            '<div class="edl-combo-menu-item edl-combo-item"' +
+              ' data-au-acct-idx="' + i + '"' +
+              (r.disabled ? ' aria-disabled="true"' : "") + '>' +
+              '<div class="au-acct-opt">' +
+                '<div class="au-acct-opt-label">' +
+                  '<span class="au-acct-opt-name">' + esc(r.name) + '</span>' +
+                  '<span class="au-acct-opt-tag" data-kind="' + esc(r.kind) + '">' + esc(kindLabel) + '</span>' +
+                  (r.badge ? '<span class="au-acct-opt-badge">' + esc(r.badge) + '</span>' : '') +
+                '</div>' +
+                (r.path ? '<div class="au-acct-opt-path">' + esc(r.path) + '</div>' : '') +
+              '</div>' +
+            '</div>';
+        }
+        menu.innerHTML = html;
+        menu._auAccountResults = results;
+        kbIndex = -1;
+      }
+      /* Exposed to outer scope so `auHandleRemoveAccount` etc. can
+         re-run the menu render when the assignment list changes and
+         the search input is currently open. */
+      renderAuAccountSearchMenu = renderMenu;
+
+      function openMenu() {
+        if (input.disabled || isOpen) return;
+        isOpen = true;
+        var openMenus = document.querySelectorAll(".edl-combo-menu.open");
+        for (var i = 0; i < openMenus.length; i++) openMenus[i].classList.remove("open");
+        var openCombos = document.querySelectorAll(".edl-combo.open");
+        for (var j = 0; j < openCombos.length; j++) openCombos[j].classList.remove("open");
+        container.classList.add("open");
+        menu.classList.add("open");
+        positionMenu();
+        renderMenu(input.value);
+      }
+      function closeMenu() {
+        if (!isOpen) return;
+        isOpen = false;
+        container.classList.remove("open");
+        menu.classList.remove("open");
+        kbIndex = -1;
+      }
+      function pickIdx(idx) {
+        var results = menu._auAccountResults || [];
+        if (idx < 0 || idx >= results.length) return;
+        var r = results[idx];
+        if (r.disabled) return;
+        auHandleAccountsSearchPick(r, input);
+        clearBtn.classList.remove("hidden");
+        closeMenu();
+      }
+
+      input.addEventListener("focus", function () { openMenu(); });
+      input.addEventListener("click", function () { if (!isOpen) openMenu(); });
+      input.addEventListener("input", function () {
+        auSetAccountsSearchPick(null);
+        clearBtn.classList.toggle("hidden", !this.value);
+        if (!isOpen) openMenu();
+        else renderMenu(this.value);
+      });
+      input.addEventListener("keydown", function (e) {
+        if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+          e.preventDefault();
+          openMenu();
+          return;
+        }
+        if (!isOpen) return;
+        var items = getVisibleItems();
+        var count = items.length;
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (!count) return;
+          kbIndex = (kbIndex + 1) % count;
+          updateKbHighlight();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (!count) return;
+          kbIndex = (kbIndex - 1 + count) % count;
+          updateKbHighlight();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (kbIndex >= 0) {
+            var el = items[kbIndex];
+            if (el) pickIdx(parseInt(el.getAttribute("data-au-acct-idx"), 10));
+          } else if (auState.accountsSearchPickId) {
+            auHandleAddAccountClick();
+          }
+        } else if (e.key === "Escape") {
+          closeMenu();
+        }
+      });
+      toggleBtn.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        if (isOpen) closeMenu();
+        else { input.focus(); openMenu(); }
+      });
+      clearBtn.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        input.value = "";
+        auSetAccountsSearchPick(null);
+        clearBtn.classList.add("hidden");
+        renderMenu("");
+        input.focus();
+        openMenu();
+      });
+      menu.addEventListener("mousedown", function (e) {
+        var item = e.target.closest(".edl-combo-menu-item");
+        if (!item) return;
+        e.preventDefault();
+        if (item.getAttribute("aria-disabled") === "true") return;
+        pickIdx(parseInt(item.getAttribute("data-au-acct-idx"), 10));
+      });
+      document.addEventListener("mousedown", function (e) {
+        if (!isOpen) return;
+        if (container.contains(e.target)) return;
+        if (menu.contains(e.target)) return;
+        closeMenu();
+      });
+      window.addEventListener("scroll", function () { if (isOpen) positionMenu(); }, true);
+      window.addEventListener("resize", function () { if (isOpen) positionMenu(); });
+    }
+    /* Placeholder that `initAuAccountsSearch` overwrites once the
+       combobox is initialized. Safe to invoke before init — noop. */
+    var renderAuAccountSearchMenu = function () {};
+
+    function auClearAccountsSearchField() {
+      var container = document.getElementById("auAccountsSearchCombo");
+      if (!container) return;
+      var input = container.querySelector(".edl-combo-input");
+      var clearBtn = container.querySelector(".edl-combo-clear");
+      if (input) input.value = "";
+      if (clearBtn) clearBtn.classList.add("hidden");
+      if (typeof renderAuAccountSearchMenu === "function") renderAuAccountSearchMenu("");
+    }
+
+    function auShowAccountsError(message) {
+      var card = document.getElementById("auAccountsCard");
+      var box  = document.getElementById("auAccountsError");
+      var text = document.getElementById("auAccountsErrorText");
+      if (!card || !box || !text) return;
+      if (card.classList.contains("collapsed")) {
+        card.classList.remove("collapsed");
+        var hdr = card.querySelector(".cr-section-header[data-au-toggle]");
+        if (hdr) hdr.setAttribute("aria-expanded", "true");
+      }
+      text.textContent = message;
+      box.hidden = false;
+      card.classList.add("au-accounts-invalid");
+      auState.accountsErrorShown = true;
+      /* Move focus so keyboard + screen readers land inside the
+         invalid section (brief §15). Prefer the search field if no
+         cards exist; otherwise prefer the first card's parent
+         checkbox. */
+      var focusEl = null;
+      if (!auState.assignedAccounts.length) {
+        focusEl = document.querySelector("#auAccountsSearchCombo .edl-combo-input");
+      } else {
+        focusEl = card.querySelector("input.au-account-parent-check");
+      }
+      if (focusEl && typeof focusEl.focus === "function") {
+        try { focusEl.focus(); } catch (_) {}
+      }
+      /* Scroll the section into view so the error is visible. */
+      try { card.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (_) {}
+    }
+
+    function auMaybeClearAccountsError() {
+      if (!auState.accountsErrorShown) return;
+      /* Valid state check: at least one included account across all
+         assignments. Uses `auAssignmentHasInclusion` so direct
+         advertisers and parent-with-children behave consistently. */
+      var hasAny = false;
+      for (var i = 0; i < auState.assignedAccounts.length; i++) {
+        if (auAssignmentHasInclusion(auState.assignedAccounts[i])) {
+          hasAny = true; break;
+        }
+      }
+      if (!hasAny) return;
+      var card = document.getElementById("auAccountsCard");
+      var box  = document.getElementById("auAccountsError");
+      if (box) box.hidden = true;
+      if (card) card.classList.remove("au-accounts-invalid");
+      auState.accountsErrorShown = false;
+    }
+
+    function auResetAccountsState() {
+      auState.assignedAccounts = [];
+      auState.accountsSearchPickId = "";
+      auState.accountsErrorShown = false;
+      auClearAccountsSearchField();
+      auSetAccountsSearchPick(null);
+      var card = document.getElementById("auAccountsCard");
+      var box  = document.getElementById("auAccountsError");
+      if (card) card.classList.remove("au-accounts-invalid", "collapsed");
+      if (box) box.hidden = true;
+      renderAuAccountsList();
+    }
+
+    /* External-mode hook: reset transient search + validation state
+       when toggling between internal and external Add flows so the
+       user sees a clean section on view-switch, but preserve the
+       assignedAccounts list within a single external session. */
+    function onAuExternalModeChange(isExternalAdd) {
+      var card = document.getElementById("auAccountsCard");
+      var box  = document.getElementById("auAccountsError");
+      if (!isExternalAdd) {
+        auState.accountsErrorShown = false;
+        if (box) box.hidden = true;
+        if (card) card.classList.remove("au-accounts-invalid");
+      } else {
+        /* Rebuild the section so it reflects current state whenever
+           external Add is (re)entered. */
+        renderAuAccountsList();
       }
     }
 
@@ -7226,27 +8081,35 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         return;
       }
-      /* Round 28 (2026-06-09): determine whether the Add User flow is
-         producing an internal or external user. Mirrors the global
-         Users-page Internal/External segmented toggle (`userView`).
-         External users carry `organization` (free-text from the
-         Company name input) and never carry `team`; internal users
-         carry `team` and never `organization`. The Users table render
-         path (line ~1483) already prefers `organization` for external
-         and `team` for internal — by keeping each record one-or-the-
-         other we avoid stale fields leaking into the wrong view. */
+      /* Round 28 (2026-06-09) → Round 39 (2026-07-10): determine
+         whether the Add User flow is producing an internal or
+         external user. Mirrors the global Users-page Internal/
+         External segmented toggle (`userView`). External users
+         carry `organization` (now OPTIONAL — free-text from the
+         Agency / Vendor input) and account-based access via
+         `accountsIncluded`, and never carry `team`. Internal users
+         carry `team` and never `organization`. The Users table
+         render path (line ~1483) prefers `organization` for
+         external and `team` for internal — so we keep each record
+         one-or-the-other to avoid stale fields leaking. */
       var isExternalAdd = (typeof userView === "string" && userView === "external");
       if (isExternalAdd) {
-        var companyVal = auCompany && auCompany.value ? auCompany.value.trim() : "";
-        if (!companyVal) {
-          showEdlToast({
-            type: "warning",
-            title: "Company name required",
-            body: "Enter the external user's company name."
-          });
-          if (auCompany) {
-            try { auCompany.focus(); } catch (_) {}
+        /* Round 39: Agency / Vendor is optional. No validation. */
+        /* Round 39 + 40: External users must have at least one
+           INCLUDED account row (across all assignments). Inline
+           error near Search accounts (brief §10) — never a toast. */
+        var anyIncluded = false;
+        for (var ai = 0; ai < auState.assignedAccounts.length; ai++) {
+          if (auAssignmentHasInclusion(auState.assignedAccounts[ai])) {
+            anyIncluded = true; break;
           }
+        }
+        if (!auState.assignedAccounts.length) {
+          auShowAccountsError("Assign at least one account before adding this external user.");
+          return;
+        }
+        if (!anyIncluded) {
+          auShowAccountsError("Include at least one account this user can access.");
           return;
         }
       }
@@ -7275,7 +8138,38 @@ document.addEventListener("DOMContentLoaded", function () {
         region: selectedRegionCode()
       };
       if (isExternalAdd) {
-        newUser.organization = auCompany.value.trim();
+        /* Round 39 → 40 (2026-07-10): Agency / Vendor is optional.
+           Fall back to a neutral display string when the admin
+           leaves it blank so the Users table (which renders the
+           `organization` column for external users) doesn't show
+           `undefined` / empty. Assignments are captured per-parent
+           with parent + included + excluded child-id lists.
+           Direct advertisers surface via a separate list so
+           downstream consumers can distinguish holdco assignments
+           from single-advertiser assignments without knowing the
+           sample-data structure. */
+        var agencyVal = auCompany && auCompany.value ? auCompany.value.trim() : "";
+        newUser.organization = agencyVal || "External";
+        newUser.userType = "external";
+        newUser.agencyVendor = agencyVal;
+        var accountsPayload = [];
+        var directAdvertiserIds = [];
+        for (var apx = 0; apx < auState.assignedAccounts.length; apx++) {
+          var assn = auState.assignedAccounts[apx];
+          var acctPayload = auFindAccountById(assn.parentId);
+          if (!acctPayload) continue;
+          if (acctPayload.children.length === 0) {
+            if (assn.directIncluded !== false) directAdvertiserIds.push(assn.parentId);
+            continue;
+          }
+          accountsPayload.push({
+            parentId: assn.parentId,
+            includedChildIds: auAssignmentIncludedChildIds(assn),
+            excludedChildIds: Object.keys(assn.excluded || {})
+          });
+        }
+        newUser.accounts = accountsPayload;
+        newUser.directAdvertiserIds = directAdvertiserIds;
       } else {
         newUser.team = auTeam && auTeam.value && auTeam.value.trim() ? auTeam.value.trim() : "Unassigned";
       }
@@ -7405,6 +8299,111 @@ document.addEventListener("DOMContentLoaded", function () {
         renderAURolePicker();
         renderAuCombinedEffectiveAccess(auState.selectedRoleIds);
         refreshAuSaveDirty();
+      });
+    }
+
+    /* ═ Agency field overflow tooltip (Round 42, 2026-07-10) ═
+       When the entered Agency value is wider than the visible input
+       (see the CSS ellipsis rules for `#auCompany`), surface the
+       full value via the shared `.edl-tooltip` on mouse hover and
+       keyboard focus. Uses the existing `showTooltipFor` /
+       `hideTooltip` helpers defined at the top of this DOMContentLoaded
+       scope, so nothing new is invented — the tooltip typography,
+       positioning, arrow, and z-index all match the rest of V3. */
+    var auAgencyInput = document.getElementById("auCompany");
+    if (auAgencyInput) {
+      var _auAgencyTipActive = false;
+      function _auAgencyOverflows() {
+        /* An input overflows when the pixel width required to render
+           the value exceeds the client width. `scrollWidth` gives the
+           former; `clientWidth` the latter. Guard against a hidden
+           input reporting 0 dimensions during Add-User mount. */
+        return auAgencyInput.value &&
+               auAgencyInput.scrollWidth > auAgencyInput.clientWidth + 1;
+      }
+      function _auAgencyShowTip() {
+        if (!addUsersPage.classList.contains("is-external-add-mode")) return;
+        if (!_auAgencyOverflows()) { hideTooltip(); _auAgencyTipActive = false; return; }
+        showTooltipFor(auAgencyInput, auAgencyInput.value, false);
+        _auAgencyTipActive = true;
+      }
+      function _auAgencyHideTip() {
+        if (!_auAgencyTipActive) return;
+        hideTooltip();
+        _auAgencyTipActive = false;
+      }
+      /* Mouse: hover shows, leave hides. Keyboard: focus shows, blur
+         hides. Input events re-evaluate overflow so the tooltip
+         appears/disappears as the user types past the visible edge. */
+      auAgencyInput.addEventListener("mouseenter", _auAgencyShowTip);
+      auAgencyInput.addEventListener("mouseleave", _auAgencyHideTip);
+      auAgencyInput.addEventListener("focus", _auAgencyShowTip);
+      auAgencyInput.addEventListener("blur",  _auAgencyHideTip);
+      auAgencyInput.addEventListener("input", function () {
+        if (document.activeElement === auAgencyInput) {
+          if (_auAgencyOverflows()) _auAgencyShowTip();
+          else _auAgencyHideTip();
+        }
+      });
+    }
+
+    /* ═ Account Assignments wiring (Round 39, 2026-07-10) ═
+       Boot the account search combobox on first init, then bind the
+       Add-account button + delegated event listeners on the section
+       root for card-level controls (remove, expand/collapse toggle,
+       parent/child checkboxes, "Show N more"). Each interaction
+       feeds `renderAuAccountsList()` or `renderAuAccountCard()` and
+       refreshes the Save-dirty state — mirrors the Roles &
+       Permissions section wiring above. Guards ensure event
+       handlers never fire when the page is not in external Add
+       mode (defensive; the section itself is display:none in every
+       other mode). */
+    initAuAccountsSearch();
+    var auAccountsAddBtn = document.getElementById("auAccountsAdd");
+    if (auAccountsAddBtn) {
+      auAccountsAddBtn.addEventListener("click", function () {
+        if (auAccountsAddBtn.disabled) return;
+        if (!addUsersPage.classList.contains("is-external-add-mode")) return;
+        auHandleAddAccountClick();
+      });
+    }
+    var auAccountsCardEl = document.getElementById("auAccountsCard");
+    if (auAccountsCardEl) {
+      auAccountsCardEl.addEventListener("click", function (e) {
+        if (!addUsersPage.classList.contains("is-external-add-mode")) return;
+        var removeBtn = e.target.closest("[data-au-account-remove]");
+        if (removeBtn) {
+          e.preventDefault();
+          auHandleRemoveAccount(removeBtn.getAttribute("data-au-account-remove"));
+          return;
+        }
+        var cardToggle = e.target.closest("[data-au-card-toggle]");
+        if (cardToggle) {
+          e.preventDefault();
+          auHandleCardCollapse(cardToggle.getAttribute("data-au-card-toggle"));
+          return;
+        }
+        var showMore = e.target.closest("[data-au-show-more]");
+        if (showMore) {
+          e.preventDefault();
+          auHandleShowMoreChildren(showMore.getAttribute("data-au-show-more"));
+          return;
+        }
+      });
+      auAccountsCardEl.addEventListener("change", function (e) {
+        if (!addUsersPage.classList.contains("is-external-add-mode")) return;
+        var target = e.target;
+        if (!target || target.tagName !== "INPUT" || target.type !== "checkbox") return;
+        var parentId = target.getAttribute("data-au-parent");
+        if (parentId) {
+          auHandleToggleParent(parentId, target.checked);
+          return;
+        }
+        var childParent = target.getAttribute("data-au-child-parent");
+        var childId = target.getAttribute("data-au-child-id");
+        if (childParent && childId) {
+          auHandleToggleChild(childParent, childId, target.checked);
+        }
       });
     }
 

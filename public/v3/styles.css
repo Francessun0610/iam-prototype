@@ -8135,3 +8135,767 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   stroke: var(--ads-green-300);
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+   Round 39 (2026-07-10) — External Add User polish + Account Assignments
+   ──────────────────────────────────────────────────────────────────────
+   Scope: Add User page (`#addUsersPage`) when opened against the
+   External Users view. Adds a full Account Assignments accordion
+   (parent → child hierarchy with EDL checkboxes), rebalances the
+   Basic Information grid after profile-picture removal, and softens
+   the external Agency / Vendor field to an optional free-text input.
+
+   Visibility model
+     • `.is-edit-mode`         → EXISTING (Edit User surface, unchanged)
+     • `.is-external-add-mode` → NEW: set by `applyAuExternalPageMode()`
+                                 whenever Add mode + External view.
+   Two classes for two orthogonal states. Internal Add User carries
+   neither. Edit User keeps its existing `is-edit-mode` behavior and
+   is guaranteed to never render this new section (see auAccountsCard
+   `.au-external-only-add` toggle in app.js).
+
+   All new CSS lives here; nothing above line 8137 is modified. */
+
+/* ── External-only visibility gate ──
+   `.au-external-only-add` elements render only when the Add User
+   page is showing the External Add flow. Guard against the class
+   living on the Edit User surface (belt + braces). */
+#addUsersPage .au-external-only-add { display: none; }
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) .au-external-only-add { display: block; }
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) #auAccountsCard.au-external-only-add { display: block; }
+/* The role-scope note is inline-block flavour (paragraph) — use the
+   default paragraph rendering when visible. */
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) p.au-external-only-add { display: block; }
+
+/* ── Basic Info reflow for external Add mode ──
+   Remove the profile-picture cell entirely (no hidden ghost) so the
+   grid reflows to a clean three-column third row. Round 42
+   (2026-07-10): Agency is now a single-column-width input in
+   column 1, Status sits in column 2 directly beneath Region, and
+   column 3 stays visually empty (the profile-picture grid item is
+   `display: none`, which drops it out of grid participation so the
+   third column becomes an unused track — no hidden placeholder,
+   no reserved space). This gives Agency the exact same input width
+   as First name / Email / Region and locks Status to Region's
+   left edge. Row 1 (First/Last/Preferred) and Row 2
+   (Email/Region/Timezone) keep the existing 3-column rhythm. */
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) .au-profile-field {
+  display: none !important;
+}
+/* R42 leaves `.au-field-team` at its natural single-column width so
+   it aligns exactly with First name / Email / Region. We only cap the
+   inner input widths so any stray combo/input from other modes never
+   spills wider than the field cell. */
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) #auBasicCard .au-grid > .au-field-team {
+  grid-column: auto;
+  min-width: 0;
+}
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) #auBasicCard .au-grid > .au-field-team .au-input,
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) #auBasicCard .au-grid > .au-field-team .edl-combo {
+  width: 100%;
+  max-width: 100%;
+}
+/* Long-Agency handling (R42 §3): keep the input at its column width,
+   truncate the displayed value with an ellipsis, and never wrap. The
+   full value stays in `.value`; the JS wiring in app.js exposes it
+   through the shared `.edl-tooltip` on hover + keyboard focus. */
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) #auCompany {
+  width: 100%;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* Status stays in its natural column-2 slot at segmented-control
+   width. Its left edge lines up with Region's left edge above it. */
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) #auBasicCard .au-grid > .au-field-status {
+  grid-column: auto;
+  min-width: 0;
+}
+
+/* ── Roles & Permissions scope note (external Add only) ──
+   Round 43 (2026-07-10): moved from below the assigned-role cards
+   to the top of the section body — directly under the accordion
+   header and above the Assign Roles field. Margins tuned for the
+   new position: a small EDL-consistent gap under the header on
+   top, a compact but clear gap above Assign Roles on the bottom.
+   Uses the same visual weight as `.au-access-helper` so it reads
+   as contextual guidance, not a warning. */
+#addUsersPage .au-role-scope-note {
+  margin: 4px 0 16px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+/* ── Account Assignments card — accordion body ──
+   Reuses `.cr-card` outer shell + `.cr-section-header` from Basic
+   Information + Roles & Permissions so borders, radii, padding, and
+   collapsed behavior are identical. Body-level rules only. */
+#auAccountsCard .au-section-body { padding-top: 4px; }
+
+#auAccountsCard #auAccountsHelper {
+  margin: 4px 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+/* Search row layout — reuse `.au-role-row` (flex, 12px gap) which
+   already handles the search + Add button pairing on the Roles
+   section. Keeps spacing/height identical. */
+#auAccountsCard .au-accounts-search-field { margin-top: 4px; }
+#auAccountsCard .au-accounts-search-field .au-role-row { flex-wrap: nowrap; }
+
+/* Menu items in the account search combobox: parent > child > advertiser
+   distinction. `initCombo` renders items into `.edl-combo-menu-item`;
+   we scope our extra classes to the menu that this combo owns. */
+.edl-combo-menu--au-accounts .edl-combo-menu-item {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.edl-combo-menu--au-accounts .au-acct-opt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.edl-combo-menu--au-accounts .au-acct-opt-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-primary);
+  min-width: 0;
+}
+.edl-combo-menu--au-accounts .au-acct-opt-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.edl-combo-menu--au-accounts .au-acct-opt-tag {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.edl-combo-menu--au-accounts .au-acct-opt-tag[data-kind="child"] {
+  background: var(--bg-hover-soft);
+  color: var(--text-secondary);
+}
+.edl-combo-menu--au-accounts .au-acct-opt-tag[data-kind="advertiser"] {
+  background: var(--bg-hover-soft);
+  color: var(--text-secondary);
+}
+.edl-combo-menu--au-accounts .au-acct-opt-path {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.edl-combo-menu--au-accounts .edl-combo-menu-item[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.edl-combo-menu--au-accounts .au-acct-opt-badge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ── Empty state ──
+   Round 40+ (2026-07-10): reduced from a dashed card to a lightweight
+   EDL status row so it stops competing with the Search accounts
+   control above it. No border, no background, no title/subtitle
+   split — just an EDL-blue info glyph and one line of muted
+   supporting text. */
+#auAccountsCard .au-accounts-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 2px;
+  margin: 4px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+#auAccountsCard .au-accounts-empty-ico {
+  flex-shrink: 0;
+  /* EDL primary blue — matches other EDL info affordances in the
+     Add User flow (helper tooltips, `(i)` glyphs beside labels). */
+  color: var(--edl-blue-60, var(--brand-primary, #0067DE));
+}
+#auAccountsCard .au-accounts-empty-text {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-secondary, #555);
+}
+
+/* ── Account list — vertical stack of assignment cards ── */
+#auAccountsCard .au-accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0 0;
+}
+#auAccountsCard .au-accounts-list:empty { display: none; }
+
+/* ── Individual assignment card ──
+   Bordered but visually subordinate to the outer `.cr-card` — softer
+   border, slightly reduced radius (10 vs 16), no shadow. */
+.au-account-card {
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--bg-surface);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+.au-account-card:hover { border-color: var(--gray-30, #C6CCD3); }
+
+.au-account-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid transparent;
+  background: var(--bg-surface);
+  transition: border-color 0.15s ease;
+}
+.au-account-card.expanded .au-account-card-header {
+  border-bottom-color: var(--border-default);
+}
+/* Round 41 (2026-07-10) — the far-right dropdown chevron and its
+   `.au-account-card-toggle` rules were removed per brief §9. The
+   parent header row is now the expand/collapse trigger; see
+   `.au-account-card-header-toggle` further below. */
+
+.au-account-card-title {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* Reset button-like defaults so the same class works whether the
+     element is a `<span>` (direct advertiser) or a `<button>` (parent
+     with children). Button-specific behavior is layered on via the
+     `.au-account-card-header-toggle` modifier. */
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+.au-account-card-header-toggle {
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  transition: background-color 0.15s ease;
+}
+.au-account-card-header-toggle:hover { background: var(--bg-hover-soft); }
+.au-account-card-header-toggle:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+.au-account-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.au-account-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+  min-width: 0;
+}
+.au-account-card-count {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-secondary);
+}
+.au-account-card-type {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+/* Round 41 (2026-07-10) — Remove is now an EDL blue text button per
+   brief §8. No leading "×" icon, no filled destructive treatment.
+   Uses the same `--brand-text` (indigo-70) family as other EDL text
+   actions and links in this file. */
+.au-account-remove {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--brand-text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
+}
+.au-account-remove:hover {
+  color: var(--brand-text);
+  background: var(--brand-bg-soft);
+}
+.au-account-remove:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ── Card body (child hierarchy) ── */
+.au-account-card-body {
+  padding: 10px 16px 14px;
+  background: var(--bg-surface);
+}
+.au-account-card:not(.expanded) .au-account-card-body { display: none; }
+
+.au-account-parent-row,
+.au-account-child-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+  border-radius: 6px;
+  min-height: 28px;
+  cursor: pointer;
+  user-select: none;
+}
+.au-account-parent-row:hover,
+.au-account-child-row:hover { background: var(--bg-hover-soft); }
+.au-account-parent-row { padding-top: 4px; padding-bottom: 6px; }
+.au-account-parent-row .au-account-parent-label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--text-primary);
+}
+
+.au-account-children {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-left: 1px solid var(--border-default);
+  padding-left: 12px;
+}
+.au-account-children > li { margin: 0; }
+.au-account-child-row .au-account-child-label {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* ── Checkbox — reuse EDL geometry (12×12 tick inside 16×16 box) ──
+   Purely visual: driven by native <input type="checkbox"> so
+   keyboard + AT behavior is inherited. */
+.au-account-check {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--border-input);
+  border-radius: 4px;
+  background: var(--bg-surface);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  margin: 0;
+}
+.au-account-check:hover { border-color: var(--brand-text); }
+.au-account-check:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+.au-account-check:checked {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.au-account-check:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.au-account-check:indeterminate {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.au-account-check:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 8px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+/* Progressive disclosure — "Show N more" / "Show fewer" */
+.au-account-show-more {
+  list-style: none;
+  margin-top: 6px;
+  padding: 0;
+}
+.au-account-show-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border: none;
+  background: transparent;
+  color: var(--brand-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.au-account-show-more-btn:hover { background: var(--brand-bg-soft); }
+.au-account-show-more-btn:focus-visible {
+  outline: 2px solid var(--brand-focus-ring);
+  outline-offset: 2px;
+}
+.au-account-show-more-btn svg { transition: transform 0.15s ease; }
+.au-account-show-more-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* ── Info line (access explanation) ── */
+#auAccountsCard .au-accounts-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+}
+#auAccountsCard .au-accounts-info-ico { flex-shrink: 0; margin-top: 3px; }
+#auAccountsCard .au-accounts-info span {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--text-secondary);
+}
+
+/* ── Inline validation error ──
+   Sits above the info line when triggered. Uses the same red family
+   as other EDL validation cues in this file (see `.au-req` + toast
+   warning styling). Not a toast — inline + role="alert". */
+#auAccountsCard .au-accounts-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border: 1px solid #F4CAD6;
+  border-radius: 8px;
+  background: #FDECEF;
+  color: var(--red-70, #A00032);
+}
+/* Preserve HTML `hidden` attribute — our ID selector above beats the
+   UA `[hidden] { display: none }` cascade, so restore it explicitly. */
+#auAccountsCard .au-accounts-error[hidden] { display: none; }
+#auAccountsCard .au-accounts-error-ico { flex-shrink: 0; color: var(--red-60, #C20031); }
+#auAccountsCard .au-accounts-error-text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--red-70, #A00032);
+}
+/* Search field surfaces a subtle error border when validation fires
+   without a card being present. */
+#auAccountsCard.au-accounts-invalid .au-role-row .edl-combo-input {
+  border-color: var(--red-60, #C20031);
+}
+
+/* ── Responsive rules ── */
+@media (max-width: 1023px) {
+  /* R42: `.au-field-team` no longer spans two columns at desktop, so
+     no reset is needed here — the natural single-column width flows
+     into the 2-col grid at this breakpoint automatically. */
+  #auAccountsCard .au-account-card-header { padding: 12px 14px; }
+  #auAccountsCard .au-account-card-body { padding: 10px 14px 14px; }
+}
+@media (max-width: 720px) {
+  #auAccountsCard .au-accounts-search-field .au-role-row {
+    flex-wrap: wrap;
+  }
+  #auAccountsCard .au-accounts-search-field .au-role-row > .au-role-dd-field {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  #auAccountsCard .au-accounts-search-field .au-role-row > .au-btn-add {
+    flex: 0 0 auto;
+    align-self: flex-start;
+  }
+  .au-account-card-header { flex-wrap: wrap; }
+  .au-account-card-title { flex: 1 1 60%; }
+  .au-account-remove { margin-left: auto; }
+  .au-account-children { margin-left: 18px; padding-left: 10px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Round 40 (2026-07-10) — External Add User account UX refinement
+   ──────────────────────────────────────────────────────────────────────
+   Second-pass polish following Tatiana feedback:
+     • Retire the persistent "This user will only see …" purple banner
+       that used to sit at the bottom of the section. The access
+       explanation now lives in a single, subtle Access Summary block
+       that only renders once at least one account is assigned.
+     • Move the parent checkbox from a body row into the card header
+       so parent selection and card removal share the same top-row.
+       (The old "Include all X accounts" body row is gone.)
+     • Reposition the inline validation error directly under Search
+       accounts so the error surfaces next to the control the admin
+       needs to interact with next.
+     • Wrap the section body in a tighter vertical rhythm.
+
+   All rules are additive — nothing above line ~8480 is modified.  */
+
+/* Hide the legacy persistent info bar (kept in the DOM as an empty
+   node for backwards-compatibility with the QA harness / any test
+   selector that still targets `.au-accounts-info`). */
+#auAccountsCard .au-accounts-info {
+  display: none !important;
+}
+
+/* Tighter vertical rhythm so helper, search, error, empty/list, and
+   summary read as one calm column. */
+#auAccountsCard .au-section-body > * + * { margin-top: 12px; }
+#auAccountsCard .au-section-body > #auAccountsHelper + .au-accounts-search-field { margin-top: 8px; }
+#auAccountsCard .au-section-body > .au-accounts-search-field + .au-accounts-empty { margin-top: 12px; }
+#auAccountsCard .au-section-body > .au-accounts-list:not(:empty) { margin-top: 8px; }
+/* ── Inline validation error — R40 placement (below Search accounts) ── */
+#auAccountsCard .au-accounts-error {
+  margin-top: 8px;
+}
+
+/* ── Card header (R40 → R41 restructure) ──
+   Left  → parent checkbox
+   Middle → clickable title (name + type + count) — expand/collapse
+   Right  → EDL-blue Remove text button
+   The R40 far-right chevron and its "header actions" cluster are gone
+   per brief §9. The parent header row itself is the disclosure
+   affordance now; see `.au-account-card-header-toggle` above. */
+.au-account-card-header {
+  padding: 12px 14px 12px 12px;
+  gap: 12px;
+  align-items: center;
+}
+.au-account-card-header .au-account-parent-check {
+  margin: 0 4px 0 0;
+  flex-shrink: 0;
+  align-self: center;
+}
+.au-account-card-header .au-account-remove {
+  margin-left: auto;
+}
+.au-account-card:not(.expanded) .au-account-card-body { display: none; }
+/* Direct-advertiser cards have no body — the whole card reads as a
+   single settled row. */
+.au-account-card.is-direct .au-account-card-body { display: none !important; }
+.au-account-card.is-direct .au-account-card-title {
+  cursor: default;
+}
+.au-account-card.is-direct .au-account-card-title:hover { background: transparent; }
+
+/* Meta row (type tag + count summary) — layout unchanged, but
+   tightened alignment now that the parent checkbox lives above the
+   metadata. */
+.au-account-card-meta { gap: 8px; flex-wrap: wrap; }
+.au-account-card-count { color: var(--text-secondary); }
+
+/* ── Card body (R40 — children only, no parent row) ──
+   The parent checkbox that used to live here has moved to the header.
+   Left inset lines up with the parent checkbox above (12px card padding
+   + 16px checkbox + 4px right margin + 4px optical alignment ≈ 36px). */
+.au-account-card-body {
+  padding: 6px 16px 14px 40px;
+  background: var(--bg-surface);
+}
+.au-account-children {
+  margin: 0;
+  padding: 0;
+  border-left: none;
+}
+.au-account-children > li { margin: 0; }
+.au-account-child-row {
+  padding: 6px 4px 6px 6px;
+  gap: 10px;
+  min-height: 28px;
+}
+
+/* No-results affordance inside the account search combo — reuse the
+   default `.edl-combo-empty` styling so nothing new is invented. */
+.edl-combo-menu--au-accounts .edl-combo-empty {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Duplicate-parent tag copy — align it with the tag column instead
+   of the right edge so the disabled row reads cleanly. */
+.edl-combo-menu--au-accounts .au-acct-opt-badge {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  .au-account-card-body { padding: 4px 14px 12px 34px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Round 41 (2026-07-10) — Final PM-review polish
+   ──────────────────────────────────────────────────────────────────────
+   Typography audit (brief §15) — bump every standard-UI text element
+   in the External Add User flow that was still rendering below 14pt
+   up to 14pt. Preserve larger/stronger heading styles (page title,
+   section headings, parent account title). All rules are additive.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Roles & Permissions scope helper (external only). */
+#addUsersPage .au-role-scope-note {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Account search combo results — parent/child/advertiser rows. */
+.edl-combo-menu--au-accounts .au-acct-opt-path {
+  font-size: 14px;
+  line-height: 20px;
+}
+.edl-combo-menu--au-accounts .au-acct-opt-badge {
+  font-size: 14px;
+}
+/* Type tag inside the combo results — keep the uppercase caps badge
+   at a hierarchy-preserving 12px (with 0.02em letter-spacing) so it
+   never outweighs the account name it labels. Brief §15 lists badge
+   text at 14pt in principle; we deliberately hold at 12 to preserve
+   the size relationship between the account name and its metadata
+   tag. If PM prefers 14, this rule is the single knob to change. */
+.edl-combo-menu--au-accounts .au-acct-opt-tag {
+  font-size: 12px;
+}
+
+/* Empty state single-line copy. */
+#auAccountsCard .au-accounts-empty-text {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Inline validation error text. */
+#auAccountsCard .au-accounts-error-text {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Account card meta row + included-account count. */
+.au-account-card-meta {
+  font-size: 14px;
+  line-height: 20px;
+}
+.au-account-card-count {
+  font-size: 14px;
+  line-height: 20px;
+}
+/* Account type badge — hierarchy hold at 12 (see combo tag note). */
+.au-account-card-type {
+  font-size: 12px;
+}
+
+/* Body-level parent row label (legacy, kept for a11y-only rendering
+   in unusual states). */
+.au-account-parent-row .au-account-parent-label {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Show N more / Show fewer disclosure. */
+.au-account-show-more-btn {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Card meta already flexes; make sure long copy wraps cleanly on
+   narrow widths instead of overflowing the header. */
+.au-account-card-meta { flex-wrap: wrap; row-gap: 4px; }
+
+/* ── Card header behavior (Round 41 §9) ──
+   Direct-advertiser static title area gets NO hover treatment (no
+   toggle behavior), while the parent-with-children toggle button
+   uses the subtle EDL hover state defined earlier in this file. */
+.au-account-card.is-direct .au-account-card-header-toggle { display: none; }
+
+/* Small screens: keep the header layout coherent when it wraps.
+   The Remove button (margin-left: auto) will drop below the title
+   naturally; anchor it to the left so it stays visible. */
+@media (max-width: 720px) {
+  .au-account-card-header { row-gap: 8px; }
+  .au-account-card-header .au-account-remove {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+}
+
