@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260710r43ext">
+  <link rel="stylesheet" href="styles.css?v=20260711r44revert">
 </head>
 <body>
 
@@ -554,6 +554,20 @@
                internal/external user view. -->
           <input type="text" class="au-input au-field-company-input" id="auCompany" value=""
                  placeholder="Enter agency name" autocomplete="off" maxlength="120" hidden>
+        </div>
+        <!-- ═ Row 3 · Advertiser (External Add User only) ═
+             Round 44 (2026-07-11 — Tatiana): sits between Agency
+             (column 1) and Status (column 3), so Row 3 reads
+             Agency | Advertiser | Status. The cell is `display:
+             none` in every other page state (Internal Add, Edit
+             User) via CSS so it never affects layout for those
+             modes. Optional field — no required asterisk, no
+             validation. Value persists into the External user
+             record alongside `agencyVendor`. -->
+        <div class="au-field au-field-advertiser">
+          <label class="au-label" for="auAdvertiser">Advertiser</label>
+          <input type="text" class="au-input" id="auAdvertiser" value=""
+                 placeholder="Enter advertiser name" autocomplete="off" maxlength="120">
         </div>
         <div class="au-field au-field-status">
           <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
@@ -1391,6 +1405,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260710r43ext"></script>
+<script src="app.js?v=20260711r44revert"></script>
 </body>
 </html>

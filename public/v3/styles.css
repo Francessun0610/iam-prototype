@@ -8899,3 +8899,87 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════
+   Round 44 (2026-07-11 — Tatiana)
+   Add User page — Advertiser field + section-card corner radius.
+   Two independent concerns bundled here so the intent + scope are
+   traceable in one place.
+
+   1. `.au-field-advertiser`
+      A brand-new Basic Information cell that renders ONLY for
+      External Add User (Row 3, column 2). Hidden by default so
+      Internal Add User and Edit User are visually and layout-wise
+      unaffected. Uses the standard `.au-input` component so
+      typography, height, hover/focus, and disabled treatments all
+      match Agency and every other Basic Information text input
+      without new rules.
+
+   2. 12px corner radius on the three section cards only
+      Round 44 originally normalized every rounded surface on the
+      Add User page to 12px; that pass was reverted on the same
+      day (2026-07-11) because it changed the EDL component look
+      for interactive controls (inputs, combos, buttons, the
+      Active/Inactive segmented control, account cards, role
+      cards, etc.). The final R44 rule set applies 12px ONLY to
+      the three top-level section cards:
+        • Basic Information (`#auBasicCard`)
+        • Roles & Permissions (`#auRolesCard`)
+        • Account Assignments (`#auAccountsCard`)
+      Every other rounded control on the page keeps its original
+      EDL radius (8px combos / inputs / buttons, 10px account
+      cards, 6px hover surfaces, etc.).
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── (1) Advertiser field visibility ──
+   Default state = hidden. The cell participates in the Basic
+   Information grid only when the page is in External Add mode,
+   at which point it takes the natural column-2 slot between
+   Agency (col 1) and Status (col 3). */
+.au-field-advertiser { display: none; }
+
+#addUsersPage.is-external-add-mode:not(.is-edit-mode) .au-field-advertiser {
+  display: block;
+}
+
+/* Match the width contract of every other single-column Basic
+   Information field: fill the grid track (no arbitrary min-width
+   forcing spillover). Mirrors the R42 rule for `.au-field-team`. */
+#addUsersPage.is-external-add-mode:not(.is-edit-mode)
+  #auBasicCard .au-grid > .au-field-advertiser {
+  grid-column: auto;
+  min-width: 0;
+}
+#addUsersPage.is-external-add-mode:not(.is-edit-mode)
+  #auBasicCard .au-grid > .au-field-advertiser .au-input {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Edit User continues to hide Row-3 status/profile via existing
+   rules; make sure Advertiser stays hidden in Edit User even if
+   `.is-external-add-mode` accidentally coexists (defensive). */
+#addUsersPage.is-edit-mode .au-field-advertiser { display: none !important; }
+
+
+/* ── (2) Section cards → 12px (final R44 rule set) ──
+   Three top-level cards only. `.au-card` is the shared shell for
+   `#auBasicCard`, `#auRolesCard`, and `#auAccountsCard` on the
+   Add User page. `.cr-card` is included because the Roles &
+   Permissions section applies both classes on the same node in
+   Add User (see the Edit User read-only variant in R21) — the
+   two selectors together guarantee the same 12px lands on that
+   card regardless of which class wins specificity elsewhere.
+
+   Every interactive control (text inputs, EDL combos, dropdown
+   menus, primary/secondary buttons, the Active/Inactive
+   segmented control, account cards, role cards, tooltips, etc.)
+   keeps its original EDL radius. This block does not override
+   those.
+
+   The scope stays on `#addUsersPage` so no other page — Users
+   table, Roles list, Edit Team, Create Role, V4, or the ADS
+   preview theme — inherits the change. */
+#addUsersPage .au-card,
+#addUsersPage .cr-card { border-radius: 12px; }
+

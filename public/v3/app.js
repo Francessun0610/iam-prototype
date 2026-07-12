@@ -5291,6 +5291,14 @@ document.addEventListener("DOMContentLoaded", function () {
         auCompany.value = "";
         auCompany.removeAttribute("data-au-last-mode");
       }
+      /* Round 44 (2026-07-11 — Tatiana): the Advertiser text input
+         (External Add User only) is a peer of Agency in Basic
+         Information Row 3. Reset it on every Add-User mount so
+         re-opening the page never carries a stale advertiser
+         value across sessions. Persisted into the user record
+         below alongside `agencyVendor`. */
+      var auAdvertiserReset = document.getElementById("auAdvertiser");
+      if (auAdvertiserReset) auAdvertiserReset.value = "";
       auComboState.addUserRegion = "NA";
       auComboState.addUserTimezone = "America/New_York";
       auComboState.addUserTeam = "";
@@ -8152,6 +8160,16 @@ document.addEventListener("DOMContentLoaded", function () {
         newUser.organization = agencyVal || "External";
         newUser.userType = "external";
         newUser.agencyVendor = agencyVal;
+        /* Round 44 (2026-07-11 — Tatiana): capture the Advertiser
+           text input alongside Agency. Optional — a blank value is
+           preserved as an empty string so downstream consumers can
+           tell "no advertiser named" apart from "field never
+           filled". The Advertiser input lives only on External
+           Add User (see Basic Information Row 3). */
+        var auAdvertiserEl = document.getElementById("auAdvertiser");
+        newUser.advertiser = (auAdvertiserEl && auAdvertiserEl.value)
+          ? auAdvertiserEl.value.trim()
+          : "";
         var accountsPayload = [];
         var directAdvertiserIds = [];
         for (var apx = 0; apx < auState.assignedAccounts.length; apx++) {
