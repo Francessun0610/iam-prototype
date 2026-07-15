@@ -5658,36 +5658,31 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (external && inEditMode) {
-        /* === Edit + External: read-only Company display === */
-        setLabel("Company", false);
-        labelEl.removeAttribute("for");
+        /* === Edit + External: editable Agency input ===
+             Round 45 (2026-07-15 — Tatiana): the "Company" slot is
+             now labeled "Agency" and rendered as an editable
+             `.au-input` (the same `#auCompany` element used by the
+             external Add flow), not a read-only styled div. This
+             makes the field share height, typography, border,
+             border-radius, and hover/focus states with every
+             other Basic Information input. The value is seeded
+             from the user record (`organization`) with a
+             sensible fallback so PM/Tatiana always see the
+             Omnicom Media Group example when reviewing the
+             prototype. */
+        setLabel("Agency", false);
+        labelEl.setAttribute("for", "auCompany");
         if (triggerEl) triggerEl.style.display = "none";
+        if (roEl) roEl.style.display = "none";
         if (companyInput) {
-          companyInput.hidden = true;
+          companyInput.hidden = false;
           companyInput.required = false;
-          companyInput.value = "";
+          companyInput.removeAttribute("aria-required");
+          companyInput.setAttribute("placeholder", "Enter agency name");
+          var agencyVal = (user && user.organization) ? String(user.organization) : "Omnicom Media Group";
+          companyInput.value = agencyVal;
+          companyInput.setAttribute("data-au-last-mode", "external-edit");
         }
-        var companyText = (user && user.organization) ? String(user.organization) : "";
-        if (!roEl) {
-          roEl = document.createElement("div");
-          roEl.className = "au-field-team-readonly au-input";
-          roEl.style.background = "var(--bg-readonly, #F6F8FA)";
-          roEl.style.border     = "1px solid var(--border-input, #D8DEE5)";
-          roEl.style.borderRadius = "6px";
-          roEl.style.padding    = "8px 12px";
-          roEl.style.fontSize   = "14px";
-          roEl.style.lineHeight = "20px";
-          roEl.style.color      = "var(--text-primary, #1F2933)";
-          roEl.style.minHeight  = "36px";
-          roEl.style.display    = "flex";
-          roEl.style.alignItems = "center";
-          roEl.setAttribute("role", "textbox");
-          roEl.setAttribute("aria-readonly", "true");
-          comboEl.parentNode.insertBefore(roEl, comboEl.nextSibling);
-        }
-        roEl.style.display = "flex";
-        roEl.textContent = companyText;
-        roEl.setAttribute("aria-label", "Company");
       } else if (external && !inEditMode) {
         /* === Add + External: optional Agency text input ===
              Round 42 (2026-07-10): Label is now the singular
@@ -5755,6 +5750,14 @@ document.addEventListener("DOMContentLoaded", function () {
          `[hidden]` reliably in every browser, so JS ownership wins. */
       var isExternalAdd = (external && !inEditMode);
       addUsersPage.classList.toggle("is-external-add-mode", isExternalAdd);
+      /* Round 45 (2026-07-15 — Tatiana): mirror `.is-external-add-mode`
+         for the Edit variant so the R45 CSS block can target ONLY the
+         External Edit User grid without leaking into internal Edit
+         User (which still uses the R21 identity block + Team combo
+         layout). Toggled here alongside the Add variant so both stay
+         in lock-step. */
+      var isExternalEdit = (external && inEditMode);
+      addUsersPage.classList.toggle("is-external-edit-mode", isExternalEdit);
       var accountsCardEl = document.getElementById("auAccountsCard");
       if (accountsCardEl) {
         if (isExternalAdd) accountsCardEl.removeAttribute("hidden");
@@ -6513,6 +6516,20 @@ document.addEventListener("DOMContentLoaded", function () {
          brief explicitly disallows showing "Select team" or any
          internal team name for an external user. */
       applyAuBasicInfoCompanyOrTeam(user);
+      /* Round 45 (2026-07-15 — Tatiana): populate the Advertiser
+         field for External Edit User. Uses the user's stored
+         `advertiser` when present (e.g. new external users saved
+         through the R44 Add flow), otherwise falls back to the
+         brief-specified default "Disney Advertising" so seeded
+         external users (Rachel Morales et al) demonstrate the
+         intended field content on first view. Internal users
+         never see this field; the R45 CSS keeps it hidden. */
+      var auAdvertiserEditEl = document.getElementById("auAdvertiser");
+      if (auAdvertiserEditEl) {
+        var advVal = (user && user.advertiser) ? String(user.advertiser) : "";
+        if (!advVal && isAuUserExternal(user)) advVal = "Disney Advertising";
+        auAdvertiserEditEl.value = advVal;
+      }
       setAUStatus(user.status === "Inactive" ? "Inactive" : "Active");
       var ids = [];
       var rns = user.roles || [];

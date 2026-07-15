@@ -8901,6 +8901,197 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 
 
 /* ══════════════════════════════════════════════════════════════════
+   Round 45 (2026-07-15 — Tatiana)
+   External Edit User — Basic Information grid reorganization.
+
+   Restructures the Basic Information section for External Edit User
+   into a consistent 3-col × 2-row grid, with the identity block
+   now rendered as a proper "Name" field (label + compact
+   avatar/name/email/status treatment) at col 1 row 1 instead of a
+   spanned identity block that consumed both rows.
+
+   Row 1: Name          | Preferred name | Region
+   Row 2: Advertiser    | Agency         | Timezone
+
+   Every rule is scoped to `#addUsersPage.is-edit-mode
+   .is-external-edit-mode` (a new modifier class toggled by
+   `applyAuBasicInfoCompanyOrTeam`) so Internal Edit User and every
+   Add-mode variant are untouched. Add-mode grid rules from R42
+   and R44 are left in place; they never receive this class.
+
+   Compact identity treatment (Name cell):
+   • Label "Name" at the standard `.au-label` position.
+   • Avatar shrinks from 72px → 40px so the cell height budget
+     matches an ordinary input field.
+   • Name from 18/500 heading → 14/400 body — same weight and size
+     as `.au-input` values so the Name cell reads as a value, not
+     a heading.
+   • Email + status icon share a single 14/20 row below the name.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── (R45-0) Scope the "Name" label to external Edit User only ──
+   The new `<label id="auIdentityLabel">Name</label>` sits inside
+   `.au-edit-row` in the DOM so it's rendered in both internal
+   and external Edit User. The R45 brief scopes the identity
+   redesign to External Edit User only, so we hide the label
+   everywhere else (Add mode already hides the whole identity
+   row via `.au-edit-only` + the JS-toggled `hidden` attribute).
+   Internal Edit User keeps its R21 identity block with the
+   72-px avatar + 18/500 name heading, unaltered. */
+#auIdentityLabel { display: none; }
+#addUsersPage.is-edit-mode.is-external-edit-mode #auIdentityLabel {
+  display: inline-flex;
+}
+
+/* ── (R45-1) Compact identity block styling — external Edit User ──
+   Override the R21 identity styling ONLY when the page is in
+   external-edit mode. Internal Edit User (which still renders a
+   72px avatar + 18/500 name heading per Figma 847:16182) keeps
+   the previous treatment because the internal design has not
+   changed. */
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-block {
+  gap: 12px;
+  width: 100%;
+  flex: 1 1 auto;
+  align-items: center;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-avatar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-avatar .au-id-avatar-initials {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  line-height: 1;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-avatar-svg {
+  width: 40px;
+  height: 40px;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-meta {
+  gap: 2px;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-name {
+  /* Match `.au-input` typography so the Name value reads as a
+     field value, not a heading. */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-email-row {
+  gap: 6px;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode .au-id-email {
+  /* Email keeps 14/20 so it aligns with the name line-height,
+     but shifts to secondary color so the primary Name value
+     reads first. */
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary, #4B5563);
+}
+
+/* ── (R45-2) `.au-field-identity` — outer cell alignment ──
+   The identity cell hosts the label + the compact identity
+   block. It participates in the grid as a normal field
+   (col 1 row 1) rather than the R21 identity block that spanned
+   both rows. Layout inside: label on top, identity block below.
+
+   `align-items: flex-start` is required because the R21
+   `.au-edit-row` rule still sets `align-items: center` (from
+   its original flex-row context). Once we swap to
+   `flex-direction: column` here, that leftover `center` value
+   maps to horizontal centering, which pushed the "Name" label
+   into the middle of the 296-px column. Explicit flex-start
+   snaps the label back to the column's left edge so it aligns
+   with the avatar and with the labels of every other field in
+   the row. */
+#addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 0;
+  width: 296px;
+  min-width: 0;
+  align-self: start;
+}
+
+/* ── (R45-3) Grid placement — external Edit User only ──
+   Overrides the R21 identity `grid-row: 1 / -1` span so the Name
+   cell sits at col 1 row 1 only, leaving col 1 row 2 free for
+   the new Advertiser field. Everything else stays at its
+   existing edit-mode position (Preferred/Region on row 1,
+   Agency/Timezone on row 2).
+
+   `align-items: start` on the section-body switches the grid
+   from R21's `center` alignment to top-alignment, so every cell
+   in row 1 (Name / Preferred / Region) shares a common top edge
+   regardless of the identity cell being slightly taller than a
+   plain input field — the whole row reads on the same baseline
+   grid Tatiana asked for. */
+#addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-section-body {
+  align-items: start;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-section-body > .au-edit-row {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-advertiser {
+  /* Turn the R44 add-mode-hidden rule back on for external Edit
+     User. Set explicit grid coordinates so it lands at col 1
+     row 2 next to the Agency cell. `display: block` beats the
+     `display: none !important` from R44's guard because this
+     selector is doubly-scoped (edit + external-edit) and thus
+     has higher specificity. */
+  display: block !important;
+  grid-column: 1;
+  grid-row: 2;
+  width: 296px;
+  min-width: 0;
+  order: 0;
+}
+#addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-advertiser .au-input {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ── (R45-4) Narrow viewport — external Edit User only ──
+   At <=1000px, the grid already collapses to a single column
+   (existing R21 rule at line 7105+). We add two things:
+   1. Ensure the new Advertiser field participates in the
+      single-column collapse.
+   2. Reorder the collapsed stack so it preserves the desktop
+      reading order (Name → Preferred → Region → Advertiser →
+      Agency → Timezone). Without this, the fields fall through
+      in DOM order (Preferred → Region → Timezone → Agency →
+      Advertiser), which does not match the row/column semantics
+      Tatiana specified. */
+@media (max-width: 1000px) {
+  /* Match the other Basic Information fields exactly (R21 keeps
+     Preferred / Region / Team / Timezone at their 296-px width
+     even in the narrow grid; the R21 media query's `width: 100%`
+     override loses on specificity vs the base R21 rule, so those
+     cells stay at 296 px in practice). We mirror that here so
+     Advertiser lines up with them instead of spanning the whole
+     card. */
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-advertiser {
+    grid-column: 1;
+    grid-row: auto;
+    width: 296px;
+  }
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-section-body > .au-edit-row       { order: 1; }
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-preferred                  { order: 2; }
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-region                     { order: 3; }
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-advertiser                 { order: 4; }
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-team                       { order: 5; }
+  #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-timezone                   { order: 6; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
    Round 44 (2026-07-11 — Tatiana)
    Add User page — Advertiser field + section-card corner radius.
    Two independent concerns bundled here so the intent + scope are

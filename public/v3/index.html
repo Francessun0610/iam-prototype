@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260711r44revert">
+  <link rel="stylesheet" href="styles.css?v=20260715r45edit">
 </head>
 <body>
 
@@ -425,22 +425,18 @@
 
       <div class="au-section-body">
       <!-- ═ Edit-mode identity row (V3 only) ═
-           Figma node 847:16172 — single horizontal row containing the
-           roster-style identity block (avatar + name + email + active
-           check-circle) on the left, followed by two 296-px form
-           columns to the right. Rendered only in edit mode; Add mode
-           keeps the existing 3-column `.au-grid` untouched.
-
-           Figma geometry: 3 × 296px columns, 39px gaps, identity column
-           = 72px avatar + 16px gap + name/email meta column.
-
-           Avatar treatment: defaults to the EDL neutral placeholder to
-           match Figma 847:16174 (which shows the placeholder, not a
-           photo). The photo path remains supported for internal users
-           via `populateAuIdentityBlock` in app.js, but is opt-in per
-           user record so we don't upscale low-resolution sources.
-           External users always render the placeholder. -->
-      <div class="au-edit-row au-edit-only" id="auEditRow" hidden>
+           Round 45 (2026-07-15): the identity row now presents as a
+           regular Basic Information FIELD (label "Name" + compact
+           identity treatment) so it sits inside the 3-col grid at
+           col 1 row 1 instead of a spanned identity block. Avatar
+           is now a compact 40px chip that matches the Users-table
+           avatar rhythm, the name is 14pt regular (was 18/500
+           heading), and email + active status render beside the
+           name on their own line. Populated by the existing
+           `populateAuIdentityBlock` (see app.js). Add-mode keeps
+           the previous 3-column `.au-grid` untouched. -->
+      <div class="au-edit-row au-edit-only au-field au-field-identity" id="auEditRow" hidden>
+        <label class="au-label" id="auIdentityLabel">Name</label>
         <div class="au-id-block" id="auIdBlock">
           <div class="au-id-avatar" id="auIdAvatar" aria-hidden="true">
             <!-- Neutral placeholder per Figma node 847:16174 (the exact
@@ -1405,6 +1401,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260711r44revert"></script>
+<script src="app.js?v=20260715r45edit"></script>
 </body>
 </html>
