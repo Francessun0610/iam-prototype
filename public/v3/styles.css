@@ -8929,20 +8929,6 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    • Email + status icon share a single 14/20 row below the name.
    ══════════════════════════════════════════════════════════════════ */
 
-/* ── (R45-0) Scope the "Name" label to external Edit User only ──
-   The new `<label id="auIdentityLabel">Name</label>` sits inside
-   `.au-edit-row` in the DOM so it's rendered in both internal
-   and external Edit User. The R45 brief scopes the identity
-   redesign to External Edit User only, so we hide the label
-   everywhere else (Add mode already hides the whole identity
-   row via `.au-edit-only` + the JS-toggled `hidden` attribute).
-   Internal Edit User keeps its R21 identity block with the
-   72-px avatar + 18/500 name heading, unaltered. */
-#auIdentityLabel { display: none; }
-#addUsersPage.is-edit-mode.is-external-edit-mode #auIdentityLabel {
-  display: inline-flex;
-}
-
 /* ── (R45-1) Compact identity block styling — external Edit User ──
    Override the R21 identity styling ONLY when the page is in
    external-edit mode. Internal Edit User (which still renders a
@@ -8993,29 +8979,24 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 
 /* ── (R45-2) `.au-field-identity` — outer cell alignment ──
-   The identity cell hosts the label + the compact identity
-   block. It participates in the grid as a normal field
-   (col 1 row 1) rather than the R21 identity block that spanned
-   both rows. Layout inside: label on top, identity block below.
-
-   `align-items: flex-start` is required because the R21
-   `.au-edit-row` rule still sets `align-items: center` (from
-   its original flex-row context). Once we swap to
-   `flex-direction: column` here, that leftover `center` value
-   maps to horizontal centering, which pushed the "Name" label
-   into the middle of the 296-px column. Explicit flex-start
-   snaps the label back to the column's left edge so it aligns
-   with the avatar and with the labels of every other field in
-   the row. */
+   With the "Name" label removed (R45.1), the identity cell now
+   holds only the compact identity block (avatar + name +
+   email/status). We bottom-align the cell (`align-self: end`)
+   so the identity block's baseline sits on the same horizontal
+   line as the input bottoms of Preferred name and Region in
+   the same row — reclaiming the vertical space the label
+   previously occupied and keeping the row visually aligned.
+   The row itself is still driven by the tallest cell (label +
+   input = ~56 px), so the ~42 px identity block gets pushed
+   flush against the row's bottom edge. */
 #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-identity {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
   padding: 0;
   width: 296px;
   min-width: 0;
-  align-self: start;
+  align-self: end;
 }
 
 /* ── (R45-3) Grid placement — external Edit User only ──
@@ -9037,7 +9018,10 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-section-body > .au-edit-row {
   grid-column: 1;
   grid-row: 1;
-  align-self: start;
+  /* Bottom-align the identity cell inside its row so the block's
+     bottom edge sits on the same horizontal line as the input
+     bottoms of Preferred name and Region (R45.1 — Tatiana). */
+  align-self: end;
 }
 #addUsersPage.is-edit-mode.is-external-edit-mode #auBasicCard .au-field-advertiser {
   /* Turn the R44 add-mode-hidden rule back on for external Edit

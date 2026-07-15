@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260715r45edit">
+  <link rel="stylesheet" href="styles.css?v=20260715r45p1">
 </head>
 <body>
 
@@ -425,18 +425,17 @@
 
       <div class="au-section-body">
       <!-- ═ Edit-mode identity row (V3 only) ═
-           Round 45 (2026-07-15): the identity row now presents as a
-           regular Basic Information FIELD (label "Name" + compact
-           identity treatment) so it sits inside the 3-col grid at
-           col 1 row 1 instead of a spanned identity block. Avatar
-           is now a compact 40px chip that matches the Users-table
-           avatar rhythm, the name is 14pt regular (was 18/500
-           heading), and email + active status render beside the
-           name on their own line. Populated by the existing
-           `populateAuIdentityBlock` (see app.js). Add-mode keeps
-           the previous 3-column `.au-grid` untouched. -->
+           Round 45 (2026-07-15): the identity row participates as a
+           Basic Information FIELD in col 1 row 1. Round 45.1
+           (2026-07-15) — Tatiana: the "Name" label was removed
+           entirely; the identity block (compact 40px avatar + 14/400
+           name + email + active-status icon) now bottom-aligns with
+           the input bottoms of Preferred name and Region in the same
+           row, reclaiming the vertical space the label previously
+           occupied. Populated by `populateAuIdentityBlock` in
+           app.js. Add-mode keeps the previous 3-column `.au-grid`
+           untouched. -->
       <div class="au-edit-row au-edit-only au-field au-field-identity" id="auEditRow" hidden>
-        <label class="au-label" id="auIdentityLabel">Name</label>
         <div class="au-id-block" id="auIdBlock">
           <div class="au-id-avatar" id="auIdAvatar" aria-hidden="true">
             <!-- Neutral placeholder per Figma node 847:16174 (the exact
@@ -1401,6 +1400,6 @@
   </div>
 </div>
 
-<script src="app.js?v=20260715r45edit"></script>
+<script src="app.js?v=20260715r45p1"></script>
 </body>
 </html>
