@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Cache hygiene for the GitLab Pages deploy: V2 ships changes on most
+       pushes, but the HTML itself has no query-string cache-buster (only
+       the CSS/JS asset URLs do). Without these meta tags, a browser that
+       cached an older HTML keeps loading the OLD asset version stamps and
+       never sees the new CSS/JS. `no-cache` forces revalidation each
+       visit, so the freshly deployed HTML is fetched and the up-to-date
+       `?v=` busters on `styles.css` / `app.js` take effect.
+
+       Scope: V2 only. Theme 1.0 (`public/index.html`) is untouched. -->
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <title>Atlas — Access Management · V4 (ADS)</title>
+  <script>
+    /* V4 (Round 32, 2026-07-05): Version 4 of the IAM prototype is a
+       standalone fork of V3 that always renders under the ADS visual
+       language. `data-theme="ads-preview"` is hardcoded on the root so
+       the ADS token overrides at the end of styles.css become the
+       default (rather than opt-in via the user menu, as in V3). V3
+       itself is untouched; the two versions can be compared side by
+       side at `/public/v3/` and `/public/v4/`. IAM content, layout,
+       component placement, and behaviour are identical to V3 — only
+       the visual system (colors, typography, spacing, borders,
+       shadows, focus, table density, chip styling, button chrome) is
+       promoted from opt-in preview to the default. */
+    document.documentElement.setAttribute("data-theme", "ads-preview");
+    document.documentElement.setAttribute("data-iam-version", "v4");
+  </script>
+  <!-- Open Sans — ADS Preview typography only. EDL Light/Dark continue
+       to use InspireTWDC / MultiplaneTWDC Display via the :root --ff token.
+       The font only becomes active when [data-theme="ads-preview"] remaps
+       --ff to the Open Sans stack; under EDL themes this is inert weight in
+       the cache and never renders. preconnect hints shave off the TLS round
+       trip when a user first switches to ADS Preview. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20260705r40v4">
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-l">
+    <div class="nav-mod">
+      <div class="nav-logo-group">
+        <!-- ═══ ATLAS BRAND (V4 R40) ═══
+             Two-part composition sourced directly from the Q2C-Design —
+             ATLAS Figma node 3606:51559. The D-glyph is inlined as SVG
+             (was an <img> in R39, which broke CSS color inheritance —
+             img-loaded SVGs can't cascade parent `color` into their
+             `currentColor` fills, so the R39 render showed a black
+             glyph on the indigo bar). Inline SVG lets the parent's
+             `color: #fff` reach the path's `fill: currentColor` and
+             paints the glyph white per Figma.
+             
+             Anatomy:
+               • .atlas-brand-glyph (32×28, node 3606:51561)   — white
+               • .atlas-brand-text  (MultiplaneTWDC 18/24 white, node 3606:51562)
+               • 8px gap between them (Figma navigation/size/gap) -->
+        <a href="../slides.html" class="nav-logo-link atlas-brand" aria-label="Disney Advertising home">
+          <svg class="atlas-brand-glyph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 28" width="32" height="28" fill="currentColor" aria-hidden="true"><path d="M8.97945 21.0995C8.98713 19.6954 9.01527 18.3096 9.01527 18.3096C9.01527 18.3096 7.65134 18.4084 6.71475 18.5124C5.52227 18.6424 3.27805 19.0376 1.98321 19.5056C1.5968 19.646 0.806078 19.9814 0.736985 20.3871C0.665334 20.8083 0.921231 21.1359 1.20784 21.4765C1.37417 21.6741 2.3082 22.5867 2.56921 22.8103C3.66701 23.7411 5.89588 25.179 7.53619 25.8784C8.09916 26.115 9.03319 26.4556 9.03319 26.4556C9.03319 26.4556 8.96921 23.7567 8.97945 21.0995ZM27.4425 13.5385C24.5176 9.71382 19.502 6.57035 15.0903 4.72691C10.5865 2.84706 6.13387 1.76284 1.3537 1.58344C1.34602 1.58344 1.33579 1.58344 1.32811 1.58344C0.601359 1.55483 0 2.14765 0 2.88346V19.0974C0.5988 18.0496 2.0958 17.2566 3.1501 16.7886C3.992 16.4116 6.60728 15.5431 7.69484 15.3819C8.2092 15.3065 9.00504 15.1609 9.05366 15.1297C9.07413 15.1141 9.08693 15.1011 9.10228 15.0829C9.12787 15.0465 9.11763 14.6071 9.16114 13.4423C9.24558 11.2062 9.37353 10.499 9.52195 9.66701C9.57825 9.34981 9.86229 8.11738 10.1028 7.79757C10.2615 7.58177 10.5404 7.59737 10.7682 7.74037C12.0144 8.52819 12.3931 11.2582 12.4852 12.6467C12.5415 13.4943 12.5697 14.7657 12.5697 14.7657C12.5697 14.7657 14.0002 14.7241 14.8779 14.7475C15.7326 14.7683 16.6743 14.9061 17.5623 15.0491C18.6984 15.2337 20.912 15.7251 22.1812 16.3778C23.2278 16.916 24.2054 17.8234 24.5227 18.7828C24.817 19.6642 24.7735 20.2726 24.3256 21.0657C23.5835 22.3787 21.5338 23.3459 20.1954 22.2929C20.0649 22.1863 20.0726 21.9991 20.1647 21.8717C20.2006 21.8249 20.7072 21.5519 21.0066 21.3933C21.1576 21.3101 21.2804 21.2217 21.3982 21.1125C21.6464 20.8889 21.869 20.6445 21.846 20.3585C21.8127 19.9866 21.4238 19.7552 21.0553 19.6096C19.3228 18.9102 15.8605 18.3304 14.187 18.229C13.5319 18.19 12.6004 18.1562 12.6004 18.1562L12.7974 27.5398C12.7974 27.5398 13.5677 27.6906 14.1742 27.7894C14.5222 27.844 15.9962 27.9766 16.3902 27.987C19.374 28.0676 22.7058 27.7972 25.4439 26.4816C26.6466 25.907 27.7495 25.192 28.5838 24.2221C29.6841 22.9403 30.2599 21.1853 30.1089 19.3522C29.9375 17.3606 28.5505 14.9841 27.4425 13.5385ZM29.4206 0H11.1418C11.5359 0.109202 11.9299 0.226205 12.324 0.348408C14.3021 0.956821 16.8944 1.97604 18.7906 2.90426C20.1519 3.57248 22.2964 4.79711 23.5016 5.59792C23.8829 5.85273 26.1041 7.51157 26.4496 7.80277C27.1712 8.40079 28.1129 9.26141 28.7936 9.95042C29.8556 11.0216 31.1274 12.5505 32 13.9493V2.62086C32 1.17263 30.8459 0 29.4206 0Z"/></svg>
+          <span class="atlas-brand-text">Disney Advertising</span>
+        </a>
+        <span class="nav-divider"></span>
+      </div>
+    </div>
+  </div>
+  <div class="nav-c">
+    <a href="#" class="nav-a">Sales</a>
+    <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+  </div>
+  <div class="nav-r">
+    <!-- Notification button. Two icon glyphs co-exist; CSS shows one per theme:
+         • `nav-bell-img` — legacy EDL Light/Dark asset (`nav/bell.svg`). Unchanged
+           from the original committed design. Hidden under ADS Preview.
+         • `nav-ico-bell` — Ads DS inline SVG, shown only in ADS Preview. -->
+    <button class="nav-r-btn" aria-label="Notifications">
+      <img class="nav-bell-img" src="../nav/bell.svg" alt="" width="24" height="24">
+      <!-- ADS DS Bell — sourced from Figma node 3606:51541 (Q2C Nav) so the
+           icon renders at its native 20×20 viewBox, matching the utility-slot
+           spec. Old EDL bell path is kept as an <img> sibling above; the CSS
+           theme swap in nav.css hides one or the other per active theme. -->
+      <svg class="nav-ico nav-ico-bell" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M17.3281 13.7453C16.8945 12.9984 16.25 10.8852 16.25 8.125C16.25 6.4674 15.5915 4.87769 14.4194 3.70558C13.2473 2.53348 11.6576 1.875 10 1.875C8.34241 1.875 6.7527 2.53348 5.58059 3.70558C4.40849 4.87769 3.75001 6.4674 3.75001 8.125C3.75001 10.8859 3.1047 12.9984 2.6711 13.7453C2.56038 13.9352 2.50168 14.1509 2.50092 14.3707C2.50017 14.5905 2.55739 14.8066 2.66681 14.9973C2.77623 15.1879 2.93398 15.3463 3.12415 15.4565C3.31433 15.5667 3.53021 15.6248 3.75001 15.625H6.93829C7.08249 16.3306 7.46597 16.9647 8.02386 17.4201C8.58176 17.8756 9.27983 18.1243 10 18.1243C10.7202 18.1243 11.4183 17.8756 11.9762 17.4201C12.5341 16.9647 12.9175 16.3306 13.0617 15.625H16.25C16.4697 15.6247 16.6855 15.5665 16.8756 15.4562C17.0657 15.346 17.2233 15.1875 17.3326 14.9969C17.442 14.8063 17.4991 14.5903 17.4983 14.3705C17.4975 14.1508 17.4388 13.9351 17.3281 13.7453ZM10 16.875C9.61237 16.8749 9.23429 16.7546 8.91782 16.5308C8.60135 16.3069 8.36204 15.9905 8.23282 15.625H11.7672C11.638 15.9905 11.3987 16.3069 11.0822 16.5308C10.7657 16.7546 10.3877 16.8749 10 16.875ZM3.75001 14.375C4.35157 13.3406 5.00001 10.9438 5.00001 8.125C5.00001 6.79892 5.52679 5.52715 6.46448 4.58947C7.40216 3.65178 8.67393 3.125 10 3.125C11.3261 3.125 12.5979 3.65178 13.5355 4.58947C14.4732 5.52715 15 6.79892 15 8.125C15 10.9414 15.6469 13.3383 16.25 14.375H3.75001Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <!-- Utility slot #2 — the Q2C Figma reference (node 3606:51568) shows the
+         ADS Sparkle glyph in this position (star, rate, ratings, favorites).
+         The V4 R33 forked SVG below is the exact ADS Sparkle from Figma
+         node 3606:51550. The class name is kept as `nav-ico-dots` for
+         backwards compatibility with the V3 EDL CSS rules that reference
+         it — under EDL themes on V3, the dots SVG still renders. Under
+         ADS Preview / V4, this Sparkle renders per the Figma spec. -->
+    <button class="nav-r-btn nav-r-btn-dots" aria-label="Assistant">
+      <svg class="nav-ico nav-ico-dots" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M15.4359 10.0828L11.4063 8.59375L9.92189 4.56094C9.83398 4.32213 9.67494 4.11604 9.46623 3.97046C9.25751 3.82488 9.00917 3.74682 8.7547 3.74682C8.50023 3.74682 8.25188 3.82488 8.04317 3.97046C7.83445 4.11604 7.67541 4.32213 7.58751 4.56094L6.09376 8.59375L2.06095 10.0781C1.82214 10.166 1.61605 10.3251 1.47047 10.5338C1.32489 10.7425 1.24683 10.9908 1.24683 11.2453C1.24683 11.4998 1.32489 11.7481 1.47047 11.9568C1.61605 12.1656 1.82214 12.3246 2.06095 12.4125L6.09376 13.9062L7.57814 17.9391C7.66604 18.1779 7.82508 18.384 8.03379 18.5295C8.24251 18.6751 8.49085 18.7532 8.74532 18.7532C8.99979 18.7532 9.24814 18.6751 9.45685 18.5295C9.66557 18.384 9.82461 18.1779 9.91251 17.9391L11.4063 13.9062L15.4391 12.4219C15.6779 12.334 15.884 12.1749 16.0296 11.9662C16.1751 11.7575 16.2532 11.5092 16.2532 11.2547C16.2532 11.0002 16.1751 10.7519 16.0296 10.5432C15.884 10.3344 15.6779 10.1754 15.4391 10.0875L15.4359 10.0828ZM10.7031 12.8297C10.6183 12.861 10.5413 12.9103 10.4773 12.9742C10.4134 13.0381 10.3641 13.1152 10.3328 13.2L8.75001 17.4883L7.17032 13.2031C7.13911 13.1174 7.0895 13.0395 7.02498 12.975C6.96047 12.9105 6.88262 12.8609 6.79689 12.8297L2.51173 11.25L6.79689 9.67031C6.88262 9.6391 6.96047 9.58949 7.02498 9.52497C7.0895 9.46046 7.13911 9.38261 7.17032 9.29688L8.75001 5.01172L10.3297 9.29688C10.361 9.38171 10.4103 9.45875 10.4742 9.52269C10.5381 9.58662 10.6152 9.63592 10.7 9.66719L14.9883 11.25L10.7031 12.8297ZM11.25 3.125C11.25 2.95924 11.3159 2.80027 11.4331 2.68306C11.5503 2.56585 11.7092 2.5 11.875 2.5H13.125V1.25C13.125 1.08424 13.1909 0.925268 13.3081 0.808058C13.4253 0.690848 13.5842 0.625 13.75 0.625C13.9158 0.625 14.0747 0.690848 14.192 0.808058C14.3092 0.925268 14.375 1.08424 14.375 1.25V2.5H15.625C15.7908 2.5 15.9497 2.56585 16.067 2.68306C16.1842 2.80027 16.25 2.95924 16.25 3.125C16.25 3.29076 16.1842 3.44973 16.067 3.56694C15.9497 3.68415 15.7908 3.75 15.625 3.75H14.375V5C14.375 5.16576 14.3092 5.32473 14.192 5.44194C14.0747 5.55915 13.9158 5.625 13.75 5.625C13.5842 5.625 13.4253 5.55915 13.3081 5.44194C13.1909 5.32473 13.125 5.16576 13.125 5V3.75H11.875C11.7092 3.75 11.5503 3.68415 11.4331 3.56694C11.3159 3.44973 11.25 3.29076 11.25 3.125ZM19.375 6.875C19.375 7.04076 19.3092 7.19973 19.192 7.31694C19.0747 7.43415 18.9158 7.5 18.75 7.5H18.125V8.125C18.125 8.29076 18.0592 8.44973 17.942 8.56694C17.8247 8.68415 17.6658 8.75 17.5 8.75C17.3342 8.75 17.1753 8.68415 17.0581 8.56694C16.9409 8.44973 16.875 8.29076 16.875 8.125V7.5H16.25C16.0842 7.5 15.9253 7.43415 15.8081 7.31694C15.6909 7.19973 15.625 7.04076 15.625 6.875C15.625 6.70924 15.6909 6.55027 15.8081 6.43306C15.9253 6.31585 16.0842 6.25 16.25 6.25H16.875V5.625C16.875 5.45924 16.9409 5.30027 17.0581 5.18306C17.1753 5.06585 17.3342 5 17.5 5C17.6658 5 17.8247 5.06585 17.942 5.18306C18.0592 5.30027 18.125 5.45924 18.125 5.625V6.25H18.75C18.9158 6.25 19.0747 6.31585 19.192 6.43306C19.3092 6.55027 19.375 6.70924 19.375 6.875Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <div class="user-menu" id="userMenu">
+      <button class="nav-r-btn" id="userMenuTrigger" aria-label="User menu" aria-haspopup="menu" aria-expanded="false"><img src="../nav/avatar.png" alt="" class="nav-avatar-img"></button>
+      <div class="user-menu-pop" id="userMenuPop" role="menu" aria-labelledby="userMenuTrigger">
+        <div class="user-menu-hdr">
+          <div class="user-menu-name">Simpson, Marge</div>
+          <div class="user-menu-email">marge.simpson@disney.com</div>
+        </div>
+        <div class="user-menu-sep"></div>
+        <div class="user-menu-row has-sub" id="userMenuVersion" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false">
+          <span class="user-menu-label">Version</span>
+          <svg class="user-menu-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="user-menu-sub" role="menu" aria-label="Version">
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-version="1.0" data-version-href="../" tabindex="-1">1.0</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-version="2.0" data-version-href="../v2/" tabindex="-1">2.0</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-version="3.0" data-version-href="../v3/" tabindex="-1">3.0</div>
+            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="4.0" data-version-href="./" tabindex="-1">4.0 (ADS)</div>
+          </div>
+        </div>
+        <div class="user-menu-row has-sub" id="userMenuTheme" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false">
+          <span class="user-menu-label">Theme</span>
+          <svg class="user-menu-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="user-menu-sub" role="menu" aria-label="Theme">
+            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-theme="light" tabindex="-1">EDL Light</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="dark" tabindex="-1">EDL Dark</div>
+            <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="ads-preview" tabindex="-1">ADS Preview</div>
+          </div>
+        </div>
+        <div class="user-menu-sep"></div>
+        <div class="user-menu-row" role="menuitem" tabindex="-1" id="userMenuLogout">
+          <span class="user-menu-label">Log Out</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ SIDEBAR (V4 R37 — ATLAS parity) ═══
+     Sidebar rebuilt to match the Q2C-Design ATLAS navigation pattern.
+     Same visual language as the Rate Card sidebar (nodes 214:4838
+     and 214:6420 from the sibling Rate Card project — both share the
+     ADS design system), but with the ATLAS item set:
+     
+       1. Dashboard   → squares-four
+       2. Orders      → shopping-bag-open
+       3. Inventory   → tray
+       4. Targeting   → briefcase-metal
+       5. Pricing     → tag
+       6. Invoices    → invoice
+       7. Identity    → user-list        (ACTIVE — IAM/Access Management)
+       8. Settings    → gear-fine
+     
+     Identity is included as a distinct item because IAM/Access
+     Management is represented as a separate concern in the app,
+     per the user's brief: "If IAM is represented separately in the
+     current app navigation, keep Identity/IAM active but style it
+     using the exact Figma active-state treatment."
+     
+     Active-state visuals (matching Q2C/ADS tokens):
+       • Background: #e2e3f2 (navigation/surface/brand-wash)
+       • Text/icon:  #4045c2 (navigation/item/active/text)
+       • Left bar:   3×20px #4045c2 rounded 2px (flex-child)
+       • Weight:     Open Sans SemiBold 600
+     
+     All 8 icons are Phosphor Regular SVGs (MIT-licensed, same library
+     the Figma design imports), viewBox 0 0 256 256, fill=currentColor. -->
+<aside class="sidebar" id="sidebar" data-collapsed="false" aria-label="Primary navigation">
+  <nav class="sb-nav" aria-label="Primary sections">
+    <a href="#" class="sb-item" data-section="dashboard" title="Dashboard">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z"/></svg>
+      <span class="sb-item-label">Dashboard</span>
+    </a>
+    <a href="#" class="sb-item" data-section="orders" title="Orders">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V72H40V56Zm0,144H40V88H216V200Zm-40-88a48,48,0,0,1-96,0,8,8,0,0,1,16,0,32,32,0,0,0,64,0,8,8,0,0,1,16,0Z"/></svg>
+      <span class="sb-item-label">Orders</span>
+    </a>
+    <a href="#" class="sb-item" data-section="inventory" title="Inventory">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,16V152h-28.7A15.86,15.86,0,0,0,168,156.69L148.69,176H107.31L88,156.69A15.86,15.86,0,0,0,76.69,152H48V48Zm0,160H48V168H76.69L96,187.31A15.86,15.86,0,0,0,107.31,192h41.38A15.86,15.86,0,0,0,160,187.31L179.31,168H208v40Z"/></svg>
+      <span class="sb-item-label">Inventory</span>
+    </a>
+    <a href="#" class="sb-item" data-section="targeting" title="Targeting">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM40,112H216v48H40ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72V96H40V72Zm0,128H40V176H216v24Z"/></svg>
+      <span class="sb-item-label">Targeting</span>
+    </a>
+    <a href="#" class="sb-item" data-section="pricing" title="Pricing">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z"/></svg>
+      <span class="sb-item-label">Pricing</span>
+    </a>
+    <a href="#" class="sb-item" data-section="invoices" title="Invoices">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M28,128a8,8,0,0,1,0-16H56a8,8,0,0,0,0-16H40a24,24,0,0,1,0-48,8,8,0,0,1,16,0h8a8,8,0,0,1,0,16H40a8,8,0,0,0,0,16H56a24,24,0,0,1,0,48,8,8,0,0,1-16,0ZM232,56V192a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V152a8,8,0,0,1,16,0v40H160V160H80a8,8,0,0,1,0-16h80V112H104a8,8,0,0,1,0-16H216V64H96a8,8,0,0,1,0-16H224A8,8,0,0,1,232,56Zm-56,88h40V112H176Zm40,48V160H176v32Z"/></svg>
+      <span class="sb-item-label">Invoices</span>
+    </a>
+    <a href="#" class="sb-item sb-item-active" data-section="identity" data-active="true" aria-current="page" title="Identity">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M152,80a8,8,0,0,1,8-8h88a8,8,0,0,1,0,16H160A8,8,0,0,1,152,80Zm96,40H160a8,8,0,0,0,0,16h88a8,8,0,0,0,0-16Zm0,48H184a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm-96.25,22a8,8,0,0,1-5.76,9.74,7.55,7.55,0,0,1-2,.26,8,8,0,0,1-7.75-6c-6.16-23.94-30.34-42-56.25-42s-50.09,18.05-56.25,42a8,8,0,0,1-15.5-4c5.59-21.71,21.84-39.29,42.46-48a48,48,0,1,1,58.58,0C129.91,150.71,146.16,168.29,151.75,190ZM80,136a32,32,0,1,0-32-32A32,32,0,0,0,80,136Z"/></svg>
+      <span class="sb-item-label">Identity</span>
+    </a>
+    <a href="#" class="sb-item" data-section="settings" title="Settings">
+      <span class="sb-item-indicator" aria-hidden="true"></span>
+      <svg class="sb-item-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,120H215.63a87.27,87.27,0,0,0-7.74-28.88l14.18-8.19a8,8,0,0,0-8-13.86l-14.2,8.2a88.78,88.78,0,0,0-21.14-21.14l8.2-14.2a8,8,0,0,0-13.86-8l-8.19,14.18A87.27,87.27,0,0,0,136,40.37V24a8,8,0,0,0-16,0V40.37a87.27,87.27,0,0,0-28.88,7.74L82.93,33.93a8,8,0,0,0-13.86,8l8.2,14.2A88.78,88.78,0,0,0,56.13,77.27l-14.2-8.2a8,8,0,0,0-8,13.86l14.18,8.19A87.27,87.27,0,0,0,40.37,120H24a8,8,0,0,0,0,16H40.37a87.27,87.27,0,0,0,7.74,28.88l-14.18,8.19a8,8,0,0,0,4,14.93,7.92,7.92,0,0,0,4-1.07l14.2-8.2a88.78,88.78,0,0,0,21.14,21.14l-8.2,14.2a8,8,0,0,0,13.86,8l8.19-14.18A87.27,87.27,0,0,0,120,215.63V232a8,8,0,0,0,16,0V215.63a87.27,87.27,0,0,0,28.88-7.74l8.19,14.18a8,8,0,0,0,13.86-8l-8.2-14.2a88.78,88.78,0,0,0,21.14-21.14l14.2,8.2A8,8,0,0,0,225,184a8,8,0,0,0-2.92-10.93l-14.18-8.19A87.27,87.27,0,0,0,215.63,136H232a8,8,0,0,0,0-16ZM128,56a72.08,72.08,0,0,1,71.54,64H132.62L99.16,62.05A71.58,71.58,0,0,1,128,56ZM56,128A72,72,0,0,1,85.31,70.06L118.76,128,85.31,185.94A72,72,0,0,1,56,128Zm72,72A71.58,71.58,0,0,1,99.16,194L132.62,136h66.92A72.08,72.08,0,0,1,128,200Z"/></svg>
+      <span class="sb-item-label">Settings</span>
+    </a>
+  </nav>
+  <div class="sb-toggle-row">
+    <button type="button" class="sb-toggle" id="sidebarToggle" aria-label="Collapse sidebar" aria-expanded="true">
+      <svg class="sb-toggle-ico" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ PAGE ═══ -->
+<main class="page">
+  <div class="hdr">
+    <h1>Access Management</h1>
+    <p>Manage users, role assignments, and permission functions across Atlas</p>
+  </div>
+
+  <div class="card">
+    <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032
+         Final tab order (2026-06-07 — Tatiana direction, Frances QA):
+           1. Users → #usersPanel  (Figma 770:17428)
+           2. Roles → #rolesPanel  (Figma 770:19301)
+           3. Teams → #teamsPanel  (read-only browse + Edit Team)
+         The standalone Functions / Permission Catalog tab was removed
+         in this phase — the role/permission matrix lives inside Edit
+         Role. Visual treatment is identical across all three
+         (inactive = muted, active = brand text + indigo underline). -->
+    <!-- ═══ TABLE CARD (V4 R38 — Rate Card parity) ═══
+         The tabs + all three panels (Users/Roles/Teams) live inside a
+         single elevated white card so the surface reads as one unit,
+         matching the Rate Card Manager table treatment: 16px rounded
+         corners, subtle box-shadow, hairline border, gray canvas
+         behind. All internal chrome (tabs, toolbar, table, pagination)
+         clips cleanly inside the card via `overflow: hidden`. -->
+    <div class="v4-card">
+    <div class="tabs-row">
+      <nav>
+        <button class="tab-btn on">Users</button>
+        <button class="tab-btn">Roles</button>
+        <button class="tab-btn">Teams</button>
+      </nav>
+    </div>
+
+    <div id="usersPanel">
+    <!-- Toolbar -->
+    <div class="tbar">
+      <div class="tbar-l">
+        <button class="btn-std">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filter
+        </button>
+        <div class="seg-ctrl" id="userViewToggle" role="group" aria-label="User type">
+          <button class="seg-btn on" data-view="internal">Internal</button>
+          <button class="seg-btn" data-view="external">External</button>
+        </div>
+        <div class="search" id="searchWrap">
+          <input type="text" id="searchInput" placeholder="Search by name, email, or role" autocomplete="off">
+          <svg class="search-ico" id="searchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <button type="button" class="search-clear hidden" id="searchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <div class="search-dropdown" id="searchDropdown">
+            <div id="searchDDContent"></div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add User
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="tbl-wrap">
+      <table class="tbl" id="usersTable">
+        <colgroup id="usersColgroup">
+          <col data-u-col="nm">
+          <col data-u-col="em">
+          <col data-u-col="rl">
+          <col data-u-col="st">
+          <col data-u-col="tm">
+          <col data-u-col="ct">
+          <col data-u-col="ll">
+          <col data-u-col="rg">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="c-nm" data-sort="name"><div class="th-inner"><span>Name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-em" data-sort="email"><div class="th-inner"><span>Email</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-rl" data-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-st" data-sort="status"><div class="th-inner"><span>Status</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-tm" data-sort="team"><div class="th-inner"><span>Team</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-ct" data-sort="title"><div class="th-inner"><span>Company Title/ Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-ll" data-sort="lastLogin"><div class="th-inner"><span>Last login</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            <th class="c-rg" data-sort="region"><div class="th-inner"><span>Region</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pgn">
+        <div class="pgn-show">
+        <span class="pgn-lbl">Show</span>
+        <div class="pgn-sel-wrap">
+          <div class="cr-dd pgn-dd" id="usersPageSizeDD">
+            <button type="button" class="cr-dd-trigger" id="usersPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="usersPageSizeMenu">
+              <span class="cr-dd-value" id="usersPageSizeValue">10</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="cr-dd-menu" id="usersPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+          </div>
+        </div>
+        <span class="pgn-lbl">of 610 items</span>
+      </div>
+      <div class="pgn-pages">
+        <button class="pg-nav off" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+        <button class="pg-nav off" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <div class="pg-nums">
+          <button class="pg-n on">1</button>
+          <button class="pg-n">2</button>
+          <button class="pg-n">3</button>
+          <span class="pg-dots">…</span>
+          <button class="pg-n">10</button>
+        </div>
+        <button class="pg-nav" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="pg-nav" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+      </div>
+      <div class="pgn-jump">
+        <span class="pgn-lbl" id="usersTotalLabel">Total users: 610</span>
+      </div>
+    </div>
+    </div>
+
+    <div id="rolesPanel" style="display:none">
+      <div class="tbar">
+        <div class="tbar-l">
+          <button class="btn-std" id="rpFilterBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filter
+          </button>
+          <div class="search" id="rpSearchWrap">
+            <input type="text" id="rpSearchInput" placeholder="Search by role name or description" autocomplete="off">
+            <svg class="search-ico" id="rpSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <button type="button" class="search-clear hidden" id="rpSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <button class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Role
+        </button>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="tbl rp-tbl" id="rpTable">
+          <!-- Roles table colgroup. No leading select column — this page
+               does not support bulk selection or bulk actions, so the
+               checkbox column was removed (Frances QA, 2026-05-29).
+               Role column now anchors the left edge per EDL pattern. -->
+          <colgroup id="rpColgroup">
+            <col data-rp-col="role">
+            <col data-rp-col="func">
+            <col data-rp-col="by">
+            <col data-rp-col="date">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="rp-role" data-rp-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-func" data-rp-sort="functions"><div class="th-inner"><span>Functions</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-by" data-rp-sort="createdBy"><div class="th-inner"><span>Created By</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+              <th class="rp-date" data-rp-sort="createDate"><div class="th-inner"><span>Create Date</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
+            </tr>
+          </thead>
+          <tbody id="rpTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pgn" id="rpPgn">
+        <div class="pgn-show">
+          <span class="pgn-lbl">Show</span>
+          <div class="pgn-sel-wrap">
+            <div class="cr-dd pgn-dd" id="rpPageSizeDD">
+              <button type="button" class="cr-dd-trigger" id="rpPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="rpPageSizeMenu">
+                <span class="cr-dd-value" id="rpPageSizeValue">10</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="rpPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+            </div>
+          </div>
+          <span class="pgn-lbl" id="rpItemCount">of 11 items</span>
+        </div>
+        <div class="pgn-pages" id="rpPgnPages">
+          <button class="pg-nav off" data-rp-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+          <button class="pg-nav off" data-rp-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="pg-nums" id="rpPgNums"></div>
+          <button class="pg-nav" data-rp-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="pg-nav" data-rp-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+        </div>
+        <div class="pgn-jump">
+          <span class="pgn-lbl" id="rpTotalLabel">Total roles: 11</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Standalone Permissions / Functions Catalog tab REMOVED 2026-06-07
+         per Tatiana direction (Frances QA): the read-only catalog is
+         not needed in this phase. Permission/role-matrix logic remains
+         intact inside Edit Role. The standalone panel, its filter
+         drawer, and all `pm-`-prefixed table state were removed from
+         markup, JS state, render functions, search/filter wiring, and
+         pagination. Edit Role's `cr-`-namespaced permission UI is
+         unchanged. The PM-token → CR-app-key model layer
+         (`PM_TOKEN_TO_CR_APP`, `pmGroupsForAppToken`,
+         `derivePMResourcesForApp`) is shared infrastructure and is
+         intentionally KEPT — it's named `pm-` for "permission model"
+         but it is not the standalone tab and Edit Role's Access Level
+         bundle derivation depends on it. -->
+
+    <!-- ═══ TEAMS PANEL ═══
+         Sub-view of Access Management. Read-only browse of team groups;
+         clicking a team name opens #editTeamPage. The list intentionally
+         does NOT support: bulk actions, row checkboxes, sorting, or an
+         "+ Add Team" button — full team creation is out of scope for
+         this version (per Frances brief, Tatiana direction). The toolbar
+         carries only a "Search teams…" input. The table re-uses the
+         shared `.tbl` EDL styles; columns: Team / Description / Members
+         / Created. -->
+    <div id="teamsPanel" style="display:none">
+      <!-- Inner page title/subtitle removed 2026-05-29 (Frances QA
+           round 4): the tab label "Teams" already names this sub-view,
+           and the other tabs do not carry an internal title block.
+           The toolbar now sits flush under the tabs row, matching the
+           Users/Roles tabs. -->
+
+      <div class="tbar">
+        <div class="tbar-l">
+          <div class="search" id="tmSearchWrap">
+            <input type="text" id="tmSearchInput" placeholder="Search teams…" autocomplete="off">
+            <svg class="search-ico" id="tmSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <button type="button" class="search-clear hidden" id="tmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+        </div>
+        <!-- No top-right actions. "+ Add Team" was intentionally NOT
+             added (Tatiana direction): this version's purpose is to
+             view/edit existing team definitions, not to build a full
+             team-creation flow. -->
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="tbl tm-tbl" id="tmTable">
+          <colgroup id="tmColgroup">
+            <col data-tm-col="name">
+            <col data-tm-col="desc">
+            <col data-tm-col="mem">
+            <col data-tm-col="created">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="tm-th-name"><div class="th-inner"><span>Team</span></div></th>
+              <th class="tm-th-desc"><div class="th-inner"><span>Description</span></div></th>
+              <th class="tm-th-mem"><div class="th-inner"><span>Members</span></div></th>
+              <th class="tm-th-created"><div class="th-inner"><span>Created</span></div></th>
+            </tr>
+          </thead>
+          <tbody id="tmTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Footer pagination — mirrors #rpPgn structure exactly so the
+           Teams tab uses the same EDL footer system as Roles (Frances
+           QA 2026-05-31). Read-only browse with one page today, but
+           the page-size dropdown + page nav + total label render so
+           the surface reads as a consistent product component. -->
+      <div class="pgn" id="tmPgn">
+        <div class="pgn-show">
+          <span class="pgn-lbl">Show</span>
+          <div class="pgn-sel-wrap">
+            <div class="cr-dd pgn-dd" id="tmPageSizeDD">
+              <button type="button" class="cr-dd-trigger" id="tmPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="tmPageSizeMenu">
+                <span class="cr-dd-value" id="tmPageSizeValue">10</span>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="cr-dd-menu" id="tmPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
+            </div>
+          </div>
+          <span class="pgn-lbl" id="tmItemCount">of 0 items</span>
+        </div>
+        <div class="pgn-pages" id="tmPgnPages">
+          <button class="pg-nav off" data-tm-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+          <button class="pg-nav off" data-tm-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="pg-nums" id="tmPgNums"></div>
+          <button class="pg-nav" data-tm-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="pg-nav" data-tm-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+        </div>
+        <div class="pgn-jump">
+          <span class="pgn-lbl" id="tmTotalLabel">Total teams: 0</span>
+        </div>
+      </div>
+    </div>
+    </div><!-- /v4-card -->
+  </div>
+</main>
+
+<!-- ═══ ADD USERS PAGE ═══ -->
+<div id="addUsersPage" class="au-page" style="display:none">
+  <div class="au-shell">
+    <button class="au-back" id="auBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span class="au-back-label" id="auBackLabel">Back to users</span>
+    </button>
+
+    <div class="au-header">
+      <div class="au-header-left">
+        <h1 class="au-title" id="auPageTitle">Add user</h1>
+        <p class="au-subtitle" id="auPageSubtitle">Capture user details and assign access for Atlas</p>
+      </div>
+      <div class="au-header-actions">
+        <button type="button" class="au-remove-user-link" id="auRemoveUser" hidden>Remove User</button>
+        <button class="btn-std" id="auCancel">Cancel</button>
+        <button class="au-btn-save" id="auSave">Add User</button>
+      </div>
+    </div>
+
+    <section class="au-card cr-card" id="auBasicCard" aria-labelledby="auBasicTitle">
+      <div class="cr-section-header" data-au-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auBasicTitle">Basic Information</span>
+        <span class="cr-section-summary" id="auBasicSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="au-section-body">
+      <!-- ═ Edit-mode identity row (V3 only) ═
+           Figma node 847:16172 — single horizontal row containing the
+           roster-style identity block (avatar + name + email + active
+           check-circle) on the left, followed by two 296-px form
+           columns to the right. Rendered only in edit mode; Add mode
+           keeps the existing 3-column `.au-grid` untouched.
+
+           Figma geometry: 3 × 296px columns, 39px gaps, identity column
+           = 72px avatar + 16px gap + name/email meta column.
+
+           Avatar treatment: defaults to the EDL neutral placeholder to
+           match Figma 847:16174 (which shows the placeholder, not a
+           photo). The photo path remains supported for internal users
+           via `populateAuIdentityBlock` in app.js, but is opt-in per
+           user record so we don't upscale low-resolution sources.
+           External users always render the placeholder. -->
+      <div class="au-edit-row au-edit-only" id="auEditRow" hidden>
+        <div class="au-id-block" id="auIdBlock">
+          <div class="au-id-avatar" id="auIdAvatar" aria-hidden="true">
+            <!-- Neutral placeholder per Figma node 847:16174 (the exact
+                 EDL avatar placeholder asset: white circle, indigo
+                 outline, indigo silhouette of head + shoulders).
+                 Inline SVG renders crisply at any DPI. JS swaps this
+                 for a photo when an internal user record carries
+                 `usePhotoInEdit: true` AND a high-resolution avatar. -->
+            <svg class="au-id-avatar-svg" xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+              <path d="M72 36C72 55.8823 55.8823 72 36 72C16.1177 72 0 55.8823 0 36C0 16.1177 16.1177 0 36 0C55.8823 0 72 16.1177 72 36Z" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M36 69.1579C54.3126 69.1579 69.1579 54.3126 69.1579 36C69.1579 17.6874 54.3126 2.84211 36 2.84211C17.6874 2.84211 2.84211 17.6874 2.84211 36C2.84211 54.3126 17.6874 69.1579 36 69.1579ZM36 72C55.8823 72 72 55.8823 72 36C72 16.1177 55.8823 0 36 0C16.1177 0 0 16.1177 0 36C0 55.8823 16.1177 72 36 72Z" fill="#5458C9"/>
+              <path d="M48.3159 27.0003C48.3159 34.0637 42.8019 39.7898 36.0001 39.7898C29.1983 39.7898 23.6843 34.0637 23.6843 27.0003C23.6843 19.9369 29.1983 14.2108 36.0001 14.2108C42.8019 14.2108 48.3159 19.9369 48.3159 27.0003Z" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M36.0001 36.9477C41.1321 36.9477 45.4738 32.5961 45.4738 27.0003C45.4738 21.4045 41.1321 17.0529 36.0001 17.0529C30.8681 17.0529 26.5264 21.4045 26.5264 27.0003C26.5264 32.5961 30.8681 36.9477 36.0001 36.9477ZM36.0001 39.7898C42.8019 39.7898 48.3159 34.0637 48.3159 27.0003C48.3159 19.9369 42.8019 14.2108 36.0001 14.2108C29.1983 14.2108 23.6843 19.9369 23.6843 27.0003Z" fill="#5458C9"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M9.58008 60.4541C11.0036 50.5618 22.2891 42.8569 36.0001 42.8569C49.711 42.8569 60.9965 50.5617 62.4201 60.454C55.8443 67.555 46.4413 72.0001 36 72.0001C25.5588 72.0001 16.1558 67.5551 9.58008 60.4541Z" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6586 59.5505C18.6534 65.4928 26.8968 69.158 36 69.158C45.1033 69.158 53.3467 65.4928 59.3416 59.5505C57.4032 52.1526 48.2393 45.699 36.0001 45.699C23.7608 45.699 14.5969 52.1526 12.6586 59.5505ZM62.4201 60.454C60.9965 50.5617 49.711 42.8569 36.0001 42.8569C22.2891 42.8569 11.0036 50.5618 9.58008 60.4541C16.1558 67.5551 25.5588 72.0001 36 72.0001C46.4413 72.0001 55.8443 67.555 62.4201 60.454Z" fill="#5458C9"/>
+            </svg>
+          </div>
+          <!-- Name + email are populated by `populateAuIdentityBlock`
+               with the SELECTED user's record. Empty initial values
+               prevent a flash of the previous-session user when the
+               page is re-shown before the data swap runs. -->
+          <div class="au-id-meta">
+            <div class="au-id-name" id="auIdName"></div>
+            <div class="au-id-email-row">
+              <span class="au-id-email" id="auIdEmail"></span>
+              <!-- Read-only status icon. Active = filled green check
+                   (Figma 847:16185 — EDL Green 70 #056C07). Inactive
+                   = neutral gray dot. Replaces the Add-mode Active /
+                   Inactive segmented control.
+                   Wired into the shared EDL tooltip system via
+                   `.status-icon-wrap` + `data-status-tooltip` — same
+                   hover/focus behavior used by the Users table status
+                   icon. JS keeps `aria-label` and `data-status-tooltip`
+                   in sync per selected user (Active vs Inactive). -->
+              <span class="au-id-status status-icon-wrap" id="auIdStatus" role="img" aria-label="Active" data-status-tooltip="Active" tabindex="0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="au-grid">
+        <div class="au-field au-field-edit-only">
+          <label class="au-label" for="auFullName">Name</label>
+          <input class="au-input au-input-readonly" id="auFullName" type="text" value="" readonly aria-readonly="true" tabindex="-1">
+        </div>
+        <div class="au-field au-field-first">
+          <label class="au-label" for="auFirstName">First name<span class="au-req">*</span></label>
+          <input class="au-input" id="auFirstName" type="text" placeholder="Enter first name" autocomplete="off">
+        </div>
+        <div class="au-field au-field-last">
+          <label class="au-label" for="auLastName">Last name<span class="au-req">*</span></label>
+          <input class="au-input" id="auLastName" type="text" placeholder="Enter last name" autocomplete="off">
+        </div>
+        <div class="au-field au-field-preferred">
+          <label class="au-label" for="auPreferredName">Preferred name
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input class="au-input" id="auPreferredName" type="text" placeholder="Enter preferred name" autocomplete="off">
+        </div>
+
+        <div class="au-field au-field-email">
+          <label class="au-label" for="auEmail">Email<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
+        </div>
+        <div class="au-field au-field-region">
+          <label class="au-label" for="auRegionCombo-ctl">Region<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input type="hidden" id="auRegion" value="NA">
+          <div class="edl-combo au-field-dd" id="auRegionCombo" aria-label="Region"></div>
+        </div>
+        <div class="au-field au-field-timezone">
+          <label class="au-label" for="auTimezoneCombo-ctl">Timezone<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input type="hidden" id="auTimezone" value="America/New_York">
+          <div class="edl-combo au-field-dd" id="auTimezoneCombo" aria-label="Timezone"></div>
+        </div>
+
+        <div class="au-field au-field-team">
+          <!-- Round 28 (2026-06-09 — Add User external-user field swap).
+               When the Add User page opens for the External Users view
+               (`userView === 'external'`), JS swaps this slot to show
+               the Company name text input below instead of the Team
+               EDL combo. Internal Add User keeps the combo. Edit User
+               retains the read-only Company line for external users
+               (Round 13 cleanup pass) via the same DOM slot. The
+               label, input visibility, and required-asterisk are all
+               managed by `applyAuBasicInfoCompanyOrTeam()` in app.js
+               so this DOM block stays a single grid cell — no layout
+               changes. -->
+          <label class="au-label" for="auTeamCombo-ctl">Team</label>
+          <input type="hidden" id="auTeam" value="">
+          <div class="edl-combo au-field-dd" id="auTeamCombo" aria-label="Team"></div>
+          <!-- External-user Company name text input (Add mode only).
+               Hidden by default; JS shows it when `userView` is
+               external. Required when shown — `applyAuBasicInfoCompanyOrTeam`
+               toggles the `required` attribute in sync with the
+               required-asterisk on the label. -->
+          <input type="text" class="au-input au-field-company-input" id="auCompany" value=""
+                 placeholder="Enter company name" autocomplete="off" maxlength="120" hidden>
+        </div>
+        <div class="au-field au-field-status">
+          <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
+          <div class="au-status-seg" id="auStatusSeg" role="radiogroup" aria-labelledby="auStatusLabel">
+            <button type="button" class="au-status-opt is-selected" data-au-status="Active" aria-pressed="true">Active</button>
+            <button type="button" class="au-status-opt" data-au-status="Inactive" aria-pressed="false">Inactive</button>
+          </div>
+          <div class="au-status-readonly" id="auStatusReadonly" aria-labelledby="auStatusLabel" hidden></div>
+          <input type="hidden" id="auStatusValue" value="Active" required>
+        </div>
+        <div class="au-field au-profile-field">
+          <label class="au-label">Profile picture</label>
+          <p class="au-profile-sync-note">Synced from Disney Rostr when available.</p>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- ═ Permission Options card (V3 Edit User only) ═
+         Figma node 847:16112 — replaces the Add-mode Roles & Permissions
+         section when the page is in edit mode. The Roles & Permissions
+         section below (`#auRolesCard`) is preserved untouched for Add mode
+         and hidden by CSS when `.is-edit-mode` is set.
+
+         Section content:
+           • Single helper line — names current-state behavior and the
+             future-state custom-actions phase (visual-only; no in-card
+             future-state controls).
+           • Assigned Applications combo (predefined access groups only —
+             no custom function builder).
+           • Two application cards rendered by JS into `#auPermsCards`.
+
+         Permission rows in each application card are READ-ONLY; the only
+         current-state edits are: pick a predefined access level from the
+         allow-list, add a predefined application, remove an assigned
+         application. There is no in-card future-state affordance — the
+         custom-actions future phase is communicated only via the helper
+         text above. -->
+    <section class="au-card cr-card au-access-card au-edit-only" id="auPermsCard" aria-labelledby="auPermsTitle" hidden>
+      <div class="cr-section-header" data-au-toggle="perms" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auPermsTitle">Permission Options</span>
+        <span class="cr-section-summary" id="auPermsSummary" aria-hidden="true"></span>
+      </div>
+      <div class="au-section-body">
+        <!-- Helper text trimmed to match Figma 847:16145 exactly. The
+             future-state custom-actions phase is intentionally NOT
+             described in the UI (PM will communicate it directly). -->
+        <p class="au-perms-helper">Review predefined access levels and permission coverage.</p>
+
+        <div class="au-field au-perms-app-field">
+          <label class="au-label" for="auPermsAppCombo-ctl">Assigned Applications</label>
+          <div class="au-role-row">
+            <div class="au-role-dd-field">
+              <input type="hidden" id="auPermsApp" value="">
+              <div class="edl-combo au-field-dd" id="auPermsAppCombo" aria-label="Assigned Applications"></div>
+            </div>
+            <button class="au-btn-add" id="auPermsAppAdd" type="button">Add</button>
+          </div>
+        </div>
+
+        <div class="au-perms-cards" id="auPermsCards" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ═ Access section (Edit User v3 — Figma 788:4348) ═
+         In Edit mode this card carries:
+           • Section title "Access"
+           • Helper copy explaining role assignment is the source of truth
+           • Single "Assigned Role *" dropdown (read+pick from existing
+             ROLES_PERMISSIONS_DATA — drives the effective-access table)
+           • Effective-access table (Application / Access Level / Summary)
+             populated from the selected user's role via the existing
+             `getRoleAppAccessDetails` / `roleAccessLevel` helpers.
+
+         In Add mode this card keeps its original "Roles & Permissions"
+         shell (Assign Roles + role-card stack) so the Add User flow is
+         unchanged. The two modes are split via `.au-edit-only` /
+         `.au-add-only` class toggles inside the section body. -->
+    <section class="au-card cr-card au-access-card" id="auRolesCard" aria-labelledby="auRolesPermissionsTitle">
+      <div class="cr-section-header" data-au-toggle="roles" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="auRolesPermissionsTitle">Roles &amp; Permissions</span>
+        <span class="cr-section-summary" id="auRolesSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="au-section-body">
+      <!-- Add-mode helper text is hidden by `.au-edit-only` toggle; Edit
+           mode shows this single helper sentence (per brief). -->
+      <p class="au-access-helper au-edit-only" id="auAccessHelper">Role assignment determines this user's effective access. Permission functions are managed in role definitions.</p>
+
+      <div class="au-field au-role-field">
+        <label class="au-label" for="auRoleCombo-ctl"><span class="au-add-only">Assign Roles</span><span class="au-edit-only">Assigned Role</span><span class="au-req">*</span></label>
+        <div class="au-role-row">
+          <div class="au-role-dd-field">
+            <!-- Add-mode: single-select EDL combo (unchanged). The
+                 existing initCombo wiring still drives this in Add mode
+                 only; in Edit mode this element is hidden via
+                 `.au-add-only`. -->
+            <div class="edl-combo au-field-dd au-add-only" id="auRoleCombo" aria-label="Roles"></div>
+            <!-- Round 21 (2026-06-09 — Edit User multi-select role
+                 dropdown). The EDL "checkbox dropdown" component
+                 (Figma EDL Component Library node 13065:14610) but
+                 with the search box intentionally omitted per the
+                 brief. The trigger shows a Users-table-style role
+                 summary (e.g. "Read-Only Viewer" or "Read-Only Viewer
+                 +1 role"); the open menu lists every role with a
+                 checkbox aligned left. Visible in edit mode only;
+                 driven by `initAuRoleMultiCombo()` in app.js. -->
+            <div class="au-role-multi au-edit-only" id="auRoleMultiCombo" aria-label="Assigned roles">
+              <button type="button" class="au-role-multi-trigger" id="auRoleMultiTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRoleMultiMenu">
+                <span class="au-role-multi-value" id="auRoleMultiValue">Select roles</span>
+                <svg class="au-role-multi-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="au-role-multi-menu" id="auRoleMultiMenu" role="listbox" aria-multiselectable="true" hidden></div>
+            </div>
+          </div>
+          <!-- Round 21 (2026-06-09): in Edit mode this button reads
+               "Update access" and applies the dropdown's pending role
+               selection to `auState.selectedRoleIds`, which is what
+               drives the Access table + View breakdown modal. In Add
+               mode it stays as "Add" with the original single-role
+               append behavior (Add User flow unchanged). -->
+          <button class="au-btn-add" id="auRoleAdd" type="button"><span class="au-add-only">Add</span><span class="au-edit-only">Update access</span></button>
+        </div>
+        <!-- Round 21 (2026-06-09): external chip list removed per
+             brief — assigned-role state now lives inside the dropdown
+             via checkboxes, and the closed dropdown summary stands in
+             for the chip list. The container is kept in the DOM
+             (display:none) so existing references in app.js stay safe;
+             it never receives content. -->
+        <div class="au-assigned-roles au-edit-only" id="auAssignedRolesList" role="list" aria-label="Assigned roles" hidden></div>
+      </div>
+
+      <!-- Add-mode: per-role permission card stack (unchanged). -->
+      <div class="au-role-cards au-add-only" id="auRoleCards"></div>
+
+      <!-- Edit-mode: effective access table — read-only preview of the
+           applications/resources the selected role can act on. 3 columns:
+           Application / Access Level / Effective access. Round 5 (2026-
+           06-09): the third column now shows compact resource counts
+           ("Orders (3); Media Plans (1); …") so the row stays scannable;
+           full action verbs live in the "View breakdown" modal opened
+           via the right-aligned action above the table. Populated by
+           `renderAuEffectiveAccessTable` in app.js from `AU_EFF_PATTERNS`
+           + `AU_EFF_ACTIONS`. -->
+      <div class="au-eff-wrap au-edit-only" id="auEffWrap">
+        <div class="au-eff-actions">
+          <button type="button" class="au-eff-view-breakdown" id="auEffViewBreakdown" aria-haspopup="dialog" aria-controls="auEffBreakdownBackdrop">View breakdown</button>
+        </div>
+        <table class="au-eff-tbl" id="auEffTable" aria-label="Effective access by application">
+          <colgroup>
+            <col data-aueff-col="app">
+            <col data-aueff-col="level">
+            <col data-aueff-col="summary">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="au-eff-th-app"><span>Application</span></th>
+              <th class="au-eff-th-level"><span>Access Level</span></th>
+              <th class="au-eff-th-summary"><span>Effective access</span></th>
+            </tr>
+          </thead>
+          <tbody id="auEffTbody"></tbody>
+        </table>
+      </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ═══ EDIT TEAM PAGE ═══
+     Detail page for a single team. Pattern reuses the Edit User shell
+     (`.au-shell` + `.au-back` + `.au-header` + `.au-card`) so spacing,
+     typography, and button placement match Edit User exactly.
+
+     Layout:
+       1. Back link → returns to Teams list.
+       2. Header: title "Edit Team", subtitle = current team name.
+          Top-right actions: Delete Team / Cancel / Save Team.
+       3. "Team details" card: Name (required) + Description fields.
+       4. "Members" card: helper text + table of users assigned to
+          this team. Read-only — no Add/Remove member, no inline
+          editing. The "read-only" rule lives entirely in the helper
+          copy ("Assign users via the User edit screen.") so the
+          card title can stay clean. The bottom "View all in Users"
+          CTA was removed (Frances QA 2026-05-31): users navigate
+          to the Users tab from the top-level tabs instead. -->
+<div id="editTeamPage" class="au-page tm-edit-page" style="display:none">
+  <div class="au-shell">
+    <button class="au-back" id="tmBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span class="au-back-label">Back to teams</span>
+    </button>
+
+    <div class="au-header">
+      <div class="au-header-left">
+        <h1 class="au-title">Edit Team</h1>
+        <p class="au-subtitle" id="tmEditSubtitle">National Ad Sales</p>
+      </div>
+      <div class="au-header-actions">
+        <!-- Delete Team rendered as the same destructive ghost link
+             treatment used by "Remove User" on Edit User, so the
+             dangerous action sits visually demoted next to Cancel /
+             Save Team (per EDL action-priority hierarchy). -->
+        <button type="button" class="au-remove-user-link" id="tmDelete">Delete Team</button>
+        <button type="button" class="btn-std" id="tmCancel">Cancel</button>
+        <button type="button" class="au-btn-save" id="tmSave" disabled>Save Team</button>
+      </div>
+    </div>
+
+    <section class="au-card cr-card tm-details-card" aria-labelledby="tmDetailsTitle">
+      <div class="cr-section-header" aria-expanded="true">
+        <span class="cr-section-title" id="tmDetailsTitle">Team details</span>
+      </div>
+      <div class="au-section-body tm-details-body">
+        <div class="au-field tm-field-name">
+          <label class="au-label" for="tmName">Name<span class="au-req">*</span></label>
+          <input class="au-input" id="tmName" type="text" value="National Ad Sales" autocomplete="off">
+        </div>
+        <div class="au-field tm-field-desc">
+          <label class="au-label" for="tmDesc">Description</label>
+          <input class="au-input" id="tmDesc" type="text" value="National advertising sales organization" autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <section class="au-card cr-card tm-members-card" aria-labelledby="tmMembersTitle">
+      <div class="cr-section-header tm-members-head" aria-expanded="true">
+        <span class="cr-section-title" id="tmMembersTitle">Members</span>
+        <!-- `+ Add members` lives in the card header, right-aligned
+             via .tm-members-head's space-between layout. Uses the
+             EDL outlined .cr-btn-add base visual; this surface
+             intentionally does NOT use the filled-purple #createRolePage
+             override so the Add control reads as a secondary
+             affordance next to the destructive Delete Team. -->
+        <button type="button" class="cr-btn-add tm-add-members-btn" id="tmAddMembersBtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          Add members
+        </button>
+      </div>
+      <div class="au-section-body tm-members-body">
+        <p class="tm-members-helper">Review and manage users assigned to this team.</p>
+
+        <div class="tbl-wrap tm-members-tbl-wrap">
+          <table class="tbl tm-members-tbl" id="tmMembersTable">
+            <colgroup>
+              <col class="tm-mcol-name"    data-tmm-col="name">
+              <col class="tm-mcol-email"   data-tmm-col="em">
+              <col class="tm-mcol-role"    data-tmm-col="role">
+              <col class="tm-mcol-actions" data-tmm-col="actions">
+            </colgroup>
+            <thead>
+              <tr>
+                <th><div class="th-inner"><span>Name</span></div></th>
+                <th><div class="th-inner"><span>Email</span></div></th>
+                <th><div class="th-inner"><span>Role</span></div></th>
+                <th class="tm-th-actions"><div class="th-inner"><span>Actions</span></div></th>
+              </tr>
+            </thead>
+            <tbody id="tmMembersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ═══ CREATE ROLE PAGE ═══ -->
+<div id="createRolePage" class="cr-page" style="display:none">
+  <div class="cr-shell">
+    <button class="cr-back" id="crBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Roles
+    </button>
+
+    <div class="cr-header">
+      <div class="cr-header-left">
+        <h1 class="cr-title">Create Role</h1>
+        <p class="cr-subtitle">Define role details, assign functions and manage access settings</p>
+      </div>
+      <div class="cr-header-actions">
+        <button class="cr-btn-remove" id="crRemove" type="button" hidden>
+          <span>Remove Role</span>
+        </button>
+        <button class="btn-std" id="crCancel">Cancel</button>
+        <button class="cr-btn-save" id="crSave" disabled>Save Role</button>
+      </div>
+    </div>
+
+    <!-- Basic Information Card -->
+    <div class="cr-card" id="crBasicCard">
+      <div class="cr-section-header" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title">Role details</span>
+        <span class="cr-section-summary" id="crBasicSummary" aria-hidden="true"></span>
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Role Name <span class="cr-req">*</span></label>
+        <input type="text" class="cr-input" id="crRoleName" placeholder="Enter Role Name" autocomplete="off">
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Description</label>
+        <textarea class="cr-textarea" id="crDescription" placeholder="A brief summary of the role and its primary audience"></textarea>
+      </div>
+
+      <div class="cr-field">
+        <label class="cr-label">Data Accessibility <span class="cr-req">*</span></label>
+        <div class="cr-checkbox-row">
+          <label class="cr-checkbox-item">
+            <input type="checkbox" class="cr-check" name="dataAccess" value="sensitive" checked>
+            <span class="cr-check-label">Sensitive Data Access</span>
+          </label>
+          <label class="cr-checkbox-item">
+            <input type="checkbox" class="cr-check" name="dataAccess" value="regional" checked>
+            <span class="cr-check-label">Regional Data Access</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions Card -->
+    <div class="cr-card" id="crFuncsCard">
+      <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title" id="crFunctionsTitle">Functions</span>
+        <span class="cr-section-summary" id="crFuncsSummary" aria-hidden="true"></span>
+      </div>
+      <p class="cr-section-help" id="crFunctionsHelp">Choose which applications this role can access and what actions are allowed.</p>
+
+      <div class="cr-field cr-app-row">
+        <div class="cr-app-row-field">
+          <label class="cr-label">Add application <span class="cr-req">*</span></label>
+          <div class="cr-dd" id="crAppDD">
+            <button type="button" class="cr-dd-trigger" id="crAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="crAppMenu">
+              <span class="cr-dd-value is-placeholder" id="crAppValue">Select applications</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="cr-btn-add" id="crAddBtn" disabled>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          Add
+        </button>
+      </div>
+
+      <!-- Applications sections container (populated by JS) -->
+      <div class="cr-perms-content" id="crPermsContent" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PERMISSION CAPABILITY DETAIL PAGE ═══
+     Opens when a user clicks a permission function name on the
+     Permission Management tab. Figma 788:4348 ("Create Permission
+     Capability"). Reuses the .cr-page shell + .cr-card section
+     pattern from #createRolePage / #addUsersPage so the chrome
+     (fixed overlay, back link, header rhythm, card padding) is
+     identical to the rest of the v2 detail flows. Only the
+     fields and option-group cards are unique to this page.
+
+     Scope (per Tatiana / user prompt 2026-05-20):
+       • Basic Information — permission identity + metadata
+       • Permission Options — actions available in this capability
+     Explicitly NOT included: Assigned Roles, Capability Details,
+     Registry Object Metadata. Role assignment lives on its own tab. -->
+<div id="pcDetailPage" class="cr-page pc-page" style="display:none">
+  <div class="cr-shell">
+    <button class="cr-back" id="pcBack">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Permissions
+    </button>
+
+    <div class="cr-header">
+      <div class="cr-header-left">
+        <h1 class="cr-title">Create Permission Capability</h1>
+        <p class="cr-subtitle">Configure reusable permission groups and actions for role assignment.</p>
+      </div>
+      <div class="cr-header-actions">
+        <button class="btn-std" id="pcCancel" type="button">Cancel</button>
+        <button class="cr-btn-save" id="pcSave" type="button" disabled>Save Permission</button>
+      </div>
+    </div>
+
+    <!-- Basic Information -->
+    <div class="cr-card" id="pcBasicCard">
+      <div class="cr-section-header" data-pc-toggle="basic" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title">Basic Information</span>
+      </div>
+
+      <div class="pc-basic-grid">
+        <div class="pc-field pc-field-name">
+          <label class="cr-label" for="pcPermName">Permission Name<span class="cr-req">*</span></label>
+          <input type="text" class="cr-input" id="pcPermName" autocomplete="off">
+        </div>
+        <div class="pc-field pc-field-app">
+          <label class="cr-label" for="pcAppTrigger">Choose Application<span class="cr-req">*</span></label>
+          <div class="cr-dd pc-dd" id="pcAppDD">
+            <button type="button" class="cr-dd-trigger" id="pcAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAppMenu">
+              <span class="cr-dd-value is-placeholder" id="pcAppValue">Select Application</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-field pc-field-created">
+          <label class="cr-label" for="pcCreatedBy">Created By</label>
+          <input type="text" class="cr-input pc-input-disabled" id="pcCreatedBy" value="Marge Simpson" disabled aria-disabled="true">
+        </div>
+
+        <div class="pc-field pc-field-desc">
+          <label class="cr-label" for="pcDesc">Description</label>
+          <input type="text" class="cr-input" id="pcDesc" autocomplete="off">
+        </div>
+        <div class="pc-field pc-field-meta">
+          <div class="pc-meta-cell">
+            <label class="cr-label">Status</label>
+            <div class="pc-status" id="pcStatus">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="7" stroke="#056C07" stroke-width="1.5" fill="none"/>
+                <path d="M5 8.5l2 2 4-4.5" stroke="#056C07" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+              <span class="pc-status-label">Active</span>
+            </div>
+          </div>
+          <div class="pc-meta-cell">
+            <label class="cr-label">Last Updated</label>
+            <div class="pc-meta-value" id="pcLastUpdated">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permission Options -->
+    <div class="cr-card" id="pcOptionsCard">
+      <div class="cr-section-header" data-pc-toggle="options" role="button" tabindex="0" aria-expanded="true">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="cr-section-title">Permission Options</span>
+      </div>
+      <p class="pc-section-help">Configure the actions available in this permission capability.</p>
+
+      <div class="pc-options-toolbar">
+        <div class="pc-field pc-field-access">
+          <label class="cr-label" for="pcAccessLevelTrigger">Default Access level<span class="cr-req">*</span></label>
+          <div class="cr-dd pc-dd" id="pcAccessLevelDD">
+            <button type="button" class="cr-dd-trigger" id="pcAccessLevelTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAccessLevelMenu">
+              <span class="cr-dd-value" id="pcAccessLevelValue">Full Access</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-field pc-field-addperm">
+          <label class="cr-label" for="pcAddGroupTrigger">Add Permission Group<span class="cr-req">*</span></label>
+          <div class="cr-dd pc-dd" id="pcAddGroupDD">
+            <button type="button" class="cr-dd-trigger" id="pcAddGroupTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAddGroupMenu">
+              <span class="cr-dd-value is-placeholder" id="pcAddGroupValue">Select a group</span>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="cr-btn-add" id="pcAddBtn" disabled>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          Add
+        </button>
+      </div>
+
+      <!-- Group cards container (populated by JS) -->
+      <div class="pc-groups" id="pcGroups"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FILTER DRAWER ═══ -->
+<div class="flt-overlay" id="fltOverlay"></div>
+<aside class="flt-drawer" id="fltDrawer">
+  <div class="flt-header">
+    <h2 class="flt-title">Filters</h2>
+    <button class="flt-close" id="fltClose" aria-label="Close filters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flt-body">
+    <div class="flt-field">
+      <label class="flt-label">Name</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltName" placeholder="Search name">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear name" data-for="fltName"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Email</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltEmail" placeholder="Search email">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear email" data-for="fltEmail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Role</label>
+      <div class="edl-combo" id="roleCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Status</label>
+      <div class="edl-combo" id="statusCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Team</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="fltTeam" placeholder="Search team">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear team" data-for="fltTeam"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Region</label>
+      <div class="edl-combo" id="regionCombo"></div>
+    </div>
+  </div>
+  <div class="flt-footer">
+    <button class="flt-btn-reset" id="fltReset">Reset Filters</button>
+    <div class="flt-footer-r">
+      <button class="flt-btn-cancel" id="fltCancel">Cancel</button>
+      <button class="flt-btn-apply" id="fltApply">Apply</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ ROLES & PERMISSIONS FILTER DRAWER ═══
+     Structural twin of #fltDrawer above — same .flt-* classes, same .edl-combo
+     component, same header / body / footer rhythm. Only the fields + IDs
+     change. No new CSS is introduced; the drawer inherits every EDL token. -->
+<div class="flt-overlay" id="rpFltOverlay"></div>
+<aside class="flt-drawer" id="rpFltDrawer">
+  <div class="flt-header">
+    <h2 class="flt-title">Filters</h2>
+    <button class="flt-close" id="rpFltClose" aria-label="Close filters">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="flt-body">
+    <div class="flt-field">
+      <label class="flt-label">Role</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="rpFltRole" placeholder="Search role name">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear role" data-for="rpFltRole"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Description</label>
+      <div class="flt-input-wrap">
+        <input type="text" class="flt-input" id="rpFltDesc" placeholder="Search description">
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear description" data-for="rpFltDesc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Functions</label>
+      <div class="edl-combo" id="rpFunctionsCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Created By</label>
+      <div class="edl-combo" id="rpCreatorCombo"></div>
+    </div>
+    <div class="flt-field">
+      <label class="flt-label">Create Date</label>
+      <div class="flt-input-wrap">
+        <input type="date" class="flt-input" id="rpFltDate">
+      </div>
+    </div>
+  </div>
+  <div class="flt-footer">
+    <button class="flt-btn-reset" id="rpFltReset">Reset Filters</button>
+    <div class="flt-footer-r">
+      <button class="flt-btn-cancel" id="rpFltCancel">Cancel</button>
+      <button class="flt-btn-apply" id="rpFltApply">Apply</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Standalone Permissions filter drawer (#pmFltOverlay + #pmFltDrawer)
+     was REMOVED 2026-06-07 along with the Permissions tab itself, per
+     Tatiana direction. Users / Roles filter drawers below are
+     unchanged. -->
+
+<!-- EDL toast container — visually matches the EDL Toast component (Figma node 15094:75972).
+     Live region so screen readers announce toasts as they appear. -->
+<div class="edl-toast-container" id="edlToastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+<!-- Remove Role confirmation dialog -->
+<div class="cr-confirm-backdrop" id="crConfirmBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crConfirmTitle" aria-describedby="crConfirmBody">
+    <h2 class="cr-confirm-title" id="crConfirmTitle">Remove role?</h2>
+    <p class="cr-confirm-body" id="crConfirmBody">
+      Are you sure you want to remove <strong id="crConfirmRoleName">this role</strong>? This action cannot be undone.
+    </p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="crConfirmCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="crConfirmRemove" type="button">Remove Role</button>
+    </div>
+  </div>
+</div>
+
+<!-- Remove application from role (Edit Role only — same EDL modal shell as Remove Role) -->
+<div class="cr-confirm-backdrop" id="crAppRemoveBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crAppRemoveTitle" aria-describedby="crAppRemoveBody">
+    <h2 class="cr-confirm-title" id="crAppRemoveTitle">Remove application from role?</h2>
+    <p class="cr-confirm-body" id="crAppRemoveBody">Removing this application will remove its permissions from this role. Users assigned to this role may lose access.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="crAppRemoveCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="crAppRemoveConfirm" type="button">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add User: Inactive status — same EDL `.cr-confirm-*` shell as Remove Role -->
+<div class="cr-confirm-backdrop" id="auInactiveConfirmBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auInactiveConfirmTitle" aria-describedby="auInactiveConfirmBody">
+    <h2 class="cr-confirm-title" id="auInactiveConfirmTitle">Set user as inactive?</h2>
+    <p class="cr-confirm-body" id="auInactiveConfirmBody">Inactive users cannot be assigned roles, functions, or permissions in Atlas. Any selected access will be removed before this user is added.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="auInactiveConfirmCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="auInactiveConfirmPrimary" type="button">Set as Inactive</button>
+    </div>
+  </div>
+</div>
+
+<!-- Permission Capability: Delete permission group confirmation. Reuses
+     the EDL .cr-confirm-* shell (Remove Role / Remove application / Set
+     user as inactive / Remove user) with an extra "Impacted roles"
+     block injected before the actions row, populated at open time. -->
+<div class="cr-confirm-backdrop" id="pcDeleteGroupBackdrop" hidden>
+  <div class="cr-confirm-dialog pc-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="pcDeleteGroupTitle" aria-describedby="pcDeleteGroupBody">
+    <h2 class="cr-confirm-title" id="pcDeleteGroupTitle">Delete permission group?</h2>
+    <p class="cr-confirm-body" id="pcDeleteGroupBody">
+      Are you sure you want to delete this permission group? This change will impact <strong id="pcDeleteGroupCount">0</strong> assigned roles.
+    </p>
+    <div class="pc-impacted-roles" id="pcImpactedRolesWrap">
+      <div class="pc-impacted-roles-title">Impacted roles</div>
+      <ul class="pc-impacted-roles-list" id="pcImpactedRolesList"></ul>
+      <p class="pc-impacted-roles-empty" id="pcImpactedRolesEmpty" hidden>This permission group is not currently assigned to any roles.</p>
+    </div>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="pcDeleteGroupCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="pcDeleteGroupConfirm" type="button">Delete Permission Group</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User: remove confirmation (Homer prototype) -->
+<div class="cr-confirm-backdrop" id="auRemoveUserBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auRemoveUserTitle" aria-describedby="auRemoveUserBody">
+    <h2 class="cr-confirm-title" id="auRemoveUserTitle">Remove user?</h2>
+    <p class="cr-confirm-body" id="auRemoveUserBody">This user will be removed from Atlas and their assigned roles and permissions will no longer apply. This action cannot be undone in this prototype session.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="auRemoveUserCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="auRemoveUserConfirm" type="button">Remove User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User: Effective access breakdown (read-only).
+     Round 8 (2026-06-09): restructured to match the EDL Modal component
+     (Figma node 51840:2241) — separate header bar with title + close
+     icon, body region, footer with EDL standard button. The dialog
+     still mounts inside the shared `.cr-confirm-backdrop` overlay (the
+     same overlay used by Remove Role / Add members) so backdrop click
+     + Esc behavior stays consistent across the prototype. The
+     `.au-eff-modal-dialog` variant overrides `.cr-confirm-dialog`
+     padding/radius/shadow to match EDL X-Small/Small light mode
+     specifications. -->
+<div class="cr-confirm-backdrop" id="auEffBreakdownBackdrop" hidden>
+  <div class="cr-confirm-dialog au-eff-modal-dialog edl-modal" role="dialog" aria-modal="true" aria-labelledby="auEffBreakdownTitle" aria-describedby="auEffBreakdownSubtitle">
+    <header class="edl-modal-head">
+      <h2 class="edl-modal-title" id="auEffBreakdownTitle">Effective access breakdown</h2>
+      <button type="button" class="edl-modal-close" id="auEffBreakdownX" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </header>
+    <div class="edl-modal-body">
+      <p class="edl-modal-intro" id="auEffBreakdownSubtitle">Access shown is inherited from the assigned role.</p>
+      <div class="au-eff-modal-role">
+        <span class="au-eff-modal-role-label">Assigned role</span>
+        <span class="au-eff-modal-role-value" id="auEffBreakdownRoleName">—</span>
+      </div>
+      <div class="au-eff-modal-scroll" id="auEffBreakdownSections"></div>
+    </div>
+    <footer class="edl-modal-foot">
+      <button class="btn-std" id="auEffBreakdownClose" type="button">Close</button>
+    </footer>
+  </div>
+</div>
+
+<!-- Edit Team: Add members modal. Reuses the EDL `.cr-confirm-*`
+     shell (used by Remove Role / Remove application / Set user as
+     inactive / Remove user / Delete permission group) with a wider
+     `.tm-add-dialog` variant so the search + scrollable internal-user
+     list fits. Strictly scoped to Edit Team — no other surface
+     references `.tm-add-*`. -->
+<div class="cr-confirm-backdrop" id="tmAddMembersBackdrop" hidden>
+  <div class="cr-confirm-dialog tm-add-dialog" role="dialog" aria-modal="true" aria-labelledby="tmAddMembersTitle" aria-describedby="tmAddMembersSubtitle">
+    <h2 class="cr-confirm-title" id="tmAddMembersTitle">Add members</h2>
+    <p class="cr-confirm-body tm-add-subtitle" id="tmAddMembersSubtitle">Search and select internal users to add to this team.</p>
+    <div class="tm-add-search">
+      <svg class="tm-add-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="tm-add-search-input" id="tmAddMembersSearch" placeholder="Search by name, email, or team" autocomplete="off">
+    </div>
+    <div class="tm-add-list-wrap">
+      <div class="tm-add-list" id="tmAddMembersList" role="listbox" aria-multiselectable="true" tabindex="0"></div>
+      <p class="tm-add-empty" id="tmAddMembersEmpty" hidden>No matching users.</p>
+    </div>
+    <div class="cr-confirm-actions tm-add-actions">
+      <span class="tm-add-selected-count" id="tmAddMembersCount" aria-live="polite">0 selected</span>
+      <span class="tm-add-actions-spacer"></span>
+      <button class="btn-std" id="tmAddMembersCancel" type="button">Cancel</button>
+      <button class="au-btn-save" id="tmAddMembersConfirm" type="button" disabled>Add members</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Team: confirm dialog before removing a member from the
+     Members table. Reuses the shared `.cr-confirm-backdrop` /
+     `.cr-confirm-dialog` EDL shell (already used by Remove role,
+     Remove application, Set inactive, Remove user) so spacing,
+     overlay, border-radius, shadow, title typography, body
+     typography, and Cancel/primary button alignment match every
+     other V3 IAM confirmation dialog. The primary action uses
+     `.cr-btn-danger-solid` — the same destructive-confirm style
+     wired into Remove user — so a single click reads as the
+     final, destructive step. Title + body are filled in by
+     `openTmRemoveMemberConfirm()` so the dialog can name the
+     specific member and team. Strictly scoped to Edit Team. -->
+<div class="cr-confirm-backdrop" id="tmRemoveMemberBackdrop" hidden>
+  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="tmRemoveMemberTitle" aria-describedby="tmRemoveMemberBody">
+    <h2 class="cr-confirm-title" id="tmRemoveMemberTitle">Remove member from team?</h2>
+    <p class="cr-confirm-body" id="tmRemoveMemberBody">This will remove this user from the team. The user account and assigned role will remain unchanged.</p>
+    <div class="cr-confirm-actions">
+      <button class="btn-std" id="tmRemoveMemberCancel" type="button">Cancel</button>
+      <button class="cr-btn-danger-solid" id="tmRemoveMemberConfirm" type="button">Remove member</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=20260705r40v4"></script>
+<script>
+  /* Sidebar collapse/expand — V4 R35.
+     
+     Wires the collapse button to toggle `data-collapsed` on the
+     <aside id="sidebar"> element and mirrors that state on <html>
+     so the CSS can shift the .page's left padding.
+     
+     State is persisted in localStorage under the key 'iamV4SidebarCollapsed'
+     so the user's preference survives a reload. On boot, the last-saved
+     state is applied BEFORE first paint (this script is inline at the
+     end of body, but before any user interaction; the sidebar's initial
+     HTML has data-collapsed="false" so the default is "open").
+     
+     Toggle button icon flips via CSS `.sidebar[data-collapsed="true"]
+     .sb-toggle-ico { transform: rotate(180deg); }` — no JS needed.
+     
+     Aria semantics: `aria-expanded` on the toggle button reflects the
+     sidebar's open state; `aria-label` swaps between "Collapse sidebar"
+     and "Expand sidebar" for screen-reader clarity.
+     
+     Scoped by feature-detect: the script no-ops if the sidebar element
+     is absent, so V3 (which doesn't have a sidebar) is unaffected. */
+  (function initSidebar() {
+    var sb = document.getElementById('sidebar');
+    var btn = document.getElementById('sidebarToggle');
+    if (!sb || !btn) return;
+    var STORAGE_KEY = 'iamV4SidebarCollapsed';
+
+    function apply(collapsed) {
+      sb.setAttribute('data-collapsed', collapsed ? 'true' : 'false');
+      document.documentElement.setAttribute('data-sidebar-collapsed', collapsed ? 'true' : 'false');
+      btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      btn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* private mode */ }
+    apply(saved === 'true');
+
+    btn.addEventListener('click', function () {
+      var next = sb.getAttribute('data-collapsed') !== 'true';
+      apply(next);
+      try { localStorage.setItem(STORAGE_KEY, next ? 'true' : 'false'); } catch (e) { /* ignore */ }
+    });
+  })();
+</script>
+</body>
+</html>
