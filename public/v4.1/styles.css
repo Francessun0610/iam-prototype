@@ -738,7 +738,21 @@ th.c-st .th-inner { justify-content: center; }
 }
 
 /* ─── Role cell ─── */
-.role-txt { font-size: 14px; line-height: 21px; color: var(--text-primary); }
+.role-txt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--text-primary);
+}
+.role-primary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .role-extra { color: var(--brand-text); cursor: pointer; text-decoration: none; }
 .role-extra:hover { text-decoration: underline; }
 
@@ -9232,6 +9246,7 @@ html[data-iam-version="v4"] .tm-add-submit-error[hidden] { display: none; }
        node 770:17443 renders this exactly. V3 ads-preview left
        the EDL treatment on this specific element. Restyle here. */
 [data-iam-version="v4"] .role-extra {
+  flex: 0 0 auto;
   background: var(--ads-indigo-50, #E2E3F2);
   color: var(--ads-indigo-300, #4045C2);
   border-radius: var(--ads-radius-pill, 100px);

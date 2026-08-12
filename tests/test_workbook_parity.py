@@ -233,9 +233,16 @@ def main():
           not any(str(r).lower() in ("unresolved", "pending review", "needs approval",
                                      "unknown role", "no role")
                   for u in users for r in u["roles"]))
-    check("Users with one valid role are not given extra roles",
-          all(len(u["roles"]) == 1 for u in users),
-          str([u["id"] for u in users if len(u["roles"]) != 1][:5]))
+    internal_first_page = users[:10]
+    first_page_counts = [len(u["roles"]) for u in internal_first_page]
+    check("V4.1 first page intentionally mixes four single-, four double-, and two triple-role users",
+          first_page_counts.count(1) == 4
+          and first_page_counts.count(2) == 4
+          and first_page_counts.count(3) == 2,
+          str(first_page_counts))
+    check("Users outside the intentional V4.1 first-page demo retain one valid role",
+          all(len(u["roles"]) == 1 for u in users[10:]),
+          str([u["id"] for u in users[10:] if len(u["roles"]) != 1][:5]))
 
     # Identity: only `roles` may have moved. Every other field the record
     # carried before the migration must still hold the same value.
@@ -346,16 +353,27 @@ def main():
     js("Array.from(document.querySelectorAll('.tab-btn'))"
        ".find(function(b){return b.textContent.trim()==='Users';}).click();")
     time.sleep(0.4)
-    row_role = js("(function(){var r=document.querySelector('#tbody tr');"
-                  "return r ? r.children[3].textContent.trim() : null;})()")
+    row_role = js("(function(){var r=document.querySelector('#tbody tr .role-primary');"
+                  "return r ? r.textContent.trim() : null;})()")
+    row_roles = json.loads(js("JSON.stringify(DATA[0].roles)"))
     js("(function(){var a=document.querySelector('#tbody a.name-link'); if (a) a.click();})()")
     time.sleep(1.0)
     js("(function(){var b=document.getElementById('auEffViewBreakdown'); if (b) b.click();})()")
     time.sleep(0.6)
     breakdown_role = js("document.getElementById('auEffBreakdownRoleName').textContent.trim()")
-    check("Users list and the effective-access breakdown agree on the role",
-          row_role == breakdown_role, "%s vs %s" % (row_role, breakdown_role))
+    breakdown_roles = [r.strip() for r in breakdown_role.split(",") if r.strip()]
+    check("Users list primary role and the effective-access breakdown agree on role order",
+          row_role == row_roles[0] and breakdown_roles == row_roles,
+          "%s / %s vs %s" % (row_role, row_roles, breakdown_roles))
     check("The displayed role is a canonical workbook role", row_role in wb_roles, row_role)
+    check("Every breakdown role is a canonical workbook role",
+          all(role in wb_roles for role in breakdown_roles), str(breakdown_roles))
+
+    union_codes = []
+    for role in row_roles:
+        for code in wb_roles[role]:
+            if code not in union_codes:
+                union_codes.append(code)
 
     grants = js("""
       (function(){
@@ -368,13 +386,13 @@ def main():
       })()""")
     shown = sum(len([a for a in g["actions"].split(",") if a.strip()]) for g in grants)
     check("Breakdown lists one verb per granted permission code, no duplicates",
-          shown == len(wb_roles[row_role]),
-          "%d verbs shown vs %d codes" % (shown, len(wb_roles[row_role])))
+          shown == len(union_codes),
+          "%d verbs shown vs %d union codes" % (shown, len(union_codes)))
     # The workbook files sensitive/regional access under a single "(all)"
     # resource, so the row count is compared against the registry's own
     # grouping of those codes rather than the raw workbook column.
     groups = js("JSON.stringify(Array.from(new Set(%s.map(permissionGroupForCode))))"
-                % json.dumps(wb_roles[row_role]))
+                % json.dumps(union_codes))
     check("Breakdown rows are exactly the role's granted resource groups",
           len(grants) == len(json.loads(groups)),
           "%d rows vs %d groups" % (len(grants), len(json.loads(groups))))
@@ -397,9 +415,9 @@ def main():
                             "function(o,k){o[k]=appDisplayNameForToken(WB_APP_TOKEN[k]); return o;}, {}))"))
     action_by_code = {p["code"]: p["action"] for p in app_perms}
     writes = {display[p["application"]] for p in wb_perms
-              if p["code"] in wb_roles[row_role]
+              if p["code"] in union_codes
               and action_by_code[p["code"]] not in ("read", "access")}
-    granted = {display[p["application"]] for p in wb_perms if p["code"] in wb_roles[row_role]}
+    granted = {display[p["application"]] for p in wb_perms if p["code"] in union_codes}
     by_app = {l["app"]: l["level"] for l in levels}
     check("Effective access lists exactly the applications the role can reach",
           set(by_app) == granted,

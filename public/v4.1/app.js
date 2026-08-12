@@ -1,14 +1,14 @@
 var DATA = [
   /* ── Page 1 ── */
-  { id: "u001", avatar: "../avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["ACP Vendor Planner"],             status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
-  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "marge.simpson@disney.com",                roles: ["ACP Planning Specialist"],        status: "Active",   team: "Sales Planning",             title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
+  { id: "u001", avatar: "../avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["ACP Vendor Planner", "Planning Agent User", "ACP Viewer"], status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
+  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "marge.simpson@disney.com",                roles: ["ACP Planning Specialist", "Sales Agent User"], status: "Active",   team: "Sales Planning",             title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
   { id: "u003", avatar: "../avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["ACP Vendor Planning Specialist"], status: "Active",   team: "National Ad Sales",          title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
-  { id: "u004", avatar: "../avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["ACP Planning Manager"],           status: "Active",   team: "Client & Brand Solutions",   title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
-  { id: "u005", avatar: "../avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["ACP Viewer"],                     status: "Active", team: "Ad Operations",              title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
+  { id: "u004", avatar: "../avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["ACP Planning Manager", "ACP Planning Specialist", "ACP Viewer"], status: "Active",   team: "Client & Brand Solutions",   title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
+  { id: "u005", avatar: "../avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["ACP Viewer", "Planning Agent User"], status: "Active", team: "Ad Operations",              title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
   { id: "u006", avatar: "../avatars/photos/m04.png", name: "Montgomery Burns",             email: "Montgomery.Burns@disney.com",             roles: ["Sales Agent User"],               status: "Inactive", team: "Revenue & Yield Management", title: "SVP, Revenue Strategy",                region: "NA",    lastLogin: "Feb 14, 2026, 10:30 AM"  },
-  { id: "u007", avatar: "../avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Planning Agent User"],            status: "Active",   team: "Sales Planning",             title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
+  { id: "u007", avatar: "../avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Planning Agent User", "ACP Planner"], status: "Active",   team: "Sales Planning",             title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
   { id: "u008", avatar: "../avatars/photos/f03.png", name: "Maggie Simpson",               email: "Maggie.Simpson@disney.com",               roles: ["ACP Planner"],                    status: "Active",   team: "Revenue & Yield Management", title: "Associate, Revenue Ops",               region: "NA",    lastLogin: "May 2, 2026, 7:00 PM"   },
-  { id: "u009", avatar: "../avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["ACP Vendor Planner"],             status: "Inactive", team: "Sales Planning",             title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
+  { id: "u009", avatar: "../avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["ACP Vendor Planner", "Sales Agent User"], status: "Inactive", team: "Sales Planning",             title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
   { id: "u010", avatar: "../avatars/photos/m07.png", name: "Nelson Muntz",                 email: "Nelson.Muntz@disney.com",                 roles: ["ACP Vendor Planner"],             status: "Active",   team: "Revenue & Yield Management", title: "Associate, Finance & Planning",        region: "LATAM", lastLogin: "Apr 25, 2026, 5:30 PM"   },
 
   /* ── Page 2 ── */
@@ -2759,40 +2759,30 @@ function returnToUserListFromPrototype() {
   }
 }
 
-/* Width-responsive Role column overflow on the Users tab.
-   ─────────────────────────────────────────────────────────
-   Walks every visible Role cell and decides whether to show the full
-   role list or collapse the tail into a "+N role(s)" link. Reads the
-   row's roles from its td's `data-roles` attribute (pipe-delimited,
-   set in renderTable) so this works after any re-render and also for
-   size-only events that don't rebuild the table (window resize,
-   manual column resize).
+/* Stable primary-role + count-badge treatment for the Users tab.
+   ────────────────────────────────────────────────────────────────
+   The canonical role array is ordered: roles[0] is the primary role
+   used by the visible table and Role sort; every later item is a
+   supporting role. The list intentionally never renders supporting
+   names inline, even when a wide viewport could fit them. It always
+   renders:
 
-   Algorithm, per cell:
-     1. Render the full role list, no chip. Because `.tbl td` is
-        `overflow: hidden; text-overflow: ellipsis`, content that
-        fits produces `scrollWidth <= clientWidth` and we leave it
-        alone — no "+N" chip on wide/roomy layouts.
-     2. If the full list overflows, iteratively drop trailing roles
-        and append a "+N role(s)" chip until the cell fits. Stops at
-        1 visible role; if even that plus the chip overflows, the
-        cell's natural ellipsis truncates inside the last role — the
-        EDL truncation tooltip (when scrollWidth > clientWidth) and the
-        +N chip's data-tooltip reveal the full list on hover, so nothing is lost.
-     3. A +1px tolerance on the fit check absorbs sub-pixel rounding
-        from the browser so cells right at the boundary don't flap
-        between states during resize.
+       Primary role  +N role(s)
+
+   This keeps row height and scanability stable while making the
+   multi-role state explicit. The existing ADS chip carries the full,
+   ordered role list in its tooltip. `.role-primary` owns ellipsis so a
+   long primary role shrinks before the fixed-size badge.
 
    Called from:
      • renderTable() — after every table render.
      • setupRightmostAlignment's debounced window-resize handler.
      • setupColumnResize's onMove/onUp (Users table only) so dragging
-       the Role handle wider restores hidden roles in real time and
-       dragging it narrower brings the chip back only when needed.
+       the Role handle reflows the primary-role ellipsis while the
+       count badge remains visible.
 
-   No styling, row height, typography, tooltip/search/filter/pagination
-   or alignment behavior is touched — this only swaps the innerHTML of
-   the existing `.role-txt` span inside the existing td. */
+   Filtering, search, sorting, export, Edit User and effective access
+   continue to read the unchanged complete `user.roles` array. */
 function fitUsersRoleCells() {
   var tbody = document.getElementById("tbody");
   if (!tbody) return;
@@ -2805,17 +2795,13 @@ function fitUsersRoleCells() {
     var roles = rolesAttr ? rolesAttr.split("|") : [];
     if (!roles.length) continue;
     cell.removeAttribute("title");
-    span.innerHTML = esc(roles.join(", "));
-    if (cell.scrollWidth <= cell.clientWidth + 1) continue;
-    var tooltip = roles.join("\n");
-    for (var count = roles.length - 1; count >= 1; count--) {
-      var shown = roles.slice(0, count);
-      var extra = roles.length - count;
-      span.innerHTML = esc(shown.join(", ")) +
-        ' <a href="#" class="role-extra" data-tooltip="' + esc(tooltip) +
-        '">+' + extra + " role" + (extra > 1 ? "s" : "") + "</a>";
-      if (cell.scrollWidth <= cell.clientWidth + 1) break;
-    }
+    var extra = roles.length - 1;
+    span.innerHTML =
+      '<span class="role-primary">' + esc(roles[0]) + "</span>" +
+      (extra > 0
+        ? ' <a href="#" class="role-extra" data-tooltip="' + esc(roles.join("\n")) +
+          '">+' + extra + " role" + (extra > 1 ? "s" : "") + "</a>"
+        : "");
     cell.removeAttribute("title");
   }
 }
@@ -4280,12 +4266,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (td.classList.contains("empty-state")) return null;
     if (td.classList.contains("c-ct")) return null; // hidden Company Title column
     if (td.classList.contains("rp-func")) return null;
-    /* Role column: no native title — full text from data-roles only when clipped. */
+    /* Role column: the primary label is the only truncating child.
+       Additional roles have their own always-available count-badge
+       tooltip, so hovering a clipped primary should reveal just that
+       complete primary label through the shared ADS tooltip. */
     if (td.classList.contains("c-rl")) {
-      if (td.scrollWidth <= td.clientWidth + 1) return null;
-      var ra = td.getAttribute("data-roles") || "";
-      var roleFull = ra ? ra.split("|").join(", ") : td.textContent.trim();
-      return { el: td, text: roleFull };
+      var primary = td.querySelector(".role-primary");
+      if (primary && primary.scrollWidth > primary.clientWidth + 1) {
+        return { el: primary, text: primary.textContent.trim() };
+      }
+      return null;
     }
     var INNER_SELECTORS = ".name-link";
     var innerMatches = td.querySelectorAll(INNER_SELECTORS);
