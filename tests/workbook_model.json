@@ -1,0 +1,608 @@
+{
+ "_source": "New OMS - Roles & Permissions.xlsx (Tatiana). Regenerate with tools/extract_workbook.py.",
+ "_sheets": [
+  "Core Planning",
+  "v2. Agent",
+  "Agents"
+ ],
+ "_restated_on_v2_agent": [
+  "acp_lineitem_create",
+  "acp_lineitem_delete",
+  "acp_lineitem_read",
+  "acp_lineitem_update",
+  "acp_order_approve",
+  "acp_order_create",
+  "acp_order_delete",
+  "acp_order_read",
+  "acp_order_update",
+  "acp_plan_create",
+  "acp_plan_delete",
+  "acp_plan_read",
+  "acp_plan_update",
+  "acp_regional_read",
+  "acp_regional_update",
+  "acp_sensitive_read",
+  "acp_sensitive_update"
+ ],
+ "permissions": [
+  {
+   "code": "acp_order_read",
+   "application": "Core Planning",
+   "resource": "Order",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_order_create",
+   "application": "Core Planning",
+   "resource": "Order",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_order_update",
+   "application": "Core Planning",
+   "resource": "Order",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_order_delete",
+   "application": "Core Planning",
+   "resource": "Order",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_order_approve",
+   "application": "Core Planning",
+   "resource": "Order",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_plan_read",
+   "application": "Core Planning",
+   "resource": "Media Plan",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_plan_create",
+   "application": "Core Planning",
+   "resource": "Media Plan",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_plan_update",
+   "application": "Core Planning",
+   "resource": "Media Plan",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_plan_delete",
+   "application": "Core Planning",
+   "resource": "Media Plan",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_lineitem_read",
+   "application": "Core Planning",
+   "resource": "Line Item",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_lineitem_create",
+   "application": "Core Planning",
+   "resource": "Line Item",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_lineitem_update",
+   "application": "Core Planning",
+   "resource": "Line Item",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_lineitem_delete",
+   "application": "Core Planning",
+   "resource": "Line Item",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_sensitive_read",
+   "application": "Core Planning",
+   "resource": "(all)",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_sensitive_update",
+   "application": "Core Planning",
+   "resource": "(all)",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_regional_read",
+   "application": "Core Planning",
+   "resource": "(all)",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "acp_regional_update",
+   "application": "Core Planning",
+   "resource": "(all)",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_offering_read",
+   "application": "ICM",
+   "resource": "Offering",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_offering_create",
+   "application": "ICM",
+   "resource": "Offering",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_offering_update",
+   "application": "ICM",
+   "resource": "Offering",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_offering_delete",
+   "application": "ICM",
+   "resource": "Offering",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_app_group_read",
+   "application": "ICM",
+   "resource": "App Group",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_app_group_create",
+   "application": "ICM",
+   "resource": "App Group",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_app_group_update",
+   "application": "ICM",
+   "resource": "App Group",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_app_group_delete",
+   "application": "ICM",
+   "resource": "App Group",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_salespackage_read",
+   "application": "ICM",
+   "resource": "Sales Package",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_salespackage_create",
+   "application": "ICM",
+   "resource": "Sales Package",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_salespackage_update",
+   "application": "ICM",
+   "resource": "Sales Package",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "icm_salespackage_delete",
+   "application": "ICM",
+   "resource": "Sales Package",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_rule_read",
+   "application": "(TOM)",
+   "resource": "Targeting Rule",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_rule_create",
+   "application": "(TOM)",
+   "resource": "Targeting Rule",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_rule_update",
+   "application": "(TOM)",
+   "resource": "Targeting Rule",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_rule_archive",
+   "application": "(TOM)",
+   "resource": "Targeting Rule",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_restriction_read",
+   "application": "(TOM)",
+   "resource": "Targeting Restriction",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_restriction_create",
+   "application": "(TOM)",
+   "resource": "Targeting Restriction",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_restriction_update",
+   "application": "(TOM)",
+   "resource": "Targeting Restriction",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rm_restriction_archive",
+   "application": "(TOM)",
+   "resource": "Targeting Restriction",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rcm_ratecard_create",
+   "application": "RCM",
+   "resource": "Rate Card",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rcm_ratecard_read",
+   "application": "RCM",
+   "resource": "Rate Card",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rcm_ratecard_update",
+   "application": "RCM",
+   "resource": "Rate Card",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "rcm_ratecard_delete",
+   "application": "RCM",
+   "resource": "Rate Card",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "iam_user_read",
+   "application": "Access Mgmt",
+   "resource": "Users",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "si_opportunity_read",
+   "application": "SalesIntelligence",
+   "resource": "Opportunity",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "si_opportunity_update",
+   "application": "SalesIntelligence",
+   "resource": "Opportunity",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "si_opportunity_create",
+   "application": "SalesIntelligence",
+   "resource": "Opportunity",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "agent_sales_access",
+   "application": "Disney Ads Intelligence",
+   "resource": "Sales Intelligence",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "agent_planning_access",
+   "application": "Disney Ads Intelligence",
+   "resource": "Planning Intelligence",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "agent_account_access",
+   "application": "Disney Ads Intelligence",
+   "resource": "Account Intelligence",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "ss_read",
+   "application": "Disney Campaign Manager",
+   "resource": "Self Service",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "ss_update",
+   "application": "Disney Campaign Manager",
+   "resource": "Self Service",
+   "description": "",
+   "sheet": "Core Planning"
+  },
+  {
+   "code": "ads_agent_sales_read",
+   "application": "Disney Ads Agent",
+   "resource": "Sales",
+   "description": "Upload RFP, generate draft, start flow, view AI-generated content including recommendations (Magic Words, Ad Products, Audiences)",
+   "sheet": "v2. Agent"
+  },
+  {
+   "code": "ads_agent_sales_update",
+   "application": "Disney Ads Agent",
+   "resource": "Sales",
+   "description": "Edit draft, multi-turn clarification, Ad Policy re-check, Confirm Opportunity in SalesHub",
+   "sheet": "v2. Agent"
+  },
+  {
+   "code": "ads_agent_planning_read",
+   "application": "Disney Ads Agent",
+   "resource": "Planning",
+   "description": "List / view media plans, line items, plan insights, and AI-generated recommendations in Planning Agent context",
+   "sheet": "v2. Agent"
+  },
+  {
+   "code": "ads_agent_planning_update",
+   "application": "Disney Ads Agent",
+   "resource": "Planning",
+   "description": "Generate or edit plans via agent, prompt-backs / clarification turns, line-item changes, forecast / max-avails requests",
+   "sheet": "v2. Agent"
+  },
+  {
+   "code": "ads_agent_account_read",
+   "application": "Disney Ads Agent",
+   "resource": "Account",
+   "description": "Account360-scoped AI \u2014 account overview, revenue/pipeline insights, cross-opp FAQ",
+   "sheet": "v2. Agent"
+  },
+  {
+   "code": "ads_agent_account_update",
+   "application": "Disney Ads Agent",
+   "resource": "Account",
+   "description": "Query and act on account-level recommendations \u2014 eligibility questions, engagement summaries, account FAQ prompts",
+   "sheet": "v2. Agent"
+  }
+ ],
+ "roles": [
+  {
+   "name": "ACP Planner",
+   "codes": [
+    "acp_lineitem_create",
+    "acp_lineitem_delete",
+    "acp_lineitem_read",
+    "acp_lineitem_update",
+    "acp_order_create",
+    "acp_order_delete",
+    "acp_order_read",
+    "acp_order_update",
+    "acp_plan_create",
+    "acp_plan_delete",
+    "acp_plan_read",
+    "acp_plan_update",
+    "acp_regional_read",
+    "acp_regional_update",
+    "acp_sensitive_read",
+    "agent_planning_access",
+    "icm_app_group_read",
+    "icm_offering_read",
+    "icm_salespackage_read",
+    "rm_restriction_read",
+    "rm_rule_read",
+    "ss_read"
+   ]
+  },
+  {
+   "name": "ACP Vendor Planner",
+   "codes": [
+    "acp_lineitem_create",
+    "acp_lineitem_delete",
+    "acp_lineitem_read",
+    "acp_lineitem_update",
+    "acp_order_create",
+    "acp_order_delete",
+    "acp_order_read",
+    "acp_order_update",
+    "acp_plan_create",
+    "acp_plan_delete",
+    "acp_plan_read",
+    "acp_plan_update",
+    "acp_regional_read",
+    "acp_regional_update",
+    "acp_sensitive_read",
+    "agent_planning_access",
+    "icm_app_group_read",
+    "icm_offering_read",
+    "icm_salespackage_read",
+    "rm_restriction_read",
+    "rm_rule_read"
+   ]
+  },
+  {
+   "name": "ACP Planning Specialist",
+   "codes": [
+    "acp_lineitem_create",
+    "acp_lineitem_delete",
+    "acp_lineitem_read",
+    "acp_lineitem_update",
+    "acp_order_approve",
+    "acp_order_create",
+    "acp_order_delete",
+    "acp_order_read",
+    "acp_order_update",
+    "acp_plan_create",
+    "acp_plan_delete",
+    "acp_plan_read",
+    "acp_plan_update",
+    "acp_regional_read",
+    "acp_regional_update",
+    "acp_sensitive_read",
+    "iam_user_read",
+    "icm_app_group_read",
+    "icm_offering_read",
+    "icm_salespackage_read",
+    "rcm_ratecard_read",
+    "rm_restriction_read",
+    "rm_rule_read",
+    "ss_read",
+    "ss_update"
+   ]
+  },
+  {
+   "name": "ACP Vendor Planning Specialist",
+   "codes": [
+    "acp_lineitem_create",
+    "acp_lineitem_delete",
+    "acp_lineitem_read",
+    "acp_lineitem_update",
+    "acp_order_approve",
+    "acp_order_create",
+    "acp_order_delete",
+    "acp_order_read",
+    "acp_order_update",
+    "acp_plan_create",
+    "acp_plan_delete",
+    "acp_plan_read",
+    "acp_plan_update",
+    "acp_regional_read",
+    "acp_regional_update",
+    "acp_sensitive_read",
+    "acp_sensitive_update",
+    "icm_app_group_read",
+    "icm_offering_read",
+    "icm_salespackage_read",
+    "rm_restriction_read",
+    "rm_rule_read"
+   ]
+  },
+  {
+   "name": "ACP Planning Manager",
+   "codes": [
+    "acp_lineitem_read",
+    "acp_lineitem_update",
+    "acp_order_approve",
+    "acp_order_create",
+    "acp_order_delete",
+    "acp_order_read",
+    "acp_order_update",
+    "acp_plan_read",
+    "acp_regional_read",
+    "acp_regional_update",
+    "acp_sensitive_read",
+    "acp_sensitive_update",
+    "iam_user_read",
+    "icm_app_group_read",
+    "icm_offering_read",
+    "icm_salespackage_read",
+    "rcm_ratecard_create",
+    "rcm_ratecard_delete",
+    "rcm_ratecard_read",
+    "rcm_ratecard_update",
+    "rm_restriction_read",
+    "rm_rule_read"
+   ]
+  },
+  {
+   "name": "ACP Viewer",
+   "codes": [
+    "acp_lineitem_read",
+    "acp_order_read",
+    "acp_plan_read",
+    "acp_regional_read",
+    "icm_app_group_read",
+    "icm_offering_read",
+    "icm_salespackage_read",
+    "rcm_ratecard_read",
+    "rm_restriction_read",
+    "rm_rule_read"
+   ]
+  },
+  {
+   "name": "Sales Agent User",
+   "codes": [
+    "ads_agent_account_read",
+    "ads_agent_account_update",
+    "ads_agent_sales_read",
+    "ads_agent_sales_update"
+   ]
+  },
+  {
+   "name": "Planning Agent User",
+   "codes": [
+    "acp_lineitem_create",
+    "acp_lineitem_delete",
+    "acp_lineitem_read",
+    "acp_lineitem_update",
+    "acp_order_create",
+    "acp_order_delete",
+    "acp_order_read",
+    "acp_order_update",
+    "acp_plan_create",
+    "acp_plan_delete",
+    "acp_plan_read",
+    "acp_plan_update",
+    "acp_regional_read",
+    "acp_regional_update",
+    "acp_sensitive_read",
+    "ads_agent_account_read",
+    "ads_agent_account_update",
+    "ads_agent_planning_read",
+    "ads_agent_planning_update"
+   ]
+  }
+ ]
+}

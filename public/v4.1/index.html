@@ -14,19 +14,26 @@
        Scope: V2 only. Theme 1.0 (`public/index.html`) is untouched. -->
   <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
-  <title>Atlas — Access Management · V4 (ADS)</title>
+  <title>Atlas — Access Management · V4.1 (ADS)</title>
   <script>
-    /* V4 (Round 32, 2026-07-05): Version 4 of the IAM prototype is a
-       standalone fork of V3 that always renders under the ADS visual
-       language. `data-theme="ads-preview"` is hardcoded on the root so
-       the ADS token overrides at the end of styles.css become the
-       default (rather than opt-in via the user menu, as in V3). V3
-       itself is untouched; the two versions can be compared side by
-       side at `/public/v3/` and `/public/v4/`. IAM content, layout,
-       component placement, and behaviour are identical to V3 — only
-       the visual system (colors, typography, spacing, borders,
-       shadows, focus, table density, chip styling, button chrome) is
-       promoted from opt-in preview to the default. */
+    /* V4.1 (2026-08-11): a complete, independent duplicate of the V4
+       folder (`public/v4/`), taken at its latest state, so this build
+       can evolve on its own without ever modifying or regressing V4 —
+       see `public/version-config.js` for the shared version list/
+       default-route entry and the root `public/index.html` redirect.
+       This file, its sibling `app.js`/`styles.css`, and every relative
+       asset path are all self-contained copies; nothing here is loaded
+       from `../v4/`.
+
+       `data-iam-version="v4"` below is intentionally left unchanged
+       (NOT "v4.1"): it is purely an internal CSS-scoping hook used by
+       THIS document's own (copied) `styles.css` — every
+       `[data-iam-version="v4"]` selector in that file only ever
+       matches within this document, so the value has no bearing on
+       routing, the URL, or which build is active. Renaming it would
+       require a large, purely-cosmetic find/replace across this
+       folder's styles.css for zero functional or visual difference, so
+       it was left as-is to minimize risk. */
     document.documentElement.setAttribute("data-theme", "ads-preview");
     document.documentElement.setAttribute("data-iam-version", "v4");
   </script>
@@ -40,6 +47,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="styles.css?v=20260809r59v4">
+  <!-- Redline Mode (V4.1 only — inspection-only DOM/CSS overlay, invisible
+       until toggled from the profile menu or ⌘D/Ctrl+D; see redline.js).
+       Not present in public/v4/. -->
+  <link rel="stylesheet" href="redline.css?v=20260812redline3">
 </head>
 <body>
 
@@ -158,7 +169,7 @@
                so every build (v1–v4) always lists every version — this
                static markup is just a no-JS-safe placeholder. -->
           <div class="user-menu-sub" role="menu" aria-label="Version">
-            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="4.0 (ADS)" data-version-href="./" tabindex="-1">4.0 (ADS)</div>
+            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="4.1 (ADS)" data-version-href="./" tabindex="-1">4.1 (ADS)</div>
           </div>
         </div>
         <div class="user-menu-row has-sub" id="userMenuTheme" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false">
@@ -169,6 +180,20 @@
             <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="dark" tabindex="-1">EDL Dark</div>
             <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="ads-preview" tabindex="-1">ADS Preview</div>
           </div>
+        </div>
+        <div class="user-menu-sep"></div>
+        <!-- Redline Mode (V4.1 only — see redline.js/redline.css, loaded
+             below). A plain checkable row like Log Out: no leading icon,
+             no submenu chevron (`role="menuitemcheckbox"` conveys the
+             on/off state instead), same height/padding/typography as
+             every other row. The trailing shortcut hint is purely
+             decorative (`aria-hidden`) — redline.js fills in the
+             platform-correct glyph (⌘D / Ctrl+D) at load time and owns
+             the click handler (toggles Redline Mode, then closes this
+             menu) so no other file needs to know about Redline. -->
+        <div class="user-menu-row" role="menuitemcheckbox" tabindex="-1" id="userMenuRedline" aria-checked="false">
+          <span class="user-menu-label">Redline</span>
+          <span class="user-menu-shortcut" aria-hidden="true">⌘D</span>
         </div>
         <div class="user-menu-sep"></div>
         <div class="user-menu-row" role="menuitem" tabindex="-1" id="userMenuLogout">
@@ -289,14 +314,32 @@
     <!-- Toolbar -->
     <div class="tbar">
       <div class="tbar-l">
-        <button class="btn-std">
+        <!-- Icon-only Filter — a compact 36x36 square with just the funnel
+             icon, matching the icon-only filter treatment from the updated
+             Figma toolbar. `#usersFilterBtn` and Roles' `#rpFilterBtn`
+             share ONE sizing/appearance contract in styles.css (both ids
+             appear on the same rule) so the two tabs' Filter buttons can
+             never drift apart; only `aria-label` differs, since each names
+             the records it filters. `data-tooltip` reuses the same generic
+             hover/focus tooltip plumbing as the table's status icons (see
+             setupStatusTooltip() in app.js). -->
+        <button class="btn-std" id="usersFilterBtn" type="button" aria-label="Filter users" data-tooltip="Filter">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-          Filter
         </button>
         <div class="seg-ctrl" id="userViewToggle" role="group" aria-label="User type">
           <button class="seg-btn on" data-view="internal">Internal</button>
           <button class="seg-btn" data-view="external">External</button>
         </div>
+        <!-- Users search (restored Round 38, 2026-08-12). Round 24 had
+             deleted this field outright; every consumer of it survived
+             that removal untouched — the query state (`searchTerm`),
+             filtering (getFilteredData), recent-search dropdown, clear
+             action and keyboard handling all still live in app.js behind
+             an `if (searchWrap)` guard, and the field's own appearance /
+             responsive width come from the shared `.ads-search` component
+             (also used by Roles + Teams). So restoring the original
+             markup and ids below — nothing more — restores the original
+             behavior rather than reimplementing a second, local filter. -->
         <div class="search ads-search" id="searchWrap" data-ads-component="search">
           <input type="text" id="searchInput" placeholder="Search by name, email, or role" aria-label="Search by name, email, or role" autocomplete="off">
           <svg class="search-ico" id="searchIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -425,9 +468,18 @@
     <div id="rolesPanel" style="display:none">
       <div class="tbar">
         <div class="tbar-l">
-          <button class="btn-std" id="rpFilterBtn">
+          <!-- Icon-only Filter (Round 35, 2026-08-12): matches the Users
+               tab's `#usersFilterBtn` treatment exactly — same `.btn-std`
+               component, same dedicated-id sizing override (see
+               `#rpFilterBtn` alongside `#usersFilterBtn` in styles.css)
+               so this can never drift from Users' icon-only button, and
+               the same generic `data-tooltip` hover/focus tooltip
+               plumbing (setupStatusTooltip() in app.js) Users already
+               uses. Both tabs show the same "Filter" tooltip; only
+               `aria-label` differs ("Filter roles" vs "Filter users"),
+               naming the records each one filters. -->
+          <button class="btn-std" id="rpFilterBtn" type="button" aria-label="Filter roles" data-tooltip="Filter">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Filter
           </button>
           <div class="search ads-search" id="rpSearchWrap" data-ads-component="search">
             <input type="text" id="rpSearchInput" placeholder="Search by role name or description" aria-label="Search by role name or description" autocomplete="off">
@@ -488,7 +540,11 @@
               <div class="cr-dd-menu" id="rpPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
             </div>
           </div>
-          <span class="pgn-lbl" id="rpItemCount">of 11 items</span>
+          <!-- Both counts below are placeholders for the first paint only;
+               renderRPPagination() derives them from the role data on every
+               render (see app.js). Keep them at the canonical role count so
+               there is no flash of a stale number before the first render. -->
+          <span class="pgn-lbl" id="rpItemCount">of 8 items</span>
         </div>
         <div class="pgn-pages" id="rpPgnPages">
           <button class="pg-nav off" data-rp-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
@@ -498,7 +554,7 @@
           <button class="pg-nav" data-rp-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
         </div>
         <div class="pgn-jump">
-          <span class="pgn-lbl" id="rpTotalLabel">Total roles: 11</span>
+          <span class="pgn-lbl" id="rpTotalLabel">Total roles: 8</span>
         </div>
       </div>
     </div>
@@ -652,29 +708,29 @@
   <div class="au-page-main-surface">
     <div class="au-shell au-main-shell">
     <section class="au-card cr-card" id="auBasicCard" aria-labelledby="auBasicTitle">
-      <!-- Header row (Figma node 1018:21931): the left side is the
-           expand/collapse trigger (`.cr-section-header[data-au-toggle]`,
-           unchanged — still owns its own click/keydown listeners in
-           app.js). Revoke access no longer lives here (moved to the
-           page-level header action group, above) — the right side of
-           this row is now used only by Add mode's "Change user" control. -->
+      <!-- Header row (Figma node 1018:21931): the expand/collapse
+           trigger (`.cr-section-header[data-au-toggle]`, unchanged —
+           still owns its own click/keydown listeners in app.js).
+           Revoke access no longer lives here (moved to the page-level
+           header action group, above). Add mode's "Change user"
+           control (previously the only thing occupying the rest of
+           this row) was removed entirely per an explicit "no
+           replacement control on this page" spec (Round 31,
+           2026-08-11, Add User parity pass) — if the selected employee
+           needs to change, the admin returns to the previous selection
+           step instead. `.cr-section-header-row` is kept as a wrapper
+           (rather than collapsing it away) purely so the shared
+           `#addUsersPage .cr-section-header-row` / `.collapsed >
+           :not(.cr-section-header):not(.cr-section-header-row)` rules
+           elsewhere in styles.css keep matching unchanged; with no
+           second child left, it now just passes the header straight
+           through at 100% width in both modes. -->
       <div class="cr-section-header-row">
         <div class="cr-section-header" data-au-toggle="basic" role="button" tabindex="0" aria-expanded="true">
           <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
           <span class="cr-section-title" id="auBasicTitle">Basic information</span>
           <span class="cr-section-summary" id="auBasicSummary" aria-hidden="true"></span>
         </div>
-        <!-- Add-mode only: lets the admin reopen the Step 1 search
-             modal (current selection preselected) to swap the selected
-             employee without leaving the Add User page. If Role and
-             Permission work has already been configured, a discard-
-             work confirmation (`#auChangeUserConfirmBackdrop`) gates
-             this first. Positioned in the same header-row slot Revoke access
-             used to occupy in Edit mode, so it never disturbs the Figma
-             1023:22053 identity-row layout below (avatar + name +
-             check + email, flush against the field columns). Hidden
-             until a user has been selected via `refreshAuIdentityVisibility()`. -->
-        <button type="button" class="au-changeuser-btn au-add-only" id="auRosterBannerChange" hidden>Change user</button>
       </div>
 
       <div class="au-section-body">
@@ -727,7 +783,14 @@
               <path d="M72 36C72 55.8823 55.8823 72 36 72C16.1177 72 0 55.8823 0 36C0 16.1177 16.1177 0 36 0C55.8823 0 72 16.1177 72 36Z" fill="white"/>
               <path fill-rule="evenodd" clip-rule="evenodd" d="M36 69.1579C54.3126 69.1579 69.1579 54.3126 69.1579 36C69.1579 17.6874 54.3126 2.84211 36 2.84211C17.6874 2.84211 2.84211 17.6874 2.84211 36C2.84211 54.3126 17.6874 69.1579 36 69.1579ZM36 72C55.8823 72 72 55.8823 72 36C72 16.1177 55.8823 0 36 0C16.1177 0 0 16.1177 0 36C0 55.8823 16.1177 72 36 72Z" fill="#5458C9"/>
               <path d="M48.3159 27.0003C48.3159 34.0637 42.8019 39.7898 36.0001 39.7898C29.1983 39.7898 23.6843 34.0637 23.6843 27.0003C23.6843 19.9369 29.1983 14.2108 36.0001 14.2108C42.8019 14.2108 48.3159 19.9369 48.3159 27.0003Z" fill="white"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M36.0001 36.9477C41.1321 36.9477 45.4738 32.5961 45.4738 27.0003C45.4738 21.4045 41.1321 17.0529 36.0001 17.0529C30.8681 17.0529 26.5264 21.4045 26.5264 27.0003C26.5264 32.5961 30.8681 36.9477 36.0001 36.9477ZM36.0001 39.7898C42.8019 39.7898 48.3159 34.0637 48.3159 27.0003C48.3159 19.9369 42.8019 14.2108 36.0001 14.2108C29.1983 14.2108 23.6843 19.9369 23.6843 27.0003Z" fill="#5458C9"/>
+              <!-- Head ring. The outer contour needs all FOUR quarter-arcs:
+                   bottom→right→top→left→bottom. The exported path was missing
+                   the closing left→bottom arc, so `Z` shortcut it with a
+                   straight chord and sliced a wedge out of the ring's
+                   lower-left — the "incomplete circle" this fixes. The final
+                   `C23.6843 34.0637 29.1983 39.7898 36.0001 39.7898` is that
+                   arc, mirroring the same quadrant in the white fill above. -->
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M36.0001 36.9477C41.1321 36.9477 45.4738 32.5961 45.4738 27.0003C45.4738 21.4045 41.1321 17.0529 36.0001 17.0529C30.8681 17.0529 26.5264 21.4045 26.5264 27.0003C26.5264 32.5961 30.8681 36.9477 36.0001 36.9477ZM36.0001 39.7898C42.8019 39.7898 48.3159 34.0637 48.3159 27.0003C48.3159 19.9369 42.8019 14.2108 36.0001 14.2108C29.1983 14.2108 23.6843 19.9369 23.6843 27.0003C23.6843 34.0637 29.1983 39.7898 36.0001 39.7898Z" fill="#5458C9"/>
               <path fill-rule="evenodd" clip-rule="evenodd" d="M9.58008 60.4541C11.0036 50.5618 22.2891 42.8569 36.0001 42.8569C49.711 42.8569 60.9965 50.5617 62.4201 60.454C55.8443 67.555 46.4413 72.0001 36 72.0001C25.5588 72.0001 16.1558 67.5551 9.58008 60.4541Z" fill="white"/>
               <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6586 59.5505C18.6534 65.4928 26.8968 69.158 36 69.158C45.1033 69.158 53.3467 65.4928 59.3416 59.5505C57.4032 52.1526 48.2393 45.699 36.0001 45.699C23.7608 45.699 14.5969 52.1526 12.6586 59.5505ZM62.4201 60.454C60.9965 50.5617 49.711 42.8569 36.0001 42.8569C22.2891 42.8569 11.0036 50.5618 9.58008 60.4541C16.1558 67.5551 25.5588 72.0001 36 72.0001C46.4413 72.0001 55.8443 67.555 62.4201 60.454Z" fill="#5458C9"/>
             </svg>
@@ -799,14 +862,11 @@
           <input type="hidden" id="auRegion" value="NA">
           <div class="edl-combo au-field-dd" id="auRegionCombo" aria-label="Region"></div>
         </div>
-        <div class="au-field au-field-timezone">
-          <label class="au-label" for="auTimezoneCombo-ctl">Timezone<span class="au-req">*</span>
-            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          </label>
-          <input type="hidden" id="auTimezone" value="America/New_York">
-          <div class="edl-combo au-field-dd" id="auTimezoneCombo" aria-label="Timezone"></div>
-        </div>
-
+        <!-- Team/Company precedes Timezone in the source because the
+             Basic information grid lays these two out side by side on
+             the second row (Team left, Timezone right). Source order is
+             what drives the tab sequence, so it has to read left-to-right
+             the way the row does. -->
         <div class="au-field au-field-team">
           <!-- Round 28 (2026-06-09 — Add User external-user field swap).
                When the Add User page opens for the External Users view
@@ -829,6 +889,13 @@
                required-asterisk on the label. -->
           <input type="text" class="au-input au-field-company-input" id="auCompany" value=""
                  placeholder="Enter company name" autocomplete="off" maxlength="120" hidden>
+        </div>
+        <div class="au-field au-field-timezone">
+          <label class="au-label" for="auTimezoneCombo-ctl">Timezone<span class="au-req">*</span>
+            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </label>
+          <input type="hidden" id="auTimezone" value="America/New_York">
+          <div class="edl-combo au-field-dd" id="auTimezoneCombo" aria-label="Timezone"></div>
         </div>
         <div class="au-field au-field-status">
           <label class="au-label" id="auStatusLabel" for="auStatusValue">Status<span class="au-req">*</span></label>
@@ -916,11 +983,19 @@
       </div>
 
       <div class="au-section-body">
-      <!-- Shared helper sentence (Figma 1023:22053 "Role and Permission" /
-           788:4348 "Access") — exact approved copy, unchanged between
-           punctuation, wording, and position: directly under the
-           section title, above "Assigned Role". Shown in BOTH modes
-           now (was Edit-only). -->
+      <!-- Shared helper sentence (Figma 1023:22053 "Role and Permission") —
+           exact approved copy, unchanged position/wording, directly under
+           the section title, above "Assigned Role". Add-mode ("Role and
+           Permission") still shows it. Edit User's "Access" card (final-QA
+           pass, 2026-08-11 round 2) hides it via
+           `#addUsersPage.is-edit-mode #auRolesCard .au-access-helper
+           { display: none; }` in styles.css — the node stays in the DOM
+           only because this section body is shared markup between both
+           modes; in Edit mode it renders no box at all (no layout, no
+           reserved spacing, not exposed to assistive tech), which is the
+           same reason `.au-add-only`/`.au-edit-only` siblings in this same
+           card use `display: none` rather than physically duplicating the
+           whole card per mode. -->
       <p class="au-access-helper" id="auAccessHelper">Role assignment determines this user's effective access. Permission functions are managed in role definitions.</p>
 
       <div class="au-field au-role-field">
@@ -1007,20 +1082,43 @@
           </thead>
           <tbody id="auEffTbody"></tbody>
         </table>
-        <!-- "View access breakdown" — canonical ADS compact ghost/text
-             button (same shared box-model contract as "Remove Role" /
-             "Remove application", `.cr-btn-remove`), moved below the
-             table (final-QA pass, 2026-08-11) so reading order becomes
-             Assigned Role -> table -> "View access breakdown", and
-             left-aligned with the table's own first-column boundary
-             instead of floating above/right of it. Lives inside
-             `#auEffWrap` (the table section) but outside the `<table>`
-             element itself — never a row, never a column. Opens the
-             "Effective access breakdown" modal; hidden automatically
-             whenever `#auRolesCard` is collapsed, same as the table
-             above it (see `.cr-card.collapsed > :not(...)` rule). -->
-        <div class="au-eff-actions">
-          <button type="button" class="au-eff-view-breakdown" id="auEffViewBreakdown" aria-haspopup="dialog" aria-controls="auEffBreakdownBackdrop">View access breakdown</button>
+        <!-- "View access breakdown" — the ADS Button component from Figma
+             node 7722:252 (Variant=tertiary, Size=default, State=rest,
+             Type=text+icon): 36px height, 8px/12px padding, 6px radius,
+             Open Sans SemiBold 14/20, #51585b text, transparent at rest
+             with a 1px rgba(15,18,20,0.5) border — see the CSS rule for
+             the full state table (round 22, 2026-08-11 — Access card
+             refinement). The trailing icon reuses the codebase's own
+             16px chevron-right glyph (same `polyline` as the pagination
+             "Next" control) rather than Figma's generic showcase icon
+             pair — see the CSS comment for why. Positioned below the
+             table (round 1, 2026-08-11) so reading order is Assigned
+             Role -> table -> "View access breakdown", with its container
+             starting at the table's own left edge (no negative-margin
+             text nudge — the button's own ADS padding is left intact).
+             Lives inside `#auEffWrap` (the table section) but outside the
+             `<table>` element itself — never a row, never a column. Opens
+             the "Effective access breakdown" modal; hidden automatically
+             whenever `#auRolesCard` is collapsed, same as the table above
+             it (see `.cr-card.collapsed > :not(...)` rule). -->
+        <!-- Round 31 (2026-08-11, Add User parity pass): hidden entirely
+             (via the `hidden` attribute, not just visually empty) whenever
+             no role is assigned yet — `refreshAuEffActionsVisibility()` in
+             app.js toggles this immediately after every role add/remove in
+             BOTH modes, keyed off `auState.selectedRoleIds.length`, so
+             there's never a reserved blank area below the empty-state
+             message. Shown with this exact same component/spacing in
+             both modes once `selectedRoleIds.length > 0`. -->
+        <div class="au-eff-actions" id="auEffActions">
+          <!-- Round 26 (2026-08-11): trailing chevron-right icon removed
+               per updated spec — text-only label, recentered inside the
+               button via the existing `justify-content: center` (see
+               `.au-eff-view-breakdown` below). Dimensions, border,
+               typography, hover/focus states, and click behavior are all
+               unchanged; only the icon glyph is gone. -->
+          <button type="button" class="au-eff-view-breakdown" id="auEffViewBreakdown" aria-haspopup="dialog" aria-controls="auEffBreakdownBackdrop">
+            <span>View access breakdown</span>
+          </button>
         </div>
       </div>
       </div>
@@ -1045,9 +1143,23 @@
           copy ("Assign users via the User edit screen.") so the
           card title can stay clean. The bottom "View all in Users"
           CTA was removed (Frances QA 2026-05-31): users navigate
-          to the Users tab from the top-level tabs instead. -->
+          to the Users tab from the top-level tabs instead.
+
+     Two-region page shell (Vertical-spacing audit, Figma 1023:22021):
+     brought in line with Add/Edit User and Create/Edit Role — Edit Team
+     uses the same visual shell (back-nav, page title, header actions,
+     gray main background, white content cards) so it gets the identical
+     `.au-page-header-surface` / `.au-page-main-surface` split instead of
+     the flat `--bg-app` wash it used before. That previous single-tone
+     background made Edit Team's header/content boundary invisible and
+     inconsistent with every other detail page. `.au-card`'s existing
+     `margin-top: 24px` (unchanged) still supplies both the 24px
+     boundary→first-card gap and the 24px card→card gap, exactly as it
+     does on Add/Edit User; `flow-root` on `.au-page-main-surface` keeps
+     that margin from collapsing out the top of the surface. -->
 <div id="editTeamPage" class="au-page tm-edit-page" style="display:none">
-  <div class="au-shell">
+  <div class="au-page-header-surface">
+    <div class="au-shell au-header-shell">
     <button class="au-back" id="tmBack">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
       <span class="au-back-label">Back to Teams</span>
@@ -1073,7 +1185,11 @@
         <button type="button" class="au-btn-save" id="tmSave" disabled>Save Team</button>
       </div>
     </div>
+    </div>
+  </div>
 
+  <div class="au-page-main-surface">
+    <div class="au-shell au-main-shell">
     <section class="au-card cr-card tm-details-card" aria-labelledby="tmDetailsTitle">
       <!-- Static section heading (Figma-reviewed, node 1025:23294 vicinity):
            unlike every other .cr-section-header in this app, "Team details"
@@ -1137,6 +1253,7 @@
         </div>
       </div>
     </section>
+    </div>
   </div>
 </div>
 
@@ -1178,8 +1295,10 @@
     <div class="cr-shell cr-main-shell">
     <!-- Basic Information Card -->
     <div class="cr-card" id="crBasicCard">
-      <div class="cr-section-header" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="cr-section-header" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true" aria-label="Collapse Role Details">
+        <button type="button" class="cr-section-chev-btn" tabindex="-1" aria-hidden="true">
+          <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
         <span class="cr-section-title">Role Details</span>
       </div>
 
@@ -1196,8 +1315,10 @@
 
     <!-- Permissions Card -->
     <div class="cr-card" id="crFuncsCard">
-      <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true" aria-label="Collapse Functions">
+        <button type="button" class="cr-section-chev-btn" tabindex="-1" aria-hidden="true">
+          <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
         <span class="cr-section-title" id="crFunctionsTitle">Functions</span>
       </div>
       <p class="cr-section-help" id="crFunctionsHelp">Choose which applications this role can access and what actions are allowed.</p>
@@ -1238,9 +1359,17 @@
        • Basic Information — permission identity + metadata
        • Permission Options — actions available in this capability
      Explicitly NOT included: Assigned Roles, Capability Details,
-     Registry Object Metadata. Role assignment lives on its own tab. -->
+     Registry Object Metadata. Role assignment lives on its own tab.
+
+     Two-region page shell (Vertical-spacing audit, Figma 1023:22021):
+     brought in line with Add/Edit User and Create/Edit Role for
+     consistency, even though this page is not reachable from any UI
+     today (the standalone Permissions tab was removed 2026-06-07) —
+     if it's ever reopened programmatically it should render with the
+     exact same shared page-shell as every other detail page. -->
 <div id="pcDetailPage" class="cr-page pc-page" style="display:none">
-  <div class="cr-shell">
+  <div class="cr-page-header-surface">
+    <div class="cr-shell cr-header-shell">
     <button class="cr-back" id="pcBack">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
       <span class="au-back-label">Back to Permissions</span>
@@ -1256,7 +1385,11 @@
         <button class="cr-btn-save" id="pcSave" type="button" disabled>Save Permission</button>
       </div>
     </div>
+    </div>
+  </div>
 
+  <div class="cr-page-main-surface">
+    <div class="cr-shell cr-main-shell">
     <!-- Basic Information -->
     <div class="cr-card" id="pcBasicCard">
       <div class="cr-section-header" data-pc-toggle="basic" role="button" tabindex="0" aria-expanded="true">
@@ -1341,6 +1474,7 @@
 
       <!-- Group cards container (populated by JS) -->
       <div class="pc-groups" id="pcGroups"></div>
+    </div>
     </div>
   </div>
 </div>
@@ -1454,9 +1588,14 @@
      Tatiana direction. Users / Roles filter drawers below are
      unchanged. -->
 
-<!-- EDL toast container — visually matches the EDL Toast component (Figma node 15094:75972).
-     Live region so screen readers announce toasts as they appear. -->
-<div class="edl-toast-container" id="edlToastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
+<!-- Global Toast container — single shared instance for the whole app,
+     visually matching the canonical ADS Toast component (Figma node
+     70:62). This wrapper is intentionally NOT itself a live region:
+     each toast (see `showEdlToast()` in app.js) carries its own
+     role="status"/"alert", which already has an implicit aria-live.
+     Adding a live region here too would make some screen readers
+     announce every toast twice. -->
+<div class="edl-toast-container" id="edlToastContainer" role="region" aria-label="Notifications"></div>
 
 <!-- Remove Role confirmation dialog -->
 <div class="cr-confirm-backdrop" id="crConfirmBackdrop" hidden>
@@ -1472,14 +1611,45 @@
   </div>
 </div>
 
-<!-- Remove application from role (Edit Role only — same EDL modal shell as Remove Role) -->
+<!-- Remove application from role (Create/Edit Role — final-QA pass,
+     2026-08-11: rebuilt onto the canonical ADS Modal shell
+     (`.cr-confirm-dialog--modal`, Figma 38:46 / Default+Footer=Yes
+     variant 38:2 — same header/close-icon/divider/body-region/divider/
+     footer regions as Delete Team / Revoke access / Effective access
+     breakdown) instead of the old flat `.cr-confirm-dialog` panel with
+     no header row, no close icon, and no shared left boundary between
+     title/body/actions. Title shortened to "Remove application?" per
+     brief — the app/role relationship now lives in the body copy
+     instead of an overlong title. `#crAppRemoveAppName` is filled in
+     by openRemoveAppConfirm() with the actual selected application's
+     label (never hardcoded). Loading spinner + inline error region
+     mirror Delete Team's exact pattern (setTmDeleteLoading /
+     showTmDeleteError equivalents) since this is the same "confirmed
+     product pattern" for a destructive confirm with no real network
+     call to await. -->
 <div class="cr-confirm-backdrop" id="crAppRemoveBackdrop" hidden>
-  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crAppRemoveTitle" aria-describedby="crAppRemoveBody">
-    <h2 class="cr-confirm-title" id="crAppRemoveTitle">Remove application from role?</h2>
-    <p class="cr-confirm-body" id="crAppRemoveBody">Removing this application will remove its permissions from this role. Users assigned to this role may lose access.</p>
+  <div class="cr-confirm-dialog cr-confirm-dialog--modal" role="dialog" aria-modal="true" aria-labelledby="crAppRemoveTitle" aria-describedby="crAppRemoveBody">
+    <div class="cr-confirm-header">
+      <h2 class="cr-confirm-title" id="crAppRemoveTitle">Remove application?</h2>
+      <button type="button" class="cr-confirm-close" id="crAppRemoveClose" aria-label="Close remove application dialog">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cr-confirm-body-region">
+      <p class="cr-confirm-text" id="crAppRemoveBody">Removing <strong id="crAppRemoveAppName">this application</strong> will remove all of its permissions from this role. Users assigned to this role may lose access.</p>
+      <p class="cr-confirm-error" id="crAppRemoveError" role="alert" hidden></p>
+    </div>
     <div class="cr-confirm-actions">
       <button class="btn-std" id="crAppRemoveCancel" type="button">Cancel</button>
-      <button class="cr-btn-danger-solid" id="crAppRemoveConfirm" type="button">Remove</button>
+      <button class="cr-btn-danger-solid" id="crAppRemoveConfirm" type="button">
+        <svg class="au-revoke-confirm-spinner" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.75"/>
+          <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+        <span id="crAppRemoveConfirmLabel">Remove</span>
+      </button>
     </div>
   </div>
 </div>
@@ -1601,22 +1771,6 @@
   </div>
 </div>
 
-<!-- Add User: "Change user" — discard-work confirmation. Only shown when
-     the admin already has unsaved Role/Permission work configured for
-     the currently-selected person (see auHasUnsavedRoleWork); otherwise
-     Change User reopens the Step 1 modal directly. Same EDL
-     `.cr-confirm-*` shell as Set Inactive / Remove Role. -->
-<div class="cr-confirm-backdrop" id="auChangeUserConfirmBackdrop" hidden>
-  <div class="cr-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="auChangeUserConfirmTitle" aria-describedby="auChangeUserConfirmBody">
-    <h2 class="cr-confirm-title" id="auChangeUserConfirmTitle">Change selected user?</h2>
-    <p class="cr-confirm-body" id="auChangeUserConfirmBody">Choosing a different person will discard the Team, Role, and Permission you&rsquo;ve configured for the current selection.</p>
-    <div class="cr-confirm-actions">
-      <button class="btn-std" id="auChangeUserConfirmCancel" type="button">Cancel</button>
-      <button class="cr-btn-danger-solid" id="auChangeUserConfirmPrimary" type="button">Change User</button>
-    </div>
-  </div>
-</div>
-
 <!-- Edit User: Effective access breakdown (read-only).
      Round 8 (2026-06-09): restructured to match the EDL Modal component
      (Figma node 51840:2241) — separate header bar with title + close
@@ -1658,38 +1812,60 @@
   </div>
 </div>
 
-<!-- Edit Team: Add members modal. Reuses the EDL `.cr-confirm-*`
-     shell (used by Remove Role / Remove application / Set user as
-     inactive / Remove user / Delete permission group) with a wider
-     `.tm-add-dialog` variant so the search + scrollable internal-user
-     list fits. Strictly scoped to Edit Team — no other surface
-     references `.tm-add-*`. -->
-<!-- Add members modal — migrated onto the canonical ADS Modal shell
-     (`.cr-confirm-dialog--modal`, Figma 38:46, same header/body-region/
-     footer regions already used by Revoke Access and the Add User
-     Step-1 modal) so title/description/search/results/footer all
-     share ONE 24px content gutter instead of the old flat dialog
-     where the description picked up an extra, unintended 24px of
-     left padding from the generic `.cr-confirm-body` rule. -->
+<!-- Edit Team: Add members modal.
+
+     Built on the same shell and the same parts as the Add User Step-1
+     picker: the ADS Modal regions (`.cr-confirm-dialog--modal`, Figma
+     38:46 — header / body-region / footer), the `.au-adduser-*` search
+     field and result rows, and the same `renderAvatarHtml` avatar. The
+     `.tm-add-*` classes that remain carry only what is genuinely
+     team-specific: the row checkbox (this picker is multi-select), the
+     inline results panel (a persistent panel rather than Add User's
+     floating combobox popover, because selecting here must not dismiss
+     the list), and the footer selection count.
+
+     Like Add User, nothing is listed until the admin searches — the
+     panel below stays hidden until the query clears the 2-character
+     threshold. -->
 <div class="cr-confirm-backdrop" id="tmAddMembersBackdrop" hidden>
-  <div class="cr-confirm-dialog cr-confirm-dialog--modal tm-add-dialog" role="dialog" aria-modal="true" aria-labelledby="tmAddMembersTitle" aria-describedby="tmAddMembersSubtitle">
+  <div class="cr-confirm-dialog cr-confirm-dialog--modal au-adduser-dialog tm-add-dialog" role="dialog" aria-modal="true" aria-labelledby="tmAddMembersTitle" aria-describedby="tmAddMembersSubtitle">
     <div class="cr-confirm-header">
       <h2 class="cr-confirm-title" id="tmAddMembersTitle">Add members</h2>
+      <button type="button" class="cr-confirm-close" id="tmAddMembersClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-    <div class="cr-confirm-body-region tm-add-body">
-      <p class="tm-add-subtitle" id="tmAddMembersSubtitle">Search and select internal users to add to this team.</p>
-      <div class="tm-add-search ads-search" data-ads-component="search">
-        <svg class="tm-add-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" class="tm-add-search-input" id="tmAddMembersSearch" placeholder="Search by name, email, or team" aria-label="Search by name, email, or team" autocomplete="off">
+    <div class="cr-confirm-body-region au-adduser-body tm-add-body">
+      <p class="au-adduser-heading-sub tm-add-subtitle" id="tmAddMembersSubtitle">Search and select internal users to add to this team.</p>
+      <div class="au-adduser-search-wrap tm-add-search-wrap">
+        <div class="ads-search au-adduser-search tm-add-search" data-ads-component="search">
+          <svg class="au-adduser-search-icon tm-add-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="au-adduser-search-input tm-add-search-input" id="tmAddMembersSearch"
+                 placeholder="Search by name, email, or team" aria-label="Search by name, email, or team"
+                 aria-describedby="tmAddMembersHint" aria-controls="tmAddMembersList"
+                 autocomplete="off" autocapitalize="off" spellcheck="false">
+          <button type="button" class="search-clear au-adduser-search-clear tm-add-search-clear" id="tmAddMembersSearchClear" aria-label="Clear search" hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <svg class="au-adduser-search-spinner tm-add-search-spinner" id="tmAddMembersSpinner" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" hidden>
+            <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.75"/>
+            <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+        </div>
       </div>
-      <div class="tm-add-list-wrap">
-        <div class="tm-add-list" id="tmAddMembersList" role="listbox" aria-multiselectable="true" tabindex="0"></div>
-        <p class="tm-add-empty" id="tmAddMembersEmpty" hidden>No matching users.</p>
+      <p class="tm-add-hint" id="tmAddMembersHint">Enter at least 2 characters to search.</p>
+      <div class="tm-add-panel" id="tmAddMembersPanel" hidden>
+        <ul class="au-adduser-listbox tm-add-listbox" id="tmAddMembersList" aria-label="Matching users"></ul>
+        <p class="au-adduser-dd-note tm-add-note" id="tmAddMembersNote" hidden></p>
       </div>
+      <p class="tm-add-submit-error" id="tmAddMembersSubmitError" role="alert" hidden>We couldn’t add the selected members. Try again.</p>
+      <span class="sr-only" id="tmAddMembersSRStatus" role="status" aria-live="polite"></span>
     </div>
-    <div class="cr-confirm-actions tm-add-actions">
+    <div class="cr-confirm-actions au-adduser-actions tm-add-actions">
       <span class="tm-add-selected-count" id="tmAddMembersCount" aria-live="polite">0 selected</span>
-      <span class="tm-add-actions-spacer"></span>
+      <span class="au-adduser-actions-spacer tm-add-actions-spacer"></span>
       <button class="btn-std" id="tmAddMembersCancel" type="button">Cancel</button>
       <button class="au-btn-save" id="tmAddMembersConfirm" type="button" disabled>Add members</button>
     </div>
@@ -1852,7 +2028,18 @@
 <div class="sr-only" id="simA11yStatus" role="status" aria-live="polite"></div>
 
 <script src="../version-config.js?v=20260810versionmenu1"></script>
-<script src="app.js?v=20260810versionmenu1"></script>
+<script src="app.js?v=20260812gallery1"></script>
+<!-- Redline Mode (V4.1 only). Self-contained: wires its own profile-menu
+     click handler (#userMenuRedline) and its own ⌘D/Ctrl+D shortcut, so
+     app.js does not need to know about it beyond the roving-tabindex
+     entry added for keyboard menu navigation. -->
+<script src="redline.js?v=20260812redline6"></script>
+<!-- Redline overlay-gallery registry. Loads in this document and in the
+     `?redlinePreview=1` iframe alike; only the iframe copy is ever driven,
+     because that is where both galleries render. Registers nothing until
+     Redline asks for it, and reaches every state by driving the real
+     production UI — see REDLINE-OVERLAY-GALLERY.md. -->
+<script src="redline-gallery.js?v=20260812gallery4"></script>
 <script>
   /* Sidebar init — V4 R48.
 

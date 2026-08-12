@@ -1,0 +1,11 @@
+# Python caches from the CDP-driven test suite in tests/.
+__pycache__/
+*.pyc
+
+# Screenshots written by test runs and manual QA passes. They are
+# regenerated on every run and are only useful while looking at the run
+# that produced them, so they are deliberately not versioned.
+qa_screens/
+tests/_shot_*.png
+
+.DS_Store

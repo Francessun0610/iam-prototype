@@ -3,18 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Cache hygiene for the GitLab Pages deploy: V2 ships changes on most
-       pushes, but the HTML itself has no query-string cache-buster (only
-       the CSS/JS asset URLs do). Without these meta tags, a browser that
-       cached an older HTML keeps loading the OLD asset version stamps and
-       never sees the new CSS/JS. `no-cache` forces revalidation each
-       visit, so the freshly deployed HTML is fetched and the up-to-date
-       `?v=` busters on `styles.css` / `app.js` take effect.
-
-       Scope: V2 only. Theme 1.0 (`public/index.html`) is untouched. -->
-  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <title>Atlas — Access Management</title>
+  <title>Atlas — User Management</title>
   <script>
     (function () {
       try {
@@ -37,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20260522pagesdeploy1">
+  <link rel="stylesheet" href="styles.css?v=20260424scrollsubtle1">
 </head>
 <body>
 
@@ -94,7 +83,7 @@
                so every build (v1–v4) always lists every version — this
                static markup is just a no-JS-safe placeholder. -->
           <div class="user-menu-sub" role="menu" aria-label="Version">
-            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="2.0" data-version-href="./" tabindex="-1">2.0</div>
+            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="1.0" data-version-href="./" tabindex="-1">1.0</div>
           </div>
         </div>
         <div class="user-menu-row has-sub" id="userMenuTheme" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false">
@@ -118,23 +107,16 @@
 <!-- ═══ PAGE ═══ -->
 <main class="page">
   <div class="hdr">
-    <h1>Access Management</h1>
-    <p>Manage users, role assignments, and permission functions across Atlas</p>
+    <h1>User Management</h1>
+    <p>Assign roles and manage access across Atlas</p>
   </div>
 
   <div class="card">
-    <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032 (three secondary tabs).
-         All three tabs are now wired to real panes:
-           1. Users → #usersPanel (Figma 770:17428)
-           2. Role assignment → #rolesPanel (Figma 770:19301)
-           3. Permission Management → #permsPanel (Figma 770:20032)
-         Visual treatment is identical across all three (inactive = muted,
-         active = brand text + indigo underline). -->
+    <!-- Tabs -->
     <div class="tabs-row">
       <nav>
         <button class="tab-btn on">Users</button>
-        <button class="tab-btn">Role assignment</button>
-        <button class="tab-btn">Permission Management</button>
+        <button class="tab-btn">Roles and Permissions</button>
       </nav>
     </div>
 
@@ -250,7 +232,6 @@
       <div class="tbl-wrap">
         <table class="tbl rp-tbl" id="rpTable">
           <colgroup id="rpColgroup">
-            <col data-rp-col="sel" class="rp-col-sel">
             <col data-rp-col="role">
             <col data-rp-col="func">
             <col data-rp-col="by">
@@ -258,7 +239,6 @@
           </colgroup>
           <thead>
             <tr>
-              <th class="rp-sel" aria-label="Select all roles"><input type="checkbox" id="rpSelectAll" class="rp-check" aria-label="Select all roles"></th>
               <th class="rp-role" data-rp-sort="role"><div class="th-inner"><span>Role</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
               <th class="rp-func" data-rp-sort="functions"><div class="th-inner"><span>Functions</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
               <th class="rp-by" data-rp-sort="createdBy"><div class="th-inner"><span>Created By</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
@@ -292,78 +272,6 @@
         </div>
         <div class="pgn-jump">
           <span class="pgn-lbl" id="rpTotalLabel">Total roles: 11</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Permission Management pane (Figma 770:20032) — flat catalog of
-         the function/permission atoms used by Role assignment. Read-only
-         view; the per-row link (Function Name) anchors a future detail
-         page. Toolbar mirrors R&P (Filter + Search) but omits an
-         "Add Users" CTA — that label in Figma is a copy-paste artifact
-         from the Users design and has no semantic meaning here. -->
-    <div id="permsPanel" style="display:none">
-      <div class="tbar">
-        <div class="tbar-l">
-          <button class="btn-std" id="pmFilterBtn" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Filter
-          </button>
-          <div class="search" id="pmSearchWrap">
-            <input type="text" id="pmSearchInput" placeholder="Search functions" autocomplete="off">
-            <svg class="search-ico" id="pmSearchIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9EB0BD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <button type="button" class="search-clear hidden" id="pmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-          </div>
-        </div>
-      </div>
-
-      <div class="tbl-wrap">
-        <table class="tbl pm-tbl" id="pmTable">
-          <colgroup id="pmColgroup">
-            <col data-pm-col="sel" class="rp-col-sel">
-            <col data-pm-col="name">
-            <col data-pm-col="desc">
-            <col data-pm-col="type">
-            <col data-pm-col="used">
-            <col data-pm-col="date">
-          </colgroup>
-          <thead>
-            <tr>
-              <th class="pm-sel" aria-label="Select all functions"><input type="checkbox" id="pmSelectAll" class="rp-check" aria-label="Select all functions"></th>
-              <th class="pm-name" data-pm-sort="name"><div class="th-inner"><span>Function Name</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-desc" data-pm-sort="description"><div class="th-inner"><span>Description</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-type" data-pm-sort="type"><div class="th-inner"><span>Type</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-used" data-pm-sort="usedIn"><div class="th-inner"><span>Used in</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-              <th class="pm-date" data-pm-sort="lastUpdated"><div class="th-inner"><span>Last Updated</span><svg class="sort-ico" width="12" height="12" viewBox="0 0 9.25 8.25" fill="none"><path class="sort-dn" d="M2.125 0C2.47 0 2.75.28 2.75.625V6.116l.433-.433a.625.625 0 0 1 .884.884l-1.5 1.5a.625.625 0 0 1-.884 0l-1.5-1.5a.625.625 0 0 1 .884-.884L1.5 6.116V.625C1.5.28 1.78 0 2.125 0Z"/><path class="sort-up" d="M7.125 0c.166 0 .325.066.442.183l1.5 1.5a.625.625 0 0 1-.884.884L7.75 2.134V7.625a.625.625 0 0 1-1.25 0V2.134l-.433.433a.625.625 0 0 1-.884-.884l1.5-1.5A.625.625 0 0 1 7.125 0Z"/></svg></div></th>
-            </tr>
-          </thead>
-          <tbody id="pmTbody"></tbody>
-        </table>
-      </div>
-
-      <div class="pgn" id="pmPgn">
-        <div class="pgn-show">
-          <span class="pgn-lbl">Show</span>
-          <div class="pgn-sel-wrap">
-            <div class="cr-dd pgn-dd" id="pmPageSizeDD">
-              <button type="button" class="cr-dd-trigger" id="pmPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pmPageSizeMenu">
-                <span class="cr-dd-value" id="pmPageSizeValue">10</span>
-                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <div class="cr-dd-menu" id="pmPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
-            </div>
-          </div>
-          <span class="pgn-lbl" id="pmItemCount">of 0 items</span>
-        </div>
-        <div class="pgn-pages" id="pmPgnPages">
-          <button class="pg-nav off" data-pm-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
-          <button class="pg-nav off" data-pm-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-          <div class="pg-nums" id="pmPgNums"></div>
-          <button class="pg-nav" data-pm-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          <button class="pg-nav" data-pm-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
-        </div>
-        <div class="pgn-jump">
-          <span class="pgn-lbl" id="pmTotalLabel">Total functions: 0</span>
         </div>
       </div>
     </div>
@@ -570,126 +478,6 @@
   </div>
 </div>
 
-<!-- ═══ PERMISSION CAPABILITY DETAIL PAGE ═══
-     Opens when a user clicks a permission function name on the
-     Permission Management tab. Figma 788:4348 ("Create Permission
-     Capability"). Reuses the .cr-page shell + .cr-card section
-     pattern from #createRolePage / #addUsersPage so the chrome
-     (fixed overlay, back link, header rhythm, card padding) is
-     identical to the rest of the v2 detail flows. Only the
-     fields and option-group cards are unique to this page.
-
-     Scope (per Tatiana / user prompt 2026-05-20):
-       • Basic Information — permission identity + metadata
-       • Permission Options — actions available in this capability
-     Explicitly NOT included: Assigned Roles, Capability Details,
-     Registry Object Metadata. Role assignment lives on its own tab. -->
-<div id="pcDetailPage" class="cr-page pc-page" style="display:none">
-  <div class="cr-shell">
-    <button class="cr-back" id="pcBack">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Permission Management
-    </button>
-
-    <div class="cr-header">
-      <div class="cr-header-left">
-        <h1 class="cr-title">Create Permission Capability</h1>
-        <p class="cr-subtitle">Configure reusable permission groups and actions for role assignment.</p>
-      </div>
-      <div class="cr-header-actions">
-        <button class="btn-std" id="pcCancel" type="button">Cancel</button>
-        <button class="cr-btn-save" id="pcSave" type="button" disabled>Save Permission</button>
-      </div>
-    </div>
-
-    <!-- Basic Information -->
-    <div class="cr-card" id="pcBasicCard">
-      <div class="cr-section-header" data-pc-toggle="basic" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <span class="cr-section-title">Basic Information</span>
-      </div>
-
-      <div class="pc-basic-grid">
-        <div class="pc-field pc-field-name">
-          <label class="cr-label" for="pcPermName">Permission Name<span class="cr-req">*</span></label>
-          <input type="text" class="cr-input" id="pcPermName" autocomplete="off">
-        </div>
-        <div class="pc-field pc-field-app">
-          <label class="cr-label" for="pcAppTrigger">Choose Application<span class="cr-req">*</span></label>
-          <div class="cr-dd pc-dd" id="pcAppDD">
-            <button type="button" class="cr-dd-trigger" id="pcAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAppMenu">
-              <span class="cr-dd-value is-placeholder" id="pcAppValue">Select Application</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="pc-field pc-field-created">
-          <label class="cr-label" for="pcCreatedBy">Created By</label>
-          <input type="text" class="cr-input pc-input-disabled" id="pcCreatedBy" value="Marge Simpsons" disabled aria-disabled="true">
-        </div>
-
-        <div class="pc-field pc-field-desc">
-          <label class="cr-label" for="pcDesc">Description</label>
-          <input type="text" class="cr-input" id="pcDesc" autocomplete="off">
-        </div>
-        <div class="pc-field pc-field-meta">
-          <div class="pc-meta-cell">
-            <label class="cr-label">Status</label>
-            <div class="pc-status" id="pcStatus">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <circle cx="8" cy="8" r="7" stroke="#056C07" stroke-width="1.5" fill="none"/>
-                <path d="M5 8.5l2 2 4-4.5" stroke="#056C07" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-              </svg>
-              <span class="pc-status-label">Active</span>
-            </div>
-          </div>
-          <div class="pc-meta-cell">
-            <label class="cr-label">Last Updated</label>
-            <div class="pc-meta-value" id="pcLastUpdated">—</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Permission Options -->
-    <div class="cr-card" id="pcOptionsCard">
-      <div class="cr-section-header" data-pc-toggle="options" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <span class="cr-section-title">Permission Options</span>
-      </div>
-      <p class="pc-section-help">Configure the actions available in this permission capability.</p>
-
-      <div class="pc-options-toolbar">
-        <div class="pc-field pc-field-access">
-          <label class="cr-label" for="pcAccessLevelTrigger">Default Access level<span class="cr-req">*</span></label>
-          <div class="cr-dd pc-dd" id="pcAccessLevelDD">
-            <button type="button" class="cr-dd-trigger" id="pcAccessLevelTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAccessLevelMenu">
-              <span class="cr-dd-value" id="pcAccessLevelValue">Full Access</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="pc-field pc-field-addperm">
-          <label class="cr-label" for="pcAddGroupTrigger">Add Permission Group<span class="cr-req">*</span></label>
-          <div class="cr-dd pc-dd" id="pcAddGroupDD">
-            <button type="button" class="cr-dd-trigger" id="pcAddGroupTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAddGroupMenu">
-              <span class="cr-dd-value is-placeholder" id="pcAddGroupValue">Select a group</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </div>
-        </div>
-        <button type="button" class="cr-btn-add" id="pcAddBtn" disabled>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
-          Add
-        </button>
-      </div>
-
-      <!-- Group cards container (populated by JS) -->
-      <div class="pc-groups" id="pcGroups"></div>
-    </div>
-  </div>
-</div>
-
 <!-- ═══ FILTER DRAWER ═══ -->
 <div class="flt-overlay" id="fltOverlay"></div>
 <aside class="flt-drawer" id="fltDrawer">
@@ -832,28 +620,6 @@
     <div class="cr-confirm-actions">
       <button class="btn-std" id="auInactiveConfirmCancel" type="button">Cancel</button>
       <button class="cr-btn-danger-solid" id="auInactiveConfirmPrimary" type="button">Set as Inactive</button>
-    </div>
-  </div>
-</div>
-
-<!-- Permission Capability: Delete permission group confirmation. Reuses
-     the EDL .cr-confirm-* shell (Remove Role / Remove application / Set
-     user as inactive / Remove user) with an extra "Impacted roles"
-     block injected before the actions row, populated at open time. -->
-<div class="cr-confirm-backdrop" id="pcDeleteGroupBackdrop" hidden>
-  <div class="cr-confirm-dialog pc-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="pcDeleteGroupTitle" aria-describedby="pcDeleteGroupBody">
-    <h2 class="cr-confirm-title" id="pcDeleteGroupTitle">Delete permission group?</h2>
-    <p class="cr-confirm-body" id="pcDeleteGroupBody">
-      Are you sure you want to delete this permission group? This change will impact <strong id="pcDeleteGroupCount">0</strong> assigned roles.
-    </p>
-    <div class="pc-impacted-roles" id="pcImpactedRolesWrap">
-      <div class="pc-impacted-roles-title">Impacted roles</div>
-      <ul class="pc-impacted-roles-list" id="pcImpactedRolesList"></ul>
-      <p class="pc-impacted-roles-empty" id="pcImpactedRolesEmpty" hidden>This permission group is not currently assigned to any roles.</p>
-    </div>
-    <div class="cr-confirm-actions">
-      <button class="btn-std" id="pcDeleteGroupCancel" type="button">Cancel</button>
-      <button class="cr-btn-danger-solid" id="pcDeleteGroupConfirm" type="button">Delete Permission Group</button>
     </div>
   </div>
 </div>

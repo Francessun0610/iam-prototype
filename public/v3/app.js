@@ -2225,10 +2225,29 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ─── User menu (profile dropdown + theme + version switchers) ───
      Wires the avatar trigger, the Theme submenu, the Version submenu,
      sub-item selection, outside-click/Escape close, and persists the
-     chosen theme. The Version submenu navigates between the 1.0 and 2.0
-     prototype builds (`/index.html` and `/v2/index.html` respectively);
-     it never mutates page state — it just hands off via `location.assign`. */
+     chosen theme. The Version submenu navigates between the separate
+     v1–v4 prototype builds (`../v1/`, `../v2/`, `../v3/`, `../v4/`); it
+     never mutates page state — it just hands off via `location.assign`.
+
+     Version submenu content: rendered at load time from the shared
+     `window.IAM_VERSIONS` list (see `../version-config.js`) rather than
+     hardcoded per build, so adding/removing a version is a one-file edit
+     that every build's menu picks up. `IAM_CURRENT_VERSION_ID` is the one
+     thing each build still declares locally — it's this bundle's own
+     identity, used only to mark the matching item selected/checked (never
+     hardcoded to a *different* version, and re-derived from this
+     constant on every render rather than baked into static HTML).
+
+     Keyboard: the Theme/Version/Log Out rows and their sub-items use a
+     roving-tabindex menu pattern (ArrowUp/Down move the roving tab stop,
+     Home/End jump to the first/last item, Enter/Space activates, and
+     ArrowRight opens / Escape or ArrowLeft closes a submenu and returns
+     focus to its parent row) so the menu is fully operable without a
+     mouse, matching the ADS menu keyboard pattern. Mouse hover/click
+     continue to work exactly as before — this is additive. */
   (function setupUserMenu() {
+    var IAM_CURRENT_VERSION_ID = "v3";
+
     var menu = document.getElementById("userMenu");
     var trigger = document.getElementById("userMenuTrigger");
     var pop = document.getElementById("userMenuPop");
@@ -2237,14 +2256,34 @@ document.addEventListener("DOMContentLoaded", function () {
     var logoutRow = document.getElementById("userMenuLogout");
     if (!menu || !trigger || !pop || !themeRow) return;
 
+    var versionSub = versionRow ? versionRow.querySelector(".user-menu-sub") : null;
+
+    /* Render the Version submenu from the shared config. Re-run any time
+       we need a fresh, correctly-selected item list (just once, on load —
+       the current version never changes without a full page navigation). */
+    function renderVersionSubmenu() {
+      if (!versionSub || !window.IAM_VERSIONS) return;
+      var html = "";
+      for (var i = 0; i < window.IAM_VERSIONS.length; i++) {
+        var v = window.IAM_VERSIONS[i];
+        var selected = v.id === IAM_CURRENT_VERSION_ID;
+        var href = window.iamVersionHref ? window.iamVersionHref(v.folder) : "../" + v.folder + "/";
+        html += '<div class="user-menu-sub-item' + (selected ? " is-selected" : "") +
+          '" role="menuitemradio" aria-checked="' + (selected ? "true" : "false") +
+          '" data-version-id="' + v.id + '" data-version="' + v.label +
+          '" data-version-href="' + href + '" tabindex="-1">' + v.label + "</div>";
+      }
+      versionSub.innerHTML = html;
+    }
+    renderVersionSubmenu();
+
     /* Scope sub-item lookups by submenu owner. Earlier this used a single
        `pop.querySelectorAll(".user-menu-sub-item")` which conflated Theme
        and Version children — clicking a Version item would call
-       applyTheme(null) and silently reset the theme to EDL Light. */
+       applyTheme(null) and silently reset the theme to EDL Light. Version
+       items are re-queried on demand (see `subItemsOf`) since they're
+       regenerated above, rather than captured once here. */
     var themeItems = themeRow.querySelectorAll(".user-menu-sub-item");
-    var versionItems = versionRow
-      ? versionRow.querySelectorAll(".user-menu-sub-item")
-      : [];
     var THEME_KEY = "atlas:theme";
 
     /* Theme controller — generic over any number of themes.
@@ -2279,9 +2318,53 @@ document.addEventListener("DOMContentLoaded", function () {
       syncSelection();
     }
 
+    /* ── Roving-tabindex keyboard menu ──────────────────────────────
+       ROWS = the top-level menuitems (Version, Theme, Log Out — skips
+       any that don't exist on this build). Only one row/sub-item has
+       tabindex="0" at a time; arrow keys move that single tab stop. */
+    var ROWS = [versionRow, themeRow, logoutRow].filter(function (r) { return !!r; });
+    var rowIndex = 0;
+
+    function subItemsOf(row) {
+      return row ? Array.prototype.slice.call(row.querySelectorAll(".user-menu-sub-item")) : [];
+    }
+
+    function focusRow(idx) {
+      rowIndex = ((idx % ROWS.length) + ROWS.length) % ROWS.length;
+      for (var i = 0; i < ROWS.length; i++) {
+        ROWS[i].setAttribute("tabindex", i === rowIndex ? "0" : "-1");
+      }
+      ROWS[rowIndex].focus();
+    }
+
+    function focusSubItem(items, idx, parentRow) {
+      var n = ((idx % items.length) + items.length) % items.length;
+      for (var i = 0; i < items.length; i++) {
+        items[i].setAttribute("tabindex", i === n ? "0" : "-1");
+      }
+      items[n].focus();
+    }
+
+    function openRowSubmenu(row) {
+      row.setAttribute("aria-expanded", "true");
+      var items = subItemsOf(row);
+      if (!items.length) return;
+      var startAt = 0;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].classList.contains("is-selected")) { startAt = i; break; }
+      }
+      focusSubItem(items, startAt, row);
+    }
+
+    function closeRowSubmenu(row) {
+      row.setAttribute("aria-expanded", "false");
+      focusRow(ROWS.indexOf(row));
+    }
+
     function openMenu() {
       menu.classList.add("open");
       trigger.setAttribute("aria-expanded", "true");
+      focusRow(0);
     }
     function closeMenu() {
       menu.classList.remove("open");
@@ -2300,6 +2383,12 @@ document.addEventListener("DOMContentLoaded", function () {
       e.stopPropagation();
       toggleMenu();
     });
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!menu.classList.contains("open")) openMenu();
+      }
+    });
 
     themeRow.addEventListener("click", function (e) {
       if (e.target.closest(".user-menu-sub-item")) return;
@@ -2314,15 +2403,16 @@ document.addEventListener("DOMContentLoaded", function () {
         var val = this.getAttribute("data-theme");
         if (val) applyTheme(val);
         closeMenu();
+        trigger.focus();
       });
     }
 
     /* Version submenu — opens like Theme (click toggles aria-expanded; CSS
        hover also reveals it). Selecting an unselected version navigates to
        that build's HTML entry point; selecting the current version is a
-       no-op aside from closing the menu. The current-version attribute is
-       declared in markup (`is-selected`) so each prototype build ships its
-       own correct selection state — no JS theme-style sync needed. */
+       no-op aside from closing the menu. Delegated on the container (not
+       bound per-item) so it keeps working after `renderVersionSubmenu`
+       regenerates the item nodes. */
     if (versionRow) {
       versionRow.addEventListener("click", function (e) {
         if (e.target.closest(".user-menu-sub-item")) return;
@@ -2331,26 +2421,130 @@ document.addEventListener("DOMContentLoaded", function () {
         versionRow.setAttribute("aria-expanded", expanded ? "false" : "true");
       });
 
-      for (var vi = 0; vi < versionItems.length; vi++) {
-        versionItems[vi].addEventListener("click", function (e) {
-          e.stopPropagation();
-          if (this.classList.contains("is-selected")) {
-            closeMenu();
-            return;
-          }
-          var href = this.getAttribute("data-version-href");
+      versionRow.addEventListener("click", function (e) {
+        var item = e.target.closest(".user-menu-sub-item");
+        if (!item) return;
+        e.stopPropagation();
+        if (item.classList.contains("is-selected")) {
           closeMenu();
-          if (href) window.location.assign(href);
-        });
-      }
+          trigger.focus();
+          return;
+        }
+        var href = item.getAttribute("data-version-href");
+        closeMenu();
+        if (href) window.location.assign(href);
+      });
     }
 
     if (logoutRow) {
       logoutRow.addEventListener("click", function (e) {
         e.stopPropagation();
         closeMenu();
+        trigger.focus();
       });
     }
+
+    /* Row-level keyboard handling: Up/Down/Home/End move the roving tab
+       stop among ROWS; Enter/Space/ArrowRight opens a has-sub row's
+       submenu (or activates Log Out); Escape closes the whole menu. */
+    ROWS.forEach(function (row) {
+      row.addEventListener("keydown", function (e) {
+        /* Only handle these keys when the ROW itself is focused. Key
+           events from a focused sub-item bubble up to this same
+           listener (since has-sub rows contain their sub-items) — the
+           dedicated sub-item handler below owns that case instead. */
+        if (e.target !== row) return;
+        var isSub = row.classList.contains("has-sub");
+        switch (e.key) {
+          case "ArrowDown":
+            e.preventDefault();
+            focusRow(rowIndex + 1);
+            break;
+          case "ArrowUp":
+            e.preventDefault();
+            focusRow(rowIndex - 1);
+            break;
+          case "Home":
+            e.preventDefault();
+            focusRow(0);
+            break;
+          case "End":
+            e.preventDefault();
+            focusRow(ROWS.length - 1);
+            break;
+          case "ArrowRight":
+            if (isSub) {
+              e.preventDefault();
+              openRowSubmenu(row);
+            }
+            break;
+          case "Enter":
+          case " ":
+          case "Spacebar":
+            e.preventDefault();
+            if (isSub) {
+              openRowSubmenu(row);
+            } else {
+              row.click();
+            }
+            break;
+          case "Escape":
+            e.preventDefault();
+            closeMenu();
+            trigger.focus();
+            break;
+          case "Tab":
+            closeMenu();
+            break;
+        }
+      });
+    });
+
+    /* Sub-item keyboard handling: Up/Down/Home/End roam the open
+       submenu's items; Enter/Space activates (reuses the existing click
+       handler so theme/version selection logic stays in one place);
+       Escape/ArrowLeft closes the submenu and returns focus to its row. */
+    [versionRow, themeRow].forEach(function (row) {
+      if (!row) return;
+      row.addEventListener("keydown", function (e) {
+        var item = e.target.closest(".user-menu-sub-item");
+        if (!item) return;
+        var items = subItemsOf(row);
+        var idx = items.indexOf(item);
+        switch (e.key) {
+          case "ArrowDown":
+            e.preventDefault();
+            focusSubItem(items, idx + 1, row);
+            break;
+          case "ArrowUp":
+            e.preventDefault();
+            focusSubItem(items, idx - 1, row);
+            break;
+          case "Home":
+            e.preventDefault();
+            focusSubItem(items, 0, row);
+            break;
+          case "End":
+            e.preventDefault();
+            focusSubItem(items, items.length - 1, row);
+            break;
+          case "Enter":
+          case " ":
+          case "Spacebar":
+            e.preventDefault();
+            item.click();
+            break;
+          case "Escape":
+          case "ArrowLeft":
+            e.preventDefault();
+            closeRowSubmenu(row);
+            break;
+          case "Tab":
+            closeMenu();
+            break;
+        }
+      });
+    });
 
     document.addEventListener("click", function (e) {
       if (!menu.classList.contains("open")) return;
@@ -2358,7 +2552,7 @@ document.addEventListener("DOMContentLoaded", function () {
       closeMenu();
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && menu.classList.contains("open")) {
+      if (e.key === "Escape" && menu.classList.contains("open") && !menu.contains(e.target)) {
         closeMenu();
         trigger.focus();
       }
@@ -8219,8 +8413,8 @@ document.addEventListener("DOMContentLoaded", function () {
            the new external user will be visible the next time they
            flip the segmented toggle to External.) */
         if (userView === "external") {
-          ORIGINAL_ORDER.unshift(newUser);
-          DATA = ORIGINAL_ORDER.slice();
+      ORIGINAL_ORDER.unshift(newUser);
+      DATA = ORIGINAL_ORDER.slice();
           TOTAL_ITEMS = EXTERNAL_TOTAL;
         }
       } else {
@@ -8230,7 +8424,7 @@ document.addEventListener("DOMContentLoaded", function () {
           INTERNAL_ORIGINAL_SNAPSHOT.unshift(newUser);
         }
         if (typeof INTERNAL_TOTAL !== "undefined") INTERNAL_TOTAL += 1;
-        TOTAL_ITEMS += 1;
+      TOTAL_ITEMS += 1;
       }
       sortKey = null;
       sortDir = null;
@@ -10274,14 +10468,14 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       } else {
-        var fns = record.functions || [];
-        for (var i = 0; i < fns.length; i++) {
-          var appKey = FUNCTION_TO_APP_KEY[fns[i].name];
-          if (!appKey || !APP_PERMISSIONS[appKey]) continue;
-          crAddApplication(appKey);
-          var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
-          if (section) {
-            section.setAttribute("data-role-id", record.id);
+      var fns = record.functions || [];
+      for (var i = 0; i < fns.length; i++) {
+        var appKey = FUNCTION_TO_APP_KEY[fns[i].name];
+        if (!appKey || !APP_PERMISSIONS[appKey]) continue;
+        crAddApplication(appKey);
+        var section = crPermsContent.querySelector('.cr-app-section[data-app-key="' + appKey + '"]');
+        if (section) {
+          section.setAttribute("data-role-id", record.id);
             applyCheckedActions(section, preferredValuesForRoleApp(record.id, fns[i].name), fns[i].count);
           }
         }
@@ -11181,7 +11375,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
       var moduleHead = e.target.closest("[data-module-toggle]");
       if (moduleHead && moduleHead === e.target) {
-        e.preventDefault();
+      e.preventDefault();
         moduleHead.click();
         return;
       }
@@ -11295,8 +11489,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       /* Figma matrix has no access-level dropdown — each checkbox
          change updates the form state directly. */
-      updateFunctionsCount();
-      validateCreateRole();
+        updateFunctionsCount();
+        validateCreateRole();
     });
 
     crAddBtn.addEventListener("click", function () {

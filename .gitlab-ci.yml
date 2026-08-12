@@ -2,28 +2,62 @@
 # IAM prototype files stay at repo root under `public/` (not modified by DCM work).
 #
 # Published routes (relative to the Pages site origin):
-#   IAM prototype (1.0):  /          → public/index.html
+#   Site root (redirects to default version): /          → public/index.html
+#                                                            (JS `location.replace` to
+#                                                            IAM_DEFAULT_VERSION_ID's
+#                                                            folder, carrying the query
+#                                                            string and hash; no flash of
+#                                                            any version, no timeout)
+#   IAM prototype (1.0):  /v1/       → public/v1/index.html
 #   IAM prototype (2.0):  /v2/       → public/v2/index.html
 #   IAM prototype (3.0):  /v3/       → public/v3/index.html
+#   IAM prototype (4.0):  /v4/       → public/v4/index.html
+#   IAM prototype (4.1):  /v4.1/     → public/v4.1/index.html  (ADS — current default
+#                                                                 version; full, independent
+#                                                                 duplicate of v4/, not an
+#                                                                 alias/redirect to it)
 #   DCM prototype:        /dcm/      → public/dcm/index.html  (canonical DCM URL path)
 #   DCM shortcut:         /dcm.html  → public/dcm.html (meta refresh → /dcm/)
+#
+# `public/version-config.js` is the single shared source of truth for the
+# version list + default version (consumed by every `v*/index.html`'s
+# Version submenu and by the root redirect above) — see that file's header
+# comment before adding/removing/reordering a version.
 pages:
   stage: deploy
   script:
-    - echo "Verifying Pages artifact (IAM 1.0 + IAM 2.0 + IAM 3.0 + DCM)"
+    - echo "Verifying Pages artifact (IAM 1.0 + IAM 2.0 + IAM 3.0 + IAM 4.0 + IAM 4.1 + DCM)"
     - test -f public/index.html
-    - test -f public/styles.css
-    - test -f public/app.js
+    - test -f public/version-config.js
+    - test -f public/v1/index.html
+    - test -f public/v1/styles.css
+    - test -f public/v1/app.js
     - test -f public/v2/index.html
     - test -f public/v2/styles.css
     - test -f public/v2/app.js
     - test -f public/v3/index.html
     - test -f public/v3/styles.css
     - test -f public/v3/app.js
+    - test -f public/v4/index.html
+    - test -f public/v4/styles.css
+    - test -f public/v4/app.js
+    - test -f "public/v4.1/index.html"
+    - test -f "public/v4.1/styles.css"
+    - test -f "public/v4.1/app.js"
+    - test -f "public/v4.1/redline.css"
+    - test -f "public/v4.1/redline.js"
+    - test -f "public/v4.1/redline-gallery.js"
     - test -f public/dcm/index.html
     - test -f public/dcm/dcm.css
     - test -f public/dcm/app-dcm.js
     - test -f public/dcm.html
+    # The files existing isn't enough: the whole point of the root shell is
+    # that "/" opens the default version directly. Fail the deploy here
+    # rather than publish a root that silently sends reviewers to an older
+    # build (or to a version chooser).
+    - echo "Verifying the site root resolves to the default version (v4.1)"
+    - grep -q 'IAM_DEFAULT_VERSION_ID = "v4.1"' public/version-config.js
+    - grep -q 'v4.1/' public/index.html
     - echo "Deploying GitLab Pages site (public/)"
   artifacts:
     paths:

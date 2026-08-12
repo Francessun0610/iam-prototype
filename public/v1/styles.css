@@ -3,7 +3,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/InspireTWDC-Roman.woff2') format('woff2'),
+  src: url('../assets/fonts/InspireTWDC-Roman.woff2') format('woff2'),
        local('InspireTWDC Roman'), local('InspireTWDC-Roman'), local('Inspire TWDC Roman'), local('InspireTWDC');
 }
 @font-face {
@@ -11,7 +11,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/InspireTWDC-Medium.woff2') format('woff2'),
+  src: url('../assets/fonts/InspireTWDC-Medium.woff2') format('woff2'),
        local('InspireTWDC Medium'), local('InspireTWDC-Medium'), local('Inspire TWDC Medium');
 }
 @font-face {
@@ -19,7 +19,7 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
+  src: url('../assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
        local('InspireTWDC Bold'), local('InspireTWDC-Bold'), local('Inspire TWDC Bold');
 }
 @font-face {
@@ -27,7 +27,7 @@
   font-weight: 800;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
+  src: url('../assets/fonts/InspireTWDC-Heavy.woff2') format('woff2'),
        local('InspireTWDC Heavy'), local('InspireTWDC-Heavy'), local('Inspire TWDC Heavy');
 }
 @font-face {
@@ -35,7 +35,7 @@
   font-weight: 900;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/InspireTWDC-Black.woff2') format('woff2'),
+  src: url('../assets/fonts/InspireTWDC-Black.woff2') format('woff2'),
        local('InspireTWDC Black'), local('InspireTWDC-Black'), local('Inspire TWDC Black');
 }
 @font-face {
@@ -43,7 +43,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/MultiplaneTWDC-Display-Medium.woff2') format('woff2'),
+  src: url('../assets/fonts/MultiplaneTWDC-Display-Medium.woff2') format('woff2'),
        local('MultiplaneTWDC Display Medium'), local('MultiplaneTWDC_Display-Medium'), local('MultiplaneTWDC Display');
 }
 

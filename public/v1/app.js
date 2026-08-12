@@ -1,75 +1,75 @@
 var DATA = [
   /* ── Page 1 ── */
-  { id: "u001", avatar: "avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["Core Planning Admin", "Planning Manager", "Planner"],              status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
-  { id: "u002", avatar: "avatars/photos/f01.png", name: "Marge Simpson",                email: "Marge.Simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
-  { id: "u003", avatar: "avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
-  { id: "u004", avatar: "avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Streaming Revenue",          title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
-  { id: "u005", avatar: "avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation",  title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
-  { id: "u006", avatar: "avatars/photos/m04.png", name: "Montgomery Burns",             email: "Montgomery.Burns@disney.com",             roles: ["Campaign Planner", "Planning Manager"],                             status: "Inactive", team: "Yield & Inventory",          title: "SVP, Revenue Strategy",                region: "NA",    lastLogin: "Feb 14, 2026, 10:30 AM"  },
-  { id: "u007", avatar: "avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Operations Admin"],                                                 status: "Active",   team: "Programmatic Sales",         title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
-  { id: "u008", avatar: "avatars/photos/f03.png", name: "Maggie Simpson",               email: "Maggie.Simpson@disney.com",               roles: ["Read-Only Viewer", "Planner"],                                      status: "Active",   team: "Revenue Operations",         title: "Associate, Revenue Ops",               region: "NA",    lastLogin: "May 2, 2026, 7:00 PM"   },
-  { id: "u009", avatar: "avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"],                status: "Inactive", team: "Ad Sales Finance",           title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
-  { id: "u010", avatar: "avatars/photos/m07.png", name: "Nelson Muntz",                 email: "Nelson.Muntz@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Finance & Planning",        region: "LATAM", lastLogin: "Apr 25, 2026, 5:30 PM"   },
+  { id: "u001", avatar: "../avatars/photos/m01.png", name: "Homer Simpson",                email: "Homer.Simpson@disney.com",                roles: ["Core Planning Admin", "Planning Manager", "Planner"],              status: "Active",   team: "National Ad Sales",          title: "VP, Ad Sales Operations",              region: "NA",    lastLogin: "May 3, 2026, 8:45 AM"   },
+  { id: "u002", avatar: "../avatars/photos/f01.png", name: "Marge Simpson",                email: "Marge.Simpson@disney.com",                roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Director, Media Strategy",             region: "NA",    lastLogin: "May 2, 2026, 2:30 PM"   },
+  { id: "u003", avatar: "../avatars/photos/m02.png", name: "Bart Simpson",                 email: "Bart.Simpson@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Coordinator, Sales Support",           region: "NA",    lastLogin: "May 3, 2026, 9:15 AM"   },
+  { id: "u004", avatar: "../avatars/photos/m03.png", name: "Ned Flanders",                 email: "Ned.Flanders@disney.com",                 roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Streaming Revenue",          title: "Manager, Client Partnerships",         region: "EMEA",  lastLogin: "Apr 28, 2026, 11:20 AM"  },
+  { id: "u005", avatar: "../avatars/photos/f02.png", name: "Lisa Simpson",                 email: "Lisa.Simpson@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner", "Planning Specialist"], status: "Active", team: "Ad Solutions & Innovation",  title: "Sr. Analyst, Audience Insights",       region: "NA",    lastLogin: "May 1, 2026, 4:00 PM"   },
+  { id: "u006", avatar: "../avatars/photos/m04.png", name: "Montgomery Burns",             email: "Montgomery.Burns@disney.com",             roles: ["Campaign Planner", "Planning Manager"],                             status: "Inactive", team: "Yield & Inventory",          title: "SVP, Revenue Strategy",                region: "NA",    lastLogin: "Feb 14, 2026, 10:30 AM"  },
+  { id: "u007", avatar: "../avatars/photos/m05.png", name: "Milhouse Van Houten",          email: "Milhouse.VanHouten@disney.com",           roles: ["Operations Admin"],                                                 status: "Active",   team: "Programmatic Sales",         title: "Analyst, Campaign Planning",           region: "ANZ",   lastLogin: "Apr 30, 2026, 3:45 PM"   },
+  { id: "u008", avatar: "../avatars/photos/f03.png", name: "Maggie Simpson",               email: "Maggie.Simpson@disney.com",               roles: ["Read-Only Viewer", "Planner"],                                      status: "Active",   team: "Revenue Operations",         title: "Associate, Revenue Ops",               region: "NA",    lastLogin: "May 2, 2026, 7:00 PM"   },
+  { id: "u009", avatar: "../avatars/photos/m06.png", name: "Waylon Smithers",              email: "Waylon.Smithers@disney.com",              roles: ["Operations Admin", "Read-Only Viewer", "ICM Admin"],                status: "Inactive", team: "Ad Sales Finance",           title: "Lead, Billing Operations",             region: "NA",    lastLogin: "Jan 22, 2026, 9:00 AM"   },
+  { id: "u010", avatar: "../avatars/photos/m07.png", name: "Nelson Muntz",                 email: "Nelson.Muntz@disney.com",                 roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Finance & Planning",        region: "LATAM", lastLogin: "Apr 25, 2026, 5:30 PM"   },
 
   /* ── Page 2 ── */
-  { id: "u011", avatar: "avatars/photos/m08.png", name: "Ralph Wiggum",                 email: "Ralph.Wiggum@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Ad Operations",             region: "NA",    lastLogin: "Apr 29, 2026, 1:15 PM"   },
-  { id: "u012", avatar: "avatars/photos/m09.png", name: "Principal Skinner",            email: "Principal.Skinner@disney.com",            roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Agency Sales",               title: "Sr. Manager, Agency Partnerships",     region: "NA",    lastLogin: "May 1, 2026, 10:00 AM"   },
-  { id: "u013", avatar: "avatars/photos/m10.png", name: "Krusty the Clown",             email: "Krusty.TheClown@disney.com",              roles: ["Campaign Planner"],                                                 status: "Active",   team: "National Ad Sales",          title: "Director, Brand Partnerships",         region: "NA",    lastLogin: "Apr 22, 2026, 2:00 PM"   },
-  { id: "u014", avatar: "avatars/photos/f04.png", name: "Selma Bouvier",                email: "Selma.Bouvier@disney.com",                roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"],      status: "Active",   team: "Ad Sales Finance",           title: "Manager, Billing Operations",          region: "EMEA",  lastLogin: "Apr 18, 2026, 9:30 AM"   },
-  { id: "u015", avatar: "avatars/photos/f05.png", name: "Patty Bouvier",                email: "Patty.Bouvier@disney.com",                roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Revenue Reporting",       region: "EMEA",  lastLogin: "May 2, 2026, 11:45 AM"   },
-  { id: "u016", avatar: "avatars/photos/m11.png", name: "Lenny Leonard",                email: "Lenny.Leonard@disney.com",                roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Media Investment",        region: "NA",    lastLogin: "Apr 30, 2026, 4:15 PM"   },
-  { id: "u017", avatar: "avatars/photos/m12.png", name: "Carl Carlson",                 email: "Carl.Carlson@disney.com",                 roles: ["Operations Admin", "Planning Specialist"],                          status: "Active",   team: "Yield & Inventory",          title: "Manager, Yield Optimization",          region: "NA",    lastLogin: "Apr 27, 2026, 3:00 PM"   },
-  { id: "u018", avatar: "avatars/photos/m13.png", name: "Moe Szyslak",                  email: "Moe.Szyslak@disney.com",                  roles: ["Read-Only Viewer", "Planner"],                                      status: "Inactive", team: "Client Partnerships",        title: "Coordinator, Client Services",         region: "LATAM", lastLogin: "Mar 10, 2026, 6:00 PM"   },
-  { id: "u019", avatar: "avatars/photos/m14.png", name: "Apu Nahasapeemapetilon",       email: "Apu.Nahasapeemapetilon@disney.com",       roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Global Partnerships",    title: "Sr. Manager, International Strategy",  region: "ANZ",   lastLogin: "May 3, 2026, 7:30 AM"   },
-  { id: "u020", avatar: "avatars/photos/m15.png", name: "Comic Book Guy",               email: "Comic.BookGuy@disney.com",                roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Ad Sales Finance",           title: "Analyst, Financial Planning",          region: "NA",    lastLogin: "Apr 14, 2026, 12:30 PM"  },
+  { id: "u011", avatar: "../avatars/photos/m08.png", name: "Ralph Wiggum",                 email: "Ralph.Wiggum@disney.com",                 roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Associate, Ad Operations",             region: "NA",    lastLogin: "Apr 29, 2026, 1:15 PM"   },
+  { id: "u012", avatar: "../avatars/photos/m09.png", name: "Principal Skinner",            email: "Principal.Skinner@disney.com",            roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Agency Sales",               title: "Sr. Manager, Agency Partnerships",     region: "NA",    lastLogin: "May 1, 2026, 10:00 AM"   },
+  { id: "u013", avatar: "../avatars/photos/m10.png", name: "Krusty the Clown",             email: "Krusty.TheClown@disney.com",              roles: ["Campaign Planner"],                                                 status: "Active",   team: "National Ad Sales",          title: "Director, Brand Partnerships",         region: "NA",    lastLogin: "Apr 22, 2026, 2:00 PM"   },
+  { id: "u014", avatar: "../avatars/photos/f04.png", name: "Selma Bouvier",                email: "Selma.Bouvier@disney.com",                roles: ["Operations Admin", "Read-Only Viewer", "Planning Specialist"],      status: "Active",   team: "Ad Sales Finance",           title: "Manager, Billing Operations",          region: "EMEA",  lastLogin: "Apr 18, 2026, 9:30 AM"   },
+  { id: "u015", avatar: "../avatars/photos/f05.png", name: "Patty Bouvier",                email: "Patty.Bouvier@disney.com",                roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Revenue Reporting",       region: "EMEA",  lastLogin: "May 2, 2026, 11:45 AM"   },
+  { id: "u016", avatar: "../avatars/photos/m11.png", name: "Lenny Leonard",                email: "Lenny.Leonard@disney.com",                roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Media Investment",        region: "NA",    lastLogin: "Apr 30, 2026, 4:15 PM"   },
+  { id: "u017", avatar: "../avatars/photos/m12.png", name: "Carl Carlson",                 email: "Carl.Carlson@disney.com",                 roles: ["Operations Admin", "Planning Specialist"],                          status: "Active",   team: "Yield & Inventory",          title: "Manager, Yield Optimization",          region: "NA",    lastLogin: "Apr 27, 2026, 3:00 PM"   },
+  { id: "u018", avatar: "../avatars/photos/m13.png", name: "Moe Szyslak",                  email: "Moe.Szyslak@disney.com",                  roles: ["Read-Only Viewer", "Planner"],                                      status: "Inactive", team: "Client Partnerships",        title: "Coordinator, Client Services",         region: "LATAM", lastLogin: "Mar 10, 2026, 6:00 PM"   },
+  { id: "u019", avatar: "../avatars/photos/m14.png", name: "Apu Nahasapeemapetilon",       email: "Apu.Nahasapeemapetilon@disney.com",       roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Planner"], status: "Active", team: "Global Partnerships",    title: "Sr. Manager, International Strategy",  region: "ANZ",   lastLogin: "May 3, 2026, 7:30 AM"   },
+  { id: "u020", avatar: "../avatars/photos/m15.png", name: "Comic Book Guy",               email: "Comic.BookGuy@disney.com",                roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Ad Sales Finance",           title: "Analyst, Financial Planning",          region: "NA",    lastLogin: "Apr 14, 2026, 12:30 PM"  },
 
   /* ── Page 3 ── */
-  { id: "u021", avatar: "avatars/photos/m16.png", name: "Chief Wiggum",                 email: "Chief.Wiggum@disney.com",                 roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "VP, Client Solutions",                 region: "NA",    lastLogin: "Apr 24, 2026, 10:15 AM"  },
-  { id: "u022", avatar: "avatars/photos/f06.png", name: "Edna Krabappel",               email: "Edna.Krabappel@disney.com",               roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"],         status: "Active",   team: "Digital Media Planning",     title: "Director, Planning & Activation",      region: "NA",    lastLogin: "May 1, 2026, 3:30 PM"   },
-  { id: "u023", avatar: "avatars/photos/m17.png", name: "Groundskeeper Willie",         email: "Groundskeeper.Willie@disney.com",         roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Lead, Campaign Trafficking",           region: "EMEA",  lastLogin: "Apr 20, 2026, 8:00 AM"   },
-  { id: "u024", avatar: "avatars/photos/m18.png", name: "Fat Tony",                     email: "Fat.Tony@disney.com",                     roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"],      status: "Active",   team: "Streaming Revenue",          title: "SVP, Distribution Strategy",           region: "NA",    lastLogin: "Apr 16, 2026, 1:00 PM"   },
-  { id: "u025", avatar: "avatars/photos/m19.png", name: "Dr. Hibbert",                  email: "Julius.Hibbert@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"],         status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Analytics",           region: "NA",    lastLogin: "Apr 29, 2026, 9:45 AM"   },
-  { id: "u026", avatar: "avatars/photos/m20.png", name: "Professor Frink",              email: "Professor.Frink@disney.com",              roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Programmatic Sales",         title: "Sr. Analyst, Programmatic Yield",      region: "NA",    lastLogin: "Apr 12, 2026, 2:15 PM"   },
-  { id: "u027", avatar: "avatars/photos/m21.png", name: "Barney Gumble",                email: "Barney.Gumble@disney.com",                roles: ["Campaign Planner", "Ad Operations Specialist"],                     status: "Inactive", team: "Addressable Ad Ops",         title: "Coordinator, Campaign Delivery",       region: "NA",    lastLogin: "Feb 28, 2026, 11:00 AM"  },
-  { id: "u028", avatar: "avatars/photos/m22.png", name: "Sideshow Bob",                 email: "Sideshow.Bob@disney.com",                 roles: ["Read-Only Viewer", "Campaign Planner", "Planner"],                  status: "Active",   team: "Agency Sales",               title: "Director, Agency Development",         region: "EMEA",  lastLogin: "Apr 8, 2026, 4:45 PM"    },
-  { id: "u029", avatar: "avatars/photos/m23.png", name: "Kent Brockman",                email: "Kent.Brockman@disney.com",                roles: ["Core Planning Admin", "Planning Manager"],                          status: "Active",   team: "Global Partnerships",        title: "VP, Global Media Sales",               region: "NA",    lastLogin: "May 2, 2026, 6:30 PM"   },
-  { id: "u030", avatar: "avatars/photos/m24.png", name: "Otto Mann",                    email: "Otto.Mann@disney.com",                    roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Accounts Receivable",       region: "LATAM", lastLogin: "Apr 5, 2026, 10:00 AM"   },
+  { id: "u021", avatar: "../avatars/photos/m16.png", name: "Chief Wiggum",                 email: "Chief.Wiggum@disney.com",                 roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "VP, Client Solutions",                 region: "NA",    lastLogin: "Apr 24, 2026, 10:15 AM"  },
+  { id: "u022", avatar: "../avatars/photos/f06.png", name: "Edna Krabappel",               email: "Edna.Krabappel@disney.com",               roles: ["Planner", "Campaign Planner", "Ad Operations Specialist"],         status: "Active",   team: "Digital Media Planning",     title: "Director, Planning & Activation",      region: "NA",    lastLogin: "May 1, 2026, 3:30 PM"   },
+  { id: "u023", avatar: "../avatars/photos/m17.png", name: "Groundskeeper Willie",         email: "Groundskeeper.Willie@disney.com",         roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Lead, Campaign Trafficking",           region: "EMEA",  lastLogin: "Apr 20, 2026, 8:00 AM"   },
+  { id: "u024", avatar: "../avatars/photos/m18.png", name: "Fat Tony",                     email: "Fat.Tony@disney.com",                     roles: ["Planning Manager", "Planning Specialist", "Campaign Planner"],      status: "Active",   team: "Streaming Revenue",          title: "SVP, Distribution Strategy",           region: "NA",    lastLogin: "Apr 16, 2026, 1:00 PM"   },
+  { id: "u025", avatar: "../avatars/photos/m19.png", name: "Dr. Hibbert",                  email: "Julius.Hibbert@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Manager"],         status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Analytics",           region: "NA",    lastLogin: "Apr 29, 2026, 9:45 AM"   },
+  { id: "u026", avatar: "../avatars/photos/m20.png", name: "Professor Frink",              email: "Professor.Frink@disney.com",              roles: ["Operations Admin", "Planning Specialist", "Ad Operations Specialist"], status: "Active", team: "Programmatic Sales",         title: "Sr. Analyst, Programmatic Yield",      region: "NA",    lastLogin: "Apr 12, 2026, 2:15 PM"   },
+  { id: "u027", avatar: "../avatars/photos/m21.png", name: "Barney Gumble",                email: "Barney.Gumble@disney.com",                roles: ["Campaign Planner", "Ad Operations Specialist"],                     status: "Inactive", team: "Addressable Ad Ops",         title: "Coordinator, Campaign Delivery",       region: "NA",    lastLogin: "Feb 28, 2026, 11:00 AM"  },
+  { id: "u028", avatar: "../avatars/photos/m22.png", name: "Sideshow Bob",                 email: "Sideshow.Bob@disney.com",                 roles: ["Read-Only Viewer", "Campaign Planner", "Planner"],                  status: "Active",   team: "Agency Sales",               title: "Director, Agency Development",         region: "EMEA",  lastLogin: "Apr 8, 2026, 4:45 PM"    },
+  { id: "u029", avatar: "../avatars/photos/m23.png", name: "Kent Brockman",                email: "Kent.Brockman@disney.com",                roles: ["Core Planning Admin", "Planning Manager"],                          status: "Active",   team: "Global Partnerships",        title: "VP, Global Media Sales",               region: "NA",    lastLogin: "May 2, 2026, 6:30 PM"   },
+  { id: "u030", avatar: "../avatars/photos/m24.png", name: "Otto Mann",                    email: "Otto.Mann@disney.com",                    roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Accounts Receivable",       region: "LATAM", lastLogin: "Apr 5, 2026, 10:00 AM"   },
 
   /* ── Page 4 ── */
-  { id: "u031", avatar: "avatars/photos/m25.png", name: "Mayor Quimby",                 email: "Mayor.Quimby@disney.com",                 roles: ["Planning Manager", "Planning Specialist"],                          status: "Active",   team: "National Ad Sales",          title: "SVP, Sales & Partnerships",            region: "NA",    lastLogin: "Apr 3, 2026, 11:30 AM"   },
-  { id: "u032", avatar: "avatars/photos/m26.png", name: "Hans Moleman",                 email: "Hans.Moleman@disney.com",                 roles: ["Operations Admin"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Billing Support",           region: "NA",    lastLogin: "Apr 18, 2026, 8:15 AM"   },
-  { id: "u033", avatar: "avatars/photos/m27.png", name: "Gil Gunderson",                email: "Gil.Gunderson@disney.com",                roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Inactive", team: "Client Partnerships",        title: "Coordinator, New Business",            region: "NA",    lastLogin: "Jan 15, 2026, 3:00 PM"   },
-  { id: "u034", avatar: "avatars/photos/m28.png", name: "Rainier Wolfcastle",           email: "Rainier.Wolfcastle@disney.com",           roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Streaming Revenue",          title: "Director, Content Partnerships",       region: "EMEA",  lastLogin: "Apr 14, 2026, 9:00 AM"   },
-  { id: "u035", avatar: "avatars/photos/m29.png", name: "Troy McClure",                 email: "Troy.McClure@disney.com",                 roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Manager, Cross-Platform Planning",     region: "NA",    lastLogin: "Apr 10, 2026, 2:45 PM"   },
-  { id: "u036", avatar: "avatars/photos/m30.png", name: "Disco Stu",                    email: "Disco.Stu@disney.com",                    roles: ["Ad Operations Specialist"],                                         status: "Active",   team: "Ad Solutions & Innovation",  title: "Analyst, Creative Ad Solutions",       region: "LATAM", lastLogin: "Mar 28, 2026, 12:00 PM"  },
-  { id: "u037", avatar: "avatars/photos/m31.png", name: "Dr. Nick Riviera",             email: "Nick.Riviera@disney.com",                 roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Active",   team: "Revenue Operations",         title: "Analyst, Revenue Reconciliation",      region: "NA",    lastLogin: "Apr 22, 2026, 11:15 AM"  },
-  { id: "u038", avatar: "avatars/photos/m32.png", name: "Kirk Van Houten",              email: "Kirk.VanHouten@disney.com",               roles: ["Operations Admin", "Planning Specialist"],                          status: "Inactive", team: "Yield & Inventory",          title: "Associate, Inventory Management",      region: "NA",    lastLogin: "Mar 5, 2026, 4:00 PM"    },
-  { id: "u039", avatar: "avatars/photos/f07.png", name: "Luann Van Houten",             email: "Luann.VanHouten@disney.com",              roles: ["Planner", "Campaign Planner"],                                      status: "Active",   team: "Agency Sales",               title: "Manager, Client Relations",            region: "ANZ",   lastLogin: "Apr 25, 2026, 8:30 AM"   },
-  { id: "u040", avatar: "avatars/photos/f08.png", name: "Agnes Skinner",                email: "Agnes.Skinner@disney.com",                roles: ["Read-Only Viewer", "TOM Admin"],                                    status: "Active",   team: "Addressable Ad Ops",         title: "Sr. Analyst, Financial Controls",      region: "NA",    lastLogin: "Apr 17, 2026, 1:30 PM"   },
+  { id: "u031", avatar: "../avatars/photos/m25.png", name: "Mayor Quimby",                 email: "Mayor.Quimby@disney.com",                 roles: ["Planning Manager", "Planning Specialist"],                          status: "Active",   team: "National Ad Sales",          title: "SVP, Sales & Partnerships",            region: "NA",    lastLogin: "Apr 3, 2026, 11:30 AM"   },
+  { id: "u032", avatar: "../avatars/photos/m26.png", name: "Hans Moleman",                 email: "Hans.Moleman@disney.com",                 roles: ["Operations Admin"],                                                 status: "Active",   team: "Ad Sales Finance",           title: "Associate, Billing Support",           region: "NA",    lastLogin: "Apr 18, 2026, 8:15 AM"   },
+  { id: "u033", avatar: "../avatars/photos/m27.png", name: "Gil Gunderson",                email: "Gil.Gunderson@disney.com",                roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Inactive", team: "Client Partnerships",        title: "Coordinator, New Business",            region: "NA",    lastLogin: "Jan 15, 2026, 3:00 PM"   },
+  { id: "u034", avatar: "../avatars/photos/m28.png", name: "Rainier Wolfcastle",           email: "Rainier.Wolfcastle@disney.com",           roles: ["Campaign Planner", "Ad Operations Specialist", "Planning Specialist"], status: "Active", team: "Streaming Revenue",          title: "Director, Content Partnerships",       region: "EMEA",  lastLogin: "Apr 14, 2026, 9:00 AM"   },
+  { id: "u035", avatar: "../avatars/photos/m29.png", name: "Troy McClure",                 email: "Troy.McClure@disney.com",                 roles: ["Planner", "Planning Specialist"],                                   status: "Active",   team: "Digital Media Planning",     title: "Manager, Cross-Platform Planning",     region: "NA",    lastLogin: "Apr 10, 2026, 2:45 PM"   },
+  { id: "u036", avatar: "../avatars/photos/m30.png", name: "Disco Stu",                    email: "Disco.Stu@disney.com",                    roles: ["Ad Operations Specialist"],                                         status: "Active",   team: "Ad Solutions & Innovation",  title: "Analyst, Creative Ad Solutions",       region: "LATAM", lastLogin: "Mar 28, 2026, 12:00 PM"  },
+  { id: "u037", avatar: "../avatars/photos/m31.png", name: "Dr. Nick Riviera",             email: "Nick.Riviera@disney.com",                 roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Active",   team: "Revenue Operations",         title: "Analyst, Revenue Reconciliation",      region: "NA",    lastLogin: "Apr 22, 2026, 11:15 AM"  },
+  { id: "u038", avatar: "../avatars/photos/m32.png", name: "Kirk Van Houten",              email: "Kirk.VanHouten@disney.com",               roles: ["Operations Admin", "Planning Specialist"],                          status: "Inactive", team: "Yield & Inventory",          title: "Associate, Inventory Management",      region: "NA",    lastLogin: "Mar 5, 2026, 4:00 PM"    },
+  { id: "u039", avatar: "../avatars/photos/f07.png", name: "Luann Van Houten",             email: "Luann.VanHouten@disney.com",              roles: ["Planner", "Campaign Planner"],                                      status: "Active",   team: "Agency Sales",               title: "Manager, Client Relations",            region: "ANZ",   lastLogin: "Apr 25, 2026, 8:30 AM"   },
+  { id: "u040", avatar: "../avatars/photos/f08.png", name: "Agnes Skinner",                email: "Agnes.Skinner@disney.com",                roles: ["Read-Only Viewer", "TOM Admin"],                                    status: "Active",   team: "Addressable Ad Ops",         title: "Sr. Analyst, Financial Controls",      region: "NA",    lastLogin: "Apr 17, 2026, 1:30 PM"   },
 
   /* ── Page 5 ── */
-  { id: "u041", avatar: "avatars/photos/m43.png", name: "Snake Jailbird",               email: "Snake.Jailbird@disney.com",               roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Coordinator, Programmatic Deals",      region: "NA",    lastLogin: "Apr 2, 2026, 9:15 AM"    },
-  { id: "u042", avatar: "avatars/photos/m44.png", name: "Jimbo Jones",                  email: "Jimbo.Jones@disney.com",                  roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Analyst, Ad Targeting",                region: "NA",    lastLogin: "Apr 30, 2026, 2:00 PM"   },
-  { id: "u043", avatar: "avatars/photos/m45.png", name: "Dolph Starbeam",               email: "Dolph.Starbeam@disney.com",               roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy",         region: "EMEA",  lastLogin: "Mar 20, 2026, 10:45 AM"  },
-  { id: "u044", avatar: "avatars/photos/f09.png", name: "Sherri Mackleberry",           email: "Sherri.Mackleberry@disney.com",           roles: ["Planner"],                                                          status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Audience Strategy",       region: "NA",    lastLogin: "May 1, 2026, 8:45 AM"    },
-  { id: "u045", avatar: "avatars/photos/f10.png", name: "Terri Mackleberry",            email: "Terri.Mackleberry@disney.com",            roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Integrated Media",        region: "NA",    lastLogin: "Apr 28, 2026, 5:00 PM"   },
-  { id: "u046", avatar: "avatars/photos/m33.png", name: "Martin Prince",                email: "Martin.Prince@disney.com",                roles: ["Read-Only Viewer", "Planning Manager"],                             status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Data Governance",         region: "NA",    lastLogin: "Apr 24, 2026, 3:15 PM"   },
-  { id: "u047", avatar: "avatars/photos/m34.png", name: "Timothy Lovejoy",              email: "Timothy.Lovejoy@disney.com",              roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts",        region: "ANZ",   lastLogin: "Apr 19, 2026, 10:30 AM"  },
-  { id: "u048", avatar: "avatars/photos/m35.png", name: "Cletus Spuckler",              email: "Cletus.Spuckler@disney.com",              roles: ["Operations Admin", "Read-Only Viewer"],                             status: "Active",   team: "Ad Sales Finance",           title: "Coordinator, Invoice Processing",      region: "NA",    lastLogin: "Apr 13, 2026, 12:00 PM"  },
-  { id: "u049", avatar: "avatars/photos/f11.png", name: "Cookie Kwan",                  email: "Cookie.Kwan@disney.com",                  roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "Sr. Manager, Regional Sales",          region: "ANZ",   lastLogin: "May 2, 2026, 9:00 AM"    },
-  { id: "u050", avatar: "avatars/photos/f12.png", name: "Lindsey Naegle",               email: "Lindsey.Naegle@disney.com",               roles: ["Operations Admin", "Planning Specialist", "TOM Admin"],             status: "Active",   team: "Yield & Inventory",          title: "Director, Yield Strategy",             region: "NA",    lastLogin: "Apr 26, 2026, 4:30 PM"   },
+  { id: "u041", avatar: "../avatars/photos/m43.png", name: "Snake Jailbird",               email: "Snake.Jailbird@disney.com",               roles: ["Read-Only Viewer", "Planner", "Campaign Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Coordinator, Programmatic Deals",      region: "NA",    lastLogin: "Apr 2, 2026, 9:15 AM"    },
+  { id: "u042", avatar: "../avatars/photos/m44.png", name: "Jimbo Jones",                  email: "Jimbo.Jones@disney.com",                  roles: ["Ad Operations Specialist", "Campaign Planner"],                     status: "Active",   team: "Addressable Ad Ops",         title: "Analyst, Ad Targeting",                region: "NA",    lastLogin: "Apr 30, 2026, 2:00 PM"   },
+  { id: "u043", avatar: "../avatars/photos/m45.png", name: "Dolph Starbeam",               email: "Dolph.Starbeam@disney.com",               roles: ["Campaign Planner", "Planning Specialist", "Ad Operations Specialist"], status: "Inactive", team: "Ad Solutions & Innovation", title: "Associate, Campaign Strategy",         region: "EMEA",  lastLogin: "Mar 20, 2026, 10:45 AM"  },
+  { id: "u044", avatar: "../avatars/photos/f09.png", name: "Sherri Mackleberry",           email: "Sherri.Mackleberry@disney.com",           roles: ["Planner"],                                                          status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Audience Strategy",       region: "NA",    lastLogin: "May 1, 2026, 8:45 AM"    },
+  { id: "u045", avatar: "../avatars/photos/f10.png", name: "Terri Mackleberry",            email: "Terri.Mackleberry@disney.com",            roles: ["Planner", "Planning Specialist", "Planning Manager"],               status: "Active",   team: "Digital Media Planning",     title: "Sr. Planner, Integrated Media",        region: "NA",    lastLogin: "Apr 28, 2026, 5:00 PM"   },
+  { id: "u046", avatar: "../avatars/photos/m33.png", name: "Martin Prince",                email: "Martin.Prince@disney.com",                roles: ["Read-Only Viewer", "Planning Manager"],                             status: "Active",   team: "Revenue Operations",         title: "Sr. Analyst, Data Governance",         region: "NA",    lastLogin: "Apr 24, 2026, 3:15 PM"   },
+  { id: "u047", avatar: "../avatars/photos/m34.png", name: "Timothy Lovejoy",              email: "Timothy.Lovejoy@disney.com",              roles: ["Planning Manager", "Campaign Planner", "Planning Specialist", "Core Planning Admin"], status: "Active", team: "Global Partnerships", title: "Director, Strategic Accounts",        region: "ANZ",   lastLogin: "Apr 19, 2026, 10:30 AM"  },
+  { id: "u048", avatar: "../avatars/photos/m35.png", name: "Cletus Spuckler",              email: "Cletus.Spuckler@disney.com",              roles: ["Operations Admin", "Read-Only Viewer"],                             status: "Active",   team: "Ad Sales Finance",           title: "Coordinator, Invoice Processing",      region: "NA",    lastLogin: "Apr 13, 2026, 12:00 PM"  },
+  { id: "u049", avatar: "../avatars/photos/f11.png", name: "Cookie Kwan",                  email: "Cookie.Kwan@disney.com",                  roles: ["Planner"],                                                          status: "Active",   team: "National Ad Sales",          title: "Sr. Manager, Regional Sales",          region: "ANZ",   lastLogin: "May 2, 2026, 9:00 AM"    },
+  { id: "u050", avatar: "../avatars/photos/f12.png", name: "Lindsey Naegle",               email: "Lindsey.Naegle@disney.com",               roles: ["Operations Admin", "Planning Specialist", "TOM Admin"],             status: "Active",   team: "Yield & Inventory",          title: "Director, Yield Strategy",             region: "NA",    lastLogin: "Apr 26, 2026, 4:30 PM"   },
 
   /* ── Page 6 ── */
-  { id: "u051", avatar: "avatars/photos/m36.png", name: "Lionel Hutz",                  email: "Lionel.Hutz@disney.com",                  roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Manager, Business Development",        region: "NA",    lastLogin: "Apr 11, 2026, 2:45 PM"   },
-  { id: "u052", avatar: "avatars/photos/f13.png", name: "Helen Lovejoy",                email: "Helen.Lovejoy@disney.com",                roles: ["Planner", "Campaign Planner", "Planning Specialist"],               status: "Active",   team: "Agency Sales",               title: "Sr. Planner, Agency Investment",        region: "EMEA",  lastLogin: "Apr 22, 2026, 10:00 AM"  },
-  { id: "u053", avatar: "avatars/photos/m37.png", name: "Artie Ziff",                   email: "Artie.Ziff@disney.com",                   roles: ["Planning Manager", "Core Planning Admin"],                          status: "Active",   team: "Streaming Revenue",          title: "VP, Digital Revenue",                  region: "NA",    lastLogin: "May 3, 2026, 11:00 AM"   },
-  { id: "u054", avatar: "avatars/photos/f14.png", name: "Ruth Powers",                  email: "Ruth.Powers@disney.com",                  roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Systems",             region: "NA",    lastLogin: "Apr 27, 2026, 3:30 PM"   },
-  { id: "u055", avatar: "avatars/photos/m38.png", name: "Herman Hermann",               email: "Herman.Hermann@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Inactive", team: "Ad Sales Finance",           title: "Analyst, Cost Allocation",             region: "LATAM", lastLogin: "Feb 8, 2026, 9:15 AM"    },
-  { id: "u056", avatar: "avatars/photos/m39.png", name: "Wendell Borton",               email: "Wendell.Borton@disney.com",               roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Associate, Creative Operations",       region: "NA",    lastLogin: "Apr 23, 2026, 1:45 PM"   },
-  { id: "u057", avatar: "avatars/photos/m40.png", name: "Lyle Lanley",                  email: "Lyle.Lanley@disney.com",                  roles: ["Campaign Planner", "Planning Manager", "Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Sr. Manager, Programmatic Sales",      region: "NA",    lastLogin: "May 1, 2026, 7:30 PM"    },
-  { id: "u058", avatar: "avatars/photos/m41.png", name: "Lewis Clark",                  email: "Lewis.Clark@disney.com",                  roles: ["Operations Admin"],                                                 status: "Inactive", team: "Yield & Inventory",          title: "Analyst, Inventory Forecasting",       region: "ANZ",   lastLogin: "Mar 14, 2026, 11:00 AM"  },
-  { id: "u059", avatar: "avatars/photos/m42.png", name: "Kearney Zzyzwicz",             email: "Kearney.Zzyzwicz@disney.com",             roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Global Partnerships",        title: "Coordinator, Partner Relations",       region: "EMEA",  lastLogin: "Apr 16, 2026, 6:15 PM"   },
-  { id: "u060", avatar: "avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon",   email: "Manjula.Nahasapeemapetilon@disney.com",   roles: ["Operations Admin", "Read-Only Viewer", "Planner"],                  status: "Active",   team: "Addressable Ad Ops",         title: "Lead, Operations Support",             region: "ANZ",   lastLogin: "Apr 29, 2026, 8:00 AM"   }
+  { id: "u051", avatar: "../avatars/photos/m36.png", name: "Lionel Hutz",                  email: "Lionel.Hutz@disney.com",                  roles: ["Read-Only Viewer"],                                                 status: "Active",   team: "Client Partnerships",        title: "Manager, Business Development",        region: "NA",    lastLogin: "Apr 11, 2026, 2:45 PM"   },
+  { id: "u052", avatar: "../avatars/photos/f13.png", name: "Helen Lovejoy",                email: "Helen.Lovejoy@disney.com",                roles: ["Planner", "Campaign Planner", "Planning Specialist"],               status: "Active",   team: "Agency Sales",               title: "Sr. Planner, Agency Investment",        region: "EMEA",  lastLogin: "Apr 22, 2026, 10:00 AM"  },
+  { id: "u053", avatar: "../avatars/photos/m37.png", name: "Artie Ziff",                   email: "Artie.Ziff@disney.com",                   roles: ["Planning Manager", "Core Planning Admin"],                          status: "Active",   team: "Streaming Revenue",          title: "VP, Digital Revenue",                  region: "NA",    lastLogin: "May 3, 2026, 11:00 AM"   },
+  { id: "u054", avatar: "../avatars/photos/f14.png", name: "Ruth Powers",                  email: "Ruth.Powers@disney.com",                  roles: ["Read-Only Viewer", "Operations Admin"],                             status: "Active",   team: "Revenue Operations",         title: "Manager, Revenue Systems",             region: "NA",    lastLogin: "Apr 27, 2026, 3:30 PM"   },
+  { id: "u055", avatar: "../avatars/photos/m38.png", name: "Herman Hermann",               email: "Herman.Hermann@disney.com",               roles: ["Read-Only Viewer", "Operations Admin", "Planning Specialist"],      status: "Inactive", team: "Ad Sales Finance",           title: "Analyst, Cost Allocation",             region: "LATAM", lastLogin: "Feb 8, 2026, 9:15 AM"    },
+  { id: "u056", avatar: "../avatars/photos/m39.png", name: "Wendell Borton",               email: "Wendell.Borton@disney.com",               roles: ["Ad Operations Specialist", "Planning Specialist"],                  status: "Active",   team: "Ad Solutions & Innovation",  title: "Associate, Creative Operations",       region: "NA",    lastLogin: "Apr 23, 2026, 1:45 PM"   },
+  { id: "u057", avatar: "../avatars/photos/m40.png", name: "Lyle Lanley",                  email: "Lyle.Lanley@disney.com",                  roles: ["Campaign Planner", "Planning Manager", "Planner"],                  status: "Active",   team: "Programmatic Sales",         title: "Sr. Manager, Programmatic Sales",      region: "NA",    lastLogin: "May 1, 2026, 7:30 PM"    },
+  { id: "u058", avatar: "../avatars/photos/m41.png", name: "Lewis Clark",                  email: "Lewis.Clark@disney.com",                  roles: ["Operations Admin"],                                                 status: "Inactive", team: "Yield & Inventory",          title: "Analyst, Inventory Forecasting",       region: "ANZ",   lastLogin: "Mar 14, 2026, 11:00 AM"  },
+  { id: "u059", avatar: "../avatars/photos/m42.png", name: "Kearney Zzyzwicz",             email: "Kearney.Zzyzwicz@disney.com",             roles: ["Planner", "Campaign Planner", "Read-Only Viewer"],                  status: "Active",   team: "Global Partnerships",        title: "Coordinator, Partner Relations",       region: "EMEA",  lastLogin: "Apr 16, 2026, 6:15 PM"   },
+  { id: "u060", avatar: "../avatars/photos/f15.png", name: "Manjula Nahasapeemapetilon",   email: "Manjula.Nahasapeemapetilon@disney.com",   roles: ["Operations Admin", "Read-Only Viewer", "Planner"],                  status: "Active",   team: "Addressable Ad Ops",         title: "Lead, Operations Support",             region: "ANZ",   lastLogin: "Apr 29, 2026, 8:00 AM"   }
 ];
 
 var ORIGINAL_ORDER = DATA.slice();
@@ -156,7 +156,7 @@ var EXTERNAL_DATA_ARRAY = [
 var EXTERNAL_TOTAL = 60;
 var userView = "internal";
 /* Session-added users (Add User flow) — same image for every new row until page refresh. */
-var DEFAULT_ADD_USER_AVATAR = "avatars/default-add-user.png";
+var DEFAULT_ADD_USER_AVATAR = "../avatars/default-add-user.png";
 var currentPage = 1;
 var pageSize = 10;
 var sortKey = null;
@@ -1360,10 +1360,29 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ─── User menu (profile dropdown + theme + version switchers) ───
      Wires the avatar trigger, the Theme submenu, the Version submenu,
      sub-item selection, outside-click/Escape close, and persists the
-     chosen theme. The Version submenu navigates between the 1.0 and 2.0
-     prototype builds (`/index.html` and `/v2/index.html` respectively);
-     it never mutates page state — it just hands off via `location.assign`. */
+     chosen theme. The Version submenu navigates between the separate
+     v1–v4 prototype builds (`../v1/`, `../v2/`, `../v3/`, `../v4/`); it
+     never mutates page state — it just hands off via `location.assign`.
+
+     Version submenu content: rendered at load time from the shared
+     `window.IAM_VERSIONS` list (see `../version-config.js`) rather than
+     hardcoded per build, so adding/removing a version is a one-file edit
+     that every build's menu picks up. `IAM_CURRENT_VERSION_ID` is the one
+     thing each build still declares locally — it's this bundle's own
+     identity, used only to mark the matching item selected/checked (never
+     hardcoded to a *different* version, and re-derived from this
+     constant on every render rather than baked into static HTML).
+
+     Keyboard: the Theme/Version/Log Out rows and their sub-items use a
+     roving-tabindex menu pattern (ArrowUp/Down move the roving tab stop,
+     Home/End jump to the first/last item, Enter/Space activates, and
+     ArrowRight opens / Escape or ArrowLeft closes a submenu and returns
+     focus to its parent row) so the menu is fully operable without a
+     mouse, matching the ADS menu keyboard pattern. Mouse hover/click
+     continue to work exactly as before — this is additive. */
   (function setupUserMenu() {
+    var IAM_CURRENT_VERSION_ID = "v1";
+
     var menu = document.getElementById("userMenu");
     var trigger = document.getElementById("userMenuTrigger");
     var pop = document.getElementById("userMenuPop");
@@ -1372,14 +1391,34 @@ document.addEventListener("DOMContentLoaded", function () {
     var logoutRow = document.getElementById("userMenuLogout");
     if (!menu || !trigger || !pop || !themeRow) return;
 
+    var versionSub = versionRow ? versionRow.querySelector(".user-menu-sub") : null;
+
+    /* Render the Version submenu from the shared config. Re-run any time
+       we need a fresh, correctly-selected item list (just once, on load —
+       the current version never changes without a full page navigation). */
+    function renderVersionSubmenu() {
+      if (!versionSub || !window.IAM_VERSIONS) return;
+      var html = "";
+      for (var i = 0; i < window.IAM_VERSIONS.length; i++) {
+        var v = window.IAM_VERSIONS[i];
+        var selected = v.id === IAM_CURRENT_VERSION_ID;
+        var href = window.iamVersionHref ? window.iamVersionHref(v.folder) : "../" + v.folder + "/";
+        html += '<div class="user-menu-sub-item' + (selected ? " is-selected" : "") +
+          '" role="menuitemradio" aria-checked="' + (selected ? "true" : "false") +
+          '" data-version-id="' + v.id + '" data-version="' + v.label +
+          '" data-version-href="' + href + '" tabindex="-1">' + v.label + "</div>";
+      }
+      versionSub.innerHTML = html;
+    }
+    renderVersionSubmenu();
+
     /* Scope sub-item lookups by submenu owner. Earlier this used a single
        `pop.querySelectorAll(".user-menu-sub-item")` which conflated Theme
        and Version children — clicking a Version item would call
-       applyTheme(null) and silently reset the theme to EDL Light. */
+       applyTheme(null) and silently reset the theme to EDL Light. Version
+       items are re-queried on demand (see `subItemsOf`) since they're
+       regenerated above, rather than captured once here. */
     var themeItems = themeRow.querySelectorAll(".user-menu-sub-item");
-    var versionItems = versionRow
-      ? versionRow.querySelectorAll(".user-menu-sub-item")
-      : [];
     var THEME_KEY = "atlas:theme";
 
     /* Theme controller — generic over any number of themes.
@@ -1414,9 +1453,53 @@ document.addEventListener("DOMContentLoaded", function () {
       syncSelection();
     }
 
+    /* ── Roving-tabindex keyboard menu ──────────────────────────────
+       ROWS = the top-level menuitems (Version, Theme, Log Out — skips
+       any that don't exist on this build). Only one row/sub-item has
+       tabindex="0" at a time; arrow keys move that single tab stop. */
+    var ROWS = [versionRow, themeRow, logoutRow].filter(function (r) { return !!r; });
+    var rowIndex = 0;
+
+    function subItemsOf(row) {
+      return row ? Array.prototype.slice.call(row.querySelectorAll(".user-menu-sub-item")) : [];
+    }
+
+    function focusRow(idx) {
+      rowIndex = ((idx % ROWS.length) + ROWS.length) % ROWS.length;
+      for (var i = 0; i < ROWS.length; i++) {
+        ROWS[i].setAttribute("tabindex", i === rowIndex ? "0" : "-1");
+      }
+      ROWS[rowIndex].focus();
+    }
+
+    function focusSubItem(items, idx, parentRow) {
+      var n = ((idx % items.length) + items.length) % items.length;
+      for (var i = 0; i < items.length; i++) {
+        items[i].setAttribute("tabindex", i === n ? "0" : "-1");
+      }
+      items[n].focus();
+    }
+
+    function openRowSubmenu(row) {
+      row.setAttribute("aria-expanded", "true");
+      var items = subItemsOf(row);
+      if (!items.length) return;
+      var startAt = 0;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].classList.contains("is-selected")) { startAt = i; break; }
+      }
+      focusSubItem(items, startAt, row);
+    }
+
+    function closeRowSubmenu(row) {
+      row.setAttribute("aria-expanded", "false");
+      focusRow(ROWS.indexOf(row));
+    }
+
     function openMenu() {
       menu.classList.add("open");
       trigger.setAttribute("aria-expanded", "true");
+      focusRow(0);
     }
     function closeMenu() {
       menu.classList.remove("open");
@@ -1435,6 +1518,12 @@ document.addEventListener("DOMContentLoaded", function () {
       e.stopPropagation();
       toggleMenu();
     });
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!menu.classList.contains("open")) openMenu();
+      }
+    });
 
     themeRow.addEventListener("click", function (e) {
       if (e.target.closest(".user-menu-sub-item")) return;
@@ -1449,15 +1538,16 @@ document.addEventListener("DOMContentLoaded", function () {
         var val = this.getAttribute("data-theme");
         if (val) applyTheme(val);
         closeMenu();
+        trigger.focus();
       });
     }
 
     /* Version submenu — opens like Theme (click toggles aria-expanded; CSS
        hover also reveals it). Selecting an unselected version navigates to
        that build's HTML entry point; selecting the current version is a
-       no-op aside from closing the menu. The current-version attribute is
-       declared in markup (`is-selected`) so each prototype build ships its
-       own correct selection state — no JS theme-style sync needed. */
+       no-op aside from closing the menu. Delegated on the container (not
+       bound per-item) so it keeps working after `renderVersionSubmenu`
+       regenerates the item nodes. */
     if (versionRow) {
       versionRow.addEventListener("click", function (e) {
         if (e.target.closest(".user-menu-sub-item")) return;
@@ -1466,26 +1556,130 @@ document.addEventListener("DOMContentLoaded", function () {
         versionRow.setAttribute("aria-expanded", expanded ? "false" : "true");
       });
 
-      for (var vi = 0; vi < versionItems.length; vi++) {
-        versionItems[vi].addEventListener("click", function (e) {
-          e.stopPropagation();
-          if (this.classList.contains("is-selected")) {
-            closeMenu();
-            return;
-          }
-          var href = this.getAttribute("data-version-href");
+      versionRow.addEventListener("click", function (e) {
+        var item = e.target.closest(".user-menu-sub-item");
+        if (!item) return;
+        e.stopPropagation();
+        if (item.classList.contains("is-selected")) {
           closeMenu();
-          if (href) window.location.assign(href);
-        });
-      }
+          trigger.focus();
+          return;
+        }
+        var href = item.getAttribute("data-version-href");
+        closeMenu();
+        if (href) window.location.assign(href);
+      });
     }
 
     if (logoutRow) {
       logoutRow.addEventListener("click", function (e) {
         e.stopPropagation();
         closeMenu();
+        trigger.focus();
       });
     }
+
+    /* Row-level keyboard handling: Up/Down/Home/End move the roving tab
+       stop among ROWS; Enter/Space/ArrowRight opens a has-sub row's
+       submenu (or activates Log Out); Escape closes the whole menu. */
+    ROWS.forEach(function (row) {
+      row.addEventListener("keydown", function (e) {
+        /* Only handle these keys when the ROW itself is focused. Key
+           events from a focused sub-item bubble up to this same
+           listener (since has-sub rows contain their sub-items) — the
+           dedicated sub-item handler below owns that case instead. */
+        if (e.target !== row) return;
+        var isSub = row.classList.contains("has-sub");
+        switch (e.key) {
+          case "ArrowDown":
+            e.preventDefault();
+            focusRow(rowIndex + 1);
+            break;
+          case "ArrowUp":
+            e.preventDefault();
+            focusRow(rowIndex - 1);
+            break;
+          case "Home":
+            e.preventDefault();
+            focusRow(0);
+            break;
+          case "End":
+            e.preventDefault();
+            focusRow(ROWS.length - 1);
+            break;
+          case "ArrowRight":
+            if (isSub) {
+              e.preventDefault();
+              openRowSubmenu(row);
+            }
+            break;
+          case "Enter":
+          case " ":
+          case "Spacebar":
+            e.preventDefault();
+            if (isSub) {
+              openRowSubmenu(row);
+            } else {
+              row.click();
+            }
+            break;
+          case "Escape":
+            e.preventDefault();
+            closeMenu();
+            trigger.focus();
+            break;
+          case "Tab":
+            closeMenu();
+            break;
+        }
+      });
+    });
+
+    /* Sub-item keyboard handling: Up/Down/Home/End roam the open
+       submenu's items; Enter/Space activates (reuses the existing click
+       handler so theme/version selection logic stays in one place);
+       Escape/ArrowLeft closes the submenu and returns focus to its row. */
+    [versionRow, themeRow].forEach(function (row) {
+      if (!row) return;
+      row.addEventListener("keydown", function (e) {
+        var item = e.target.closest(".user-menu-sub-item");
+        if (!item) return;
+        var items = subItemsOf(row);
+        var idx = items.indexOf(item);
+        switch (e.key) {
+          case "ArrowDown":
+            e.preventDefault();
+            focusSubItem(items, idx + 1, row);
+            break;
+          case "ArrowUp":
+            e.preventDefault();
+            focusSubItem(items, idx - 1, row);
+            break;
+          case "Home":
+            e.preventDefault();
+            focusSubItem(items, 0, row);
+            break;
+          case "End":
+            e.preventDefault();
+            focusSubItem(items, items.length - 1, row);
+            break;
+          case "Enter":
+          case " ":
+          case "Spacebar":
+            e.preventDefault();
+            item.click();
+            break;
+          case "Escape":
+          case "ArrowLeft":
+            e.preventDefault();
+            closeRowSubmenu(row);
+            break;
+          case "Tab":
+            closeMenu();
+            break;
+        }
+      });
+    });
 
     document.addEventListener("click", function (e) {
       if (!menu.classList.contains("open")) return;
@@ -1493,7 +1687,7 @@ document.addEventListener("DOMContentLoaded", function () {
       closeMenu();
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && menu.classList.contains("open")) {
+      if (e.key === "Escape" && menu.classList.contains("open") && !menu.contains(e.target)) {
         closeMenu();
         trigger.focus();
       }

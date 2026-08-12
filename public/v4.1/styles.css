@@ -145,6 +145,16 @@
   --shadow-tip:   0 1px 3px rgba(16,17,19,0.24);
   --shadow-drawer: 4px 0 16px rgba(0,0,0,0.08);
   --overlay-scrim: rgba(23,28,32,0.40);
+
+  /* R58 — Responsive content-container model (V4 list pages: Users,
+     Roles, Teams). The deliberate design-system maximum content width
+     a list card/table grows to before it stops and centers with equal
+     outer whitespace. 1920px matches the ADS pilot's own upper
+     desktop target (see `ads-design-system/design.md`, "Pilot
+     constraint: 1440px and 1920px desktop") — the largest width the
+     table/column system was actually designed against, so growth is
+     deliberately held there rather than stretching further at 2560+. */
+  --v4-content-max-width: 1920px;
 }
 
 /* ─── EDL Dark Theme ───
@@ -532,10 +542,11 @@ table { border-spacing: 0; border-collapse: collapse; }
 /* The table itself spans the full card width so the row-divider borders
    (.tbl tbody tr { border-bottom }) draw cleanly from edge to edge with
    no gap on the right. The 56px right-gutter rail that aligns the CTA
-   with the rightmost column's visible content is implemented on those
-   elements individually (see .tbar below and the per-column padding on
-   the rightmost cell in each table — .c-rg for Users, .rp-date for
-   R&P). The pagination row intentionally uses a symmetric 16px
+   with the rightmost column's visible content is implemented on that
+   element individually (see .tbar below and the per-column padding on
+   the rightmost cell — .rp-date for R&P; Users' .c-rg no longer does
+   this — see its own rule further down for why). The pagination row
+   intentionally uses a symmetric 16px
    horizontal padding (see .pgn below) so the left and right ends of
    the row feel visually balanced against each other; it does not
    share the CTA rail. Doing the rail via cell padding instead of
@@ -1289,20 +1300,58 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-shell { max-width: 1144px; margin: 0 auto; padding: 8px 48px 64px; }
 /* Header/main shell variants — same shared width/padding formula as
    the base `.cr-shell` (never duplicated), just with vertical padding
-   redistributed across the two surfaces above. No Figma spec exists
-   for a Create/Edit Role-specific header/main-content split (only
-   Add/Edit User's node was provided), so the *total* existing
-   header-to-first-card distance is preserved exactly as before: the
-   header shell keeps its own bottom padding at 0 and relies on
-   `.cr-header`'s existing `margin-bottom: 24px` (unchanged) plus
-   `flow-root` on `.cr-page-header-surface` to contain it, so the
-   boundary lands 24px below the header row exactly as it did when
-   everything shared one `.cr-shell`. The main shell keeps top padding
-   at 0 (the 24px above already comes from the header surface) and
-   moves the previous single shell's 64px bottom padding to its own
-   `padding-bottom` unchanged. */
+   redistributed across the two surfaces above.
+
+   Vertical-spacing audit (Figma 1023:22021) correction: the *total*
+   header-to-first-card distance (24px) was already correct, but it
+   used to live entirely inside `.cr-page-header-surface` — `.cr-header`'s
+   own `margin-bottom: 24px`, contained by that surface's `flow-root`,
+   painted the gap in the *header* tone (`--gray-10`) instead of the
+   main-content tone (`--ads-surface-recessed`), which fails the "the
+   visible space must belong to the gray main-content region" rule
+   (confirmed by sampling the actual painted element at the gap's
+   midpoint — it resolved to `.cr-page-header-surface`, not
+   `.cr-page-main-surface`). Add/Edit User never had this bug because
+   `.au-header` carries no such margin; its 24px comes from `.au-card`'s
+   `margin-top`, which lives in the main surface.
+
+   Fix: neutralize `.cr-header`'s margin-bottom only inside the header
+   surface (`.cr-page-header-surface .cr-header`, just below) and move
+   the equivalent 24px onto `.cr-main-shell`'s own `padding-top`
+   instead. The header/main boundary now lands exactly at the header
+   row's bottom edge (no change there), and the 24px gap before the
+   first card is now painted by the main surface, matching Add/Edit
+   User and the Figma reference. Total card position is unchanged. */
 .cr-shell.cr-header-shell { padding: 8px 48px 0; }
-.cr-shell.cr-main-shell { padding: 0 48px 64px; }
+.cr-shell.cr-main-shell { padding: 24px 48px 64px; }
+.cr-page-header-surface .cr-header { margin-bottom: 0; }
+
+/* ═══ Round 32 (2026-08-11) — Edit Role page-header spacing now
+   matches Edit User's exactly. Edit User's header surface (`.au-
+   header-shell`) carries `padding: 8px 0 12px` — 12px of breathing
+   room below the helper text before the header/main boundary — and
+   its title-to-subtitle gap is 11px (`.au-subtitle { margin-top:
+   11px }`, with `.au-title` contributing no margin-bottom of its
+   own). Edit Role's shared `.cr-header-shell`/`.cr-title`/`.cr-
+   subtitle` rules above give Create Role a 0px bottom padding (the
+   helper text sat flush against the boundary — the reported bug) and
+   only an 8px title/subtitle gap (`.cr-title`'s own margin-bottom).
+   Scoped to `#createRolePage.is-edit-mode` only — Create Role's
+   header spacing is intentionally left as-is; this is an Edit-Role-
+   only correction. The existing 24px boundary-to-first-card gap
+   (`.cr-main-shell`'s own `padding-top: 24px`, unchanged) is
+   untouched by this, so the two comfortable gaps now stack exactly
+   like Edit User's do (12px within the header surface, then 24px
+   within the main surface) instead of colliding into one. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-header-shell {
+  padding-bottom: 12px;
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-title {
+  margin-bottom: 0;
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-subtitle {
+  margin-top: 11px;
+}
 
 /* ═══ Shared V4 back-navigation component ═══════════════════════════
    ONE style contract for every "Back to…" control in V4 — Add/Edit
@@ -1380,31 +1429,19 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
    same optical-centering padding so the two buttons feel balanced. */
 #crCancel.btn-std { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; height: 32px; padding: 2px 16px 0; font-family: var(--ff); font-size: 14px; font-weight: 500; line-height: 16px; border-radius: 8px; }
 
-/* ─── Remove Role — EDL text action, Indigo 70 ───
-   Text-only 32px action (no icon, no fill, no border) matching the EDL
-   inline text-action spec. Color uses the Indigo 70 brand text token,
-   consistent with other EDL text actions on the page. Optical centering
-   uses the same 2px-top / 0-bottom padding as the Cancel / Save Role
-   buttons. Visible only in Edit Role mode.
-
-   NOTE: in V4 the height/font-size/font-weight/padding below are
-   superseded by the higher-specificity `html[data-iam-version="v4"]
-   .cr-btn-remove` rule further down this file (the shared 26px/12px/600
-   "compact ghost text-action" contract also used by Remove application,
-   table Remove links, etc.) — that rule is this control's real rendered
-   ADS treatment and is intentionally left untouched by this pass.
-
-   `margin-right: 12px` (Edit Role header-actions QA, 2026-08-11) adds
-   separation before Cancel beyond `.cr-header-actions`'s own 12px flex
-   `gap`, for a combined 24px — the same "slightly larger gap before the
-   destructive action's neighbor, standard gap between Cancel and the
-   primary Save action" contract already established for Edit User's
-   `.au-revoke-btn` and Edit Team's `.tm-delete-btn` (12px base gap + 12px
-   margin = 24px there too). Kept on the control itself, not on
-   `.cr-header-actions`, so the base 12px stays the untouched Cancel↔Save
-   Role gap. Not overridden by the v4-scoped rule below (which sets no
-   `margin`), so it survives to the rendered result. No-op while
-   `[hidden]` (Create Role mode). */
+/* ─── Remove Role — legacy EDL text-action fallback ───
+   This un-scoped rule is the pre-ADS fallback and is fully superseded
+   in V4 by the higher-specificity `html[data-iam-version="v4"]
+   .cr-btn-remove` rule (grouped with `.au-revoke-btn`/`.tm-delete-btn`
+   further down this file — the shared 36px ADS ghost/text-button
+   component, Edit Role header-actions QA round, 2026-08-11). That rule
+   is this control's real rendered treatment; only `margin-right: 12px`
+   below (not set by the shared component) actually reaches the
+   rendered result, giving the same "slightly larger gap before the
+   destructive action's neighbor" contract already established for
+   `.au-revoke-btn`/`.tm-delete-btn` (12px base `.cr-header-actions`
+   gap + this 12px margin = 24px). No-op while `[hidden]` (Create Role
+   mode, where there is no persisted role yet to remove). */
 .cr-btn-remove {
   display: inline-flex;
   align-items: center;
@@ -1574,21 +1611,15 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   color: var(--text-secondary);
 }
 
-/* ─── EDL Toast — matches EDL Toast Figma spec (node 15094:75972) ───
-   Container: fixed bottom-right stack. Each toast is 287px wide with
-   12px/16px padding, 8px corner radius, and a 32px drop shadow. Title
-   color varies by type (informative/success/warning/error); body text
-   is always gray-95. Light-mode tokens only — dark mode not needed in
-   this app today. Types: success (check-circle + green-60) and error
-   (alert-circle + red-60) are used here; the informative/warning styles
-   are included for completeness and parity with the EDL component. */
-/* Toast stack — anchored to the top-right corner across the entire IAM
-   experience. All toast variants (success, error, warning, informative)
-   share this one container, so every toast originates from the same
-   position. 24px offsets from the top and right follow EDL spacing.
-   New toasts are appended, so with flex-direction: column the newest
-   toast stacks below the previous ones — reading naturally downward
-   from the top-right anchor. */
+/* ─── Toast — canonical ADS Toast (Figma 70:62) ───────────────────────
+   Anatomy is a single row: [status icon] [title + message, stacked]
+   [close], left-bordered in the semantic color, white surface, 6px
+   radius, elevation/30 shadow. These are the structural/EDL-light-
+   default rules; the exact ADS token values (colors, elevation, the
+   16px/12px/4px spacing scale) are layered on top for
+   `html[data-iam-version="v4"][data-theme="ads-preview"]` further
+   down this file (search "R52 — Toast"), since V4.1 can still be
+   switched back to EDL Light/Dark via the theme menu. */
 .edl-toast-container {
   position: fixed;
   top: 24px;
@@ -1602,14 +1633,16 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .edl-toast {
   pointer-events: auto;
-  width: 287px;
+  width: 320px;
+  max-width: 100%;
   box-sizing: border-box;
   background: var(--bg-surface);
   border-radius: 8px;
+  border-left: 4px solid var(--brand-text);
   padding: 12px 16px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 12px;
   box-shadow: 0 0 32px 0 rgba(23, 29, 35, 0.25);
   font-family: var(--ff);
   animation: edl-toast-in 180ms ease-out;
@@ -1618,7 +1651,9 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   animation: edl-toast-out 160ms ease-in forwards;
 }
 /* Entrance/exit motion origin matches the top-right anchor:
-   slide in from -8px above, slide out back up on dismiss. */
+   slide in from -8px above, slide out back up on dismiss. Subtle,
+   non-blocking, no bounce/overshoot — satisfies the ADS motion
+   requirement without inventing a custom flashy animation. */
 @keyframes edl-toast-in {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -1627,29 +1662,48 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   from { opacity: 1; transform: translateY(0); }
   to   { opacity: 0; transform: translateY(-8px); }
 }
-.edl-toast-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+@media (prefers-reduced-motion: reduce) {
+  .edl-toast { animation: none; }
+  .edl-toast.is-leaving { animation: none; }
 }
 .edl-toast-icon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edl-toast-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .edl-toast-title {
-  flex: 1 0 0;
-  min-width: 0;
+  margin: 0;
   font-family: var(--ff);
   font-size: 14px;
-  font-weight: 600;
-  line-height: 21px;
-  letter-spacing: -0.1px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0;
   color: var(--brand-text);
+  word-wrap: break-word;
 }
+.edl-toast-body {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--gray-95);
+  word-wrap: break-word;
+}
+.edl-toast-body strong { font-weight: 600; }
 .edl-toast-close {
   flex-shrink: 0;
+  align-self: flex-start;
   width: 16px;
   height: 16px;
   padding: 0;
@@ -1663,29 +1717,29 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   align-items: center;
   justify-content: center;
 }
-.edl-toast-close svg { width: 16px; height: 16px; display: block; }
+/* Glyph keeps its native 10×10 size (not stretched to fill the box) —
+   the surrounding padding on `.edl-toast-close` (8px under the ADS
+   32×32 hit-target rule further down, reproducing Figma's 16px icon
+   box around the 10×10 "x") supplies the correct inset. */
+.edl-toast-close svg { width: 10px; height: 10px; display: block; }
 .edl-toast-close:hover { opacity: 0.75; }
 .edl-toast-close:focus-visible { outline: 2px solid var(--brand-focus-ring); outline-offset: 2px; }
-.edl-toast-body {
-  padding-left: 32px;
-  font-family: var(--ff);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  color: var(--gray-95);
-  word-wrap: break-word;
-}
-.edl-toast-body strong { font-weight: 600; }
 
-/* Type variants — icon + title color per EDL spec */
+/* Type variants — icon + title color; message/body stays neutral
+   (gray-95) across every variant, matching the ADS spec where only
+   the headline (not the supporting message) carries semantic color. */
 .edl-toast--informative .edl-toast-title { color: var(--indigo-70); }
 .edl-toast--informative .edl-toast-icon  { color: var(--indigo-70); }
+.edl-toast--informative { border-left-color: var(--indigo-70); }
 .edl-toast--success .edl-toast-title     { color: var(--green-60); }
 .edl-toast--success .edl-toast-icon      { color: var(--green-60); }
+.edl-toast--success { border-left-color: var(--green-60); }
 .edl-toast--warning .edl-toast-title     { color: var(--orange-70); }
 .edl-toast--warning .edl-toast-icon      { color: var(--orange-70); }
+.edl-toast--warning { border-left-color: var(--orange-70); }
 .edl-toast--error .edl-toast-title       { color: var(--red-60); }
 .edl-toast--error .edl-toast-icon        { color: var(--red-60); }
+.edl-toast--error { border-left-color: var(--red-60); }
 
 .cr-card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 16px; padding: 16px 24px 24px; margin-bottom: 24px; }
 
@@ -1699,6 +1753,31 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 .cr-card.collapsed .cr-section-chev { transform: rotate(-90deg); }
 @media (prefers-reduced-motion: reduce) {
   .cr-section-chev { transition: none; }
+}
+/* Round 28 (2026-08-11, Edit Role QA) — the chevron is wrapped in a
+   real `<button>` (`#crBasicCard`/`#crFuncsCard` in index.html) per an
+   accessibility requirement to use actual button elements for chevron
+   controls. `tabindex="-1"`/`aria-hidden="true"` in the markup keep it
+   from being a second, redundant tab stop — the header row itself
+   (`role="button"`, `aria-expanded`, a dynamically-updated `aria-label`)
+   remains the one real keyboard toggle target. At this default 16x16
+   size (no padding/border/background) it is visually identical to the
+   bare `<svg>` it replaces, so every consumer of this markup — Create
+   Role included — renders pixel-for-pixel unchanged; only Edit Role's
+   `#crBasicCard`/`#crFuncsCard` grow it to a ~32px clickable hit area
+   (see the Edit-Role-scoped rule further down this file). */
+.cr-section-chev-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 /* `.cr-section-header-row` (Edit User's Basic Information header — the
    toggle + Revoke access button share this row, see index.html) must
@@ -2227,6 +2306,26 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
 }
 .cr-app-section-head:focus-visible { outline: 2px solid var(--indigo-50); outline-offset: 2px; border-radius: 4px; }
 .cr-app-head-left { display: flex; flex-direction: row; align-items: center; gap: 8px; min-width: 0; }
+/* Round 28 (2026-08-11) — the nested "Core Planning"-style accordion
+   chevron is wrapped in a real `<button>` (see `buildAppSectionHtml`
+   in app.js), matching the same pattern used for Role Details/
+   Functions above. Default 16x16, no padding/border/background,
+   keeps it visually identical to the bare `<svg>` it replaces —
+   `#createRolePage.is-edit-mode` (further down this file) is the only
+   place that grows it to a ~32px clickable hit area. */
+.cr-app-head-chev-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  flex-shrink: 0;
+  cursor: pointer;
+}
 .cr-app-title {
   margin: 0;
   font-family: var(--ff);
@@ -2453,44 +2552,59 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   font-weight: 600;
   line-height: 22px;
   color: var(--brand-text);
+  /* Round 33 (2026-08-11): truncate unusually long application names
+     instead of overlapping "Remove application" — the native `title`
+     attribute set in `buildAppSectionHtml()` (app.js) supplies the
+     full-name tooltip. Requires the sibling `min-width: 0` already set
+     below (flex items don't shrink past their content size otherwise). */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /* Section head padding tightened so each app block reads as a
    compact subsection rather than a card. The first section gets a
    slightly smaller top padding; subsequent sections inherit the
    hairline separator from `.cr-app-section--matrix + .cr-app-section--matrix`
-   below. */
+   below.
+
+   Round 28 (2026-08-11 — nested "Core Planning" header QA): the
+   toggle target grew from `.cr-app-head-left` (chevron+title only) to
+   this whole row (`role="button"` now lives here, see app.js), so it
+   needs its own `cursor`/`user-select`/`gap`. The three children
+   (chevron button, title, Remove application) are now flat flex
+   siblings — `justify-content: space-between` is dropped in favor of
+   `.cr-app-title { flex: 1 1 auto }` below, which grows to consume the
+   row's remaining width and is what actually pushes Remove
+   application (and, in Edit Role, the chevron) to the row's right
+   edge; `gap` sets the fixed spacing between whichever two children
+   end up adjacent. `order` values below keep Create Role's original
+   "chevron+title left / Remove right" visual exactly as it was; only
+   `#createRolePage.is-edit-mode` (further down this file) reorders to
+   "title left / Remove application + chevron grouped at the right". */
 #createRolePage .cr-app-section--matrix .cr-app-section-head {
-  /* Round 24 (2026-06-09 — nested-accordion alignment QA): the
-     app-header lives on the same horizontal grid as the matrix
-     table — chevron + app title at the section's left edge, Remove
-     application at the section's right edge. This satisfies the
-     brief's rule "Remove application should remain aligned to the
-     right edge of the table/application area" while letting the
-     table sit flush at the parent content grid. The "slightly
-     nested" hierarchy the brief calls for (§3) comes from the
-     parent Functions section's own 20px content padding (see
-     `.cr-perms-content { padding-left: 20px }`), not from a second
-     inset inside each app section. */
   padding: 12px 0 8px;
   margin-bottom: 0;
   align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+#createRolePage .cr-app-section--matrix .cr-app-head-chev-btn {
+  order: 0;
+}
+#createRolePage .cr-app-section--matrix .cr-app-title {
+  order: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#createRolePage .cr-app-section--matrix .cr-app-remove {
+  order: 2;
 }
 #createRolePage .cr-app-section--matrix .cr-app-head-chev {
   color: var(--brand-text);
   flex-shrink: 0;
   transition: transform 0.18s ease;
-}
-/* The `.cr-app-head-left` (chevron + app title) is the accordion
-   toggle target. Pointer cursor + non-selectable text so clicking
-   it doesn't highlight the label. */
-#createRolePage .cr-app-section--matrix .cr-app-head-left {
-  cursor: pointer;
-  user-select: none;
-}
-#createRolePage .cr-app-section--matrix .cr-app-head-left:focus-visible {
-  outline: 2px solid var(--indigo-50);
-  outline-offset: 2px;
-  border-radius: 4px;
 }
 /* Collapsed state: rotate the chevron from down (default) to
    right, and hide the matrix wrapper. Checkbox state is preserved
@@ -2908,16 +3022,12 @@ td.rp-act { text-align: right !important; overflow: visible !important; }
   display: flex;
   flex-direction: column;
 }
-/* Edit Team (#editTeamPage) is out of scope for the two-region page-
-   header background (Figma 1023:22021 only covers Add/Edit User and
-   Create/Edit Role). It reuses the bare `.au-page` overlay mechanics
-   (fixed position, scroll) but was never split into the
-   `.au-page-header-surface` / `.au-page-main-surface` pair, so it must
-   keep painting the original single-tone `--bg-app` background rather
-   than silently inheriting the new header-only tone. */
-.au-page.tm-edit-page {
-  background: var(--bg-app);
-}
+/* Edit Team (#editTeamPage) now shares the identical two-region
+   page-header background as Add/Edit User and Create/Edit Role
+   (Vertical-spacing audit, Figma 1023:22021 — see the HTML comment on
+   `#editTeamPage` for the full rationale). It no longer needs its own
+   background override: `.au-page-header-surface` / `.au-page-main-surface`
+   fully cover the panel with the same tokens every other detail page uses. */
 /* Full-width header-region surface: back nav + title + description +
    actions. `display: flow-root` gives it its own block-formatting
    context so `.au-header-shell`'s padding/centering can't visually
@@ -3039,8 +3149,8 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 #addUsersPage .au-profile-field { display: none; }
 #addUsersPage .au-field-preferred { order: 3; }
 #addUsersPage .au-field-region { order: 4; }
-#addUsersPage .au-field-timezone { order: 5; }
-#addUsersPage .au-field-team { order: 6; }
+#addUsersPage .au-field-team { order: 5; }
+#addUsersPage .au-field-timezone { order: 6; }
 /* Status: label stacked above Active/Inactive toggle (same rhythm as other Basic fields). */
 .au-field-status {
   display: flex;
@@ -3611,8 +3721,10 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    Roles tab, Teams tab, Edit User, Edit Role, Edit Team, navigation,
    themes, and older versions are untouched.
 
-   Sub-1100: toolbar wraps (filter + segmented + Add User on row 1, full-
-   width search on row 2); row avatars hide; Last login truncates more.
+   Sub-1100: the toolbar may wrap (Filter + segmented control + search
+   stay together on row 1 and the search shrinks; Export + Add User drop
+   to row 2 only once it reaches its floor — see `#usersPanel .tbar-l`
+   below); row avatars hide; Last login truncates more.
    ≤900: Last login column collapses (matches the existing c-em / c-ct
    hide pattern, so #usersTable's fixed table-layout keeps header/body
    columns in alignment without restructuring the markup). */
@@ -3624,18 +3736,32 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
     min-height: 48px;
     align-items: center;
   }
-  /* `.tbar-l` must not grow large enough to push the `.tbar-r` (Export +
-     Add User) group to a new row. `min-width: 0` lets its inline
-     children collapse first; `max-width: calc(100% - <group>px)` keeps
-     `.tbar-r` pinned to row 1. The group is Export (~90px) + 12px gap +
-     Add User (~120px) plus the 16px `.tbar` gap before it ≈ 240px. */
+  /* Round 38 (2026-08-12 — Users search restored): back to a growing,
+     shrinkable box now that this group contains a search field again.
+     Round 24's `flex: 0 0 auto` (correct while Filter + the segmented
+     control were the only, content-sized, occupants) would refuse to
+     shrink below the group's natural width, forcing the restored search
+     to overflow the row rather than narrow. `1 1 auto` + `min-width: 0`
+     instead lets the search absorb the squeeze first (it is the only
+     shrinkable sibling — see `.ads-search`'s own `flex: 0 1 clamp(...)`
+     and its 120px floor), and only once that floor is reached does
+     `.tbar-r` wrap to a clean second row (`.tbar` itself keeps
+     `flex-wrap: wrap`, just above).
+     This group is deliberately `nowrap`: flexbox breaks lines using each
+     item's flex-BASIS, before any shrinking is applied, so a wrapping
+     `.tbar-l` dropped the search onto its own second row the moment its
+     ~41.667vw basis exceeded the space left beside Filter + the
+     segmented control (~1100px and below) — even though shrinking it a
+     few px would have kept one tidy row. Wrapping the right-hand action
+     group instead is the documented order of degradation for this
+     toolbar. Genuinely narrow screens still get a two-row layout from
+     the ≤768px `.tbar-l { width: 100% }` rule further down. */
   #usersPanel .tbar-l {
-    flex: 1 1 0;
-    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 12px;
-    min-width: 0;
-    max-width: calc(100% - 240px);
   }
   /* Pin Export + Add User to the TOP of the wrapped toolbar so the
      group visually sits in Row 1 alongside Filter + segmented control
@@ -3645,22 +3771,31 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
     align-self: flex-start;
     flex: 0 0 auto;
   }
-  /* Search wraps to its own row, full width of .tbar-l. `order: 99`
-     guarantees it always lands AFTER the Filter button and segmented
-     control regardless of how flex-wrap distributes children. */
-  #usersPanel .tbar-l .search {
-    flex: 1 1 100%;
-    width: 100%;
-    max-width: none;
-    order: 99;
-  }
-
   /* Row avatars/photos only — Edit User's .au-id-avatar (different
      selector) and the assigned-role chip avatar are untouched. */
   #usersPanel #tbody .name-avatar { display: none; }
   /* Reclaim the 40px avatar + 8px flex gap for the Name column. The
      32px left gutter on .name-cell still anchors the column edge. */
   #usersPanel #tbody .name-cell { padding-left: 16px; }
+
+  /* Compact Name column (≤1100px, which fully covers Redline's numeric
+     `1024` breakpoint): showing both the name and its email as two
+     truncated lines in a narrow column is visual noise, so the email
+     line is hidden here — presentationally only. The underlying user
+     record, `.c-em` (the always-hidden export/data column), search,
+     filter, export, and the Add/Edit User pages are all untouched; this
+     is a pure `display: none` on the visible second line inside the
+     Name cell. `.name-cell-text`'s existing `justify-content: center`
+     then re-centers the single remaining name line for free inside the
+     unchanged 64px row — no row-height or divider changes needed.
+     `.name-link` already carries the nowrap/ellipsis/min-width:0 chain
+     it needs at every width (see its base rule above), and the shared
+     truncation-tooltip system (`getCellTruncationInfo` in app.js) is a
+     generic `td` hover/focus handler that already special-cases
+     `.name-link`, so the full name surfaces automatically via the same
+     canonical ADS tooltip (`.edl-tooltip`) once the row is short enough
+     to actually clip it — no page-specific tooltip logic was added. */
+  #usersPanel #usersTable tbody .name-cell-email { display: none; }
 
   /* Last login: allow tighter truncation. Header already has nowrap;
      this makes the body cell match so long values ellipsis instead of
@@ -3715,6 +3850,17 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
   #rolesPanel .tbar,
   #teamsPanel .tbar { padding-right: 12px; }
   .tbar-l { width: 100%; }
+  /* Round 38 (2026-08-12): the ≤1100px rule above keeps Users' left
+     group on one line on purpose, so the search shrinks instead of
+     dropping to its own row. Below 768px that stops being enough — even
+     at the search's minimum width, Filter + the (non-shrinking) 179px
+     segmented control + search need more room than a phone-width row
+     has, so the group would overflow the card rather than shrink.
+     Wrapping is the correct last resort at these widths (each control
+     stays fully visible and left-aligned to the same content inset,
+     just on two lines) and this is where the toolbar already switches
+     to a stacked layout via `.tbar-l { width: 100% }` above. */
+  #usersPanel .tbar-l { flex-wrap: wrap; }
   .btn-std, .btn-ghost { height: 32px; }
   .search { width: 100%; }
 
@@ -3866,37 +4012,33 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 #usersTable td.c-em { padding: 0 !important; border: 0 !important; width: 0 !important; max-width: 0 !important; overflow: hidden !important; visibility: hidden; }
 #usersColgroup col[data-u-col="em"] { width: 0; }
 
-/* ─── Figma-matched column widths (all non-hidden visible columns) ─────
-   Role is widened +0.60 % so Status's left edge and centre shift right
-   ~8 px. Team/Org is narrowed −0.60 % to absorb that space; this keeps
-   Last login's left edge exactly in place. Region is unaffected.
+/* ─── Column widths (all non-hidden visible columns) ───────────────────
+   Round 25 (2026-08-11 — column rebalance): every visible column's REAL
+   width is computed at runtime by `setupRightmostAlignment`'s Users
+   branch in app.js, which implements the same min-width + proportional
+   "fr" grow model as this CSS Grid track spec (Select | Name | Role |
+   Status | Team | Last login | Region):
+     40px | minmax(240px,1.2fr) | minmax(320px,2fr) | 92px |
+     minmax(220px,1.4fr) | 170px | 96px
+   The px values below are ONLY the pre-JS first-paint fallback (a
+   representative snapshot at a common ~1200px table width) so nothing
+   flashes at an obviously-wrong width before that script runs on
+   DOMContentLoaded — see the "Users only" branch in app.js for the
+   actual source of truth, including the horizontal-scroll fallback
+   for viewports too narrow to fit every column's minimum.
    em and ct remain zero-width (hidden). */
-/* Leading select-all/row-checkbox column (Figma 770:17428). 3.60% is
-   taken from Name (22.00% → 18.40%) so the six pre-existing visible
-   columns' relative proportions — and therefore every other column's
-   left/right edge — are unchanged; Name still has ample room for the
-   40px avatar + name/email stack. Kept as a % (not a fixed px) so it
-   scales identically to every other column under table-layout:fixed,
-   matching how em/ct/nm/rl/st/tm/ll/rg are already declared here. */
-#usersColgroup col[data-u-col="sel"] { width: 3.60%; }
-#usersColgroup col[data-u-col="nm"] { width: 18.40%; }
-/* Final-QA pass against Figma 770:17428's actual dev-mode column pixel
-   grid (Role 448px / Status 63px / Team 180px / Last-updated 146px /
-   Region 118px of a 1314px table — Role is by far the widest data
-   column there because it must hold multiple comma-separated role
-   names plus a "+N Roles" chip). The prior percentages under-allocated
-   Role relative to that grid, which was visibly clipping real
-   multi-role values (e.g. "Planner, Campaign Planner, Read-Only
-   View…") while Status/Last login/Region — icon- or short-text-only —
-   carried more width than their real content ever uses. Rebalanced by
-   reclaiming the slack from those three into Role; Team is unchanged
-   since it was already snug for real values like "Revenue & Yield
-   Management". */
-#usersColgroup col[data-u-col="rl"] { width: 32.60%; }
-#usersColgroup col[data-u-col="st"] { width:  6.00%; }
-#usersColgroup col[data-u-col="tm"] { width: 16.40%; }
-#usersColgroup col[data-u-col="ll"] { width: 15.00%; }
-#usersColgroup col[data-u-col="rg"] { width:  8.00%; }
+#usersColgroup col[data-u-col="sel"] { width: 40px; }
+#usersColgroup col[data-u-col="nm"] { width: 246px; }
+#usersColgroup col[data-u-col="rl"] { width: 329px; }
+#usersColgroup col[data-u-col="st"] { width: 92px; }
+#usersColgroup col[data-u-col="tm"] { width: 227px; }
+/* Last login/Region are fixed px (not proportional) — see app.js. */
+#usersColgroup col[data-u-col="ll"] { width: 170px; }
+#usersColgroup col[data-u-col="rg"] { width: 96px; }
+/* `min-width: 0` lets the JS-driven inline `width` on #usersTable
+   (set below MIN_TABLE_WIDTH's threshold) be the only thing forcing
+   this table wider than its wrapper — see the horizontal-scroll
+   fallback in app.js's Users alignment branch. */
 #usersTable { min-width: 0; }
 /* Team/Organization and Last login: content nudged slightly right via
    padding (boundary already shifted with the Status column above). */
@@ -3905,9 +4047,43 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 #usersTable th.c-ll,
 #usersTable td.c-ll { padding-left: 18px; white-space: nowrap; }
 
-/* ─── Rightmost column alignment (both tabs) ───────────────────────
-   Users (Region) and R&P (Create Date) both lock their column's
-   VISIBLE content start to the CTA's "+" icon x-coordinate above.
+/* ─── Last login / Region spacing + readability ─────────────────────
+   These two were previously crowded/merged: Region was sized to
+   whatever width happened to align its left edge with the "+ Add
+   User" CTA above (often quite narrow) and had `padding-left: 0`, so
+   its text sat almost flush against Last login's.
+
+   Fix: Region got a stable ~100px column (see the `data-u-col="rg"`
+   fixed-px branch of `setupRightmostAlignment` in app.js, which is the
+   source of truth at runtime — the width below is only the pre-JS
+   fallback) with normal left padding re-added here, and Last login
+   keeps its own fixed width (168px, same JS branch) sized to
+   comfortably fit the shortened "Mon D, H:MM AM/PM" display format
+   app.js renders into `.c-ll` (see `shortLastLogin()`), so the two
+   columns' content no longer touch. Header cells get the same padding
+   as their body cells so the "Region" label and its sort icon stay
+   aligned with the column below at every width. Row height, other
+   columns' widths, sort, tooltip truncation, search, filter, and
+   pagination are untouched.
+
+   Round 34 (2026-08-11 — toolbar/table horizontal-alignment pass):
+   Region's WIDTH (not this padding — the 22px left inset inside the
+   column is unchanged) is once again tied to "Add User"'s left edge
+   at runtime, the same `targetRightPx` CTA-anchoring `align()` already
+   uses for R&P's Create Date column below — see the Users branch in
+   app.js. This makes the "Region" header/values' left edge (column
+   start + this 22px padding) land exactly at "Add User"'s left edge,
+   restoring the behavior the "no longer does" note below used to
+   describe, now scoped specifically to this one requirement rather
+   than the whole column-rebalance pass Round 25 was doing. */
+#usersTable th.c-rg,
+#usersTable td.c-rg { padding-left: 22px; }
+
+/* ─── Rightmost column alignment (R&P only) ────────────────────────
+   R&P's Create Date column locks its VISIBLE content start to the
+   "+ Create Role" CTA's "+" icon x-coordinate above (Users' Region
+   is anchored the same way again as of Round 34 — see the Users
+   branch in app.js and the comment directly above).
 
    A pure-CSS solution can only approximate this because the CTA's
    left edge is `card_right − (56px rail + button_text_width)`, where
@@ -3917,7 +4093,7 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    So the precise alignment is set at runtime in JS
    (`setupRightmostAlignment` in app.js), which measures the button's
    bounding box and writes a pixel-exact width to the `<col>` element.
-   These CSS widths below are only the pre-JS fallback so the layout
+   The CSS width below is only the pre-JS fallback so the layout
    doesn't flash a wrong width on first paint.
 
    The JS then:
@@ -3930,12 +4106,10 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 
    For the content to start AT the column's left edge (= CTA left
    edge) rather than 8px inside it, we zero `padding-left` on the
-   rightmost cells. The `<tr>` border still draws edge-to-edge because
+   rightmost cell. The `<tr>` border still draws edge-to-edge because
    the cell still spans to the table's right edge (no padding-right or
    right-align override here). Row height, typography, sort, tooltip
    truncation, search, filter, and pagination are untouched. */
-#usersTable th.c-rg,
-#usersTable td.c-rg { padding-left: 0; }
 #rpTable th.rp-date,
 #rpTable td.rp-date { padding-left: 0; }
 
@@ -5235,15 +5409,34 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 /* ─── P5c. Users list — leading select-all/row-checkbox column + Export
    toolbar action (Figma 770:17428) ───────────────────────────────────
    Checkbox cell reuses the same `.rp-sel`/`.pm-sel` line-height:0
-   vertical-centering trick above, plus horizontal centering (those two
-   columns don't need it — their checkbox sits at a fixed left inset —
-   but `.c-sel` is a full column so it does). Unscoped to any theme
-   since the geometric-centering fix is correct under EDL too, not an
-   ADS-only concern. */
+   vertical-centering trick above (kept below). Horizontal position
+   used to be `text-align: center` (this column's only content is the
+   checkbox, so centering inside a fixed-width column was an easy way
+   to keep every row's checkbox lined up) — Round 34 (2026-08-11,
+   toolbar/table horizontal-alignment pass) replaces that with a fixed
+   `padding-left` instead, because the checkbox needs to land at a
+   predictable x-position rather than merely centered within whatever
+   width this column happens to have.
+   Round 38 (2026-08-12): the value used to arrive here as a
+   `--users-sel-pad-left` custom property written from app.js, computed
+   from the "Users" tab label's live x-coordinate. That anchor is gone
+   (the toolbar takes its inset from `.tbar`'s own shared padding now,
+   not from a tab label), so this column keeps the same 32px it has
+   always effectively rendered at — declared here, in the table's own
+   shared column rule, instead of being pushed in from a script.
+   `align()` mirrors it as `SEL_COL_PAD_LEFT` purely to size the
+   colgroup track; header and body cells are both positioned by THIS
+   rule, so they can never drift apart.
+   Round 39 (2026-08-12): that 32px turned out to BE the card's shared
+   content edge all along — every row of the card now derives its inset
+   from one `--iam-card-content-inset` property, and this column is
+   re-pointed at it in the "ONE shared content inset" block at the end
+   of this file. The literal below remains the value for the non-V4
+   sheets that also match this selector. */
 #usersTable th.c-sel,
 #usersTable td.c-sel {
-  padding: 0;
-  text-align: center;
+  padding: 0 0 0 32px;
+  text-align: left;
   line-height: 0;
 }
 #usersTable .cr-perm-check.u-row-check,
@@ -6692,8 +6885,9 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 
 /* ─── Access / Role and Permission section — shared helper sentence ──
    Same EDL rhythm as the Edit Team Members helper (margin: 0 0 16px;
-   14/20 secondary text). Applies in both modes now (Figma 1023:22053
-   "Role and Permission" carries the identical sentence). */
+   14/20 secondary text). Add User's "Role and Permission" card (Figma
+   1023:22053) still carries this sentence and keeps this base rule
+   completely unchanged. */
 #addUsersPage #auRolesCard .au-access-helper {
   /* Figma 1003:20186 "Frame 2134099791": ~8px between the chevron/title
      baseline and this description (was 0, i.e. text touching the
@@ -6703,6 +6897,17 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
   font-weight: 400;
   line-height: 20px;
   color: var(--text-secondary, #526374);
+}
+/* Edit User's "Access" card (final-QA pass, 2026-08-11 round 2) drops
+   this sentence entirely — scoped to `.is-edit-mode` only, so Add
+   User's "Role and Permission" card above is completely untouched.
+   `display: none` (not `visibility: hidden` / zero-opacity / an
+   off-screen or visually-hidden treatment) removes the paragraph from
+   rendered layout, reserved spacing, AND the accessibility tree in one
+   step — nothing below it needs a compensating margin change, because
+   an element with no box also has no margin box. */
+#addUsersPage.is-edit-mode #auRolesCard .au-access-helper {
+  display: none;
 }
 
 /* Effective-access table layout. Reuses the EDL table rhythm
@@ -6718,6 +6923,16 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    the *visible* target was wrong. */
 #addUsersPage #auRolesCard .au-eff-wrap {
   margin-top: 16px;
+}
+/* Round 22 (2026-08-11 — Access card refinement): Edit mode only,
+   widen the role-controls -> table gap from 16px to 24px per brief
+   ("approximately 24px of space between the role controls and the
+   access table") so the table reads as its own block rather than
+   crowding the "Update access" row above it. Add mode is unaffected
+   (still 16px) — its role controls have a different shape (helper
+   text + single-select combo + Add button) and were not in scope. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-wrap {
+  margin-top: 24px;
 }
 #addUsersPage #auRolesCard .au-eff-tbl {
   width: 100%;
@@ -6753,6 +6968,19 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 #addUsersPage #auRolesCard .au-eff-tbl thead th.au-eff-th-app     { width: 22%; }
 #addUsersPage #auRolesCard .au-eff-tbl thead th.au-eff-th-level   { width: 14%; }
 #addUsersPage #auRolesCard .au-eff-tbl thead th.au-eff-th-summary { width: auto; }
+/* Round 22 (2026-08-11 — Access card refinement): Edit mode only,
+   rebalance the two content-bound columns slightly — Access Level's
+   values ("Full Access"/"View Access"/"No Access") never need 14% of
+   a ~1000px card (that reads as a wide gap before Effective access
+   starts), while Application occasionally wraps a long name
+   ("Identity and Access Management") onto 2 lines.    Shifting 2% from
+   Level to Application tightens that gap and gives the wrapping name
+   a bit more room. All 3 columns stay % of the card (set on both the
+   `<col data-aueff-col>` elements and these `<th>` rules together),
+   so header <-> body edges stay pixel-identical, just shifted. Add
+   mode keeps the original 22/14 split — unchanged/out of scope. */
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th.au-eff-th-app   { width: 24%; }
+#addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th.au-eff-th-level { width: 12%; }
 
 #addUsersPage #auRolesCard .au-eff-tbl tbody td {
   /* Vertical padding rather than fixed height so the cell can
@@ -6933,6 +7161,20 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    to fit the button + 8px gap. Without this cap relaxation the row
    would still clamp at 380px and the button would wrap to a second
    line on common viewports. */
+/* Round 22 (2026-08-11 — Access card refinement, Figma node 7722:252):
+   Edit User's "Access" heading and the "Assigned Role" label sat only
+   12px apart total (the shared `.cr-section-header` 4px bottom padding
+   plus `.au-field`'s base 8px `margin-top`), which read as cramped —
+   Add mode doesn't have this problem because its helper paragraph
+   (`.au-access-helper`) fills that space; Edit mode hides that
+   paragraph entirely, so the label sat right under the heading with
+   almost no breathing room. Bumping this field's own top margin to
+   20px (+ the header's existing 4px padding = 24px total, matching
+   the brief's 20-24px target) fixes Edit mode only — Add mode keeps
+   its original 8px rhythm below the visible helper text. */
+#addUsersPage.is-edit-mode #auRolesCard .au-role-field {
+  margin-top: 20px;
+}
 #addUsersPage.is-edit-mode #auRolesCard .au-role-row {
   max-width: 480px;
   gap: 8px;
@@ -7218,54 +7460,105 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
 }
 
 /* ─── Edit User: "View access breakdown" trigger ────────────────────
-   Final-QA pass (2026-08-11): moved from a right-aligned row above the
-   table to a left-aligned row directly below it, and restyled onto the
-   SAME canonical compact ADS ghost/text-button contract already shared
-   by "Remove Role" / "Remove application" / "Remove" table actions
-   (`.cr-btn-remove` and friends — see the shared box-model rule in the
-   `[data-iam-version="v4"]` block: 26px height, 4px/8px padding, 6px
-   radius, Open Sans SemiBold 12/18, transparent at rest) rather than
-   the old bespoke 20px/14px text-link-with-underline treatment. Colors/
-   states (brand text, soft-brand hover/active background, brand focus
-   ring) mirror `.cr-btn-remove` exactly — this IS that same ADS ghost
-   button, just with different label text, not a new component. */
+   Round 22 (2026-08-11 — Access card refinement, Figma node 7722:252):
+   moved off the *ghost* Button reference (node 7722:259, no border —
+   see the round-2 history below) onto the *tertiary* Button variant
+   the brief actually links to, because ghost's transparent-at-rest,
+   border-less shell reads as plain text until the pointer is right on
+   top of it ("clear interactive state" was the explicit ask). Tertiary
+   keeps every dimension/color token round 2 already verified —
+   36px height (8px/12px padding-y/x — 8+20+8=36), 6px radius, Open
+   Sans SemiBold 14px/20px, text `button/variant/tertiary/text`
+   #51585b, hover/active/focus backgrounds `rgba(15,18,20,0.05)` /
+   `rgba(15,18,20,0.1)` / `rgba(15,18,20,0.05)` — identical to ghost's,
+   confirmed directly against Figma's hover/active/focus/disabled
+   instances (nodes 17:281/17:290/17:299/17:308) — and adds tertiary's
+   one distinguishing property: a 1px `rgba(15,18,20,0.5)` border at
+   rest/hover/active/focus, fading to `rgba(15,18,20,0.05)` on
+   disabled (`button/variant/tertiary/disabled/border`), so the button
+   now reads as a real outlined control at rest, not just SemiBold
+   text.
+
+   Icon: round 3 (2026-08-11) added a trailing chevron-right icon here
+   per the then-current Figma "Type=text+icon" tertiary instance (see
+   git history for that rationale). Round 26 (2026-08-11, later the
+   same day) removed it again per an updated spec calling for a
+   text-only label — `justify-content: center` below now centers the
+   single remaining `<span>` label for free, no extra CSS needed.
+
+   History (round 2, 2026-08-11): rebuilt from the unrelated *compact*
+   26px ghost contract shared with "Remove Role"/"Remove application"
+   (`.cr-btn-remove` and friends) plus a `margin-left: -8px` hack that
+   faked flush text alignment; both were removed in favor of this
+   button's own full box model and real ADS padding, with its
+   container `.au-eff-actions` starting at the table's own left edge
+   so the button's outer box — not just its label glyphs — aligns
+   with the table's content boundary. */
 #addUsersPage #auRolesCard .au-eff-actions {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  /* Table's last row already sits flush against `.au-eff-wrap`'s
-     bottom edge (no bottom padding of its own); this margin is the
-     entire divider-to-button gap, matched to the same 16px rhythm
-     `.au-eff-wrap` itself uses above the table. `.au-card`'s own 18px
-     bottom padding (see its rule) supplies the space below the button
-     — no extra margin-bottom needed here. */
-  margin-top: 16px;
+  margin-top: 12px;
+}
+/* Round 31 (2026-08-11) — Add User parity pass: "View access
+   breakdown" is hidden (not just visually empty) whenever no role is
+   assigned yet (`assignedRoles.length === 0`), toggled via the
+   `hidden` attribute in app.js (`refreshAuEffActionsVisibility`).
+   Needs its own `[hidden]` override because `.au-eff-actions` above
+   already sets `display: flex` at equal specificity — the extra
+   attribute selector here breaks that tie so the element actually
+   leaves the flow (no reserved height/margin) instead of rendering as
+   an empty flex row. */
+#addUsersPage #auRolesCard .au-eff-actions[hidden] {
+  display: none;
+}
+/* Round 22: widen the controls-are-connected-to-the-table gap from
+   12px to 22px per brief ("approximately 20-24px of spacing above the
+   View access breakdown control so it does not feel attached to the
+   final table row"). Round 31 (2026-08-11) — un-scoped from
+   `.is-edit-mode`: Add User's "Role and Permission" card uses this
+   exact same shared markup, and the Add User parity spec calls for
+   "exactly the same spacing as Edit User" once a role is assigned, so
+   Add mode now gets the same 22px instead of the previous 12px. */
+#addUsersPage #auRolesCard .au-eff-actions {
+  margin-top: 22px;
 }
 #addUsersPage #auRolesCard .au-eff-view-breakdown {
-  /* Box model (height/padding/gap/radius/font) comes from the shared
-     v4-scoped compact-ghost-button rule below; only this component's
-     own color/hover/active/focus states live here, same split every
-     other consumer of that shared contract (Remove Role, Remove
-     application, etc.) already uses. Negative left margin cancels the
-     shared rule's 8px horizontal padding so the button's *visible
-     text* — not just its larger hit-area box — lines up flush with
-     the table's first-column left edge, per the compact/flush ADS
-     ghost-button configuration (no transform, no arbitrary nudge). */
-  margin-left: -8px;
-  color: var(--brand-text);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 36px;
+  padding: 8px 12px;
+  border: 1px solid rgba(15, 18, 20, 0.5);
+  border-radius: 6px;
+  background: transparent;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  color: var(--iam-ads-text-muted, #51585b);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-#addUsersPage #auRolesCard .au-eff-view-breakdown:hover {
-  background: var(--brand-bg-soft);
+#addUsersPage #auRolesCard .au-eff-view-breakdown:hover:not(:disabled) {
+  background: rgba(15, 18, 20, 0.05);
+  color: var(--iam-ads-text, #1e2528);
 }
-#addUsersPage #auRolesCard .au-eff-view-breakdown:active {
-  background: var(--brand-bg-selected);
+#addUsersPage #auRolesCard .au-eff-view-breakdown:active:not(:disabled) {
+  background: rgba(15, 18, 20, 0.1);
+  color: var(--iam-ads-text, #1e2528);
 }
 #addUsersPage #auRolesCard .au-eff-view-breakdown:focus-visible {
   outline: 2px solid var(--brand-focus-ring);
   outline-offset: 2px;
 }
 #addUsersPage #auRolesCard .au-eff-view-breakdown:disabled {
-  opacity: 0.5;
+  color: rgba(81, 88, 91, 0.45);
+  background: transparent;
+  border-color: rgba(15, 18, 20, 0.05);
   cursor: not-allowed;
 }
 
@@ -7412,8 +7705,15 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
   display: flex;
   align-items: center;
   gap: 16px;
-  width: 296px;
-  flex: 0 0 296px;
+  /* Fills whatever the identity grid column gives it (a
+     `minmax(240px, 296px)` range — see `.au-section-body` below)
+     instead of hard-coding 296px. A rigid width here would make the
+     block wider than its own column on narrower cards, which is how
+     the name and email came to sit on top of the Preferred name
+     field: an over-wide block has no width left for the text to
+     ellipsis against. */
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   /* The identity block is non-interactive (no role, no tabindex). Kill
      any inherited outline/border/box-shadow so the block never paints
@@ -7590,13 +7890,26 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    `minmax(0, 1fr)` reproduces that flexible-fill behavior while
    keeping the identity column's own 296px fixed per Figma. */
 #addUsersPage #auBasicCard .au-section-body {
+  /* ONE column-gap token for both gaps in the row, so the space
+     between the identity column and Preferred name/Team is always
+     identical to the space between Preferred name/Team and
+     Region/Timezone. Every breakpoint below re-points this single
+     property rather than setting left/right spacing per column. */
+  --au-basic-col-gap: 39px;
+  /* Identity column: a range, not a fixed track. 296px is the Figma
+     width and stays the maximum; 240px is the floor below which the
+     avatar + a useful amount of name text no longer fit, at which
+     point the responsive stages further down move the identity block
+     onto its own row instead of squeezing it. */
+  --au-basic-identity-col: minmax(240px, 296px);
   display: grid;
-  grid-template-columns: 296px minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: var(--au-basic-identity-col) minmax(0, 1fr) minmax(0, 1fr);
   grid-template-rows: auto auto;
-  column-gap: 39px;
+  column-gap: var(--au-basic-col-gap);
   row-gap: 24px;
   padding-top: 8px;
   align-items: center;
+  min-width: 0;
 }
 #addUsersPage #auBasicCard .au-section-body > .au-edit-row {
   grid-column: 1;
@@ -7611,7 +7924,10 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
   align-self: center;
   padding: 0;
   gap: 0;
-  width: 296px;
+  /* Track the identity column's own width (see `.au-id-block`). */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 /* `.au-grid` is the legacy Add-mode wrapper around the form fields.
    In edit mode we collapse its box (display:contents) so its four
@@ -7628,15 +7944,65 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
   min-width: 0;
   margin: 0;
   width: auto;
+  /* The two fields sharing a row must share a top edge. They're the
+     same height at normal text sizes, so the grid's `align-items:
+     center` looks identical — but under browser zoom or a larger base
+     font a longer label ("Preferred name" vs "Region") wraps to a
+     second line, and centering then floats the shorter field down out
+     of line with its partner. Aligning to the row start keeps the pair
+     level however tall either one grows. The identity block opts back
+     into centering above, since it spans both rows. */
+  align-self: start;
 }
 
-/* Narrow viewports: collapse to single column. */
-@media (max-width: 1000px) {
+/* ─── Responsive stages ────────────────────────────────────────────
+   Three usable columns for as long as the card can hold them, then a
+   two-column form with the identity on its own row, then a single
+   column. Each stage keeps ONE shared column-gap, so the two gaps in
+   any row stay equal to each other. Thresholds come from the width the
+   two form fields end up with: the card's content box is roughly
+   `viewport - 193px`, so at 900px the fields are still ~200px wide in
+   the 3-column layout, and at 600px they are still ~200px wide in the
+   2-column layout. Below each of those they'd be too cramped to use.
+
+   These stages are deliberately NOT scoped to `.is-edit-mode`: Add
+   User and Edit User render the same markup, so they reflow the same
+   way (Edit User being the reference for this card's layout). */
+
+/* Medium: tighten the flexible widths and the gap before wrapping. */
+@media (max-width: 1199px) {
   #addUsersPage #auBasicCard .au-section-body {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    column-gap: 0;
+    --au-basic-col-gap: 24px;
     row-gap: 16px;
+  }
+}
+
+/* Identity moves to its own row; the two form columns sit beneath it
+   and keep the same shared gap between them. */
+@media (max-width: 900px) {
+  #addUsersPage #auBasicCard .au-section-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+  }
+  #addUsersPage #auBasicCard .au-section-body > .au-edit-row {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  #addUsersPage #auBasicCard .au-field-preferred { grid-column: 1; grid-row: 2; }
+  #addUsersPage #auBasicCard .au-field-region    { grid-column: 2; grid-row: 2; }
+  #addUsersPage #auBasicCard .au-field-team      { grid-column: 1; grid-row: 3; }
+  #addUsersPage #auBasicCard .au-field-timezone  { grid-column: 2; grid-row: 3; }
+}
+
+/* Narrow: one column. The two form columns stack in pair order —
+   Preferred name + Team, then Region + Timezone — so the groupings that
+   read as columns at wider sizes stay together here instead of
+   interleaving into the markup's Preferred/Region/Timezone/Team order. */
+@media (max-width: 600px) {
+  #addUsersPage #auBasicCard .au-section-body {
+    --au-basic-col-gap: 0px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
   }
   #addUsersPage #auBasicCard .au-section-body > .au-edit-row,
   #addUsersPage #auBasicCard .au-field-preferred,
@@ -7646,7 +8012,14 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
     grid-column: 1;
     grid-row: auto;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
+  #addUsersPage #auBasicCard .au-section-body > .au-edit-row { order: 1; }
+  #addUsersPage #auBasicCard .au-field-preferred { order: 2; }
+  #addUsersPage #auBasicCard .au-field-team      { order: 3; }
+  #addUsersPage #auBasicCard .au-field-region    { order: 4; }
+  #addUsersPage #auBasicCard .au-field-timezone  { order: 5; }
 }
 
 /* Figma top-right action cluster is just Cancel + Save Permission.
@@ -8105,15 +8478,28 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    when scanning between tabs. */
 #teamsPanel .tm-tbl { min-width: 0; table-layout: fixed; }
 
-#tmColgroup col[data-tm-col="name"]    { width: 15.00%; }
-#tmColgroup col[data-tm-col="desc"]    { width: 58.00%; }
-#tmColgroup col[data-tm-col="mem"]     { width: 13.00%; }
-#tmColgroup col[data-tm-col="created"] { width: 14.00%; }
+/* R58 — Teams intelligent column growth. `mem` (a 1-3 digit count)
+   and `created` (a fixed-format date) are bounded/content-based, so
+   they're pinned in px; `table-layout: fixed` then hands 100% of the
+   remaining width to `name`/`desc` in their existing ~20/80 ratio —
+   Description (the long free-text column) absorbs almost all of the
+   growth as the table widens, Name gets a smaller, proportional
+   share, and the two bounded columns never grow past their content's
+   needs the way a flat percentage would have. */
+#tmColgroup col[data-tm-col="name"]    { width: 20.00%; }
+#tmColgroup col[data-tm-col="desc"]    { width: 80.00%; }
+#tmColgroup col[data-tm-col="mem"]     { width: 100px; }
+#tmColgroup col[data-tm-col="created"] { width: 130px; }
 
 /* Roles uses `.rp-tbl th.rp-role, .rp-tbl td.rp-role { padding-left:
    28px !important }` to anchor the first column to the same left
    edge as the search input above. Apply the same 28px gutter to
-   the Teams first column so both tables share the same left edge. */
+   the Teams first column so both tables share the same left edge.
+   Round 39 (2026-08-12): both of those now resolve from the card's
+   shared `--iam-card-content-inset` instead (32px — see the "ONE shared
+   content inset" block at the end of this file), which is what actually
+   puts them on the same edge as the search input above and the tab
+   labels above that. This 28px remains for the non-V4 sheets. */
 #teamsPanel .tm-tbl th.tm-th-name,
 #teamsPanel .tm-tbl td.tm-cell-name { padding-left: 28px !important; }
 
@@ -8218,11 +8604,24 @@ html[data-iam-version="v4"] #editTeamPage .cr-section-header .cr-section-title {
   line-height: 24px;
   font-weight: 500;
   letter-spacing: 0;
-  color: var(--iam-ads-text);
+  /* Color intentionally NOT set here (Round 36, 2026-08-12): "Team
+     details" / "Members" now share the exact same #2D2F8C title color
+     as Edit User's "Basic information" / "Access" — see the Round 26
+     rule (search this file for "Round 26" near `#auBasicCard`), whose
+     selector list was extended to include this same `#editTeamPage
+     .cr-section-header .cr-section-title` selector rather than
+     duplicating the hex value in a second rule. Typography (family/
+     size/weight/line-height, all unaffected by this change) stays
+     declared here since Team's heading uses a different type scale
+     rationale (a static `<h2>`, not an accordion trigger — see the
+     comment above) than the shared color rule needs to care about. */
 }
 html[data-iam-version="v4"] #editTeamPage .cr-section-header:hover .cr-section-title,
 html[data-iam-version="v4"] #editTeamPage .cr-section-header:focus-visible .cr-section-title {
-  color: var(--iam-ads-text);
+  /* Round 36: no `color` override here either — same reasoning as
+     above. These headings aren't interactive (no `role="button"`,
+     `cursor: default` on the header), so `background: transparent`
+     is the only thing this rule still needs to guarantee. */
   background: transparent;
 }
 
@@ -8275,29 +8674,15 @@ html[data-iam-version="v4"] #editTeamPage .cr-section-header:focus-visible .cr-s
 
 #editTeamPage .tm-th-actions .th-inner { justify-content: flex-end; }
 #editTeamPage .tm-members-tbl td.tm-cell-actions { text-align: right; }
-#editTeamPage .tm-members-tbl .tm-row-remove {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 6px;
-  background: none;
-  border: 0;
-  border-radius: 4px;
-  font-family: var(--ff);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  color: var(--brand-text);
-  cursor: pointer;
-}
-#editTeamPage .tm-members-tbl .tm-row-remove:hover {
-  color: var(--brand-text-hover);
-  background: var(--brand-bg-soft);
-}
-#editTeamPage .tm-members-tbl .tm-row-remove:focus-visible {
-  outline: 2px solid var(--indigo-50);
-  outline-offset: 2px;
-}
+/* Round 37 (2026-08-12) — "Remove" now reuses the shared ADS ghost-
+   button component (the same one Delete Team / Remove Role use — see
+   `html[data-iam-version="v4"] .au-revoke-btn, .tm-delete-btn,
+   .cr-btn-remove, .tm-row-remove` further down this file) instead of
+   this page-specific indigo-link treatment, which is removed
+   entirely. Shape/box-sizing/color/background/border/hover/active/
+   focus states all now come from that one shared rule group (plus a
+   compact-size modifier scoped to `.tm-row-remove` alone, right next
+   to it) rather than being redeclared here. */
 
 /* First and last column flush with the card's content edges so the
    header text "Name" lines up under the card title / helper, and
@@ -8308,26 +8693,29 @@ html[data-iam-version="v4"] #editTeamPage .cr-section-header:focus-visible .cr-s
 #editTeamPage .tm-members-tbl th:last-child,
 #editTeamPage .tm-members-tbl td:last-child  { padding-right: 0; }
 
-/* Do NOT change `.tm-row-remove` itself (fixed alignment reference —
-   its box is already flush with the shared column's right boundary,
-   same as this header, per the `:last-child` rule above). Every
-   "Remove" label's own *visible text* actually sits 6px left of that
-   boundary because the button carries its own 6px right padding
-   (`.tm-row-remove { padding: 4px 6px }`, needed for its hit-target/
-   hover halo) — text-align:right on the td only flushes the button's
-   box to the column edge, not the label glyphs inside it. The
-   "Actions" header had no equivalent inset, so its glyphs sat a
-   visible 6px right of every "Remove" label's glyphs despite both
-   boxes already sharing one column boundary. Restoring that same 6px
-   as the header's own right padding (must come after the generic
-   `:last-child` zero above — identical selector specificity, so
-   source order decides — to actually win the cascade) is the
-   header-side half of one shared Actions-column right-padding
-   contract; the body supplies its half via the untouched button
-   padding, so both *rendered* labels land on the exact same right
-   edge instead of just their bounding boxes. */
+/* `.tm-row-remove`'s box is already flush with the shared column's
+   right boundary, same as this header, per the `:last-child` rule
+   above. Every "Remove" label's own *visible text* actually sits some
+   distance left of that boundary because the button carries its own
+   right padding (needed for its hit-target/hover halo) — text-
+   align:right on the td only flushes the button's box to the column
+   edge, not the label glyphs inside it. The "Actions" header had no
+   equivalent inset, so its glyphs sat visibly right of every "Remove"
+   label's glyphs despite both boxes already sharing one column
+   boundary. Restoring that same inset as the header's own right
+   padding (must come after the generic `:last-child` zero above —
+   identical selector specificity, so source order decides — to
+   actually win the cascade) is the header-side half of one shared
+   Actions-column right-padding contract; the body supplies its half
+   via the button's own padding, so both *rendered* labels land on the
+   exact same right edge instead of just their bounding boxes.
+
+   Round 37 (2026-08-12): value updated from 6px to 8px to track
+   `.tm-row-remove`'s new compact-ghost right padding (see its size
+   rule further down this file) now that it reuses the shared ADS
+   ghost-button component instead of its own bespoke padding. */
 #editTeamPage .tm-members-tbl th.tm-th-actions {
-  padding-right: 6px;
+  padding-right: 8px;
 }
 
 /* Members card body trims its bottom padding now that the
@@ -8352,182 +8740,93 @@ html[data-iam-version="v4"] #editTeamPage .cr-section-header:focus-visible .cr-s
        user sees their selection count without scanning the list
    Strictly scoped to `.tm-add-dialog` / `#tmAddMembersBackdrop` so
    no other confirm modal in the app is affected. */
-/* Width: the shared ADS-modal rule further down (`.cr-confirm-dialog
-   { width: 480px }`) outranks a bare `.tm-add-dialog { width: 100% }`
-   on specificity, which was silently clamping this modal to 480px
-   instead of the wider 640px it needs for the search input + 3-column
-   user rows. `.tm-add-dialog.cr-confirm-dialog` (both classes,
-   specificity 0,3,1) restores the intended width unconditionally. See
-   also the compact-override block further down for the ADS-modal
-   header/body-region/footer spacing applied to this dialog. */
-html[data-iam-version="v4"] .tm-add-dialog.cr-confirm-dialog {
-  width: 100%;
-  max-width: min(640px, calc(100vw - 48px));
-}
-/* Supporting sentence — ADS body/supporting-text style (14/20 regular,
-   secondary text color), same token already used by `.cr-confirm-text`
-   and `.au-adduser-heading-sub` elsewhere in this app. Deliberately NOT
-   `.cr-confirm-body` (that class's v4 rule adds an extra 24px left
-   padding meant for a different layout, which was misaligning this
-   sentence against the title/search/results above and below it).
-   Spacing to title above and Search below comes entirely from the
-   parent `.cr-confirm-body-region`'s flex `gap`, not from margins here,
-   so there is exactly one spacing source instead of stacked/duplicated
-   values. */
-.tm-add-subtitle {
+/* Width, header, body padding, search field, result rows and footer
+   all come from the Add User Step-1 picker: this dialog carries
+   `.au-adduser-dialog` alongside `.tm-add-dialog`, and its rows carry
+   the `.au-adduser-option*` classes. What remains below is only what
+   this picker has and Add User doesn't — the row checkbox, the inline
+   results panel (Add User's list is a floating popover; selecting here
+   must not dismiss it), the pre-search helper line, the error/empty
+   copy, and the footer selection count. */
+.tm-add-hint {
   margin: 0;
-  max-width: 100%;
   font-family: var(--ff);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--text-secondary);
-  text-align: left;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--iam-ads-text-muted, var(--text-muted));
 }
-.tm-add-search {
-  position: relative;
+.tm-add-hint[hidden] { display: none; }
+/* The results panel takes the dropdown's surface treatment (border,
+   radius, clipped corners) but sits in the modal body rather than
+   floating over it, so the modal grows to fit the list instead of
+   overlaying itself. */
+html[data-iam-version="v4"] .tm-add-panel {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--iam-ads-surface);
+  border: 1px solid var(--iam-ads-divider);
+  border-radius: var(--iam-ads-control-radius);
+  overflow: hidden;
 }
-.tm-add-search-icon {
-  position: absolute;
-  left: 12px;
-  color: var(--text-muted);
-  pointer-events: none;
+html[data-iam-version="v4"] .tm-add-panel[hidden] { display: none; }
+html[data-iam-version="v4"] .tm-add-listbox {
+  /* Scrolls only once the results outgrow it; a short list keeps the
+     modal short. */
+  max-height: 336px;
 }
-.tm-add-search-input {
-  width: 100%;
-  height: 36px;
-  padding: 0 12px 0 36px;
-  border: 1px solid var(--border-input);
-  border-radius: 8px;
-  background: var(--bg-surface);
-  font-family: var(--ff);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--text-primary);
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.tm-add-search-input::placeholder { color: var(--text-placeholder); }
-.tm-add-search-input:focus {
-  border-color: var(--brand-text);
-  box-shadow: 0 0 0 2px var(--brand-focus-ring, rgba(54, 17, 200, 0.2));
-}
-.tm-add-list-wrap {
-  position: relative;
-}
-.tm-add-list {
-  max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-  background: var(--bg-surface);
-}
-.tm-add-list:focus-visible {
-  outline: 2px solid var(--indigo-50);
-  outline-offset: 2px;
-}
-.tm-add-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border-default);
+.tm-add-option-item { list-style: none; }
+/* The row is the <label>, so the whole thing is a click target for its
+   checkbox. Layout otherwise comes from `.au-adduser-option`. */
+html[data-iam-version="v4"] .tm-add-option {
   cursor: pointer;
   user-select: none;
 }
-.tm-add-row:last-child { border-bottom: 0; }
-.tm-add-row:hover { background: var(--row-hover, rgba(54, 17, 200, 0.04)); }
-.tm-add-row.is-selected { background: var(--brand-bg-soft); }
-.tm-add-row-check {
-  flex-shrink: 0;
+html[data-iam-version="v4"] .tm-add-option.is-selected { background: var(--brand-bg-soft); }
+html[data-iam-version="v4"] .tm-add-option-check {
+  flex: 0 0 auto;
   margin: 0;
 }
-.tm-add-row-info {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  flex: 1;
+/* Search state copy — loading, empty, and error all render as a single
+   row inside the listbox so the panel keeps one border and one
+   scroll region regardless of state. */
+html[data-iam-version="v4"] .tm-add-state-msg {
+  list-style: none;
+  padding: 12px;
+  font-family: var(--ff);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--iam-ads-text-secondary);
 }
-.tm-add-row-name {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+html[data-iam-version="v4"] .tm-add-state-error { color: var(--ads-red-400, #AF434E); }
+html[data-iam-version="v4"] .tm-add-retry {
+  margin-left: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--iam-ads-brand);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
 }
-/* Email — brief 2026-06-09 round 7 confirms 14/20 muted. Was 13/18. */
-.tm-add-row-meta {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+html[data-iam-version="v4"] .tm-add-submit-error {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ads-red-400, #AF434E);
 }
-/* Right-side metadata — single 14/20 muted team-name span.
-   Round 10 (2026-06-09): the repeated "Current team" caption was
-   removed per the brief; the row now reads `Name / Email | Team`
-   with no header chrome and no captions in the list itself. The
-   side block still uses `flex-direction: column` + `align-items:
-   flex-end` so the (now single) value sits flush right, and the
-   parent row's `align-items: center` keeps it vertically centered
-   against the two-line name+email stack on the left. */
-.tm-add-row-side {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-left: 12px;
-  min-width: 0;
-  /* 220px is wide enough for the longest internal-team string
-     ("Addressable & Programmatic Sales") at 14px without truncation
-     on the 640px modal, while still leaving the left stack (name +
-     email) the dominant column. Values still ellipsis-truncate
-     defensively for any future longer string. */
-  max-width: 220px;
-}
-.tm-add-row-side-value {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* Intentionally NOT styled as a link — no cursor: pointer override,
-     no hover color shift, no underline. The brief mandates this can't
-     look clickable. */
-  max-width: 100%;
-}
-.tm-add-empty {
-  margin: 16px 12px;
-  font-size: 14px;
-  color: var(--text-muted);
-  text-align: center;
-}
+html[data-iam-version="v4"] .tm-add-submit-error[hidden] { display: none; }
 .tm-add-actions {
   align-items: center;
 }
 .tm-add-actions-spacer { flex: 1; }
-/* Compact footer: the shared ADS-modal footer padding (16px top/bottom,
-   used by every other `.cr-confirm-actions`) reads as too heavy for
-   this already-compact modal. Trim vertical padding only — the 24px
-   horizontal gutter is untouched so "0 selected" and "Add members"
-   stay on the exact same left/right content guide as the header title
-   and body above. Button height (36px, ADS default) is never touched,
-   only the air around it. Scoped to `#tmAddMembersBackdrop` so no
-   other `.cr-confirm-actions` footer in the app is affected. */
-html[data-iam-version="v4"] #tmAddMembersBackdrop .cr-confirm-actions {
-  padding: 12px 24px;
-}
+/* Footer padding is deliberately not overridden here: this modal now
+   takes the shared ADS-modal footer (16px 24px, border-top) so it sits
+   on exactly the same spacing as the Add User picker. The compact
+   12px variant this used to carry made the two modals visibly
+   different heights when placed side by side. */
 .tm-add-selected-count {
   /* Round 25 (2026-06-09 — Add members footer typography):
      selected-count text upgraded from 13px/500 → 14px/400 to match
@@ -8646,43 +8945,37 @@ html[data-iam-version="v4"] #tmAddMembersBackdrop .cr-confirm-actions {
   opacity: 1;
 }
 
-/* ─── P7-3. Destructive button — ADS Button "danger" variant states ──
-   ads-components.json `Button.variants` lists primary / secondary /
-   tertiary / ghost / danger. The Pass-3 button rules cover the first
-   four; the danger variant is currently shape-aligned (6 px radius,
-   `:active` step-down) but does not have a hover or focus treatment
-   under ADS Preview, so the Cancel-vs-Delete affordance pair on the
-   Remove App / Remove User / Inactive User confirmation modals reads
-   inconsistent (Cancel hovers, Delete does not).
-
-   Reference values come from the local --ads-red-* ramp declared at
-   the top of this section (file ~3036): Red 300 = #AF434E (rest),
-   Red 400 = #993B44 (hover/active text). We do not introduce a
-   new token; we point through the existing one. EDL Light / Dark
-   keep whatever the base `.cr-btn-danger-solid` rule provides. */
-[data-theme="ads-preview"] .cr-btn-danger-solid {
-  background: var(--ads-red-300);
-  color: #FFFFFF;
-  border-color: var(--ads-red-300);
-}
-[data-theme="ads-preview"] .cr-btn-danger-solid:hover:not(:disabled) {
-  background: var(--ads-red-400);
-  border-color: var(--ads-red-400);
-}
-[data-theme="ads-preview"] .cr-btn-danger-solid:active:not(:disabled) {
-  background: var(--ads-red-400);
-  border-color: var(--ads-red-400);
-}
-[data-theme="ads-preview"] .cr-btn-danger-solid:focus-visible {
-  outline: 2px solid var(--brand-focus-ring);
-  outline-offset: 2px;
-}
-[data-theme="ads-preview"] .cr-btn-danger-solid:disabled {
-  background: var(--brand-disabled-bg);
-  color: var(--brand-disabled-fg);
-  border-color: transparent;
-  cursor: not-allowed;
-}
+/* ─── Delete/Remove confirmation buttons — ADS Primary Button, not a
+   red "danger" variant (app-wide Delete/Remove audit, 2026-08-11) ───
+   This block used to repaint `.cr-btn-danger-solid` red under ADS
+   Preview (`--ads-red-300` rest / `--ads-red-400` hover/active — a
+   destructive-button treatment that does not exist as an approved ADS
+   Button variant in this system; ads-components.json only lists
+   primary / secondary / tertiary / ghost). Per the app-wide decision
+   to never use a red destructive button in this prototype, that
+   override is removed entirely — no replacement rule is needed here,
+   because `.cr-btn-danger-solid` already sits in every shared
+   `html[data-iam-version="v4"]` box-model/typography/focus-visible
+   group alongside `.cr-btn-save` / `.au-btn-save` (see e.g. the
+   min-height:36px/padding/radius/font block and the
+   `outline:2px solid #4045c2` focus-visible block elsewhere in this
+   file), and its own un-scoped base rule (~line 1485) already uses
+   `var(--brand)` / `var(--brand-hover)` / `var(--indigo-95)` /
+   `var(--brand-disabled-bg)` — the exact same tokens `.cr-btn-save`
+   uses. Removing this block simply lets that base rule (and the
+   shared box-model rules) win under ADS Preview too, so every button
+   with this class now renders pixel-identical to the canonical ADS
+   Primary Button in every state (rest/hover/active/focus/disabled) —
+   reusing the existing component instead of inventing a new
+   "destructive" visual language. The class name `.cr-btn-danger-solid`
+   is left as-is (renaming it is a larger, purely mechanical change
+   across HTML/JS with no visual benefit — every consumer's loading-
+   spinner wiring and JS `.classList` toggles key off this exact
+   class name), but nothing about its rendered appearance is
+   destructive/red any longer. Consumers: Remove Role, Remove
+   application, Remove Member, Delete Team, Delete Permission Group,
+   Set as Inactive, Change User — every one of them now renders as
+   ADS Primary. */
 
 /* ════════════════════════════════════════════════════════════════════
    ADS Preview · Pass-8 — Coverage polish from the May 30 audit.
@@ -9171,15 +9464,12 @@ html[data-iam-version="v4"] #tmAddMembersBackdrop .cr-confirm-actions {
   color: var(--text-primary);
 }
 
-/* R33-14. Toast — ADS DS Toast uses a 6px radius container with a
-   neutral dismiss button (never tinted by variant). V3's EDL toast
-   uses a slightly different chrome. Restate the ADS treatment. */
-[data-iam-version="v4"] .toast,
-[data-iam-version="v4"] .edl-toast {
-  border-radius: var(--ads-radius-sm, 6px);
-  box-shadow: 0 4px 12px rgba(15, 18, 20, 0.24);
-  border: 1px solid var(--border-subtle);
-}
+/* R33-14. Toast — superseded by the full ADS Toast token block under
+   "R52 — Toast" further down this file (exact Figma 70:62 values:
+   6px radius, 5px semantic left border only, no all-round hairline,
+   dismiss button tinted per variant to match the exported assets).
+   Kept as a comment marker so this section number isn't silently
+   reused. */
 
 /* R33-15. Empty avatar treatment — internal users without a photo
    fall back to `.name-avatar` (a colored circle with initials).
@@ -9721,6 +10011,40 @@ html[data-iam-version="v4"][data-sidebar-collapsed="true"] main.page {
 @media (max-width: 1280px) {
   html[data-iam-version="v4"] main.page { padding-right: 24px; padding-left: 264px; }
   html[data-iam-version="v4"][data-sidebar-collapsed="true"] main.page { padding-left: 88px; }
+}
+
+/* R58. Responsive content-container model — fixes the "empty right
+   side at 1920/2560" regression. `main.page` (above) intentionally has
+   `max-width: none` so its *padding* can encode the sidebar offset;
+   that leaves the actual growth-and-centering job to its direct list
+   card. Below ~1888px available content width (1920 viewport minus
+   the collapsed-sidebar gutters) the card just fills 100% of
+   `main.page`'s content box, so it grows continuously from 1024 up
+   through 1440 and 1920 with no artificial ceiling. Only once the
+   *available* width exceeds `--v4-content-max-width` (2560-class
+   viewports and wider) does growth stop and the leftover space
+   resolve into equal left/right whitespace via `margin-inline: auto`
+   — i.e. centered *within the content region to the right of the
+   fixed sidebar*, not the full browser viewport (a fixed sidebar is
+   not a "gutter" and is intentionally excluded from that centering).
+
+   1920px was chosen as the max because the ADS pilot itself only
+   commits to two desktop targets — 1440px and 1920px (see
+   `ads-design-system/design.md`, "Pilot constraint") — so 1920px is
+   the largest width the table/typography/column system was actually
+   designed against. Beyond it we hold the line rather than inventing
+   an undesigned, arbitrarily-wider table.
+
+   This must resolve to a *single* declaration for `main.page > .card`
+   in the whole file — a second, later rule that re-sets `max-width`
+   on `main.page` itself previously undid the `max-width: none` above
+   by cascade order (same selector, same specificity, declared later
+   wins) and was the actual root cause of the bug; see R58 note by
+   the `background: transparent` header-band rule further down. */
+html[data-iam-version="v4"] main.page > .card {
+  width: 100%;
+  max-width: var(--v4-content-max-width, 1920px);
+  margin-inline: auto;
 }
 
 /* R35-14. Secondary full-page mode surfaces.
@@ -10743,10 +11067,15 @@ html[data-iam-version="v4"] .v4-card .tbar .ads-search .search-clear {
   position: static !important;
   left: auto !important;
   right: auto !important;
-  width: 16px !important;
-  min-width: 16px !important;
-  height: 16px !important;
-  min-height: 16px !important;
+  /* Round 23 (2026-08-11): 16px -> 24px clickable area, matching the
+     canonical `.ads-search .search-clear` rule below — this is one of
+     three byte-identical duplicate blocks in this file (all `!important`,
+     so all three had to move together or the lowest-value one would
+     keep winning the cascade). */
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
   padding: 0 !important;
 }
 html[data-iam-version="v4"] .ads-search:focus-within {
@@ -10898,10 +11227,15 @@ html[data-iam-version="v4"] .v4-card .tbar .ads-search .search-clear {
   position: static !important;
   left: auto !important;
   right: auto !important;
-  width: 16px !important;
-  min-width: 16px !important;
-  height: 16px !important;
-  min-height: 16px !important;
+  /* Round 23 (2026-08-11): 16px -> 24px clickable area, matching the
+     canonical `.ads-search .search-clear` rule below — this is one of
+     three byte-identical duplicate blocks in this file (all `!important`,
+     so all three had to move together or the lowest-value one would
+     keep winning the cascade). */
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
   padding: 0 !important;
 }
 html[data-iam-version="v4"] .ads-search:focus-within {
@@ -11093,18 +11427,48 @@ html[data-iam-version="v4"] .ads-tab[aria-disabled="true"] {
 }
 
 /* Search — the wrapper owns ADS border/background/radius while the
-   native input remains the existing JS hook and query-state owner. */
+   native input remains the existing JS hook and query-state owner.
+
+   Round 23 (2026-08-11 — search-field responsive width): this is a flex
+   ITEM (its own parent, `.tbar-l`, is `display:flex`), so the `width`
+   below is only a fallback for non-flex contexts — the value that
+   actually governs layout is the flex-basis carried by the `flex`
+   shorthand a few lines down (flex-basis wins over `width` whenever
+   it's a definite length, per the flexbox spec), which is why both
+   are kept in lockstep with the same `clamp(...)` expression. The
+   `41.667vw` coefficient is chosen so the curve is perfectly
+   continuous AND hits exactly 600px right at 1440px (600 / 1440 =
+   0.41666...): below 1440px it scales fluidly with the viewport
+   (never jumping between breakpoints),    at/above 1440px `clamp` caps it
+   at the 600px ceiling on its own — no separate `@media (min-width:
+   1440px)` snap needed. Below a hard 280px floor, flexbox is still
+   allowed to shrink it further on genuinely narrow viewports (never a
+   fixed 280px `min-width`) so it can never itself force horizontal
+   overflow; 280px remains the *preferred* size down to a ~672px-wide
+   flex row, per the brief, simply because that's where `41.667vw`
+   first drops below 280px. The one exception is `min-width: 120px`:
+   `#usersPanel .tbar-l` has a separate, pre-existing `max-width:
+   calc(100% - 240px)` reservation (for Export + Add User) that goes
+   negative below ~615px of *card* width regardless of this field —
+   Filter and the segmented control both refuse to shrink (`flex-shrink:
+   0`) and simply overflow that reservation, leaving search, as the
+   only shrinkable sibling, to absorb literally all of the deficit and
+   collapse to ~0px. 120px is a pragmatic floor that keeps the field
+   itself minimally visible/usable (still shows a few characters and
+   the clear button) through that pre-existing squeeze, without
+   reopening the `.tbar-l` reservation logic itself. */
 html[data-iam-version="v4"] .ads-search {
   position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  width: 320px;
-  max-width: 100%;
+  width: clamp(280px, 41.667vw, 600px);
+  min-width: 120px;
+  max-width: 600px;
   height: 36px;
-  padding: 8px 12px;
+  padding: 8px 16px;
   gap: 8px;
-  flex: 0 1 320px;
+  flex: 0 1 clamp(280px, 41.667vw, 600px);
   border: 1px solid var(--ads-target-control-border);
   border-radius: 100px;
   background: #ffffff;
@@ -11169,18 +11533,47 @@ html[data-iam-version="v4"] .ads-search .tm-add-search-icon {
   color: #51585b;
   pointer-events: none;
 }
+/* Round 23 (2026-08-11 — search-field text alignment): this toolbar
+   field (`#searchWrap`/`#rpSearchWrap`/`#tmSearchWrap` — Users/Roles/
+   Teams) never actually shows a leading magnifier once it has a query
+   (the base `.search.has-value .search-ico{opacity:0}` rule already
+   fades it out), but as a static flex item it kept reserving its full
+   20px + 8px gap of layout space even while invisible, pushing typed
+   text ~28px further right than the field's own padding alone would.
+   `display: none` (rather than opacity) removes it from the flex flow
+   entirely so entered text sits directly against the field's 16px
+   padding, and — since the icon is then never rendered in either
+   state for this field — placeholder and entered text land at the
+   identical x-position instead of shifting when the query is cleared.
+   `.tm-add-search-icon` (the unrelated "Add members" modal search,
+   which always shows its icon) is intentionally left out of this rule
+   so it keeps its own icon untouched. */
+html[data-iam-version="v4"] .ads-search .search-ico {
+  display: none;
+}
 html[data-iam-version="v4"] .ads-search .search-clear {
   position: static;
   order: 2;
-  width: 16px;
-  min-width: 16px;
-  height: 16px;
-  min-height: 16px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
   padding: 0;
   border: 0;
   border-radius: 100px;
   background: transparent;
   color: #51585b;
+  /* Cancels the base `.search-clear { transform: translateY(-50%) }`
+     rule (written for its old absolute-positioned layout), which was
+     leaking into this flex-centered context and pushing the button up
+     by half its own height — the ~8px "sits too high" bug. Vertical
+     centering here comes entirely from the parent's flex
+     `align-items: center` now, so no transform is needed. The box grows
+     16px -> 24px for a full 24x24 clickable area per the design brief;
+     the 16x16 SVG glyph inside stays centered within it for free via
+     the base `.search-clear` rule's own `display:inline-flex;
+     align-items:center; justify-content:center`. */
+  transform: none;
 }
 html[data-iam-version="v4"] .ads-search .search-clear svg {
   width: 16px;
@@ -11199,17 +11592,12 @@ html[data-iam-version="v4"] .ads-search .search-dropdown {
 html[data-iam-version="v4"] .tm-add-search.ads-search {
   width: 100%;
   flex: 0 0 auto;
-  /* Compact ADS search-field variant for this modal: the shared
-     `.ads-search` default (36px = 20px content + 8px vertical
-     padding x2) is sized for the toolbar/table-filter context. Inside
-     this compact modal, trim vertical padding to 6px so the control
-     matches the 32px height already used by every other field on this
-     page (`.au-input`, Name/Description above) — the same content
-     line-height (20px) and 20px icon are untouched, so nothing below
-     the accessible text-input target size is lost, only the excess
-     padding around it. */
-  height: 32px;
-  padding: 6px 12px;
+  /* Height and padding are deliberately left to the shared
+     `.ads-search` default (36px), which is what the Add User picker's
+     field uses. This modal used to trim the control to 32px to echo
+     the Name/Description inputs on the Edit Team page behind it, but
+     the two pickers sit side by side in the same flow and a 4px
+     difference between their search fields is visible. */
 }
 
 /* ADS Button default shared anatomy — 14/20 Semibold, 16px icon,
@@ -11333,14 +11721,27 @@ html[data-iam-version="v4"] #createRolePage .cr-btn-add {
    component (Button size=32, 14px/20px SemiBold) defined once near
    the top of this file, deliberately decoupled from this 26px/12px
    "small inline action" treatment used by Remove application/Remove
-   User/etc. */
+   User/etc.
+   NOTE (Edit Role header-actions QA, 2026-08-11): `.cr-btn-remove`
+   ("Remove Role") was also removed from this group — it now reuses
+   the full-size (36px) `.au-revoke-btn`/`.tm-delete-btn` ADS ghost
+   button component instead (see that rule's own comment), so it sits
+   at the same height/vertical alignment as the adjacent Cancel/Save
+   Role actions rather than this smaller 26px inline-link treatment.
+   NOTE (Edit Team Members-table QA, Round 37, 2026-08-12):
+   `.tm-row-remove` ("Remove" in the Members table) was also removed
+   from this group for the same reason as `.cr-btn-remove` above — it
+   now reuses the shared `.au-revoke-btn`/`.tm-delete-btn`/
+   `.cr-btn-remove` ghost-button color/interaction contract (Delete
+   Team's own component) instead, paired with its own compact-size
+   modifier scoped to `.tm-row-remove` alone (see that rule group
+   further down this file) so it keeps a table-row-appropriate height
+   without inheriting this group's generic 12px/gray-on-hover-only
+   treatment. */
 html[data-iam-version="v4"] .flt-btn-reset,
 html[data-iam-version="v4"] .au-remove-user-link,
-html[data-iam-version="v4"] .cr-btn-remove,
 html[data-iam-version="v4"] .cr-app-remove,
-html[data-iam-version="v4"] .tm-row-remove,
 html[data-iam-version="v4"] .pc-grp-delete,
-html[data-iam-version="v4"] .au-eff-view-breakdown,
 html[data-iam-version="v4"] button.rp-func-link {
   box-sizing: border-box;
   display: inline-flex;
@@ -11361,14 +11762,12 @@ html[data-iam-version="v4"] button.rp-func-link {
 }
 html[data-iam-version="v4"] .flt-btn-reset:hover,
 html[data-iam-version="v4"] .cr-app-remove:hover,
-html[data-iam-version="v4"] .tm-row-remove:hover,
 html[data-iam-version="v4"] .pc-grp-delete:hover,
 html[data-iam-version="v4"] button.rp-func-link:hover {
   background: rgba(15, 18, 20, 0.05);
 }
 html[data-iam-version="v4"] .flt-btn-reset:active,
 html[data-iam-version="v4"] .cr-app-remove:active,
-html[data-iam-version="v4"] .tm-row-remove:active,
 html[data-iam-version="v4"] .pc-grp-delete:active,
 html[data-iam-version="v4"] button.rp-func-link:active {
   background: rgba(15, 18, 20, 0.10);
@@ -11385,9 +11784,7 @@ html[data-iam-version="v4"] .flt-btn-cancel:focus-visible,
 html[data-iam-version="v4"] .flt-btn-apply:focus-visible,
 html[data-iam-version="v4"] .flt-btn-reset:focus-visible,
 html[data-iam-version="v4"] .au-remove-user-link:focus-visible,
-html[data-iam-version="v4"] .cr-btn-remove:focus-visible,
 html[data-iam-version="v4"] .cr-app-remove:focus-visible,
-html[data-iam-version="v4"] .tm-row-remove:focus-visible,
 html[data-iam-version="v4"] .pc-grp-delete:focus-visible,
 html[data-iam-version="v4"] button.rp-func-link:focus-visible,
 html[data-iam-version="v4"] .cr-btn-danger-solid:focus-visible {
@@ -12057,6 +12454,35 @@ html[data-iam-version="v4"][data-theme="ads-preview"] {
   --iam-ads-card-elevation: 0 0 4px rgba(23, 29, 35, 0.13);
   --iam-ads-menu-elevation: 0 4px 12px rgba(15, 18, 20, 0.30);
   --iam-ads-dialog-elevation: 0 16px 40px rgba(15, 18, 20, 0.30);
+
+  /* Toast — exact tokens read from the canonical ADS Toast component,
+     Figma node 70:62 (file "Ads Design System"), via get_variable_defs.
+     Figma variable names are noted so this block stays traceable back
+     to source instead of approximating with arbitrary CSS. */
+  --iam-ads-toast-surface: #ffffff;              /* toast/surface/default */
+  --iam-ads-toast-radius: 6px;                   /* toast/size/radius */
+  --iam-ads-toast-padding: 16px;                 /* toast/size/padding-x, applied on all 4 sides */
+  --iam-ads-toast-content-gap: 12px;             /* toast/size/content/gap — icon ↔ content ↔ close */
+  --iam-ads-toast-text-gap: 4px;                 /* gap between title and message */
+  --iam-ads-toast-border-width: 5px;              /* left-only accent border width (no border on the other 3 sides) */
+  /* elevation/30 = { y: 4, blur-length: 12 } and color/shadow/default
+     rgba(15,18,20,0.3) → drop-shadow(0px 4px 6px …) (blur-length/2, per
+     the Tailwind arbitrary-value math baked into the component). The
+     nearest existing token (--iam-ads-menu-elevation) uses a 12px blur
+     tuned for menus, not this exact toast value, so a dedicated token
+     is defined instead of reusing an approximate one. */
+  --iam-ads-toast-elevation: 0 4px 6px rgba(15, 18, 20, 0.30);
+  --iam-ads-toast-border-error: #db5461;         /* toast/border/error */
+  --iam-ads-toast-border-warning: #f5bb7a;       /* toast/border/warning */
+  --iam-ads-toast-border-success: #6cb288;       /* toast/border/success */
+  --iam-ads-toast-border-info: #4045c2;          /* toast/border/brand */
+  --iam-ads-toast-text-error: #993b44;           /* toast/text/error */
+  --iam-ads-toast-text-warning: #5c3711;         /* toast/text/warning */
+  --iam-ads-toast-text-success: #365944;         /* toast/text/success */
+  --iam-ads-toast-text-info: #4045c2;            /* toast/text/brand — the Info headline in the Figma
+                                                     component instance is styled with toast/text/brand,
+                                                     not the separate (unused-here) toast/text/info token */
+  --iam-ads-toast-text-body: #1e2528;            /* toast/text/primary — supporting message, every variant */
   color-scheme: light;
 }
 
@@ -12112,9 +12538,19 @@ html[data-iam-version="v4"] .sidebar .sb-item:focus-visible {
 }
 
 /* List page: Rate Card's white header band over a gray content canvas.
-   The full-bleed shadow technique changes no DOM structure. */
+   The full-bleed shadow technique changes no DOM structure.
+   R58: this rule used to also re-declare `max-width: 1440px` here.
+   That silently overrode the intentional `max-width: none` set on this
+   same selector earlier in the file (R35-12) — same selector, same
+   specificity, so the declaration that appears *later* in the
+   cascade wins, regardless of either rule's intent. That stray
+   re-assertion was the actual root cause of the "content stuck at
+   1440px even at 1920/2560" bug: `main.page` measured `max-width:
+   1440px` in the computed styles at every viewport width above 1440,
+   which is exactly the ceiling the redesigned `.card` max-width (see
+   R58 above) is supposed to own instead. Only `background` belongs
+   in this rule now. */
 html[data-iam-version="v4"] main.page {
-  max-width: 1440px;
   background: transparent;
 }
 /* Final-QA correction, measured against Figma 770:17428's absolute
@@ -12225,7 +12661,37 @@ html[data-iam-version="v4"] .v4-card .tbar {
 }
 html[data-iam-version="v4"] .tbar-l {
   gap: 16px;
+  /* Round 23 (2026-08-11 — search-field responsive width): `.tbar-l`
+     otherwise has flex-basis `auto` with no `flex-grow`, so — as a
+     flex item of `.tbar` (`justify-content: space-between` against
+     `.tbar-r`) — its own box only ever sized to its content's
+     max-content width and never claimed the extra room that opens up
+     as the card widens. Because that max-content calculation resolves
+     `.ads-search`'s viewport-relative (`vw`) flex-basis to a single
+     fixed value rather than re-evaluating it live, the search field
+     plateaued around ~370px on screens far wider than 1440px instead
+     of reaching its intended 600px ceiling. Growing `.tbar-l` sizes it
+     from genuinely available space instead of max-content, which
+     sidesteps that `vw`-in-intrinsic-sizing quirk; `.ads-search` itself
+     keeps `flex-grow: 0` (see its own rule) so it still renders at
+     its own `clamp(...)` value rather than greedily consuming 100% of
+     whatever `.tbar-l` now has to offer.   Filter and the segmented
+     control are unaffected — both stay `flex: 0 0 auto` / content-
+     sized regardless of `.tbar-l`'s own box size. */
+  flex-grow: 1;
 }
+/* Round 38 (2026-08-12 — Users search restored): the `#usersPanel`-only
+   `flex-grow: 0` override that Round 24 added here (when Users had no
+   search field left to grow around) is removed, so Users' `.tbar-l`
+   goes back to sharing the Round 23 grow-to-fill behavior above with
+   Roles and Teams. That is what lets `.ads-search`'s viewport-relative
+   `clamp()` basis resolve against genuinely available space and reach
+   its 600px ceiling at ≥1440px instead of plateauing at its
+   intrinsic/max-content size. Filter and the segmented control are
+   unaffected (both stay content-sized), and `.tbar`'s own
+   `justify-content: space-between` still anchors Export + Add User to
+   the right edge — `.tbar-l` grows into the middle of the row, it does
+   not push that group anywhere. */
 html[data-iam-version="v4"] .btn-std,
 html[data-iam-version="v4"] .btn-ghost,
 html[data-iam-version="v4"] .au-btn,
@@ -12256,6 +12722,33 @@ html[data-iam-version="v4"] .v4-card .tbar .btn-std {
 }
 html[data-iam-version="v4"] .v4-card .tbar .btn-std:hover {
   background: var(--iam-ads-brand-wash);
+}
+/* Round 24 (2026-08-11 — icon-only Filter button): the Users toolbar's
+   Filter control drops its "Filter" label and becomes a compact 36x36px
+   square (icon-only), matching the updated Figma toolbar. (Round 24 also
+   removed the adjacent search field; Round 38 restored it, but the
+   icon-only Filter treatment stands on its own and is unchanged by
+   that.) Scoped to the dedicated `#usersFilterBtn` id (rather than
+   `.btn-std` itself)
+   so it doesn't leak onto every other `.btn-std` on the page — this id
+   selector's specificity wins over the shared `.tbar .btn-std` rule
+   above regardless of source order. Border, colors, and hover/active/
+   focus/disabled states all still come from the shared `.btn-std`
+   rules; only the box's own dimensions/padding change here.
+
+   Round 35 (2026-08-12 — Roles Filter/toolbar alignment pass): Roles'
+   `#rpFilterBtn` drops its "Filter" text label too and joins this same
+   rule, so both toolbars' Filter buttons are pixel-identical instances
+   of the exact same icon-only `.btn-std` treatment instead of Roles
+   keeping a separate, wider text-button style. */
+html[data-iam-version="v4"] .v4-card .tbar #usersFilterBtn,
+html[data-iam-version="v4"] .v4-card .tbar #rpFilterBtn {
+  min-width: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  gap: 0;
+  flex-shrink: 0;
 }
 html[data-iam-version="v4"] .v4-card .tbar .btn-ghost,
 html[data-iam-version="v4"] .au-btn-save,
@@ -12331,6 +12824,9 @@ html[data-iam-version="v4"] .cr-dd-trigger:focus-visible {
 }
 html[data-iam-version="v4"] .au-input:disabled,
 html[data-iam-version="v4"] .au-input[readonly],
+/* External Edit User's Company display is a <div>, so it can't match
+   `[readonly]`; it takes the same read-only fill by class instead. */
+html[data-iam-version="v4"] .au-field-team-readonly,
 html[data-iam-version="v4"] .cr-input:disabled,
 html[data-iam-version="v4"] .edl-combo-input:disabled {
   color: rgba(30, 37, 40, 0.55);
@@ -12805,7 +13301,12 @@ html[data-iam-version="v4"] .au-adduser-heading-sub {
   color: var(--iam-ads-text-secondary);
 }
 html[data-iam-version="v4"] .au-adduser-search-wrap { position: relative; }
-html[data-iam-version="v4"] .au-adduser-search { width: 100%; }
+/* `.au-adduser-search` (the `.ads-search` pill itself, not the outer
+   `-wrap` that also contains the results dropdown below it) is the
+   clear button's positioning container — see `#auAddUserSearchClear`
+   below. `.ads-search` already sets `position: relative` as its base
+   rule, this just documents/guarantees it for this instance. */
+html[data-iam-version="v4"] .au-adduser-search { width: 100%; position: relative; }
 html[data-iam-version="v4"] .au-adduser-search-icon { flex-shrink: 0; color: var(--iam-ads-text-muted); }
 html[data-iam-version="v4"] .au-adduser-search-input {
   border: 0;
@@ -12818,6 +13319,18 @@ html[data-iam-version="v4"] .au-adduser-search-input {
   line-height: 20px;
   color: var(--iam-ads-text);
 }
+/* Reserve room for the 24px clear button (positioned 12px from the
+   right edge — see #auAddUserSearchClear) so entered text never runs
+   underneath it once the button is taken out of flex flow. Needs both
+   the ID selector AND `!important`: several later `.ads-search >
+   input { padding: 0px !important }` resets (written for the
+   icon-hiding/text-alignment rounds on the *other* `.ads-search`
+   fields) also match this input and would otherwise win outright
+   over any non-`!important` declaration, regardless of specificity. */
+html[data-iam-version="v4"] #auAddUserSearchInput,
+html[data-iam-version="v4"] #tmAddMembersSearch {
+  padding-right: 44px !important;
+}
 html[data-iam-version="v4"] .au-adduser-search-input::placeholder { color: var(--text-placeholder); }
 html[data-iam-version="v4"] .au-adduser-search-spinner {
   flex: 0 0 auto;
@@ -12826,6 +13339,29 @@ html[data-iam-version="v4"] .au-adduser-search-spinner {
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-iam-version="v4"] .au-adduser-search-spinner { animation: none; }
+}
+/* Round 26 (2026-08-11 — floating clear button): pin the clear "X" to
+   the search-field container (`.au-adduser-search`, above) with
+   absolute positioning + `translateY(-50%)`, rather than relying on
+   flex order/centering, so it's always dead-centered on the 36px input
+   regardless of sibling content and never anchored to
+   `.au-adduser-search-wrap` (which also wraps the results dropdown
+   underneath). `#auAddUserSearchClear` is used (rather than the
+   `.au-adduser-search-clear` class) purely for guaranteed specificity
+   over the shared `.ads-search .search-clear` flex-centering rule. */
+html[data-iam-version="v4"] #auAddUserSearchClear,
+html[data-iam-version="v4"] #tmAddMembersSearchClear {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
 }
 /* The base `.search-clear { display: inline-flex }` rule (shared with
    other search bars) and a global `svg { display: block }` reset tie
@@ -12936,6 +13472,10 @@ html[data-iam-version="v4"] .au-adduser-option-email {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* Round 26: only rendered for candidates who can still be added (see
+   auAddUserRenderOptionHtml in app.js — already-in-IAM rows hide Team
+   entirely since the "Already has access" badge already covers that
+   state), so semibold here always means "addable, here's their team". */
 html[data-iam-version="v4"] .au-adduser-option-team {
   flex: 0 1 108px;
   min-width: 0;
@@ -12946,13 +13486,17 @@ html[data-iam-version="v4"] .au-adduser-option-team {
   font-family: var(--ff);
   font-size: 12px;
   line-height: 18px;
-  color: var(--iam-ads-text-muted);
+  font-weight: 600;
+  color: var(--iam-ads-text-secondary);
   text-align: right;
 }
 html[data-iam-version="v4"] .au-adduser-option-badge {
   flex: 0 1 auto;
   min-width: 0;
-  max-width: 128px;
+  /* Round 26: widened from 128px now that Team is never shown alongside
+     this badge (see auAddUserRenderOptionHtml) — "Already has access"
+     has full room to render without truncating. */
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -13087,41 +13631,6 @@ html[data-iam-version="v4"] .au-adduser-actions-spacer { flex: 1 1 auto; }
   html[data-iam-version="v4"] .au-eff-breakdown-dialog { max-height: calc(100vh - 32px); }
 }
 
-/* ─── Add User page: "Change user" header-row trigger ────────────────
-   Add-mode-only. Lives in the same `.cr-section-header-row` slot Edit
-   mode's Revoke access button occupies (Figma 1023:22053 has no
-   equivalent node — this is the ADS-approved placement that keeps the
-   identity row below it a 1:1 match for Figma), reusing the exact
-   ghost-button contract `.au-revoke-btn` already established, just
-   swapped to the brand color since this is a neutral action, not a
-   destructive one. */
-html[data-iam-version="v4"] .au-changeuser-btn {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  font-family: "Open Sans", sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
-  color: var(--iam-ads-brand, #4045c2);
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-html[data-iam-version="v4"] .au-changeuser-btn[hidden] { display: none; }
-html[data-iam-version="v4"] .au-changeuser-btn:hover { background: rgba(64, 69, 194, 0.08); }
-html[data-iam-version="v4"] .au-changeuser-btn:active { background: rgba(64, 69, 194, 0.14); }
-html[data-iam-version="v4"] .au-changeuser-btn:focus-visible {
-  outline: 2px solid var(--brand-focus-ring);
-  outline-offset: 2px;
-}
-
 /* ─── Add User page: "no employee selected" empty state ─────────────
    Add-mode-only fallback for Basic Information when the two-step
    search modal hasn't produced a selection yet (Figma 1023:22053 has
@@ -13218,6 +13727,25 @@ html[data-iam-version="v4"] .edl-status-tooltip {
 html[data-iam-version="v4"] .v4-card .tab-btn.on {
   font-weight: 600;
 }
+/* ═══════════════════════════════════════════════════════════════════
+   R52 — Toast (ADS Toast, Figma 70:62)
+
+   Global container sits above normal page content but below the
+   Redline workspace overlay (z-index 999999, see redline.css), clears
+   the fixed navbar (56px tall) with a 24px gap — matching the ADS
+   screen-edge offset (24px) already used on the right. `.edl-toast`
+   itself is a
+   single flex row — icon, content column, close — left-bordered 5px
+   in the semantic color with no border on the other 3 sides, 6px
+   radius, 16px padding on every side, and the elevation/30 shadow.
+   Message text is always toast/text/primary regardless of variant.
+   The headline, icon, left border AND close glyph all carry the
+   variant's semantic color — the exported Toast assets from node
+   70:62 render a tinted close "x" per instance (e.g. the Error
+   instance's close glyph is `#993B44`, matching its headline), so the
+   close button is tinted to match rather than left neutral; it still
+   shares the 32×32 ADS icon-button hit target/hover/active/focus
+   states with `.flt-close`/`.edl-modal-close` below. */
 html[data-iam-version="v4"] .edl-toast-container {
   top: 80px;
   right: 24px;
@@ -13227,31 +13755,98 @@ html[data-iam-version="v4"] .edl-toast {
   box-sizing: border-box;
   width: 400px;
   max-width: calc(100vw - 48px);
-  min-height: 64px;
-  padding: 16px;
-  border: 1px solid var(--iam-ads-divider);
-  border-left-width: 5px;
-  border-radius: var(--iam-ads-control-radius);
-  background: var(--iam-ads-surface);
-  box-shadow: var(--iam-ads-menu-elevation);
+  min-height: 56px;
+  padding: var(--iam-ads-toast-padding);
+  gap: var(--iam-ads-toast-content-gap);
+  border: 0;
+  border-left: var(--iam-ads-toast-border-width) solid var(--iam-ads-toast-border-info);
+  border-radius: var(--iam-ads-toast-radius);
+  background: var(--iam-ads-toast-surface);
+  box-shadow: var(--iam-ads-toast-elevation);
 }
+html[data-iam-version="v4"] .edl-toast-content {
+  gap: var(--iam-ads-toast-text-gap);
+}
+html[data-iam-version="v4"] .edl-toast-title {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--iam-ads-toast-text-info);
+}
+html[data-iam-version="v4"] .edl-toast-body {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--iam-ads-toast-text-body);
+}
+/* Semantic left-border + headline color per variant. Message stays
+   toast/text/primary (rule above) in every variant — status is never
+   communicated by the accent color alone, since the icon shape and
+   headline text always repeat it too. */
+html[data-iam-version="v4"] .edl-toast--error {
+  border-left-color: var(--iam-ads-toast-border-error);
+}
+html[data-iam-version="v4"] .edl-toast--error .edl-toast-title {
+  color: var(--iam-ads-toast-text-error);
+}
+html[data-iam-version="v4"] .edl-toast--warning {
+  border-left-color: var(--iam-ads-toast-border-warning);
+}
+html[data-iam-version="v4"] .edl-toast--warning .edl-toast-title {
+  color: var(--iam-ads-toast-text-warning);
+}
+html[data-iam-version="v4"] .edl-toast--success {
+  border-left-color: var(--iam-ads-toast-border-success);
+}
+html[data-iam-version="v4"] .edl-toast--success .edl-toast-title {
+  color: var(--iam-ads-toast-text-success);
+}
+html[data-iam-version="v4"] .edl-toast--informative {
+  border-left-color: var(--iam-ads-toast-border-info);
+}
+html[data-iam-version="v4"] .edl-toast--informative .edl-toast-title {
+  color: var(--iam-ads-toast-text-info);
+}
+/* Icon AND close-glyph color always match the variant's headline
+   color (all four are fill-based `fill="currentColor"` inline SVGs
+   exported directly from the node 70:62 instances). The close button
+   still inherits its 32×32 hit target and hover/active/focus-visible
+   states from the shared `.flt-close`/`.edl-modal-close` rule below —
+   only `color` (the glyph tint) is overridden here, per variant. */
+html[data-iam-version="v4"] .edl-toast--error .edl-toast-icon,
+html[data-iam-version="v4"] .edl-toast--error .edl-toast-close       { color: var(--iam-ads-toast-text-error); }
+html[data-iam-version="v4"] .edl-toast--warning .edl-toast-icon,
+html[data-iam-version="v4"] .edl-toast--warning .edl-toast-close     { color: var(--iam-ads-toast-text-warning); }
+html[data-iam-version="v4"] .edl-toast--success .edl-toast-icon,
+html[data-iam-version="v4"] .edl-toast--success .edl-toast-close     { color: var(--iam-ads-toast-text-success); }
+html[data-iam-version="v4"] .edl-toast--informative .edl-toast-icon,
+html[data-iam-version="v4"] .edl-toast--informative .edl-toast-close { color: var(--iam-ads-toast-text-info); }
 
-/* Edit User grid: avoid the legacy fixed 296px tracks overflowing the
-   available content area at 1024px while preserving field order. */
-@media (max-width: 1199px) and (min-width: 769px) {
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-section-body {
-    grid-template-columns: minmax(240px, 296px) repeat(2, minmax(0, 1fr));
-    column-gap: 24px;
-    row-gap: 16px;
+/* Compact/narrow viewports: keep the ADS screen gutter, let the toast
+   shrink to fit instead of the container overflowing horizontally,
+   and let title/message wrap naturally (already the default — no
+   nowrap/truncation is applied anywhere in this component). */
+@media (max-width: 480px) {
+  html[data-iam-version="v4"] .edl-toast-container {
+    left: 16px;
+    right: 16px;
+    top: 80px;
+    max-width: none;
   }
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-id-block,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-section-body > .au-edit-row,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-grid > .au-field {
+  html[data-iam-version="v4"] .edl-toast {
     width: 100%;
     max-width: 100%;
-    min-width: 0;
   }
 }
+
+/* Edit User grid: the "avoid the legacy fixed 296px tracks overflowing
+   at 1024px" override that used to live here is gone. Its two jobs —
+   giving the identity column a `minmax(240px, 296px)` range and letting
+   the identity block/fields fill their own tracks — are now the base
+   behavior of `#auBasicCard .au-section-body` for BOTH modes, and its
+   `(min-width: 769px)` floor would have re-forced three columns
+   underneath the shared 900px two-column stage. See the "Responsive
+   stages" block next to that grid definition. */
 
 @media (max-width: 768px) {
   html[data-iam-version="v4"] main.page > .hdr {
@@ -13277,22 +13872,12 @@ html[data-iam-version="v4"] .edl-toast {
     min-height: 52px;
     padding: 8px 12px;
   }
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-section-body {
-    grid-template-columns: 1fr;
-    row-gap: 16px;
-  }
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-section-body > .au-edit-row,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-field-preferred,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-field-region,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-field-team,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-field-timezone,
-  html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .au-grid > .au-field {
-    grid-column: 1;
-    grid-row: auto;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
+  /* The Edit-mode-only "collapse #auBasicCard to one column at 768px"
+     override that used to live here is gone: collapsing at 768 in Edit
+     mode while Add mode still showed two columns made the two flows
+     reflow differently from identical markup. Both now follow the
+     shared responsive stages beside the grid definition (two form
+     columns down to 600px, one column below that). */
   html[data-iam-version="v4"] .flt-drawer {
     width: min(360px, 100vw);
   }
@@ -13461,48 +14046,279 @@ html[data-iam-version="v4"] #pcDetailPage .cr-section-header[role="button"] .cr-
   line-height: 22px;
   font-weight: 600;
 }
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .cr-section-header[role="button"] .cr-section-title,
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auPermsCard .cr-section-header[role="button"] .cr-section-title {
-  color: var(--iam-ads-text);
-  font-size: 15px;
-  line-height: 22px;
-  font-weight: 600;
-}
+/* Round 31 (2026-08-11) — the `#auBasicCard`/`#auPermsCard`-scoped
+   duplicate of the base rule above (identical values, just narrower +
+   `.is-edit-mode`-gated) was removed: it was fully redundant for
+   `#auPermsCard` (already matched by the un-scoped rule above, which
+   targets all of `#addUsersPage`) and, worse, its extra `.is-edit-mode`
+   class gave it higher specificity than the Round-2/26/30 title-color
+   overrides further below — which, now that those are un-scoped for
+   Add User parity, made THIS rule win over them for `#auBasicCard`
+   specifically while Edit mode was active, silently reverting its
+   title back to 15px gray. `#auPermsCard` (an edit-only, currently-
+   unused legacy card, unaffected by this change either way) keeps
+   getting the same 15px/gray styling it always had, from the un-scoped
+   rule above. */
 
 /* ═══ Final-QA round 2 — Edit User page (Figma node 1003:21681) ════
    Corrects a wrong token from the prior round. Dev Mode on the exact
    "Basic information" / "Access" heading nodes (1003:21681 / 1018:21842,
    nested inside 1003:20186) resolves to `heading/sm`, NOT `heading/lg`:
    MultiplaneTWDC Display Medium, 20px / 24px line-height, 0 letter-
-   spacing, color gray/800 (#161c1e ≈ this codebase's --iam-ads-text).
-   The previous round's 24/28 reading was too large — these headings
-   were visually competing with the 28px `Edit user` page title, which
-   is exactly the H1-vs-H2 hierarchy violation this correction fixes.
-   Family/weight/color/chevron treatment are otherwise already correct
-   and untouched here. Selector list must match/outrank the 15px rule
-   above on specificity (2 ids + role attr + 3 classes) and wins on
-   source order as well, since it is declared after it. */
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .cr-section-header[role="button"] .cr-section-title,
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .cr-section-header[role="button"] .cr-section-title {
+   spacing. Color/chevron treatment were superseded by round 26 below
+   (title/chevron now #2D2F8C, per an explicit updated spec). The
+   previous round's 24/28 reading was too large — these headings were
+   visually competing with the 28px `Edit user` page title, which is
+   exactly the H1-vs-H2 hierarchy violation this correction fixes.
+   Selector list must match/outrank the 15px rule above on specificity
+   (2 ids + role attr + 3 classes) and wins on source order as well,
+   since it is declared after it.
+
+   Round 31 (2026-08-11) — Add User parity pass: un-scoped from
+   `.is-edit-mode`. "Basic information" and "Role and Permission" are
+   the exact same `#auBasicCard`/`#auRolesCard` DOM nodes in Add mode
+   (see index.html — one shared markup, no separate Add-mode copy), so
+   this same heading treatment now applies unconditionally in both
+   modes per an explicit "match Edit User exactly, reuse shared styles"
+   spec, instead of only rendering it for Edit mode. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-title {
   font-family: "MultiplaneTWDC Display", "Open Sans", sans-serif;
   font-size: 20px;
   line-height: 24px;
   font-weight: 500;
-  color: var(--iam-ads-text);
   letter-spacing: 0;
 }
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .cr-section-header[role="button"] .cr-section-chev {
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-chev {
   width: 24px;
   height: 24px;
   flex: 0 0 24px;
-  /* Access's chevron otherwise inherits the neutral
-     --iam-ads-text-secondary from the shared 16px rule above — Figma's
-     "Feather/Arrows/Chevron-Left" instance on BOTH card headers renders
-     in brand indigo (#4045C2 ≈ --iam-ads-brand), so restate it here for
-     Access too (Basic Information already resolves to this color via
-     an older rule, kept as-is). */
-  color: var(--iam-ads-brand);
+}
+
+/* ═══ Round 26 (2026-08-11) — "Basic information" / "Access" header
+   redesign: chevron moves to the right, indigo #2D2F8C title color,
+   no more chevron-driven title indentation ═══
+
+   Title color: explicit #2D2F8C per an updated spec, replacing
+   whatever it previously resolved to (neutral gray --iam-ads-text).
+
+   Round 31 (2026-08-11) — un-scoped from `.is-edit-mode` for the same
+   Add User parity reason as the font rule above: same shared DOM,
+   same title color in both modes now.
+
+   Round 36 (2026-08-12) — Edit Team's "Team details" / "Members"
+   headings join this same rule (rather than a second, separately
+   hard-coded `#2D2F8C` elsewhere) so both pages' section titles are
+   always guaranteed to share the exact same color value; see
+   `#editTeamPage .cr-section-header .cr-section-title` above, which
+   deliberately leaves `color` unset for this same reason. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #editTeamPage .cr-section-header .cr-section-title {
+  color: #2D2F8C;
+}
+/* Round 30 (2026-08-11) — chevron color corrected to reuse the exact
+   ADS/brand-link token (`--brand-text`) already used by the "Back to
+   Users" link/icon on this same page (`.au-back`, `.au-back svg` via
+   `stroke="currentColor"`), instead of the Round 26 hard-coded
+   #2D2F8C. Title color is intentionally left untouched above — only
+   the chevron changes. No separate :hover/:focus/:active override
+   exists for this chevron, so it reads as this same token in every
+   interaction state (hover, focus, expanded, collapsed) automatically;
+   the collapsed-state rotation further below is a `transform`, not a
+   color change, so it doesn't need touching either.
+
+   Round 31 (2026-08-11) — un-scoped from `.is-edit-mode`; see above. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-chev {
+  color: var(--brand-text);
+}
+
+/* Chevron to the far right: DOM order is left untouched on purpose
+   (the chevron `<svg>` is still the FIRST child in index.html, before
+   `.cr-section-title`), so nothing about Create Role / Edit Team /
+   Add mode's identical shared `.cr-section-header` markup is
+   disturbed by this change — only these two cards, only in Edit mode,
+   are affected. `order: 1` (title/summary stay at the default `order:
+   0`) plus `margin-left: auto` visually pushes the chevron past them
+   to the header's own right edge, while the header itself now spans
+   the row's full width so that edge lines up with the card's real
+   right-padding guide — the same distance from the card's right edge
+   that the title sits from the card's left edge (both are the card's
+   own 24px padding; see `.au-card`/`.cr-card`). This also removes the
+   old chevron-width + gap indentation the title used to carry when
+   the chevron sat in front of it, so the title's left edge now lines
+   up exactly with the section body below it.
+
+   Round 31 (2026-08-11) — un-scoped from `.is-edit-mode`: with
+   "Change user" removed from the Basic Information header row
+   entirely (see index.html), `#auBasicCard`'s header row has no
+   sibling left to make room for in either mode, so this can safely
+   apply unconditionally. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] {
+  width: 100%;
+  justify-content: flex-start;
+}
+/* `#auBasicCard`'s header used to share its row with the Add-mode-only
+   "Change user" button via `flex: 0 1 auto` — see `.cr-section-header-
+   row .cr-section-header` above — so it didn't claim the whole row by
+   default. That button has been removed (Round 31, Add User parity
+   pass) so the header can now always grow to fill the row in both
+   modes; without this, the chevron's `margin-left: auto` would only
+   push it to the edge of the header's own (content-sized) box, not
+   the row's true right edge. `#auRolesCard` has no such wrapper row
+   (its header is already a full-width block-level flex container),
+   so it needs no equivalent override. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard > .cr-section-header-row > .cr-section-header[role="button"] {
+  flex: 1 1 auto;
+}
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-chev {
+  order: 1;
+  margin-left: auto;
+}
+
+/* Collapsed-state chevron direction: expanded already shows the base
+   SVG's natural down-chevron unrotated. The shared `.cr-card.collapsed
+   .cr-section-chev` rule (used by every OTHER accordion in the app —
+   Create Role, Edit Team, Permission Capability) rotates -90deg on
+   collapse, which turns a down-chevron into a left/right-pointing one
+   — explicitly disallowed for these two sections. 180deg instead
+   flips it to an up-chevron (expanded=down / collapsed=up), reusing
+   the same subtle animated transition already defined on
+   `.cr-section-chev`. Scoped to these two cards only — every other
+   accordion in the app keeps its original -90deg rotation, unchanged.
+   Round 31 (2026-08-11) — un-scoped from `.is-edit-mode`; Add mode now
+   gets the identical up/down chevron behavior as Edit mode. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard.cr-card.collapsed .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard.cr-card.collapsed .cr-section-chev {
+  transform: rotate(180deg);
+}
+
+/* ═══ Round 28 (2026-08-11) — Edit Role "Role Details" / "Functions"
+   header rework: chevron reposition ONLY, no color change. Round 27's
+   #2D2F8C title/chevron override (directly above, in prior source) has
+   been fully reverted per an updated spec — "preserve all existing
+   text colors, do not apply #2D2F8C or introduce any new text-color
+   override". Both cards keep whatever color they already rendered
+   before Round 27 (`.cr-section-title` → `--iam-ads-text`, `.cr-section-
+   chev` → `--iam-ads-text-secondary`, both from the shared, un-scoped
+   `#createRolePage`/`.cr-section-header[role="button"]` rules already
+   defined above in this file — nothing new needed here to restore
+   them).
+
+   Scoped to `#createRolePage.is-edit-mode` (set/cleared in
+   `showEditRole()`/`showCreateRole()`/`hideCreateRole()` in app.js) so
+   Create Role keeps its original left-chevron header, at the chevron's
+   original 16px size, completely untouched. The nested per-application
+   "Core Planning" accordion inside Functions has its own, separately
+   scoped Round 28 treatment further down this file. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-chev-btn,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev-btn {
+  /* Chevron to the far right — DOM order is untouched (the chevron
+     button stays the FIRST child before `.cr-section-title` in
+     index.html, exactly as the bare `<svg>` did before); `order: 1`
+     pushes it after the title, `margin-left: auto` then pushes it the
+     rest of the way to the header's own right edge. Removing the
+     chevron from the front also removes its former width + gap
+     indentation, so the title's left edge now lines up with the
+     section body below it, and the chevron's distance from the
+     card's right edge matches the title's distance from the card's
+     left edge (both the card's own 24px padding).
+     32px clickable area (accessibility requirement: chevron controls
+     need a ~32-36px hit target) — Create Role keeps the button at its
+     default 16px (see the un-scoped `.cr-section-chev-btn` reset rule
+     above), so this growth is Edit Role-only. */
+  order: 1;
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+}
+/* Collapsed-state chevron direction — 180deg (up), never -90deg
+   (left/right). Scoped to Edit mode only: Create Role keeps the
+   shared -90deg rotation, unchanged.
+
+   Round 33 (2026-08-11): "Functions" is deliberately EXCLUDED from
+   this rule now — its own state convention is the opposite (expanded
+   = up / collapsed = down, matching the nested application chevrons
+   introduced in this same round), see the dedicated `#crFuncsCard`
+   rule further down. "Role Details" (`#crBasicCard`) keeps this
+   original down/up convention, unchanged. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard.cr-card.collapsed .cr-section-chev {
+  transform: rotate(180deg);
+}
+/* Functions top-level chevron: expanded/open points UP (rotate
+   180deg), collapsed/closed points DOWN (unrotated) — the OPPOSITE of
+   Role Details directly above and every other top-level accordion in
+   this app, per an explicit spec matching the nested application
+   chevrons below it. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard.cr-card:not(.collapsed) .cr-section-chev {
+  transform: rotate(180deg);
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard.cr-card.collapsed .cr-section-chev {
+  transform: none;
+}
+
+/* ═══ Round 33 (2026-08-11) — Edit Role nested application headers
+   ("Core Planning", "Identity and Access Management", etc.): reworked
+   from Round 28's "Title ... [Remove application] [Chevron]" (chevron
+   grouped with Remove on the far right) to "[Chevron] Title ...
+   [Remove application]" — the chevron moves back in front of the
+   application name, immediately signalling "this row expands/
+   collapses" the way the un-scoped Create Role default already does,
+   while Remove application keeps sole ownership of the row's far
+   right edge with no chevron beside it.
+
+   This is actually the SAME order Create Role's own un-scoped default
+   already uses (`.cr-app-head-chev-btn` order 0 / `.cr-app-title`
+   order 1, `flex: 1 1 auto` / `.cr-app-remove` order 2, set above) —
+   Edit Role no longer needs its own reordering at all for these three,
+   only its own clickable-hit-area growth on the chevron button and a
+   tighter, spec'd 8px chevron-to-title gap (Create Role keeps the
+   shared 12px `.cr-app-section-head` gap, unaffected). Whichever
+   element ends up first in visual order still uses the same DOM
+   order/click-handling from `buildAppSectionHtml()` in app.js — no
+   markup change needed, this is CSS-only. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-section-head {
+  gap: 8px;
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-head-chev-btn {
+  /* Same ~32px clickable hit area as Role Details/Functions above —
+     Create Role keeps this button at its default 16px. The chevron
+     `<svg>` inside stays a 16px icon either way (only the button's own
+     hit-box grows) — see `.cr-app-head-chev` width/height, untouched. */
+  order: 0;
+  width: 32px;
+  height: 32px;
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-title {
+  order: 1;
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-remove {
+  order: 2;
+}
+/* Neutral (Gray/700, `--iam-ads-text-secondary`) nested-chevron color —
+   deliberately NOT `#4045C2`/`--brand-text` (Create Role's own nested
+   chevron color, unaffected) so the nested chevron reads as visually
+   subordinate to the blue top-level Functions chevron, establishing a
+   clear two-level hierarchy. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-head-chev {
+  color: var(--iam-ads-text-secondary, #3b4347);
+}
+/* Expanded/open application: chevron points UP (rotate 180deg).
+   Collapsed/closed application: chevron points DOWN (unrotated —
+   the base SVG's natural resting direction). This is the OPPOSITE of
+   every other accordion convention in this app (Role Details/Functions
+   above included) — intentional, explicit spec for this nested level
+   only. Create Role keeps its own unrelated -90deg collapsed rotation,
+   unaffected. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix:not(.cr-app-section--collapsed) .cr-app-head-chev {
+  transform: rotate(180deg);
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix.cr-app-section--collapsed .cr-app-head-chev {
+  transform: none;
 }
 
 /* Header row split (Figma "Frame 2134099792") — the existing
@@ -13573,41 +14389,99 @@ html[data-iam-version="v4"] #addUsersPage #auRolesCard > .cr-section-header[role
    radius, Open Sans SemiBold 14/20, rest color
    `button/variant/ghost/text` #51585b (`--iam-ads-text-muted`) — same
    contract as `.au-btn-save-draft` (Create Role's own Save as Draft),
-   since all three are the same ADS ghost/text component. */
+   since all three are the same ADS ghost/text component.
+   Round 27 (2026-08-11 — Edit Role header actions): `.cr-btn-remove`
+   ("Remove Role") joins this group too, replacing its old bespoke
+   26px/indigo "compact inline text-action" treatment (see the removed
+   entry in the 26px "Compact ghost text buttons" group above). Stays
+   muted-gray, not red — this app has an explicit, documented app-wide
+   decision to never render a red "danger" button (ADS's own component
+   inventory ships only primary/secondary/tertiary/ghost, no destructive
+   variant — see the "Delete/Remove confirmation buttons" comment
+   elsewhere in this file), and every other destructive ghost trigger
+   here (Revoke access, Delete Team) already uses this same muted-gray
+   ghost, not red, for consistency.
+
+   Round 37 (2026-08-12 — Edit Team Members-table "Remove" QA):
+   `.tm-row-remove` (per-row "Remove" in the Members table) joins the
+   shape/color/interaction contract below too — same ghost variant as
+   Delete Team, not a fourth bespoke treatment — but is deliberately
+   left OUT of the size declarations right after (height/padding/font-
+   size/line-height), which stay 36px/"default" size for the original
+   three page-level actions only. `.tm-row-remove` gets its own
+   compact-size rule immediately below instead (same rationale as
+   Round 27 splitting size from color: a table row needs a smaller
+   ADS button size than a page header, while still being unmistakably
+   "the same ghost button"). */
 html[data-iam-version="v4"] .au-revoke-btn,
-html[data-iam-version="v4"] .tm-delete-btn {
+html[data-iam-version="v4"] .tm-delete-btn,
+html[data-iam-version="v4"] .cr-btn-remove,
+html[data-iam-version="v4"] .tm-row-remove {
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  padding: 8px 12px;
   border: 0;
   border-radius: 6px;
   background: transparent;
   font-family: "Open Sans", sans-serif;
-  font-size: 14px;
-  line-height: 20px;
   font-weight: 600;
   color: var(--iam-ads-text-muted, #51585b);
   white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
+/* "Default" ADS Button size — page-level destructive actions only.
+   `.tm-row-remove`'s compact size lives in its own rule right after. */
+html[data-iam-version="v4"] .au-revoke-btn,
+html[data-iam-version="v4"] .tm-delete-btn,
+html[data-iam-version="v4"] .cr-btn-remove {
+  height: 36px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+/* "Compact"/small ADS Button size — the same ghost component as
+   above, sized for a table row: 26px, the identical compact height
+   already used app-wide for inline row/header actions like "Remove
+   application" (see the 26px "Compact ghost text buttons" group
+   earlier in this file), so this doesn't invent a new size, just
+   applies the existing compact size token to this component's color
+   contract. Row height is untouched — 26px comfortably fits inside
+   the Members table's existing 48px row height with room to spare,
+   the same way it always has for every other compact-ghost action in
+   this app. */
+html[data-iam-version="v4"] .tm-row-remove {
+  height: 26px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 18px;
+}
 html[data-iam-version="v4"] .au-revoke-btn:hover,
-html[data-iam-version="v4"] .tm-delete-btn:hover {
+html[data-iam-version="v4"] .tm-delete-btn:hover,
+html[data-iam-version="v4"] .cr-btn-remove:hover,
+html[data-iam-version="v4"] .tm-row-remove:hover {
   background: rgba(15, 18, 20, 0.05);
   color: var(--iam-ads-text, #1e2528);
 }
 html[data-iam-version="v4"] .au-revoke-btn:active,
-html[data-iam-version="v4"] .tm-delete-btn:active {
+html[data-iam-version="v4"] .tm-delete-btn:active,
+html[data-iam-version="v4"] .cr-btn-remove:active,
+html[data-iam-version="v4"] .tm-row-remove:active {
   background: rgba(15, 18, 20, 0.08);
   color: var(--iam-ads-text, #1e2528);
 }
 html[data-iam-version="v4"] .au-revoke-btn:focus-visible,
-html[data-iam-version="v4"] .tm-delete-btn:focus-visible {
+html[data-iam-version="v4"] .tm-delete-btn:focus-visible,
+html[data-iam-version="v4"] .cr-btn-remove:focus-visible,
+html[data-iam-version="v4"] .tm-row-remove:focus-visible {
   outline: 2px solid var(--brand-focus-ring);
   outline-offset: 2px;
+}
+html[data-iam-version="v4"] .cr-btn-remove:disabled,
+html[data-iam-version="v4"] .tm-row-remove:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 /* Extra separation before Cancel/Save (Final-QA requirement: "a
    slightly larger gap between Delete Team and Cancel" than the
@@ -13694,15 +14568,66 @@ html[data-iam-version="v4"] #addUsersPage .au-header-actions {
    established for the (now single-child) email row for visual
    consistency. `min-width: 0` on both the row and the name span keeps
    the existing text-overflow ellipsis working now that the name is a
-   flex child of a new wrapper rather than a lone block. */
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-id-name-row {
-  display: inline-flex;
+   flex child of a new wrapper rather than a lone block.
+
+   This rule used to be scoped to `.is-edit-mode`, which is what broke
+   Add User: `.au-id-name-row` is shared markup, so in Add mode it
+   stayed a plain block and `#auIdName` stayed `display: inline`.
+   `overflow`, `text-overflow` and `white-space: nowrap` have no effect
+   on a non-replaced inline box, so a long name laid itself out at full
+   width — straight across the Preferred name field — and the status
+   icon was pushed onto its own line after it. Blockifying the name as a
+   flex item is what makes the ellipsis (and the truncation measurement
+   that drives its tooltip) work at all, and both flows need it. */
+html[data-iam-version="v4"] #addUsersPage .au-id-name-row {
+  display: flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
+  /* The name shrinks; the status icon beside it never does, so it can't
+     be squeezed out of the identity column by a long name. */
+  flex-wrap: nowrap;
 }
-html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-id-name-row .au-id-name {
+html[data-iam-version="v4"] #addUsersPage .au-id-name-row .au-id-name {
   min-width: 0;
+  flex: 0 1 auto;
+}
+html[data-iam-version="v4"] #addUsersPage .au-id-name-row .au-id-status {
+  flex: 0 0 auto;
+}
+
+/* Truncated name/email become focusable (JS adds `tabindex` only while
+   they're actually clipped) so keyboard users can reach the tooltip
+   that reveals the full value. Give them the standard focus ring. */
+html[data-iam-version="v4"] #addUsersPage .au-id-name[tabindex]:focus-visible,
+html[data-iam-version="v4"] #addUsersPage .au-id-email[tabindex]:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, #3611C8);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* External Edit User renders Company as a read-only <div> rather than an
+   <input>, so it needs the clipping an input does natively — otherwise a
+   long organization name spills out of the field and across the column.
+   Everything else about its box (32px height, padding, radius, border,
+   read-only fill) comes from the shared `.au-input` + `.au-input-readonly`
+   classes, which is what keeps it level with the Timezone control beside
+   it. */
+html[data-iam-version="v4"] #addUsersPage .au-field-team-readonly {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Avatar: the vector placeholder draws its own circle whose outer edge
+   sits exactly on the container's boundary, so the container's circular
+   clip was shaving that edge. Nothing about a self-contained circular
+   drawing needs cropping — only a rectangular photo does. Keep
+   `overflow: hidden` for the photo/initials cases and drop it for the
+   placeholder, so the whole outer circle is guaranteed to paint. */
+html[data-iam-version="v4"] #addUsersPage .au-id-avatar:has(> .au-id-avatar-svg) {
+  overflow: visible;
 }
 
 /* Pagination digit width from the ADS component metadata. */
@@ -13872,10 +14797,15 @@ html[data-iam-version="v4"] .v4-card .tbar .ads-search .search-clear {
   position: static !important;
   left: auto !important;
   right: auto !important;
-  width: 16px !important;
-  min-width: 16px !important;
-  height: 16px !important;
-  min-height: 16px !important;
+  /* Round 23 (2026-08-11): 16px -> 24px clickable area, matching the
+     canonical `.ads-search .search-clear` rule below — this is one of
+     three byte-identical duplicate blocks in this file (all `!important`,
+     so all three had to move together or the lowest-value one would
+     keep winning the cascade). */
+  width: 24px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
   padding: 0 !important;
 }
 html[data-iam-version="v4"] .ads-search:focus-within {
@@ -14451,6 +15381,56 @@ html[data-iam-version="v4"] #crFuncsCard.collapsed .cr-section-header[role="butt
   margin-bottom: 0;
 }
 
+/* ═══ Round 32 (2026-08-11) — Edit Role "Role Details" / "Functions"
+   headers now match Edit User's "Basic information" / "Access"
+   headers exactly in color: title `#2D2F8C`, chevron `--brand-text`
+   (the same token the "Back to Users"/"Back to Roles" link already
+   uses), reusing the exact literal values Round 26/30 established for
+   `#auBasicCard`/`#auRolesCard` rather than approximating them.
+
+   Round 28 had reverted an earlier color pass per an explicit
+   "preserve all existing text colors" spec; this is a deliberate,
+   later, more specific request that supersedes that reversion — see
+   the task's "match Edit User exactly" requirement. Scoped to
+   `#createRolePage.is-edit-mode` only (set/cleared in
+   `showEditRole()`/`showCreateRole()`/`hideCreateRole()` in app.js) so
+   Create Role's own header keeps the Gray/800 resting color from the
+   un-scoped rule above, untouched — this pass is Edit-Role-only. The
+   nested per-application "Core Planning" header uses its own separate
+   `.cr-app-title`/`.cr-app-head-chev` classes (not `.cr-section-
+   title`/`.cr-section-chev`), so it is structurally unreachable by
+   these selectors and needs no exclusion. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-title {
+  color: #2D2F8C;
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev {
+  color: var(--brand-text);
+}
+/* Round 33 (2026-08-11): Functions' own chevron pinned to the exact
+   literal `#4045C2` (which `--brand-text` already resolves to above —
+   this makes it explicit/guaranteed rather than incidental, per a
+   spec asking for this exact hex on this specific chevron). Higher
+   specificity than the shared rule directly above via the repeated
+   `#crFuncsCard`, so it wins for Functions only; Role Details keeps
+   the token-based color, unaffected. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev {
+  color: #4045C2;
+}
+/* Edit User's equivalent header keeps its default visible keyboard-
+   focus outline (the shared `[data-cr-toggle]:focus-visible` /
+   `[data-au-toggle]:focus-visible` rule near the top of this file) —
+   restore that same visible affordance here, undoing the
+   `outline: 0` the un-scoped `#createRolePage` rule above applies for
+   Create Role. Higher specificity (`.is-edit-mode` added) wins over
+   that rule without needing to touch Create Role's. */
+html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-section-header[role="button"]:focus-visible {
+  outline: 2px solid var(--indigo-50);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
 /* Field labels ("Role Name", "Description", "Select applications") —
    Figma's Input component "Label and Required" slot is Open Sans
    SemiBold 12px/18px in `field-description/state/default/text`
@@ -14482,71 +15462,211 @@ html[data-iam-version="v4"] #createRolePage .cr-app-section--matrix .cr-app-titl
 html[data-iam-version="v4"] #createRolePage .cr-app-section--matrix .cr-app-head-chev {
   color: var(--iam-ads-text);
 }
-html[data-iam-version="v4"] #createRolePage .cr-app-head-left:hover .cr-app-title,
-html[data-iam-version="v4"] #createRolePage .cr-app-head-left:hover .cr-app-head-chev,
-html[data-iam-version="v4"] #createRolePage .cr-app-head-left:focus-visible .cr-app-title,
-html[data-iam-version="v4"] #createRolePage .cr-app-head-left:focus-visible .cr-app-head-chev {
+html[data-iam-version="v4"] #createRolePage .cr-app-section-head:hover .cr-app-title,
+html[data-iam-version="v4"] #createRolePage .cr-app-section-head:hover .cr-app-head-chev,
+html[data-iam-version="v4"] #createRolePage .cr-app-section-head:focus-visible .cr-app-title,
+html[data-iam-version="v4"] #createRolePage .cr-app-section-head:focus-visible .cr-app-head-chev {
   color: var(--iam-ads-brand);
 }
 
-/* "Remove application" — canonical ADS Button, `variant=tertiary`,
-   `size=default`, `type=text+icon` (Figma node 7722:252). Tertiary is
-   the one Button variant in this library that keeps a resting border
-   (`rgba(15,18,20,0.5)`) on a transparent fill, which is why this
-   gets its own rule instead of joining the borderless "ghost" group
-   (`.au-revoke-btn` / `.au-btn-save-draft` / the old shared
-   `.cr-app-remove` rule at R-brand below) — Figma's trash-can
-   instance is unambiguously bordered. Icon is leading-only (this
-   button has no trailing icon; the ADS demo instance on 7722:252
-   happens to show both an example leading AND trailing icon slot,
-   but "text+icon" per the component's own variant list takes exactly
-   one). Sized to the Button component's own `size/default` contract
-   (36px tall, 12/8 padding, 4px icon gap, 6px radius) rather than the
-   26px compact "ghost link" treatment previously shared with
-   `.tm-row-remove` / `.pc-grp-delete` / `.rp-func-link` — this control
-   reads as a full secondary-weight action, not an inline text link. */
-html[data-iam-version="v4"] #createRolePage .cr-app-remove {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  height: 36px;
-  padding: 8px 12px;
-  gap: 4px;
-  border: 1px solid rgba(15, 18, 20, 0.5);
-  border-radius: 6px;
-  background: transparent;
-  font-family: "Open Sans", sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 600;
-  color: var(--iam-ads-text-muted, #51585b);
-  white-space: nowrap;
-}
-html[data-iam-version="v4"] #createRolePage .cr-app-remove > svg {
-  width: 16px;
-  height: 16px;
-}
-html[data-iam-version="v4"] #createRolePage .cr-app-remove:hover {
-  background: rgba(15, 18, 20, 0.05);
-  border-color: rgba(15, 18, 20, 0.5);
-  color: var(--iam-ads-text-muted, #51585b);
-}
-html[data-iam-version="v4"] #createRolePage .cr-app-remove:active {
-  background: rgba(15, 18, 20, 0.10);
-  border-color: rgba(15, 18, 20, 0.5);
-}
-html[data-iam-version="v4"] #createRolePage .cr-app-remove:focus-visible {
-  outline: 2px solid var(--brand-focus-ring);
-  outline-offset: 2px;
-}
-html[data-iam-version="v4"] #createRolePage .cr-app-remove:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+/* "Remove application" — final-QA pass (2026-08-11, Remove Application
+   modal rebuild): reverted to the compact ADS ghost/text-only control
+   this button is separately approved to use — no default border, no
+   trash icon, right-aligned in its application header. A prior round
+   had bordered/icon-ed this into a `variant=tertiary, type=text+icon`
+   treatment (Figma 7722:252's demo cell — the same generic-icon
+   showcase pattern documented on the "View access breakdown" button
+   elsewhere in this file), which read as an oversized outline button
+   and is exactly what this pass reverts. Removing this ID-scoped
+   override lets `.cr-app-remove` fall through to the shared 26px
+   compact-ghost contract (`html[data-iam-version="v4"] .cr-app-remove`
+   further up this file, alongside "Remove Role" / "Remove" table
+   actions): height 26px, padding 4/8, radius 6, transparent at rest,
+   `rgba(15,18,20,.05)` hover / `.10` active — no border in any state.
+   The trash icon was also removed from this button's markup in
+   app.js (renderCrAppSection) so there is no icon left to size here.
+
+   Round 28 (2026-08-11 — Edit Role nested-header QA): this 26px
+   ghost contract still applies everywhere this button is used
+   EXCEPT Edit Role's per-application "Remove application" (Create
+   Role's own accordion + Add User's `.au-role-card` "Remove" both
+   keep it as-is). In Edit Role only, `buildAppSectionHtml` (app.js)
+   now also adds the `.btn-std` class to that one button, which — via
+   the higher-specificity, `!important` `button:is(.btn-std, …)` rule
+   above — reuses the existing ADS compact outlined/secondary button
+   component (36px, bordered, 6px radius) instead. That rule's
+   `color: #4045c2` is the exact same indigo `.cr-app-remove` already
+   used, so the label's text color is unchanged; only the border/
+   background/height/padding/radius are new. */
 
 @media (max-width: 900px) {
   .sim-excel-window { width: 100%; height: 100%; border-radius: 0; }
   .sim-excel-ribbon-tools { display: none; }
+}
+
+/* Round 33 (2026-08-11) — Edit Role nested application headers on
+   narrow screens: below 640px there usually isn't enough row width
+   for "[chevron] Application name" plus "Remove application" without
+   crushing the name down to 2-3 characters (`text-overflow: ellipsis`
+   still prevents overlap, but an unreadable name isn't "preserving
+   the application name and toggle relationship" per the brief). Wrap
+   the row so "Remove application" drops to its own line, flush with
+   the chevron+name line's left edge, while the chevron stays
+   immediately before the name on the line above — the toggle target
+   is still the whole `.cr-app-section-head` row (both lines), so
+   clicking either line still expands/collapses. Create Role is
+   unaffected (its own accordion never had this crowding issue at the
+   same breakpoint threshold; scoping to `.is-edit-mode` keeps this
+   change isolated to Edit Role's now-wider chevron hit area). */
+@media (max-width: 640px) {
+  html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-section-head {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-title {
+    flex-basis: calc(100% - 40px);
+  }
+  html[data-iam-version="v4"] #createRolePage.is-edit-mode .cr-app-section--matrix .cr-app-remove {
+    order: 3;
+    margin-left: 40px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Round 39 (2026-08-12) — Access Management card: ONE shared content
+   inset for every row of the card.
+
+   Symptom: the Filter button visibly protruded to the left of both the
+   "Users" tab label above it and the table content below it, on every
+   tab.
+
+   Cause: the tab row and the toolbar were each given a 16px inset (see
+   the "Final-QA correction, Figma node 1003:17823" comment on
+   `.tabs-row` earlier in this file, whose stated goal was exactly "one
+   consistent left content-edge") — but the ADS Primary Tab component
+   carries its own 16px `padding-x` around its label. So the tab's outer
+   box started at 16px while its LABEL — the thing you actually see and
+   align to — started at 32px, leaving the toolbar's controls 16px
+   further left than everything else in the card. The Users table had
+   independently arrived at the correct edge (its Select column's own
+   32px padding), which is why the checkbox looked right while Filter
+   looked wrong.
+
+   Fix: name the content edge once, as a custom property on the card,
+   and have every row derive its own start padding from it:
+
+     ┌─ --iam-card-content-inset ─────────────────────────────────
+     │ Users   Roles   Teams        ← tab LABEL, not its padded box
+     │ [Filter] [Internal|External] [Search]
+     │ [checkbox column] / [Role]
+     │ Show 10 …                    ← pagination
+     └────────────────────────────────────────────────────────────
+
+   The tabs row is the one row that must subtract the tab component's
+   own padding (`--iam-tab-inline-pad`) so the LABEL, not the tab's
+   outer box, lands on the shared edge. That expression resolves to the
+   16px the row already had, so the tabs themselves do not move a pixel.
+
+   Only the START edge is governed here. The card's rows deliberately
+   do NOT share a single `padding-inline`: the table is full-bleed to
+   the card's right edge, while Users' Region column is anchored to
+   "Add User"'s left edge (see `align()` in app.js). Making the right
+   gutter symmetric would therefore drag Region, Create Date, Export,
+   Add User and Create Role 16px inward — movement this pass is
+   explicitly not meant to cause. Every existing right-hand gutter is
+   left untouched.
+
+   No negative margins, no transforms, no absolute positioning and no
+   per-panel offsets are involved: Users, Roles and Teams all read the
+   same property, so their toolbars cannot drift apart. This also
+   replaces the JS-written per-panel margins that Rounds 34/35 used
+   (removed in Round 38 — see `align()` in app.js).
+   ═══════════════════════════════════════════════════════════════════ */
+html[data-iam-version="v4"] .v4-card {
+  /* Where the card's content starts, measured from the card's inner
+     edge. 32px = the ADS 8pt-grid step the tab labels already sat on. */
+  --iam-card-content-inset: 32px;
+  /* The ADS Primary Tab component's own horizontal padding — held at
+     16px for every viewport by the "R57C authoritative Tabs" layer
+     above (`.ads-tabs .ads-tab { padding: 8px 16px 0 !important }`).
+     Declared here only so the tabs row can subtract it below. */
+  --iam-tab-inline-pad: 16px;
+}
+
+/* Tab row — subtracts the tab's own padding so the LABEL lands on the
+   shared edge. Resolves to the row's existing 16px: tabs don't move. */
+html[data-iam-version="v4"] .v4-card .tabs-row {
+  padding-inline-start: calc(var(--iam-card-content-inset) - var(--iam-tab-inline-pad));
+}
+
+/* Toolbar row (all three tabs) + pagination footer. The toolbar's left
+   group keeps its own internal 12px gaps and moves as one unit — the
+   Filter button gets no offset of its own, so Filter → segmented
+   control → search spacing is unchanged. */
+html[data-iam-version="v4"] .v4-card .tbar,
+html[data-iam-version="v4"] .v4-card .pgn {
+  padding-inline-start: var(--iam-card-content-inset);
+}
+
+/* First table column. The table itself stays full-bleed (its rows,
+   hover wash and hairlines still span the whole card, and column widths
+   are untouched); it's the first column's own content padding — shared
+   by its header and every body cell, so they can never drift apart —
+   that puts the first interactive control on the shared edge. Users'
+   Select column already used exactly this 32px; Roles/Teams' first
+   column carried a legacy 28px, now 4px further right and on the line
+   with everything else. `!important` only to beat those legacy rules'
+   own `!important`; Teams' also needs `#teamsPanel` to out-specify the
+   ID its legacy rule is scoped with. */
+html[data-iam-version="v4"] .v4-card #usersTable th.c-sel,
+html[data-iam-version="v4"] .v4-card #usersTable td.c-sel,
+html[data-iam-version="v4"] .v4-card .rp-tbl th.rp-role,
+html[data-iam-version="v4"] .v4-card .rp-tbl td.rp-role,
+html[data-iam-version="v4"] .v4-card #teamsPanel .tm-tbl th.tm-th-name,
+html[data-iam-version="v4"] .v4-card #teamsPanel .tm-tbl td.tm-cell-name {
+  padding-left: var(--iam-card-content-inset) !important;
+}
+
+/* Narrow screens: the card's own gutters tighten, so the shared inset
+   tightens with them and every row stays on one edge. 16px is the value
+   the tab labels already render at here (the tabs row drops to 0 and the
+   tab component's 16px padding provides the whole inset), so — as
+   above — the tabs stay exactly where they are while the toolbar and
+   footer come into line with them. */
+@media (max-width: 768px) {
+  html[data-iam-version="v4"] .v4-card {
+    --iam-card-content-inset: 16px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Final-QA pass (2026-08-12) — tab row on very narrow viewports.
+
+   The base stylesheet already handles a tab row too narrow to hold
+   Users/Roles/Teams on one line: at <=767px it sets `.tabs-row` to
+   `height: auto` and lets `.tabs-row nav` wrap. The ADS Primary Tabs
+   rules further up this file then restate a fixed `height: 56px` on the
+   row and `height: 39px` on the nav at a much higher specificity
+   (`html[data-iam-version="v4"] .v4-card ...`), which wins everywhere —
+   including inside that media query. The wrap still happened, but the
+   row could not grow to contain the second line, so "Teams" rendered
+   on top of the toolbar beneath it.
+
+   Restating the intent at the same specificity: keep 56px/39px as the
+   MINIMUM (so the single-line case is pixel-identical to before) and
+   let the box grow when a second line appears. The query stops below
+   430px — the narrowest viewport where the three tabs still fit on one
+   line — so every wider viewport, including all supported breakpoints
+   from 1024px up, resolves to exactly the same geometry as before. */
+@media (max-width: 429px) {
+  html[data-iam-version="v4"] .v4-card .tabs-row {
+    height: auto;
+    min-height: 56px;
+  }
+  html[data-iam-version="v4"] .v4-card .tabs-row nav {
+    height: auto;
+    min-height: 39px;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
 }
