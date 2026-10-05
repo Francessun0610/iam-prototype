@@ -8575,8 +8575,13 @@ html[data-iam-version="v4"] #addUsersPage .au-card {
    body padding above; only the grid columns/gap are local. */
 #editTeamPage .tm-details-body {
   display: grid;
-  grid-template-columns: minmax(0, 296px) minmax(0, 1fr);
-  gap: 24px 39px;
+  /* Fill the card like Edit User fields on wide screens (Frances / HARPS family). */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 24px 24px;
+}
+#editTeamPage .tm-details-body .au-input {
+  width: 100%;
+  max-width: none;
 }
 #editTeamPage .tm-field-name { grid-column: 1 / 2; }
 #editTeamPage .tm-field-desc { grid-column: 2 / 3; }
@@ -8678,10 +8683,12 @@ html[data-iam-version="v4"] #editTeamPage .cr-section-header:focus-visible .cr-s
    Name / Email / Role / Actions read in a predictable rhythm and
    don't reflow when the underlying data changes. The Actions
    column is a fixed-min cell that hosts the Remove link. */
-#editTeamPage .tm-members-tbl .tm-mcol-name    { width: 28%; }
-#editTeamPage .tm-members-tbl .tm-mcol-email   { width: auto; }
-#editTeamPage .tm-members-tbl .tm-mcol-role    { width: 22%; }
-#editTeamPage .tm-members-tbl .tm-mcol-actions { width: 96px; }
+#editTeamPage .tm-members-tbl {
+  width: 100%;
+  table-layout: fixed;
+}
+/* Widths owned by IAM.evenColumns (tm-th-email is fluid). Keep actions compact. */
+#editTeamPage .tm-members-tbl .tm-mcol-actions { width: 88px; }
 
 #editTeamPage .tm-members-tbl tbody tr { cursor: default; }
 #editTeamPage .tm-members-tbl tbody tr:hover { background: transparent; }

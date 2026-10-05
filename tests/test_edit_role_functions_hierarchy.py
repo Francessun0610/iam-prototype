@@ -360,7 +360,7 @@ def main():
         matrix_checkbox_count = js(c, "document.querySelectorAll('.cr-matrix input[type=checkbox]').length")
         check("Permission matrix checkboxes still present", (matrix_checkbox_count or 0) > 0, matrix_checkbox_count)
         actions_text = js(c, "Array.from(document.querySelectorAll('.cr-header-actions button')).filter(function(b){return b.offsetParent !== null;}).map(function(b){return b.textContent.trim();})")
-        check("Page-level actions unaffected: Remove Role -> Cancel -> Save Role", actions_text == ["Remove Role", "Cancel", "Save Role"], actions_text)
+        check("Page-level actions use Remove -> Cancel -> Save Role", actions_text == ["Remove", "Cancel", "Save Role"], actions_text)
 
         # Create Role: unscoped default layout untouched (chevron+title left, Remove right, no reorder)
         c.navigate(base, wait=1.0)

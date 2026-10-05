@@ -257,7 +257,7 @@
     var title = element("span", "redline__topbar-title");
     title.textContent = "Redline Mode";
     var badge = element("span", "redline__topbar-badge", { "aria-hidden": "true" });
-    badge.textContent = "IAM v4.1";
+    badge.textContent = "IAM v4.2";
     var sizeLabel = element("span", "redline__topbar-size", { "data-redline-size": "" });
     sizeLabel.textContent = "Current";
     var close = element("button", "redline__close", {

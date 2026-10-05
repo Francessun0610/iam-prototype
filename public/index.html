@@ -8,7 +8,7 @@
   <!-- Root entry point / default-version redirect. Same shortcut pattern
        as `dcm.html` -> `dcm/`, generalized via the shared
        `version-config.js` so this file always resolves to whichever
-       version is `IAM_DEFAULT_VERSION_ID` (currently v4.1) without
+       version is `IAM_DEFAULT_VERSION_ID` (currently v4.2) without
        hardcoding the target path in more than one place (the <meta>
        fallback below is static only because a no-JS browser can't run
        the config-driven redirect either).
@@ -18,23 +18,23 @@
        has painted anything, so the old v1 app (or any version) never
        flashes on screen. `location.replace` (not `.assign`) so the
        redirect doesn't add a "/" entry to browser history: pressing
-       Back from v4.1 after landing here goes to whatever the user
+       Back from v4.2 after landing here goes to whatever the user
        visited before "/", not back to this redirect shell.
 
-       The path is always relative ("v4.1/", never "/v4.1/") so the site
+       The path is always relative ("v4.2/", never "/v4.2/") so the site
        works from any GitLab Pages base path and from a local file/server
        root alike — no origin is ever hardcoded. -->
   <script src="version-config.js?v=20260812v41default"></script>
   <script>
     (function () {
-      var id = window.IAM_DEFAULT_VERSION_ID || "v4.1";
+      var id = window.IAM_DEFAULT_VERSION_ID || "v4.2";
       var versions = window.IAM_VERSIONS || [];
-      var folder = "v4.1";
+      var folder = "v4.2";
       for (var i = 0; i < versions.length; i++) {
         if (versions[i].id === id) { folder = versions[i].folder; break; }
       }
       /* Carry the query string and hash across the hop. A link to
-         "/?redline=1#roles" has to arrive at "/v4.1/?redline=1#roles",
+         "/?redline=1#roles" has to arrive at "/v4.2/?redline=1#roles",
          otherwise every shared deep link that goes through the root
          silently loses the state it was sharing. */
       location.replace(folder + "/" + location.search + location.hash);
@@ -43,23 +43,23 @@
 
   <!-- No-JS fallback only: immediate (0s), not a delayed timeout. Kept
        in sync with IAM_DEFAULT_VERSION_ID by hand since a no-JS browser
-       can't read that constant either. 2026-08-11: default moved from
-       v4/ to v4.1/ (V4.1 duplicate); v4/ remains a fully separate,
-       directly-reachable route/folder — see version-config.js.
+       can't read that constant either. 2026-10-05: default moved from
+       v4.1/ to v4.2/; earlier builds remain directly reachable — see
+       version-config.js.
 
        Wrapped in <noscript> so it can never race the script above: this
-       refresh targets a bare "v4.1/" with no query string or hash, so if
+       refresh targets a bare "v4.2/" with no query string or hash, so if
        the parser reached it before `location.replace()` committed, a
        deep link like "/?redline=1#roles" would arrive at the root of
-       v4.1 with its state silently dropped. -->
+       v4.2 with its state silently dropped. -->
   <noscript>
-    <meta http-equiv="refresh" content="0; url=v4.1/">
+    <meta http-equiv="refresh" content="0; url=v4.2/">
   </noscript>
-  <link rel="canonical" href="v4.1/">
+  <link rel="canonical" href="v4.2/">
 </head>
 <body>
   <noscript>
-    <p><a href="v4.1/">Atlas — User Management</a> — opening the default prototype build…</p>
+    <p><a href="v4.2/">Atlas — User Management</a> — opening the default prototype build…</p>
   </noscript>
 </body>
 </html>

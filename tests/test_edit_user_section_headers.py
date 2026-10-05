@@ -177,7 +177,7 @@ def main():
         time.sleep(0.3)
         js(c, "document.querySelector('#tbody .name-link').click();")
         time.sleep(0.4)
-        check("Edit user page opened", js(c, "document.getElementById('auPageTitle').textContent.trim()") == "Edit user")
+        check("Edit User page opened", js(c, "document.getElementById('auPageTitle').textContent.trim()") == "Edit User")
 
         # ─── 1 & 4. Chevron on the right, title flush left, full clickable ──
         for card, header_sel, chev_sel, title_sel in [

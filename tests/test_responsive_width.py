@@ -125,7 +125,7 @@ def main():
         # 5/6: horizontally centered with balanced outer gaps (checked at 2560, where the cap
         # is active and there is real leftover space to balance — sidebar is excluded from
         # the gap since it's fixed navigation, not a page gutter)
-        sidebar_w = js(c, "(function(){var sb=document.querySelector('.sidebar'); return sb? sb.getBoundingClientRect().width : 0;})()")
+        sidebar_w = js(c, "(function(){var sb=document.querySelector('.vnav, .sidebar'); return sb? sb.getBoundingClientRect().width : 0;})()")
         left_gap = m[2560]["card"]["left"] - sidebar_w
         right_gap = m[2560]["winWidth"] - m[2560]["card"]["right"]
         check("5. Content remains horizontally centered within the content region (excluding fixed sidebar) at 2560",

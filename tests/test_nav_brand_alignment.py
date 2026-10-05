@@ -192,7 +192,7 @@ def main():
           "%.1f vs %.1f" % (glyph_center, text_center))
     nav = rect(c, ".nav")
     check("Nav height unchanged (56px)", abs(nav["height"] - 56) < 0.5, nav["height"])
-    check("Sidebar width unchanged (64px collapsed)", abs(sidebar["width"] - 64) < 0.5, sidebar["width"])
+    check("Sidebar width unchanged (68px collapsed)", abs(sidebar["width"] - 68) < 0.5, sidebar["width"])
 
     # ── 5. Right-side controls untouched ────────────────────────────────
     user_menu = rect(c, "#userMenu")
@@ -324,7 +324,7 @@ def main():
     win_w = js(c, "window.innerWidth")
     check("No horizontal overflow at 900px", doc_w <= win_w + 1, "%s vs %s" % (doc_w, win_w))
     sidebar_narrow = rect(c, "#sidebar")
-    check("Sidebar width unchanged at 900px", abs(sidebar_narrow["width"] - 64) < 0.5, sidebar_narrow["width"])
+    check("Sidebar width unchanged at 900px", abs(sidebar_narrow["width"] - 68) < 0.5, sidebar_narrow["width"])
 
     c.send("Emulation.setDeviceMetricsOverride", {"width": 375, "height": 800, "deviceScaleFactor": 1, "mobile": False})
     time.sleep(0.2)

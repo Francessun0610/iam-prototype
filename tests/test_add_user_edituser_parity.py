@@ -213,7 +213,7 @@ def main():
         time.sleep(0.3)
         js(c, "document.querySelector('#tbody .name-link').click();")
         time.sleep(0.4)
-        check("Edit user page opened for reference capture", js(c, "document.getElementById('auPageTitle').textContent.trim()") == "Edit user")
+        check("Edit User page opened for reference capture", js(c, "document.getElementById('auPageTitle').textContent.trim()") == "Edit User")
 
         ref_basic_title_color = style(c, "#auBasicTitle", "color")
         ref_basic_title_size = style(c, "#auBasicTitle", "fontSize")

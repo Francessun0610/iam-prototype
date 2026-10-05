@@ -37,17 +37,23 @@
        valid static-host path segment (no bundler/router involved — see
        the file-level comment above), so `/v4.1/` works out of the box
        and reads unambiguously as "Version 4.1" in the URL. */
-    { id: "v4.1", label: "4.1 (ADS)", folder: "v4.1" }
+    { id: "v4.1", label: "4.1 (ADS)", folder: "v4.1" },
+    /* V4.2 (2026-10-05): a full, independent duplicate of V4.1's folder
+       (`public/v4.2/`) taken at the moment this entry was added — same
+       HTML/CSS/JS bundle, own copy of every file (not a redirect/alias
+       to `v4.1/`), so V4.2 can evolve on its own without touching or
+       regressing V4.1. `id`/`folder` keep the literal dot ("v4.2") so
+       `/v4.2/` is a real static-host path. */
+    { id: "v4.2", label: "4.2 (ADS)", folder: "v4.2" }
   ];
 
   /* The version that `/` (and any other version-less entry point)
      resolves to. Changing this one string is the ONLY edit needed to
      move the site default to a different existing version.
-     2026-08-11: moved from "v4" to "v4.1" now that V4.1 exists — V4
-     itself is untouched and still fully reachable at its own `/v4/`
-     route (see `iamVersionHref`/each build's Version submenu); this
-     line only changes what a version-less "/" resolves to. */
-  var IAM_DEFAULT_VERSION_ID = "v4.1";
+     2026-10-05: moved from "v4.1" to "v4.2". Earlier builds stay
+     reachable at their own routes (`/v4/`, `/v4.1/`, and the rest);
+     this line only changes what a version-less "/" resolves to. */
+  var IAM_DEFAULT_VERSION_ID = "v4.2";
 
   global.IAM_VERSIONS = IAM_VERSIONS;
   global.IAM_DEFAULT_VERSION_ID = IAM_DEFAULT_VERSION_ID;

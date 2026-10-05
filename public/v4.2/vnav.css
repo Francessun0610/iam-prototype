@@ -1,0 +1,384 @@
+/* Shared Atlas global left navigation.
+   Ported from the Finance / Rate Card Manager `.vnav` shell
+   (Figma 595:6574 expanded, 595:6631 collapsed, 595:6592 selected).
+   IAM only changes which item is selected (Admin). Visual tokens,
+   collapse, hover, focus, and tooltips stay identical. */
+
+html[data-iam-version="v4"] {
+  --vnav-width-expanded: 200px;
+  --vnav-width-collapsed: 68px;
+  --vnav-cell-size: 40px;
+  --vnav-pad-y: 20px;
+  --vnav-top-offset: 56px;
+  --sidebar-expanded-width: var(--vnav-width-expanded);
+  --sidebar-collapsed-width: var(--vnav-width-collapsed);
+  --sidebar-width: var(--vnav-width-collapsed);
+}
+
+html[data-iam-version="v4"][data-sidebar-collapsed="false"] {
+  --sidebar-width: var(--vnav-width-expanded);
+}
+
+html[data-iam-version="v4"] .vnav {
+  --vnav-width-expanded: 200px;
+  --vnav-width-collapsed: 68px;
+  --vnav-cell-size: 40px;
+  --vnav-row-radius: 6px;
+  --vnav-row-gap: 4px;
+  --vnav-icon-label-gap: 8px;
+  --vnav-active-bg: var(--color-surface-brand-wash, #E2E3F2);
+  --vnav-active-text: var(--color-text-brand, #4045C2);
+  --vnav-rest-text: var(--color-text-secondary, #3B4347);
+  --vnav-border: var(--color-border-subtle, #E5E5EB);
+  --vnav-toggle-bg: var(--color-surface-subtle, #F5F5F7);
+  --vnav-pad-y: 20px;
+  --vnav-pad-x: 14px;
+  --vnav-footer-pad-bottom: 16px;
+
+  position: fixed;
+  top: var(--vnav-top-offset);
+  left: 0;
+  bottom: 0;
+  width: var(--vnav-width-collapsed);
+  padding: var(--vnav-pad-y) var(--vnav-pad-x) var(--vnav-footer-pad-bottom);
+  background: #FFFFFF;
+  border: 0;
+  border-right: 1px solid var(--vnav-border);
+  font-family: "Open Sans", "DM Sans", Inter, sans-serif;
+  z-index: 90;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: width 220ms ease-out, box-shadow 220ms ease-out;
+}
+
+html[data-iam-version="v4"] .vnav__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vnav-row-gap);
+  flex: 0 0 auto;
+}
+
+html[data-iam-version="v4"] .vnav__item {
+  width: 100%;
+  border-radius: var(--vnav-row-radius);
+}
+
+html[data-iam-version="v4"] .vnav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--vnav-icon-label-gap);
+  width: var(--vnav-cell-size);
+  height: var(--vnav-cell-size);
+  min-height: var(--vnav-cell-size);
+  padding: 0;
+  justify-content: center;
+  margin: 0;
+  border-radius: var(--vnav-row-radius);
+  color: var(--vnav-rest-text);
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  background: transparent;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+html[data-iam-version="v4"] .vnav__link:hover {
+  background: var(--gray-05);
+  color: var(--vnav-active-text);
+}
+
+html[data-iam-version="v4"] .vnav__link:focus-visible {
+  outline: 2px solid var(--vnav-active-text);
+  outline-offset: -2px;
+}
+
+html[data-iam-version="v4"] .vnav__item--active > .vnav__link {
+  background: var(--vnav-active-bg);
+  color: var(--vnav-active-text);
+  font-weight: 600;
+}
+
+html[data-iam-version="v4"] .vnav__active-bar {
+  flex: 0 0 3px;
+  width: 3px;
+  height: 20px;
+  border-radius: 2px;
+  background: transparent;
+  display: none;
+}
+
+html[data-iam-version="v4"] .vnav--pinned .vnav__active-bar {
+  display: block;
+}
+
+html[data-iam-version="v4"] .vnav__item--active .vnav__active-bar {
+  background: var(--vnav-active-text);
+}
+
+html[data-iam-version="v4"] .vnav:not(.vnav--pinned) .vnav__active-bar {
+  display: none !important;
+}
+
+html[data-iam-version="v4"] .vnav__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  color: currentColor;
+  background: transparent;
+  border: 0;
+}
+
+html[data-iam-version="v4"] .vnav__icon svg {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 20px;
+  max-height: 20px;
+}
+
+html[data-iam-version="v4"] .vnav__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+html[data-iam-version="v4"] .vnav--pinned,
+html[data-iam-version="v4"] .vnav--hovered {
+  width: var(--vnav-width-expanded);
+}
+
+html[data-iam-version="v4"] .vnav--hovered:not(.vnav--pinned) {
+  box-shadow: 4px 0 16px rgba(23, 29, 35, 0.10);
+}
+
+html[data-iam-version="v4"] .vnav--pinned .vnav__link,
+html[data-iam-version="v4"] .vnav--hovered .vnav__link {
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 10px 12px;
+  justify-content: flex-start;
+  margin: 0;
+  gap: var(--vnav-icon-label-gap);
+}
+
+html[data-iam-version="v4"] .vnav--pinned .vnav__label,
+html[data-iam-version="v4"] .vnav--hovered .vnav__label {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  clip: auto;
+  opacity: 1;
+  transition: opacity 160ms ease-out;
+}
+
+html[data-iam-version="v4"] .vnav:not(.vnav--pinned) .vnav__label {
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+html[data-iam-version="v4"] .vnav--pinned .vnav__item--active > .vnav__link,
+html[data-iam-version="v4"] .vnav--hovered .vnav__item--active > .vnav__link {
+  font-weight: 600;
+}
+
+html[data-iam-version="v4"] .vnav__expand-target {
+  flex: 1 1 auto;
+  min-height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--vnav-row-radius);
+}
+
+html[data-iam-version="v4"] .vnav__expand-target:hover {
+  background: var(--gray-05);
+}
+
+html[data-iam-version="v4"] .vnav__expand-target:focus-visible {
+  outline: 2px solid var(--vnav-active-text);
+  outline-offset: -2px;
+}
+
+html[data-iam-version="v4"] .vnav--pinned .vnav__expand-target {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+html[data-iam-version="v4"] .vnav__toggle-row {
+  display: none;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 0;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+html[data-iam-version="v4"] .vnav--pinned .vnav__toggle-row {
+  display: flex;
+}
+
+html[data-iam-version="v4"] .vnav__close {
+  display: flex;
+  width: 28px;
+  height: 28px;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  background: var(--vnav-toggle-bg);
+  border: 0;
+  border-radius: 6px;
+  color: var(--vnav-rest-text);
+  cursor: pointer;
+  transition: background-color 120ms ease-out, color 120ms ease-out;
+}
+
+html[data-iam-version="v4"] .vnav__close:hover {
+  background: var(--gray-05);
+  color: var(--vnav-active-text);
+}
+
+html[data-iam-version="v4"] .vnav__close:active {
+  background: var(--vnav-active-bg);
+  color: var(--vnav-active-text);
+}
+
+html[data-iam-version="v4"] .vnav__close:focus-visible {
+  outline: 2px solid var(--vnav-active-text);
+  outline-offset: 2px;
+}
+
+html[data-iam-version="v4"] .vnav__close svg {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 16px;
+  max-height: 16px;
+}
+
+html[data-iam-version="v4"] .vnav__hover-zone {
+  display: none !important;
+  pointer-events: none;
+}
+
+@media (max-width: 1023.98px) {
+  html[data-iam-version="v4"][data-sidebar-collapsed="false"] {
+    --sidebar-width: var(--vnav-width-collapsed);
+  }
+  html[data-iam-version="v4"] .vnav--pinned {
+    width: var(--vnav-width-collapsed);
+  }
+  html[data-iam-version="v4"] .vnav--pinned .vnav__link {
+    width: var(--vnav-cell-size);
+    height: var(--vnav-cell-size);
+    padding: 0;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  html[data-iam-version="v4"] .vnav--pinned .vnav__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  html[data-iam-version="v4"] .vnav--pinned .vnav__active-bar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-iam-version="v4"] .vnav,
+  html[data-iam-version="v4"] .vnav__link,
+  html[data-iam-version="v4"] .vnav__label {
+    transition: none !important;
+  }
+}
+
+/* ADS Tooltip — Finance singleton (Figma 73:234, Type=Small). */
+html[data-iam-version="v4"] .ads-tt {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1300;
+  pointer-events: none;
+  background: #21292D;
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-family: "Open Sans", "DM Sans", Inter, sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+
+html[data-iam-version="v4"] .ads-tt[data-ads-tt-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html[data-iam-version="v4"] .ads-tt__label {
+  display: inline-block;
+}
+
+html[data-iam-version="v4"] .ads-tt__arrow {
+  position: absolute;
+  width: 8px;
+  height: 4px;
+  left: 50%;
+  margin-left: -4px;
+}
+
+html[data-iam-version="v4"] .ads-tt[data-ads-tt-placement="top"] .ads-tt__arrow {
+  bottom: -4px;
+  border-top: 4px solid #21292D;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+html[data-iam-version="v4"] .ads-tt[data-ads-tt-placement="bottom"] .ads-tt__arrow {
+  top: -4px;
+  border-bottom: 4px solid #21292D;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-iam-version="v4"] .ads-tt {
+    transition: none;
+    transform: none;
+  }
+  html[data-iam-version="v4"] .ads-tt[data-ads-tt-visible="true"] {
+    transform: none;
+  }
+}

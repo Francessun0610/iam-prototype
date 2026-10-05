@@ -2445,9 +2445,12 @@ var STATUS_ICON_INACTIVE =
     '<defs><clipPath id="clip0_399_9264"><rect width="16" height="16" fill="white"/></clipPath></defs>' +
   '</svg>';
 function renderStatusHtml(status) {
-  var icon = status === "Active" ? STATUS_ICON_ACTIVE : STATUS_ICON_INACTIVE;
   var label = esc(status);
-  return '<span class="status-icon-wrap" data-status-tooltip="' + label + '" aria-label="' + label + '" role="img" tabindex="0">' + icon + '</span>';
+  var variant = "default";
+  if (status === "Active") variant = "success";
+  else if (status === "Pending" || status === "Invited") variant = "warning";
+  else if (status === "Error" || status === "Failed") variant = "error";
+  return '<span class="ads-chip" data-variant="' + variant + '" data-status-tooltip="' + label + '" aria-label="' + label + '" tabindex="0">' + label + "</span>";
 }
 
 /* Generic hover/keyboard-focus tooltip, positioned at body level so table/
@@ -2502,7 +2505,7 @@ function setupStatusTooltip() {
     hideStatusTooltip();
   }
 
-  var TOOLTIP_TRIGGER_SEL = ".status-icon-wrap, [data-tooltip]";
+  var TOOLTIP_TRIGGER_SEL = ".status-icon-wrap, .ads-chip[data-status-tooltip], [data-tooltip]";
   document.addEventListener("mouseover", function (e) {
     var target = e.target.closest(TOOLTIP_TRIGGER_SEL);
     if (target) show(target);
@@ -2583,6 +2586,7 @@ function renderTable() {
   tb.innerHTML = html;
   fitUsersRoleCells();
   syncUserSelectionUI();
+  if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
 }
 
 /* ═══ USERS LIST — SELECTION STATE + EXPORT (Figma 770:17428) ═══
@@ -3015,22 +3019,61 @@ function returnToUserListFromPrototype() {
 function fitUsersRoleCells() {
   var tbody = document.getElementById("tbody");
   if (!tbody) return;
+  var probe = document.getElementById("roleFitProbe");
+  if (!probe) {
+    probe = document.createElement("span");
+    probe.id = "roleFitProbe";
+    probe.setAttribute("aria-hidden", "true");
+    probe.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;pointer-events:none;";
+    document.body.appendChild(probe);
+  }
+  function suffix(hidden) {
+    if (hidden <= 0) return "";
+    return " … (+" + hidden + " role" + (hidden === 1 ? "" : "s") + ")";
+  }
   var cells = tbody.querySelectorAll("td.c-rl[data-roles]");
   for (var i = 0; i < cells.length; i++) {
     var cell = cells[i];
     var span = cell.querySelector(".role-txt");
     if (!span) continue;
-    var rolesAttr = cell.getAttribute("data-roles") || "";
-    var roles = rolesAttr ? rolesAttr.split("|") : [];
+    var roles = (cell.getAttribute("data-roles") || "").split("|").filter(function (r) { return r; });
     if (!roles.length) continue;
-    cell.removeAttribute("title");
-    var extra = roles.length - 1;
-    span.innerHTML =
-      '<span class="role-primary">' + esc(roles[0]) + "</span>" +
-      (extra > 0
-        ? ' <a href="#" class="role-extra" data-tooltip="' + esc(roles.join("\n")) +
-          '">+' + extra + " role" + (extra > 1 ? "s" : "") + "</a>"
-        : "");
+    var cs = getComputedStyle(cell);
+    probe.style.font = cs.font;
+    var avail = cell.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 1;
+    if (!(avail > 16)) avail = 16;
+    function widthOf(text) {
+      probe.textContent = text;
+      return probe.getBoundingClientRect().width;
+    }
+    var html = "";
+    if (roles.length === 1) {
+      html = '<span class="role-line">' + esc(roles[0]) + "</span>";
+    } else {
+      var k = roles.length;
+      var candidate = "";
+      while (k > 0) {
+        candidate = roles.slice(0, k).join(", ") + suffix(roles.length - k);
+        if (widthOf(candidate) <= avail) break;
+        k--;
+      }
+      if (k <= 0) {
+        html =
+          '<span class="role-line role-line-clip">' + esc(roles[0]) + "</span>" +
+          '<span class="role-more" tabindex="0" data-tooltip="' + esc(roles.slice(1).join("\n")) + '">' +
+            esc(suffix(roles.length - 1).replace(/^\s/, "")) +
+          "</span>";
+      } else if (k < roles.length) {
+        html =
+          '<span class="role-line">' + esc(roles.slice(0, k).join(", ")) +
+            '<span class="role-more" tabindex="0" data-tooltip="' + esc(roles.slice(k).join("\n")) + '">' +
+              esc(suffix(roles.length - k)) +
+            "</span></span>";
+      } else {
+        html = '<span class="role-line">' + esc(roles.join(", ")) + "</span>";
+      }
+    }
+    span.innerHTML = html;
     cell.removeAttribute("title");
   }
 }
@@ -3707,7 +3750,7 @@ document.addEventListener("DOMContentLoaded", function () {
        770:17428 "Frame 627874" two-button group) so this can no longer
        be a direct-child selector; Roles' toolbar has no Export button
        and still has Add/Create as a direct `.tbar` child. */
-    var addUsersBtn = document.querySelector("#usersPanel .tbar .btn-ghost");
+    var addUsersBtn = document.getElementById("usersAddBtn") || document.querySelector("#usersPanel .tbar .btn-ghost");
     /* R58 fix: this used to be a direct-child selector (`.tbar >
        .btn-ghost`). Create Role was later moved into the same shared
        `.tbar-r` wrapper Users uses for Export + Add User (see the
@@ -3721,7 +3764,7 @@ document.addEventListener("DOMContentLoaded", function () {
        which is exactly the flat, non-"intelligent" percentage growth
        this pass is trying to eliminate. Matching Users' descendant
        selector fixes it regardless of nesting depth. */
-    var createRoleBtn = document.querySelector("#rolesPanel .tbar .btn-ghost");
+    var createRoleBtn = document.getElementById("rolesCreateBtn") || document.querySelector("#rolesPanel .tbar .btn-ghost");
     var dragged = { users: false, rp: false };
 
     /* ─── Left-side toolbar alignment (Round 38, 2026-08-12) ───
@@ -3782,8 +3825,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       var tableRect = table.getBoundingClientRect();
       var ctaRect = cta.getBoundingClientRect();
-      var tableWidth = tableRect.width;
-      var targetRightPx = Math.round(tableRect.right - ctaRect.left);
+      /* Size against the wrapper, not a previously stretched table.
+         Otherwise a wider viewport's pixel tracks stick and the last
+         column grows into the scroll overflow instead of the card edge. */
+      var wrap = table.parentElement;
+      var availWidth = (wrap && wrap.clientWidth) ? wrap.clientWidth : tableRect.width;
+      var wrapLeft = wrap ? wrap.getBoundingClientRect().left : tableRect.left;
+      var contentRight = wrapLeft + availWidth;
+      var tableWidth = availWidth;
+      var targetRightPx = Math.round(contentRight - ctaRect.left);
 
       /* Users only — Round 25 (2026-08-11) column rebalance. Name was too
          narrow to comfortably show the avatar + full name + a useful
@@ -3931,6 +3981,7 @@ document.addEventListener("DOMContentLoaded", function () {
           cols[1].style.width = Math.max(MIN_FUNC, rem) + "px";
           cols[2].style.width = BY_PX + "px";
           cols[3].style.width = targetRightPx + "px";
+          table.style.width = availWidth + "px";
           return;
         }
       }
@@ -3947,17 +3998,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function alignUsers() {
+      /* v4.1 list geometry: Select/Status/Last login fixed, Name/Role/Team
+         share leftover 1.2:2:1.4, Region anchored to Add User. */
       if (dragged.users) return;
       align(usersTable, addUsersBtn, "rg", "data-u-col");
     }
     function alignRP() {
-      /* Round 38 (2026-08-12): Roles' toolbar no longer needs any JS at
-         all to position its left group — Filter sits at `.tbar`'s own
-         shared content inset, exactly like Users' (see the alignment
-         note above `align()`). Only the table's columns are measured
-         here now. */
+      /* v4.1 list geometry: Role and Created By fixed, Functions takes
+         the slack, Create Date anchored to Create Role. */
       if (dragged.rp) return;
       align(rpTable, createRoleBtn, "date", "data-rp-col");
+      if (typeof rpFuncApplyOverflow === "function") rpFuncApplyOverflow();
     }
 
     /* Initial alignment. Users is visible on load; R&P is hidden
@@ -4090,7 +4141,7 @@ document.addEventListener("DOMContentLoaded", function () {
        (ADS)". This is the ONLY functional difference from the V4
        source this folder was duplicated from — see version-config.js
        for the full V4.1 entry and README-style comment. */
-    var IAM_CURRENT_VERSION_ID = "v4.1";
+    var IAM_CURRENT_VERSION_ID = "v4.2";
 
     var menu = document.getElementById("userMenu");
     var trigger = document.getElementById("userMenuTrigger");
@@ -4533,7 +4584,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (rolesText) showRolesTooltipFor(rolesTip, "Used in roles", rolesText.split("\n"));
       return;
     }
-    var extra = e.target.closest(".role-extra");
+    var extra = e.target.closest(".role-more, .role-extra");
     if (extra) {
       var lines = extra.getAttribute("data-tooltip");
       if (lines) showTooltipFor(extra, lines, true);
@@ -4560,7 +4611,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (rolesText) showRolesTooltipFor(rolesTip, "Used in roles", rolesText.split("\n"));
       return;
     }
-    var extra = e.target.closest(".role-extra");
+    var extra = e.target.closest(".role-more, .role-extra");
     if (extra) {
       var lines = extra.getAttribute("data-tooltip");
       if (lines) showTooltipFor(extra, lines, true);
@@ -4589,7 +4640,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   document.addEventListener("focusout", function (e) {
-    if (e.target.closest(".role-extra, .rp-role-link, .name-link, [data-roles-tip]")) hideTooltip();
+    if (e.target.closest(".role-more, .role-extra, .rp-role-link, .name-link, [data-roles-tip]")) hideTooltip();
   });
 
   /* Per-role custom permission grids for Create Role / Edit Role
@@ -4737,6 +4788,14 @@ document.addEventListener("DOMContentLoaded", function () {
   var rolesTblWrap = document.querySelector("#rolesPanel .tbl-wrap");
   if (rolesTblWrap) {
     rolesTblWrap.addEventListener("click", function (e) {
+      var more = e.target.closest(".rp-func-more");
+      if (more) {
+        e.preventDefault();
+        e.stopPropagation();
+        var tip = more.getAttribute("data-tooltip");
+        if (tip && typeof showTooltipFor === "function") showTooltipFor(more, tip, true);
+        return;
+      }
       var btn = e.target.closest(".rp-func-link");
       if (btn) {
         e.preventDefault();
@@ -4746,6 +4805,19 @@ document.addEventListener("DOMContentLoaded", function () {
         showFuncPop(btn);
         return;
       }
+    });
+    rolesTblWrap.addEventListener("mouseover", function (e) {
+      var more = e.target.closest(".rp-func-more");
+      if (!more) return;
+      var tip = more.getAttribute("data-tooltip");
+      if (tip && typeof showTooltipFor === "function") showTooltipFor(more, tip, true);
+    });
+    rolesTblWrap.addEventListener("mouseout", function (e) {
+      var more = e.target.closest(".rp-func-more");
+      if (!more) return;
+      var next = e.relatedTarget;
+      if (next && more.contains(next)) return;
+      if (typeof hideTooltip === "function") hideTooltip();
     });
   }
   document.addEventListener("click", function (e) {
@@ -4789,7 +4861,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var searchDDContent = document.getElementById("searchDDContent");
   var searchOpen = false;
 
-  var CLOCK_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+  var CLOCK_SVG = '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg>';
 
   function saveRecent() {
     localStorage.setItem("iam_recent_searches", JSON.stringify(recentSearches));
@@ -5118,9 +5190,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* ─── EDL Combo Box ─── searchable dropdown with keyboard nav ─── */
-  var CHECK_SVG = '<svg class="edl-combo-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  var CHEV_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  var CLEAR_SVG = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+  var CHECK_SVG = '<svg class="edl-combo-check" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>';
+  var CHEV_SVG = '<svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
+  var CLEAR_SVG = '<svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>';
 
   /* The combo is shared between the Users filter drawer (live-apply) and
      the R&P filter drawer (apply-on-click). `filterObj` is the object the
@@ -5592,6 +5664,50 @@ document.addEventListener("DOMContentLoaded", function () {
     renderRPPagination();
   });
 
+  function alignIamSearchToColumn() {
+    var pairs = [
+      { wrap: document.getElementById("searchWrap"), target: document.getElementById("usersSelectAll") },
+      { wrap: document.getElementById("rpSearchWrap"), target: document.querySelector("#rpTable thead .th-inner span") },
+      { wrap: document.getElementById("tmSearchWrap"), target: document.querySelector("#tmTable thead .th-inner span") }
+    ];
+    pairs.forEach(function (pair) {
+      if (!pair.wrap) return;
+      pair.wrap.style.marginLeft = "";
+    });
+  }
+
+  function alignToolbarToActiveTab() {
+    /* Left edge is CSS: toolbar padding equals the Users tab label
+       (--iam-label-rail). Per-tab margins pushed Roles/Teams right of
+       that label. Clear any leftover inline margin. */
+    var nodes = [
+      document.getElementById("usersFilterBtn"),
+      document.getElementById("rpFilterBtn"),
+      document.querySelector("#teamsPanel .tbar-l > :first-child"),
+      document.getElementById("rpSearchWrap"),
+      document.getElementById("tmSearchWrap")
+    ];
+    nodes.forEach(function (el) {
+      if (!el) return;
+      el.style.marginLeft = "";
+    });
+  }
+
+  var toolbarAlignTimer = null;
+  function scheduleToolbarAlign() {
+    if (toolbarAlignTimer) clearTimeout(toolbarAlignTimer);
+    toolbarAlignTimer = setTimeout(function () {
+      toolbarAlignTimer = null;
+      alignIamSearchToColumn();
+      alignToolbarToActiveTab();
+    }, 140);
+  }
+  window.addEventListener("resize", scheduleToolbarAlign);
+  requestAnimationFrame(function () {
+    alignIamSearchToColumn();
+    alignToolbarToActiveTab();
+  });
+
   /* ═══ TAB SWITCHING ═══ */
   var tabBtns = document.querySelectorAll(".tab-btn");
   var usersPanel = document.getElementById("usersPanel");
@@ -5614,6 +5730,8 @@ document.addEventListener("DOMContentLoaded", function () {
        Edit Role and is unaffected. */
     hdrTitle.textContent = "Access Management";
     hdrSub.textContent = "Manage users, role assignments, and permission functions across Atlas";
+    var iamCard = document.querySelector(".v4-card");
+    if (iamCard) iamCard.setAttribute("data-iam-tab", tab);
     if (tab === "users") {
       tabBtns[0].classList.add("on");
       usersPanel.style.display = "";
@@ -5635,11 +5753,24 @@ document.addEventListener("DOMContentLoaded", function () {
       if (teamsPanel) teamsPanel.style.display = "";
       if (typeof renderTMTable === "function") renderTMTable();
     }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        alignIamSearchToColumn();
+        alignToolbarToActiveTab();
+      });
+    });
   }
 
   tabBtns[0].addEventListener("click", function () { switchTab("users"); });
   tabBtns[1].addEventListener("click", function () { switchTab("roles"); });
   if (tabBtns[2]) tabBtns[2].addEventListener("click", function () { switchTab("teams"); });
+  /* Deep-link ?tab=users|roles|teams for demos / visual QA */
+  (function () {
+    try {
+      var t = new URLSearchParams(location.search).get("tab");
+      if (t === "roles" || t === "teams" || t === "users") switchTab(t);
+    } catch (e) {}
+  })();
 
   /* ═══ TEAMS PANEL + EDIT TEAM PAGE ═══
      Read-only IAM team browse + simple definition editor.
@@ -5958,6 +6089,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       tmTbody.innerHTML = html;
       renderTMPagination();
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
     };
 
     /* Pagination renderer — same shape as `renderRPPagination`. Page
@@ -6279,6 +6411,7 @@ document.addEventListener("DOMContentLoaded", function () {
           '</tr>';
       }
       tmMembersTbody.innerHTML = html;
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
     }
 
     function openEditTeam(teamId) {
@@ -6317,6 +6450,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (createRolePageEl) createRolePageEl.style.display = "none";
       editTeamPage.style.display = "";
       window.scrollTo(0, 0);
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
     }
 
     function closeEditTeam() {
@@ -7216,13 +7350,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var mainPage = document.querySelector(".page");
     var createRolePage = document.getElementById("createRolePage");
-    var addUsersBtn = null;
-    var usersBtns = document.querySelectorAll("#usersPanel .btn-ghost");
-    for (var ub = 0; ub < usersBtns.length; ub++) {
-      var btnText = usersBtns[ub].textContent;
-      if (btnText.indexOf("Add User") !== -1 || btnText.indexOf("Add Users") !== -1) {
-        addUsersBtn = usersBtns[ub];
-        break;
+    var addUsersBtn = document.getElementById("usersAddBtn");
+    if (!addUsersBtn) {
+      var usersBtns = document.querySelectorAll("#usersPanel .btn-ghost");
+      for (var ub = 0; ub < usersBtns.length; ub++) {
+        var btnText = usersBtns[ub].textContent;
+        if (btnText.indexOf("Add User") !== -1 || btnText.indexOf("Add Users") !== -1) {
+          addUsersBtn = usersBtns[ub];
+          break;
+        }
       }
     }
 
@@ -7450,7 +7586,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "Ad Operations"
     ];
 
-    var TRASH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    var TRASH_SVG = '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>';
 
     function getAURegionKey() {
       var key = (auRegion.value || "").trim();
@@ -7674,7 +7810,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   '<span class="au-role-multi-option-cb">' +
                     '<input type="checkbox" id="' + esc(optId) + '" data-au-role-id="' + esc(opt.id) + '"' + (selected ? ' checked' : '') + ' aria-label="' + esc(opt.name) + '">' +
                     '<span class="au-role-multi-option-cb-visual" aria-hidden="true">' +
-                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' +
+                      '<svg width="3" height="3" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>' +
                     '</span>' +
                   '</span>' +
                   '<span class="au-role-multi-option-label">' + esc(opt.name) + '</span>' +
@@ -8191,7 +8327,7 @@ document.addEventListener("DOMContentLoaded", function () {
           '</span>' +
           (showTeam ? '<span class="au-adduser-option-team" title="' + esc(u.team) + '">' + esc(u.team) + '</span>' : '') +
           badge +
-          (selected ? '<svg class="au-adduser-option-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 4.5 6 12 2.5 8.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>' : "") +
+          (selected ? '<svg class="au-adduser-option-check" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>' : "") +
         '</li>'
       );
     }
@@ -8376,7 +8512,7 @@ document.addEventListener("DOMContentLoaded", function () {
           '<span class="au-adduser-selected-info">' +
             '<span class="au-adduser-selected-text">' + rows.join("") + '</span>' +
             '<span class="au-adduser-selected-check" aria-hidden="true">' +
-              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+              '<svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>' +
             '</span>' +
           '</span>';
       }
@@ -8928,8 +9064,8 @@ document.addEventListener("DOMContentLoaded", function () {
         auIdStatus.setAttribute("aria-label", statusLabel);
         auIdStatus.setAttribute("data-status-tooltip", statusLabel);
         auIdStatus.innerHTML = active
-          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>'
-          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8498A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="9" y1="12" x2="15" y2="12"/></svg>';
+          ? '<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-96a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,120Z"/></svg>';
       }
       refreshAuIdentityTruncation();
     }
@@ -9541,6 +9677,7 @@ document.addEventListener("DOMContentLoaded", function () {
       auEffLastBreakdown = breakdown;
       auEffApplyOverflow();
       refreshAuEffActionsVisibility(roleName ? 1 : 0);
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
     }
 
     /* ─── Round 18 (2026-06-09) ──────────────────────────────────────
@@ -9714,6 +9851,7 @@ document.addEventListener("DOMContentLoaded", function () {
       auEffLastBreakdown = breakdown;
       auEffApplyOverflow();
       refreshAuEffActionsVisibility(ids.length);
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
     }
 
     /* Build/refresh the chip list of currently assigned roles below the
@@ -10161,6 +10299,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Required fields missing",
           body: "First name, last name, and email are required."
         });
+        iamRevealAccordionField(!first ? auFirstName : (!last ? auLastName : auEmail));
         return;
       }
       if (selectedStatus() !== "Inactive" && auState.selectedRoleIds.length === 0) {
@@ -10169,6 +10308,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Role required",
           body: "Assign at least one role before saving this user."
         });
+        iamRevealAccordionField(document.getElementById("auRoleMultiTrigger") || document.getElementById("auRoleAdd"));
         return;
       }
       var rec = findUserInOriginalById(auEditingUserId);
@@ -10251,6 +10391,8 @@ document.addEventListener("DOMContentLoaded", function () {
       var willCollapse = !card.classList.contains("collapsed");
       card.classList.toggle("collapsed", willCollapse);
       header.setAttribute("aria-expanded", willCollapse ? "false" : "true");
+      var auTitle = header.querySelector(".cr-section-title");
+      if (auTitle) header.setAttribute("aria-label", (willCollapse ? "Expand " : "Collapse ") + auTitle.textContent.trim());
       if (willCollapse) {
         closeAllAddUserCombos();
         /* Whatever was showing a tooltip a moment ago is now hidden. */
@@ -10474,20 +10616,13 @@ document.addEventListener("DOMContentLoaded", function () {
        so the icon strokes are crisp and the link tone matches the
        Permission Options card title. */
     var AU_PERMS_REMOVE_TRASH_SVG =
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-        '<polyline points="3 6 5 6 21 6"/>' +
-        '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>' +
-      '</svg>';
+      '<svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>';
     /* Show-all arrow per Figma 847:16415 — Feather "Arrow-Down" icon
        at 16 px (NOT the unicode `↓` glyph the earlier build used). */
     var AU_PERMS_SHOW_ARROW_DOWN_SVG =
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-        '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>' +
-      '</svg>';
+      '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
     var AU_PERMS_SHOW_ARROW_UP_SVG =
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-        '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>' +
-      '</svg>';
+      '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,117.66a8,8,0,0,1-11.32,0L136,59.31V216a8,8,0,0,1-16,0V59.31L61.66,117.66a8,8,0,0,1-11.32-11.32l72-72a8,8,0,0,1,11.32,0l72,72A8,8,0,0,1,205.66,117.66Z"/></svg>';
 
     function buildAUPermsCardHtml(assignment, idx) {
       var expanded = !!assignment.expanded;
@@ -10511,7 +10646,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   ' aria-controls="auPermsAccessMenu-' + idx + '"' +
                   ' aria-labelledby="auPermsAccessLbl-' + idx + ' auPermsAccessTrigger-' + idx + '">' +
                   '<span class="cr-dd-value au-perms-access-value">' + esc(assignment.access || "Full Access") + '</span>' +
-                  '<svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                  '<svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>' +
                 '</button>' +
                 '<div class="cr-dd-menu au-perms-access-menu" id="auPermsAccessMenu-' + idx + '" role="listbox" aria-labelledby="auPermsAccessLbl-' + idx + '" data-au-perms-access-idx="' + idx + '">' +
                   buildAUPermsAccessLevelMenuHtml(assignment.access || "Full Access") +
@@ -10608,6 +10743,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Required fields missing",
           body: "First name, last name, and email are required."
         });
+        iamRevealAccordionField(!first ? auFirstName : (!last ? auLastName : auEmail));
         return;
       }
       if (selectedStatus() !== "Inactive" && auState.selectedRoleIds.length === 0) {
@@ -10616,6 +10752,7 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Role required",
           body: "Assign at least one role before adding a user."
         });
+        iamRevealAccordionField(document.getElementById("auRoleMultiTrigger") || document.getElementById("auRoleAdd"));
         return;
       }
       /* Round 28 (2026-06-09): determine whether the Add User flow is
@@ -10636,9 +10773,7 @@ document.addEventListener("DOMContentLoaded", function () {
             title: "Company name required",
             body: "Enter the external user's company name."
           });
-          if (auCompany) {
-            try { auCompany.focus(); } catch (_) {}
-          }
+          if (auCompany) iamRevealAccordionField(auCompany);
           return;
         }
       }
@@ -11002,7 +11137,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var auToggleHeaders = addUsersPage.querySelectorAll(".cr-section-header[data-au-toggle]");
     for (var ahi = 0; ahi < auToggleHeaders.length; ahi++) {
       (function (hdr) {
-        hdr.addEventListener("click", function () {
+        hdr.addEventListener("click", function (e) {
+          var nested = e.target.closest && e.target.closest("button, a, input, select, textarea");
+          if (nested && hdr.contains(nested) && nested !== hdr) return;
           auToggleSection(hdr);
         });
         hdr.addEventListener("keydown", function (e) {
@@ -11038,31 +11175,92 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
 
   /* ═══ ROLES & PERMISSIONS TABLE RENDERING ═══ */
-  var EDIT_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-  var DELETE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  var EDIT_SVG = '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM51.31,160,136,75.31,152.69,92,68,176.68ZM48,179.31,76.69,208H48Zm48,25.38L79.31,188,164,103.31,180.69,120Zm96-96L147.31,64l24-24L216,84.68Z"/></svg>';
+  var DELETE_SVG = '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>';
 
   /* R&P Functions column renders semantic access labels per app. */
 
   function formatFunctions(fns, roleId) {
     var parts = [];
     for (var i = 0; i < fns.length; i++) {
-      var app = fns[i].name;
-      var display = RP_FUNC_DISPLAY_NAME[app] || app;
-      var access = fns[i].access || roleAccessLevel(roleId, app);
-      parts.push(
-        '<span class="rp-func-group">' +
-          '<span class="rp-func-app">' + esc(display) + "</span> " +
-          '<button type="button" class="rp-func-link" ' +
-            'data-role-id="' + esc(roleId) + '" ' +
-            'data-app="' + esc(app) + '" ' +
-            'data-access="' + esc(access) + '" ' +
-            'aria-haspopup="dialog" aria-expanded="false">' +
-              '<span class="rp-func-access">(' + esc(access) + ")</span>" +
-            "</button>" +
-        "</span>"
-      );
+      parts.push(rpFuncGroupHtml(fns[i], roleId));
     }
     return parts.join(", ");
+  }
+
+  function rpFuncGroupHtml(fn, roleId) {
+    var app = fn.name;
+    var display = RP_FUNC_DISPLAY_NAME[app] || app;
+    var access = fn.access || roleAccessLevel(roleId, app);
+    return (
+      '<span class="rp-func-group">' +
+        '<span class="rp-func-app">' + esc(display) + "</span> " +
+        '<button type="button" class="rp-func-link" ' +
+          'data-role-id="' + esc(roleId) + '" ' +
+          'data-app="' + esc(app) + '" ' +
+          'data-access="' + esc(access) + '" ' +
+          'aria-haspopup="dialog" aria-expanded="false">' +
+            '<span class="rp-func-access">(' + esc(access) + ")</span>" +
+          "</button>" +
+      "</span>"
+    );
+  }
+
+  function rpFuncGroupLabel(fn) {
+    var display = RP_FUNC_DISPLAY_NAME[fn.name] || fn.name;
+    return display + " (" + (fn.access || "") + ")";
+  }
+
+  function rpFuncRenderCell(cell, fns, roleId, visibleCount) {
+    var visible = fns.slice(0, visibleCount);
+    var hidden = fns.slice(visibleCount);
+    var parts = [];
+    for (var i = 0; i < visible.length; i++) parts.push(rpFuncGroupHtml(visible[i], roleId));
+    if (hidden.length) {
+      var tipLines = [];
+      for (var k = 0; k < hidden.length; k++) tipLines.push(rpFuncGroupLabel(hidden[k]));
+      var tipAttr = esc(tipLines.join("\n")).replace(/"/g, "&quot;");
+      parts.push(
+        '<button type="button" class="rp-func-more" data-tooltip="' + tipAttr +
+          '" aria-label="' + hidden.length + ' more functions" tabindex="0">...' +
+          hidden.length + " more</button>"
+      );
+    }
+    var text = cell.querySelector(".rp-func-text");
+    if (text) text.innerHTML = parts.join(", ");
+  }
+
+  function rpFuncCellFits(cell) {
+    var span = cell.querySelector(".rp-func-text");
+    if (!span) return true;
+    return span.scrollWidth <= cell.clientWidth + 1;
+  }
+
+  function rpFuncApplyOverflow() {
+    var table = document.getElementById("rpTable");
+    if (!table || table.offsetParent === null) return;
+    var cells = table.querySelectorAll("td.rp-func");
+    for (var i = 0; i < cells.length; i++) {
+      var cell = cells[i];
+      var raw = cell.getAttribute("data-rp-func-groups");
+      var roleId = cell.getAttribute("data-role-id");
+      if (!raw) continue;
+      var fns;
+      try { fns = JSON.parse(raw); } catch (_e) { continue; }
+      if (!fns || !fns.length) continue;
+      rpFuncRenderCell(cell, fns, roleId, fns.length);
+      var n = fns.length;
+      while (n > 1 && !rpFuncCellFits(cell)) {
+        n -= 1;
+        rpFuncRenderCell(cell, fns, roleId, n);
+      }
+    }
+  }
+
+  if (window.IAM && IAM.evenColumns) {
+    IAM.evenColumns.onApplied = function () {
+      rpFuncApplyOverflow();
+    };
   }
 
   function getFunctionsText(fns) {
@@ -11154,12 +11352,16 @@ document.addEventListener("DOMContentLoaded", function () {
          point into the Create / Edit Role flow. */
       html += '<tr data-id="' + esc(r.id) + '">' +
         '<td class="rp-role" title="' + esc(r.role) + '">' + roleCell + '</td>' +
-        '<td class="rp-func"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + "</span></td>" +
+        '<td class="rp-func" data-role-id="' + esc(r.id) + '" data-rp-func-groups="' +
+          esc(JSON.stringify(r.functions)).replace(/"/g, "&quot;") +
+          '"><span class="rp-func-text">' + formatFunctions(r.functions, r.id) + "</span></td>" +
         '<td class="rp-by">' + esc(r.createdBy) + '</td>' +
         '<td class="rp-date">' + esc(r.createDate) + '</td>' +
         '</tr>';
     }
     tb.innerHTML = html;
+    if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule();
+    else rpFuncApplyOverflow();
   }
 
   function rpTotalPages() {
@@ -11596,11 +11798,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var html = '<div class="pc-grp-card" data-pc-group="' + esc(groupName) + '">';
     html +=   '<div class="pc-grp-header">';
     html +=     '<button type="button" class="pc-grp-header-left" data-pc-grp-toggle aria-expanded="true">';
-    html +=       '<svg class="pc-grp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+    html +=       '<svg class="pc-grp-chev" width="2" height="2" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
     html +=       '<span>' + esc(groupName) + '</span>';
     html +=     '</button>';
     html +=     '<button type="button" class="pc-grp-delete" data-pc-grp-delete aria-label="Delete ' + esc(groupName) + ' group">';
-    html +=       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+    html +=       '<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>';
     html +=       '<span>Delete</span>';
     html +=     '</button>';
     html +=   '</div>';
@@ -11789,11 +11991,11 @@ document.addEventListener("DOMContentLoaded", function () {
     html += '<div class="pc-grp-card" data-pc-group="' + esc(model.group) + '">';
     html +=   '<div class="pc-grp-header">';
     html +=     '<button type="button" class="pc-grp-header-left" data-pc-grp-toggle aria-expanded="true">';
-    html +=       '<svg class="pc-grp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+    html +=       '<svg class="pc-grp-chev" width="2" height="2" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
     html +=       '<span>' + esc(model.group) + '</span>';
     html +=     '</button>';
     html +=     '<button type="button" class="pc-grp-delete" data-pc-grp-delete aria-label="Delete ' + esc(model.group) + ' group">';
-    html +=       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+    html +=       '<svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>';
     html +=       '<span>Delete</span>';
     html +=     '</button>';
     html +=   '</div>';
@@ -12316,10 +12518,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* EDL trash icon (same paths as Add Users `TRASH_SVG` — EDL component library). */
     var CR_EDL_TRASH_SVG =
-      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+      '<svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>';
     /* Accordion chevron matches `.cr-section-chev` (down = expanded, rotate -90° = collapsed / right). */
     var CR_MODULE_CHEV_SVG =
-      '<svg class="cr-module-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+      '<svg class="cr-module-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
 
     function collapseAllModules(section) {
       if (!section) return;
@@ -12611,6 +12813,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       updateFunctionsCount();
       captureCrInitialState();
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule("cr-matrix");
     }
 
     /* Check the matrix boxes that correspond to a CR_ROLE_MATRIX
@@ -12685,7 +12888,11 @@ document.addEventListener("DOMContentLoaded", function () {
       for (var cc = 0; cc < cards.length; cc++) {
         cards[cc].classList.remove("collapsed");
         var hdr = cards[cc].querySelector(".cr-section-header[data-cr-toggle]");
-        if (hdr) hdr.setAttribute("aria-expanded", "true");
+        if (hdr) {
+          hdr.setAttribute("aria-expanded", "true");
+          var resetTitle = hdr.querySelector(".cr-section-title");
+          if (resetTitle) hdr.setAttribute("aria-label", "Collapse " + resetTitle.textContent.trim());
+        }
       }
       captureCrInitialState();
     }
@@ -13244,10 +13451,28 @@ document.addEventListener("DOMContentLoaded", function () {
       return cols;
     }
 
+    /* One column schema for every application matrix: the workbook
+       order (Read, Create, Update, Delete, Approve, Archive). A
+       permission the application does not define stays as a
+       non-interactive ghost track so later columns cannot slide left. */
+    function crAppRenderColumns(appKey) {
+      var supported = crAppActionColumns(appKey);
+      var supportSet = {};
+      var i;
+      for (i = 0; i < supported.length; i++) supportSet[supported[i]] = true;
+      var out = [];
+      for (i = 0; i < CR_MATRIX_COLUMNS.length; i++) {
+        var key = CR_MATRIX_COLUMNS[i];
+        out.push({ key: key, ghost: !supportSet[key] });
+      }
+      return out;
+    }
+
     function buildAppSectionHtml(appKey) {
       var app = APP_PERMISSIONS[appKey];
       if (!app) return "";
       var cols = crAppActionColumns(appKey);
+      var renderCols = crAppRenderColumns(appKey);
       var resources = crResourcesForApp(appKey);
       var displayLabel = CR_APP_DISPLAY_LABEL[appKey] || app.label;
       var html = '<div class="cr-app-section cr-app-section--matrix" data-app-key="' + esc(appKey) + '">';
@@ -13286,7 +13511,7 @@ document.addEventListener("DOMContentLoaded", function () {
       /* Inline "v" chevron matching Figma 924:14138. Rotates -90deg on
          collapse in Create Role (unchanged); rotates 180deg (up) in
          Edit Role, matching Role Details/Functions — see styles.css. */
-      html += '<svg class="cr-app-head-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+      html += '<svg class="cr-app-head-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>';
       html += '</button>';
       html += '<span class="cr-app-title" title="' + esc(displayLabel) + '">' + esc(displayLabel) + '</span>';
       /* Round 9 (2026-06-09): rename "Remove" → "Remove application"
@@ -13349,8 +13574,9 @@ document.addEventListener("DOMContentLoaded", function () {
       html += '<table class="cr-matrix" role="table" aria-label="' + esc(displayLabel) + ' functions matrix" data-action-count="' + cols.length + '">';
       html += '<colgroup>';
       html += '<col class="cr-mcol-fn">';
-      for (var cg = 0; cg < cols.length; cg++) {
-        html += '<col class="cr-mcol-act" data-action="' + esc(cols[cg]) + '">';
+      for (var cg = 0; cg < renderCols.length; cg++) {
+        html += '<col class="cr-mcol-act' + (renderCols[cg].ghost ? ' cr-mcol-ghost' : '') + '" data-action="' + esc(renderCols[cg].key) + '"' +
+          (renderCols[cg].ghost ? ' data-ghost="true"' : '') + '>';
       }
       html += '<col class="cr-mcol-spacer">';
       html += '</colgroup>';
@@ -13363,8 +13589,14 @@ document.addEventListener("DOMContentLoaded", function () {
          "Select all X actions in Y" tooltip) stays on the canonical
          column key — only the visible `<span>` label is overridden. */
       var colDisplay = CR_APP_COLUMN_DISPLAY_LABEL[appKey] || {};
-      for (var c = 0; c < cols.length; c++) {
-        var colLabel0 = cols[c];
+      for (var c = 0; c < renderCols.length; c++) {
+        var colLabel0 = renderCols[c].key;
+        if (renderCols[c].ghost) {
+          /* Empty shared-track placeholder so later columns (e.g. Update)
+             keep the same x across apps. No controls, no label. */
+          html += '<th class="cr-matrix-th cr-matrix-th-act cr-matrix-th-ghost" data-column="' + esc(colLabel0) + '" aria-hidden="true" role="presentation"></th>';
+          continue;
+        }
         var colLabelDisplay = colDisplay[colLabel0] || colLabel0;
         var headerInputId = "perm_head_" + appKey + "_" + colLabel0.toLowerCase();
         var headerTitle = "Select all " + colLabel0 + " actions in " + displayLabel;
@@ -13400,8 +13632,12 @@ document.addEventListener("DOMContentLoaded", function () {
         html += '<tr class="cr-matrix-row' + (isDataAccessRow ? ' cr-matrix-row--data-access' : '') + '"' +
           (isDataAccessRow ? ' data-data-access-key="' + esc(resource.dataAccessKey) + '"' : '') + '>';
         html += '<td class="cr-matrix-fn">' + esc(rowDisplayLabel) + '</td>';
-        for (var cc = 0; cc < cols.length; cc++) {
-          var colLabel = cols[cc];
+        for (var cc = 0; cc < renderCols.length; cc++) {
+          var colLabel = renderCols[cc].key;
+          if (renderCols[cc].ghost) {
+            html += '<td class="cr-matrix-cell cr-matrix-cell-ghost" data-column="' + esc(colLabel) + '" aria-hidden="true"></td>';
+            continue;
+          }
           /* Sensitive/Regional Data Access rows only support Read +
              Create — every other column (Update/Delete/Assign) must
              render as a fully empty, non-interactive, non-focusable
@@ -13410,7 +13646,7 @@ document.addEventListener("DOMContentLoaded", function () {
              empty"). Standard CRUD rows keep the pre-existing
              behavior of a real checkbox in every column the app
              supports (Figma 924:14107). */
-          var cellIsSupported = !isDataAccessRow || (resource.support && resource.support.indexOf(colLabel) !== -1);
+          var cellIsSupported = !!(resource.support && resource.support.indexOf(colLabel) !== -1);
           if (!cellIsSupported) {
             html += '<td class="cr-matrix-cell cr-matrix-cell-unsupported" aria-hidden="true"></td>';
             continue;
@@ -13464,6 +13700,7 @@ document.addEventListener("DOMContentLoaded", function () {
       crRefreshAppMenu();
       updateFunctionsCount();
       validateCreateRole();
+      if (window.IAM && IAM.evenColumns) IAM.evenColumns.schedule("cr-matrix");
     }
     function crRemoveApplication(appKey) {
       var idx = crAddedApps.indexOf(appKey);
@@ -13935,7 +14172,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var crToggleHeaders = crPage.querySelectorAll(".cr-section-header[data-cr-toggle]");
     for (var ch = 0; ch < crToggleHeaders.length; ch++) {
       (function (header) {
-        header.addEventListener("click", function () { crToggleSection(header); });
+        header.addEventListener("click", function (e) {
+          var nested = e.target.closest && e.target.closest("button, a, input, select, textarea");
+          if (nested && header.contains(nested) && nested !== header) return;
+          crToggleSection(header);
+        });
         header.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
             e.preventDefault();
@@ -14014,8 +14255,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleCrSave() {
+      if (!isCreateRoleValid()) {
+        var nameMissing = !(crRoleName.value && crRoleName.value.trim());
+        iamRevealAccordionField(nameMissing ? crRoleName : document.getElementById("crAppTrigger"));
+        return;
+      }
       if (crSaveBtn.disabled) return;
-      if (!isCreateRoleValid()) return;
 
       var descEl = document.getElementById("crDescription");
       var name = crRoleName.value.trim();
@@ -14067,7 +14312,20 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    if (crSaveBtn) crSaveBtn.addEventListener("click", handleCrSave);
+    if (crSaveBtn) {
+      crSaveBtn.addEventListener("click", handleCrSave);
+      /* A disabled Save does not receive the click; the header action
+         row behind it does. Reveal the collapsed section that still
+         fails validation. */
+      if (crSaveBtn.parentElement) {
+        crSaveBtn.parentElement.addEventListener("click", function (e) {
+          if (!crSaveBtn.disabled || e.target !== crSaveBtn.parentElement) return;
+          var rect = crSaveBtn.getBoundingClientRect();
+          if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+          handleCrSave();
+        });
+      }
+    }
 
     /* ─── Save as Draft (Figma 1025:23238 page-header action group) ───
        Create Role's own draft action (unrelated to Edit User, which no
@@ -14211,9 +14469,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* ─── "+ Create Role" trigger in Roles & Permissions panel ─── */
-    var createRoleBtns = document.querySelectorAll("#rolesPanel .btn-ghost");
+    var createRoleBtns = document.querySelectorAll("#rolesCreateBtn, #rolesPanel .btn-ghost");
     for (var cri = 0; cri < createRoleBtns.length; cri++) {
-      if (createRoleBtns[cri].textContent.trim().indexOf("Create Role") !== -1) {
+      if (createRoleBtns[cri].id === "rolesCreateBtn" || createRoleBtns[cri].textContent.trim().indexOf("Create Role") !== -1) {
         createRoleBtns[cri].addEventListener("click", function (e) {
           e.preventDefault();
           showCreateRole();
@@ -14238,3 +14496,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
+/* ADS Accordion: open a collapsed card and focus the field that
+   blocked submit. Form values stay on the inputs; this only changes
+   the section's expanded state. */
+function iamRevealAccordionField(el) {
+  if (!el || !el.closest) return;
+  var card = el.closest(".cr-card, .au-card");
+  if (card && card.classList.contains("collapsed")) {
+    card.classList.remove("collapsed");
+    var header = card.querySelector(".cr-section-header[role='button']");
+    if (header) {
+      header.setAttribute("aria-expanded", "true");
+      var titleEl = header.querySelector(".cr-section-title");
+      var titleText = titleEl ? titleEl.textContent.trim() : "";
+      if (titleText) header.setAttribute("aria-label", "Collapse " + titleText);
+    }
+  }
+  setTimeout(function () {
+    try { el.focus(); } catch (err) {}
+    if (typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest" });
+  }, 0);
+}

@@ -1,0 +1,901 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Redline Mode — IAM / Ad Console V4.1 only
+   ═══════════════════════════════════════════════════════════════════════
+   Architecture reference: Rate Card's `redline.js` / `redline.css`
+   (proven iframe-breakpoint scaling, dimming-hole technique, SVG
+   measurement + label-collision-avoidance engine, integer rounding).
+   Adapted here into a docked three-panel workspace (toolbar / left
+   breakpoint+mode panel / center live canvas / right property inspector)
+   per the IAM-specific brief, instead of Rate Card's floating minimal
+   toolbar + bottom-right color panel. V4 is completely untouched — this
+   file only exists in `public/v4.1/` and is only loaded there. Every
+   selector below is scoped under `.redline`/`[data-redline-ui]` so it can
+   never leak into normal V4.1 page styles when Redline is inactive (the
+   whole subtree simply does not exist in the DOM until enabled). */
+
+[data-redline-ui][hidden] { display: none !important; }
+
+/* ─── Profile menu row ───
+   Base row height/padding/typography/hover/focus all come from the
+   shared `.user-menu-row` rule in styles.css (same as Version/Log Out);
+   only the shortcut-hint layout and the checked/active state are
+   specific to this one row, so they live here instead of the shared
+   stylesheet. */
+.user-menu-shortcut {
+  flex: 0 0 auto;
+  margin-left: 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+#userMenuRedline[aria-checked="true"] {
+  color: var(--brand-text);
+  font-weight: 600;
+}
+#userMenuRedline[aria-checked="true"] .user-menu-shortcut {
+  color: var(--brand-text);
+}
+
+/* ═══ Root overlay ═══
+   Architecture: a stable four-region shell — fixed topbar, fixed-width
+   left panel, flexible center workspace, fixed-width right panel — built
+   with real flexbox regions (`.redline__body` is the row; `.redline__stage`
+   is the flexible center workspace). The live Ad Console UI itself is no
+   longer a "hole" punched through this overlay: `.redline__stage` genuinely
+   contains it (see `.redline__live-app` / `.redline__preview-shell` below),
+   so every part of this shell can simply be normal, opaque, interactive
+   chrome with no pointer-events passthrough tricks. */
+.redline {
+  --redline-measure: #FF3B3B;
+  --redline-grid: var(--brand, #4045C2);
+  --redline-warn: #C9791A;
+  --redline-label-font-size: 14px;
+  --redline-label-line-height: 20px;
+  position: fixed;
+  inset: 0;
+  /* Highest z-index anywhere in the V4.1 bundle is 10001 (confirmation
+     dialogs / toasts). Redline must always sit above every possible app
+     surface, including any modal open when it was toggled on, so this is
+     set comfortably higher rather than tracking the app's own scale. */
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-app, #F4F5F6);
+  font-family: var(--ff, "Open Sans", sans-serif);
+}
+
+html.redline-active,
+html.redline-active body {
+  overflow: hidden !important;
+}
+
+/* ═══ Top toolbar ═══ */
+.redline__topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 52px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-tip, 0 1px 3px rgba(16,17,19,0.12));
+  pointer-events: auto;
+  z-index: 3;
+}
+.redline__topbar-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.redline__topbar-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.redline__topbar-size {
+  margin-left: auto;
+  margin-right: 8px;
+  font-family: ui-monospace, "SFMono-Regular", "Roboto Mono", Consolas, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.redline__close {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  color: var(--text-secondary);
+}
+.redline__close:hover { background: var(--bg-hover); color: var(--text-primary); }
+.redline__close:focus-visible { outline: 2px solid var(--indigo-50, #4045C2); outline-offset: 2px; }
+
+/* Narrow-shell panel toggles — hidden at desktop widths where both
+   panels stay permanently docked; see the `@media` block near the
+   bottom of this file for when they appear. */
+.redline__panel-toggle {
+  display: none;
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+.redline__panel-toggle:hover { background: var(--bg-hover); color: var(--text-primary); }
+.redline__panel-toggle[aria-expanded="true"] {
+  border-color: var(--brand);
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+}
+
+/* ═══ Body: fixed left panel | flexible center workspace | fixed right
+   panel — a real three-region flex row, per the required architecture. ═══ */
+.redline__body {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+
+.redline__panel {
+  flex: 0 0 auto;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  z-index: 2;
+}
+.redline__panel--left {
+  width: 248px;
+  border-right: 1px solid var(--border-default);
+}
+.redline__panel--right {
+  width: 336px;
+  border-left: 1px solid var(--border-default);
+}
+
+.redline__section {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.redline__section-title {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Breakpoint buttons */
+.redline__breakpoints {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.redline__bp-btn {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: left;
+  cursor: pointer;
+}
+.redline__bp-btn:hover { background: var(--bg-hover); }
+.redline__bp-btn[aria-pressed="true"] {
+  border-color: var(--brand);
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+}
+.redline__bp-btn:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: 2px;
+}
+.redline__bp-btn-size {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+.redline__bp-btn[aria-pressed="true"] .redline__bp-btn-size { color: var(--brand-text); }
+
+/* Measurement mode radio pair */
+.redline__mode-toggle {
+  display: flex;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.redline__mode-btn {
+  flex: 1 1 50%;
+  padding: 8px 6px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+.redline__mode-btn + .redline__mode-btn { border-left: 1px solid var(--border-default); }
+.redline__mode-btn[aria-checked="true"] {
+  background: var(--brand);
+  color: #fff;
+}
+.redline__mode-btn:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: -2px;
+}
+.redline__mode-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--text-muted);
+}
+
+/* ═══ Overlays: gallery entry rows ═══
+   Same 16px section inset, same section-title treatment and the same
+   button metrics as the breakpoint rows above, so the new section reads
+   as part of the existing sidebar rather than an add-on. The chevron
+   points right because these rows navigate into a gallery — they are not
+   accordion headers and never expand in place. */
+.redline__nav-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.redline__nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: left;
+  cursor: pointer;
+}
+.redline__nav-row:hover { background: var(--bg-hover); }
+.redline__nav-row:active { background: var(--bg-active, var(--bg-hover)); }
+.redline__nav-row[aria-pressed="true"] {
+  border-color: var(--brand);
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+}
+.redline__nav-row:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: 2px;
+}
+.redline__nav-row-chevron {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+}
+.redline__nav-row[aria-pressed="true"] .redline__nav-row-chevron { color: var(--brand-text); }
+
+/* ═══ Gallery toolbar ═══
+   Sits above `.redline__stage`, outside `.redline__canvas`, so nothing
+   in it can be hit-tested, selected or measured as a product component. */
+.redline__gallery-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-surface);
+}
+.redline__gallery-bar[hidden] { display: none; }
+.redline__gallery-back {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  cursor: pointer;
+}
+.redline__gallery-back:hover { background: var(--bg-hover); }
+.redline__gallery-back:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: 2px;
+}
+.redline__gallery-nav {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+.redline__gallery-nav-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.redline__gallery-nav-btn:hover:not(:disabled) { background: var(--bg-hover); }
+.redline__gallery-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.redline__gallery-nav-btn:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: 2px;
+}
+.redline__gallery-title {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--text-primary);
+}
+.redline__gallery-count {
+  flex: 0 0 auto;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+}
+.redline__gallery-count::before {
+  content: "\00B7";
+  margin-right: 8px;
+}
+.redline__gallery-count:empty::before { content: none; }
+.redline__gallery-tail {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.redline__gallery-frozen {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+}
+.redline__gallery-frozen[hidden] { display: none; }
+.redline__gallery-reset {
+  padding: 6px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  cursor: pointer;
+}
+.redline__gallery-reset:hover:not(:disabled) { background: var(--bg-hover); }
+.redline__gallery-reset:disabled { opacity: 0.4; cursor: default; }
+.redline__gallery-reset:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: 2px;
+}
+
+/* Annotation visibility checkboxes */
+.redline__checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.redline__checkbox-row input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+/* Selection breadcrumb */
+.redline__breadcrumb {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.redline__crumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: ui-monospace, "SFMono-Regular", "Roboto Mono", Consolas, monospace;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.redline__crumb:hover { background: var(--bg-hover); color: var(--text-primary); }
+.redline__crumb[aria-current="true"] {
+  background: var(--brand-bg-soft);
+  color: var(--brand-text);
+  font-weight: 700;
+}
+.redline__crumb:focus-visible {
+  outline: 2px solid var(--brand-focus-ring, var(--brand));
+  outline-offset: -2px;
+}
+.redline__breadcrumb-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ═══ Center workspace / canvas ═══
+   `.redline__stage` is the flexible center workspace — its available
+   width/height (after the two docked side panels and any scrollbar) is
+   the ONLY thing breakpoint/live-app centering math is ever computed
+   against (see `positionBreakpointPreview`/`positionLiveApp` in
+   redline.js) — never the full browser viewport. `overflow: auto` here
+   is the dedicated scroll surface that lets an oversized canvas scroll
+   instead of being clipped or shrunk. `.redline__canvas` itself is
+   sized in JS to `max(stage size, real content size + gutters)` for
+   BOTH modes — a numeric breakpoint's exact preset dimensions in one
+   case, the real browser viewport's own dimensions (the app's only
+   "natural" size, since its media queries key off that, not container
+   width) in Current mode's case — so it only grows/scrolls past the
+   stage when the content genuinely doesn't fit. The `CANVAS_GUTTER`
+   constant in redline.js (used to size/center both
+   `.redline__preview-shell` and `.redline__live-app`) is the "symmetric
+   workspace padding" that distinguishes the outer workspace from the
+   preview canvas boundary underneath it. */
+/* The center column. The stage keeps every property it had when it was
+   a direct flex child of `.redline__body`; all this wrapper adds is a
+   row above it for the gallery toolbar, so gallery chrome is physically
+   outside the inspected canvas rather than layered over it. */
+.redline__center {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.redline__stage {
+  flex: 1 1 auto;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--bg-app, #F4F5F6);
+}
+.redline__canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+/* The reparented live-app host for "Current" mode — see `mountLiveApp`.
+   `contain: layout paint` is what makes this element the CSS containing
+   block for every `position: fixed` descendant inside the real app (its
+   navbar, sidebar, toast container, modal scrims), so they stay attached
+   to *this* box instead of escaping to the actual browser window; it also
+   scopes layout/paint invalidation to this subtree instead of the whole
+   document. `overflow: auto` makes it the page's own scroll viewport
+   (exactly like an un-redlined browser tab), which is also what gives
+   `position: sticky` descendants (the real `.nav`) the correct sticky
+   containing block. It intentionally carries no `data-redline-ui` marker
+   — it hosts real application content, not synthetic chrome, and must
+   stay fully inspectable/selectable. */
+.redline__live-app {
+  /* Sized/positioned entirely from JS (`positionLiveApp`): width/height
+     are pinned to the real browser viewport's own dimensions (the app's
+     actual "natural" size, since its CSS reflows against the true
+     viewport via media queries, not container width), then centered
+     inside `.redline__canvas` with the same 20px `CANVAS_GUTTER` used
+     for numeric breakpoints so both modes present an identical frame.
+     Top/left here are just layout defaults before JS positions it —
+     top-aligned by construction (never a vertical centering transform)
+     so a tall page's top navigation is always the first thing visible,
+     per spec. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  background: #fff;
+  contain: layout paint;
+  box-shadow: 0 0 0 1px var(--border-default), var(--shadow-pop);
+}
+
+.redline__preview-shell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1px var(--border-default), var(--shadow-pop);
+  transition: top 260ms ease, left 260ms ease, transform 260ms ease;
+  /* Round 29 (2026-08-11) — "separate viewport resizing from canvas
+     scaling": `positionBreakpointPreview` (redline.js) applies
+     `transform: scale(...)` here, never on `.redline__preview` itself,
+     so the iframe's own logical CSS viewport is never touched — only
+     how this shell is PAINTED shrinks. `transform-origin: 0 0` keeps
+     the shell's pre-scale top-left corner fixed, which is what its
+     `left`/`top` centering math (computed from the POST-scale visual
+     size) assumes. */
+  transform-origin: 0 0;
+}
+.redline__preview {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
+/* Round 29 (2026-08-11) — shown over the preview shell only for the
+   brief window between a numeric breakpoint being selected for the
+   first time in a Redline session and its one-time (eagerly started
+   in `enable()`, not on first click — see redline.js) load + nav-state
+   restore finishing. Without this, the raw white `about:blank`/loading
+   iframe would flash through for a moment — exactly the "UI
+   momentarily disappears" symptom this round fixes. Every SUBSEQUENT
+   breakpoint switch reuses the same already-loaded iframe and never
+   shows this again. */
+.redline__preview-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: var(--iam-ads-text-secondary, #5b6167);
+  font: 500 13px/1.4 var(--ff, sans-serif);
+}
+.redline__preview-loading[hidden] { display: none !important; }
+.redline__preview-loading-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border-default, #d8dade);
+  border-top-color: var(--iam-ads-brand, #4045c2);
+  animation: redlinePreviewSpin 0.8s linear infinite;
+}
+@keyframes redlinePreviewSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Dimming panes cut a rectangular "hole" around the active element,
+   restoring it to normal brightness while dimming everything else in
+   the canvas region (Rate Card's proven 4-pane technique). */
+.redline__dim {
+  position: fixed;
+  background: color-mix(in srgb, var(--ads-ink-95, #1E2528) 18%, transparent);
+  pointer-events: none;
+}
+
+.redline__grid {
+  position: fixed;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--redline-grid) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--redline-grid) 16%, transparent) 1px, transparent 1px);
+  background-size: 8px 8px;
+  pointer-events: none;
+}
+
+.redline__svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.redline__boundary,
+.redline__dimension,
+.redline__alignment,
+.redline__leader {
+  vector-effect: non-scaling-stroke;
+  fill: none;
+  stroke: var(--redline-measure);
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.redline__boundary {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--redline-measure) 40%, transparent));
+}
+.redline__alignment { stroke-dasharray: 4 4; opacity: 0.7; }
+.redline__recommendation { stroke: var(--redline-grid); stroke-dasharray: 2 3; }
+.redline__recommendation--warn { stroke: var(--redline-warn); }
+.redline__dimension--selected, .redline__leader {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--redline-measure) 45%, transparent));
+}
+
+.redline__labels {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.redline__label {
+  position: fixed;
+  z-index: 2;
+  max-width: 240px;
+  padding: 4px 8px;
+  border: 1px solid var(--redline-measure);
+  border-radius: 4px;
+  background: var(--ads-ink-95, #1E2528);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.28);
+  font-family: ui-monospace, "SFMono-Regular", "Roboto Mono", Consolas, monospace;
+  font-size: var(--redline-label-font-size);
+  font-weight: 600;
+  line-height: var(--redline-label-line-height);
+  white-space: nowrap;
+}
+.redline__label--grid { border-color: var(--redline-grid); }
+.redline__label--warn { border-color: var(--redline-warn); background: #4A3115; }
+
+.redline__canvas-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* ═══ Right inspector panel ═══ */
+.redline__inspector-empty {
+  padding: 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 19px;
+}
+.redline__inspector-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.redline__inspector-tag {
+  font-family: ui-monospace, "SFMono-Regular", "Roboto Mono", Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-text);
+  word-break: break-all;
+}
+.redline__inspector-component {
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-hover-soft);
+}
+.redline__inspector-component-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.redline__inspector-component[data-unmapped="true"] .redline__inspector-component-name {
+  color: var(--text-muted);
+  font-style: italic;
+}
+.redline__inspector-component-meta {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.redline__group {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.redline__group-title {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.redline__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 0;
+  font-size: 12px;
+  line-height: 18px;
+}
+.redline__row-label { flex: 0 0 auto; color: var(--text-secondary); }
+.redline__row-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
+  color: var(--text-primary);
+  font-family: ui-monospace, "SFMono-Regular", "Roboto Mono", Consolas, monospace;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.redline__row-value--warn { color: var(--redline-warn); }
+.redline__row-value--muted { color: var(--text-muted); font-weight: 400; font-family: inherit; }
+
+.redline__box-model {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.redline__box-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 2px;
+  border: 1px dashed var(--border-default);
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.redline__box-cell b {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-family: ui-monospace, monospace;
+}
+.redline__box-cell--warn b { color: var(--redline-warn); }
+
+.redline__color-role { padding-top: 8px; margin-top: 8px; border-top: 1px dashed var(--border-subtle); }
+.redline__color-role:first-child { padding-top: 0; margin-top: 0; border-top: 0; }
+.redline__color-role-head { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.redline__color-swatch {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  background-clip: padding-box;
+  background-image:
+    linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+}
+.redline__color-role-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.redline__copy-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.redline__copy-btn {
+  padding: 3px 7px;
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.redline__copy-btn:hover:not(:disabled) { background: var(--bg-hover); color: var(--text-primary); }
+.redline__copy-btn:focus-visible { outline: 2px solid var(--brand-focus-ring, var(--brand)); outline-offset: 1px; }
+.redline__copy-btn[data-copied="true"] { border-color: var(--brand); color: var(--brand-text); }
+.redline__copy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.redline__text-sample {
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  background: var(--bg-hover-soft);
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 17px;
+  max-height: 72px;
+  overflow: auto;
+  word-break: break-word;
+  font-family: var(--ff);
+}
+.redline__ads-token-warn {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--redline-warn) 16%, transparent);
+  color: var(--redline-warn);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.redline__status {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .redline__preview-shell { transition: none; }
+  .redline__preview-loading-spinner { animation: none; }
+}
+
+/* ═══ Responsive Redline shell ═══
+   At standard desktop widths (>=1280px) both panels stay permanently
+   docked side-by-side with the canvas centered between them (the default
+   rules above). Below that, permanently trimming their width eventually
+   starts covering the live canvas anyway, so instead they become
+   collapsible overlays: docked out of the layout flow, slid in as a
+   `position: fixed` drawer only when explicitly opened via the topbar's
+   "Controls"/"Inspector" toggle buttons (`redline.js`'s `setPanelOpen`),
+   and dismissed by clicking the canvas or re-pressing the toggle — never
+   permanently covering the inspected UI, and never left pretending the
+   content underneath is still selectable while open (`onWorkspaceClick`
+   closes the overlay on the same click that would otherwise reach the
+   canvas). The center workspace itself keeps its full width so there is
+   always a useful, unobstructed place to see and select the live page. */
+@media (max-width: 1279px) {
+  .redline__panel-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .redline__topbar-badge { display: none; }
+  .redline__panel {
+    position: fixed;
+    top: 52px;
+    bottom: 0;
+    z-index: 5;
+    box-shadow: var(--shadow-pop);
+    transition: transform 200ms ease;
+  }
+  .redline__panel--left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  .redline__panel--right {
+    right: 0;
+    transform: translateX(100%);
+  }
+  .redline__panel.is-open { transform: translateX(0); }
+  .redline__body { position: relative; }
+}
+
+@media (max-width: 1279px) and (prefers-reduced-motion: reduce) {
+  .redline__panel { transition: none; }
+}

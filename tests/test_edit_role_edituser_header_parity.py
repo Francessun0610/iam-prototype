@@ -175,7 +175,7 @@ def main():
         time.sleep(0.3)
         js(c, "document.querySelector('#tbody .name-link').click();")
         time.sleep(0.4)
-        check("Reference: Edit User page opened", js(c, "document.getElementById('auPageTitle').textContent.trim()") == "Edit user")
+        check("Reference: Edit User page opened", js(c, "document.getElementById('auPageTitle').textContent.trim()") == "Edit User")
 
         ref = {
             "title_color": style(c, "#auBasicTitle", "color"),
@@ -274,7 +274,7 @@ def main():
 
         # ─── Action group order/behavior preserved ─────────────────────────
         actions_text = js(c, "Array.from(document.querySelectorAll('.cr-header-actions button')).filter(function(b){return b.offsetParent !== null;}).map(function(b){return b.textContent.trim();})")
-        check("Header actions keep the order Remove Role -> Cancel -> Save Role", actions_text == ["Remove Role", "Cancel", "Save Role"], actions_text)
+        check("Header actions keep the order Remove -> Cancel -> Save Role", actions_text == ["Remove", "Cancel", "Save Role"], actions_text)
 
         # ─── Interaction still works after the styling change ──────────────
         js(c, "document.querySelector('#crBasicCard .cr-section-header[role=\"button\"]').click();")

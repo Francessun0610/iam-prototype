@@ -12,9 +12,12 @@
 #   IAM prototype (2.0):  /v2/       → public/v2/index.html
 #   IAM prototype (3.0):  /v3/       → public/v3/index.html
 #   IAM prototype (4.0):  /v4/       → public/v4/index.html
-#   IAM prototype (4.1):  /v4.1/     → public/v4.1/index.html  (ADS — current default
-#                                                                 version; full, independent
+#   IAM prototype (4.1):  /v4.1/     → public/v4.1/index.html  (ADS — full, independent
 #                                                                 duplicate of v4/, not an
+#                                                                 alias/redirect to it)
+#   IAM prototype (4.2):  /v4.2/     → public/v4.2/index.html  (ADS — current default
+#                                                                 version; independent
+#                                                                 duplicate of v4.1/, not an
 #                                                                 alias/redirect to it)
 #   DCM prototype:        /dcm/      → public/dcm/index.html  (canonical DCM URL path)
 #   DCM shortcut:         /dcm.html  → public/dcm.html (meta refresh → /dcm/)
@@ -45,6 +48,10 @@ pages:
     - test -f "public/v4.1/styles.css"
     - test -f "public/v4.1/app.js"
     - test -f "public/v4.1/redline.css"
+    - test -f "public/v4.2/index.html"
+    - test -f "public/v4.2/styles.css"
+    - test -f "public/v4.2/app.js"
+    - test -f "public/v4.2/redline.css"
     - test -f "public/v4.1/redline.js"
     - test -f "public/v4.1/redline-gallery.js"
     - test -f public/dcm/index.html
@@ -55,9 +62,9 @@ pages:
     # that "/" opens the default version directly. Fail the deploy here
     # rather than publish a root that silently sends reviewers to an older
     # build (or to a version chooser).
-    - echo "Verifying the site root resolves to the default version (v4.1)"
-    - grep -q 'IAM_DEFAULT_VERSION_ID = "v4.1"' public/version-config.js
-    - grep -q 'v4.1/' public/index.html
+    - echo "Verifying the site root resolves to the default version (v4.2)"
+    - grep -q 'IAM_DEFAULT_VERSION_ID = "v4.2"' public/version-config.js
+    - grep -q 'v4.2/' public/index.html
     - echo "Deploying GitLab Pages site (public/)"
   artifacts:
     paths:

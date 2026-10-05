@@ -14,7 +14,7 @@
        Scope: V2 only. Theme 1.0 (`public/index.html`) is untouched. -->
   <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
-  <title>Atlas — Access Management · V4.1 (ADS)</title>
+  <title>Atlas — Access Management · V4.2 (ADS)</title>
   <script>
     /* V4.1 (2026-08-11): a complete, independent duplicate of the V4
        folder (`public/v4/`), taken at its latest state, so this build
@@ -47,12 +47,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20261005vnav1">
-  <link rel="stylesheet" href="vnav.css?v=20261005vnav1">
+  <link rel="stylesheet" href="styles.css?v=20261005v42b">
+  <link rel="stylesheet" href="vnav.css?v=20261005v42">
   <!-- Redline Mode (V4.1 only — inspection-only DOM/CSS overlay, invisible
        until toggled from the profile menu or ⌘D/Ctrl+D; see redline.js).
        Not present in public/v4/. -->
-  <link rel="stylesheet" href="redline.css?v=20260812redline3">
+  <link rel="stylesheet" href="redline.css?v=20261005v42">
+  <!-- HARPS / ADS visual extensions. Linked last so it can match
+       styles.css specificity (same `html[data-iam-version="v4"]` scope
+       + one extra class) without adding more !important. -->
+  <link rel="stylesheet" href="iam-ads-extensions.css?v=20261005v42eu3">
 </head>
 <body>
 
@@ -89,7 +93,7 @@
              `window.IAM_PRODUCT_NAME` constant. The literal text below
              is only a no-JS fallback and is kept in sync with that
              constant by hand — it is not a second source of truth. -->
-        <a href="../slides.html" class="nav-logo-link atlas-brand" id="navBrandLink" aria-label="Ad Console home">
+        <a href="slides.html" class="nav-logo-link atlas-brand" id="navBrandLink" aria-label="Ad Console home">
           <span class="atlas-brand-rail" aria-hidden="true">
             <svg class="atlas-brand-glyph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 28" width="32" height="28" fill="currentColor" aria-hidden="true"><path d="M8.97945 21.0995C8.98713 19.6954 9.01527 18.3096 9.01527 18.3096C9.01527 18.3096 7.65134 18.4084 6.71475 18.5124C5.52227 18.6424 3.27805 19.0376 1.98321 19.5056C1.5968 19.646 0.806078 19.9814 0.736985 20.3871C0.665334 20.8083 0.921231 21.1359 1.20784 21.4765C1.37417 21.6741 2.3082 22.5867 2.56921 22.8103C3.66701 23.7411 5.89588 25.179 7.53619 25.8784C8.09916 26.115 9.03319 26.4556 9.03319 26.4556C9.03319 26.4556 8.96921 23.7567 8.97945 21.0995ZM27.4425 13.5385C24.5176 9.71382 19.502 6.57035 15.0903 4.72691C10.5865 2.84706 6.13387 1.76284 1.3537 1.58344C1.34602 1.58344 1.33579 1.58344 1.32811 1.58344C0.601359 1.55483 0 2.14765 0 2.88346V19.0974C0.5988 18.0496 2.0958 17.2566 3.1501 16.7886C3.992 16.4116 6.60728 15.5431 7.69484 15.3819C8.2092 15.3065 9.00504 15.1609 9.05366 15.1297C9.07413 15.1141 9.08693 15.1011 9.10228 15.0829C9.12787 15.0465 9.11763 14.6071 9.16114 13.4423C9.24558 11.2062 9.37353 10.499 9.52195 9.66701C9.57825 9.34981 9.86229 8.11738 10.1028 7.79757C10.2615 7.58177 10.5404 7.59737 10.7682 7.74037C12.0144 8.52819 12.3931 11.2582 12.4852 12.6467C12.5415 13.4943 12.5697 14.7657 12.5697 14.7657C12.5697 14.7657 14.0002 14.7241 14.8779 14.7475C15.7326 14.7683 16.6743 14.9061 17.5623 15.0491C18.6984 15.2337 20.912 15.7251 22.1812 16.3778C23.2278 16.916 24.2054 17.8234 24.5227 18.7828C24.817 19.6642 24.7735 20.2726 24.3256 21.0657C23.5835 22.3787 21.5338 23.3459 20.1954 22.2929C20.0649 22.1863 20.0726 21.9991 20.1647 21.8717C20.2006 21.8249 20.7072 21.5519 21.0066 21.3933C21.1576 21.3101 21.2804 21.2217 21.3982 21.1125C21.6464 20.8889 21.869 20.6445 21.846 20.3585C21.8127 19.9866 21.4238 19.7552 21.0553 19.6096C19.3228 18.9102 15.8605 18.3304 14.187 18.229C13.5319 18.19 12.6004 18.1562 12.6004 18.1562L12.7974 27.5398C12.7974 27.5398 13.5677 27.6906 14.1742 27.7894C14.5222 27.844 15.9962 27.9766 16.3902 27.987C19.374 28.0676 22.7058 27.7972 25.4439 26.4816C26.6466 25.907 27.7495 25.192 28.5838 24.2221C29.6841 22.9403 30.2599 21.1853 30.1089 19.3522C29.9375 17.3606 28.5505 14.9841 27.4425 13.5385ZM29.4206 0H11.1418C11.5359 0.109202 11.9299 0.226205 12.324 0.348408C14.3021 0.956821 16.8944 1.97604 18.7906 2.90426C20.1519 3.57248 22.2964 4.79711 23.5016 5.59792C23.8829 5.85273 26.1041 7.51157 26.4496 7.80277C27.1712 8.40079 28.1129 9.26141 28.7936 9.95042C29.8556 11.0216 31.1274 12.5505 32 13.9493V2.62086C32 1.17263 30.8459 0 29.4206 0Z"/></svg>
           </span>
@@ -101,10 +105,10 @@
   </div>
   <div class="nav-c">
     <a href="#" class="nav-a">Sales</a>
-    <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-    <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-    <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
-    <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+    <a href="#" class="nav-a">Planning <svg class="nav-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg></a>
+    <a href="#" class="nav-a">Ad Ops <svg class="nav-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg></a>
+    <a href="#" class="nav-a">Billing <svg class="nav-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg></a>
+    <a href="#" class="nav-a on">Admin <svg class="nav-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg></a>
   </div>
   <div class="nav-r">
     <!-- Notification button. Two icon glyphs co-exist; CSS shows one per theme:
@@ -171,12 +175,12 @@
                so every build (v1–v4) always lists every version — this
                static markup is just a no-JS-safe placeholder. -->
           <div class="user-menu-sub" role="menu" aria-label="Version">
-            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="4.1 (ADS)" data-version-href="./" tabindex="-1">4.1 (ADS)</div>
+            <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-version="4.2 (ADS)" data-version-href="./" tabindex="-1">4.2 (ADS)</div>
           </div>
         </div>
         <div class="user-menu-row has-sub" id="userMenuTheme" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false">
           <span class="user-menu-label">Theme</span>
-          <svg class="user-menu-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg class="user-menu-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
           <div class="user-menu-sub" role="menu" aria-label="Theme">
             <div class="user-menu-sub-item is-selected" role="menuitemradio" aria-checked="true" data-theme="light" tabindex="-1">EDL Light</div>
             <div class="user-menu-sub-item" role="menuitemradio" aria-checked="false" data-theme="dark" tabindex="-1">EDL Dark</div>
@@ -308,11 +312,6 @@
 
 <!-- ═══ PAGE ═══ -->
 <main class="page">
-  <div class="hdr">
-    <h1>Access Management</h1>
-    <p>Manage users, role assignments, and permission functions across Atlas</p>
-  </div>
-
   <div class="card">
     <!-- Tabs — Figma 770:17428 / 770:19301 / 770:20032
          Final tab order (2026-06-07 — Tatiana direction, Frances QA):
@@ -330,7 +329,21 @@
          corners, subtle box-shadow, hairline border, gray canvas
          behind. All internal chrome (tabs, toolbar, table, pagination)
          clips cleanly inside the card via `overflow: hidden`. -->
-    <div class="v4-card">
+    <div class="v4-card" data-iam-tab="users">
+    <div class="iam-card-header hdr">
+      <div class="iam-title-row">
+        <h1 class="iam-page-title">Access Management</h1>
+        <div class="iam-title-actions">
+          <button class="btn-ghost" id="rolesCreateBtn" type="button"
+                  aria-label="Create role" data-tooltip="Create role"
+                  data-ads-component="button" data-ads-variant="primary" data-ads-size="md">
+            <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
+            <span class="toolbar-action-label">Create Role</span>
+          </button>
+        </div>
+      </div>
+      <p class="iam-page-subtitle">Manage users, role assignments, and permission functions across Atlas</p>
+    </div>
     <div class="tabs-row ads-tabs" data-ads-component="primary-tabs">
       <nav aria-label="Access Management sections">
         <button class="tab-btn ads-tab on">Users</button>
@@ -340,51 +353,26 @@
     </div>
 
     <div id="usersPanel">
-    <!-- Toolbar -->
+    <!-- Toolbar: Filter → Internal/External → Search; Export stays right. -->
     <div class="tbar">
       <div class="tbar-l">
-        <!-- Icon-only Filter — a compact 36x36 square with just the funnel
-             icon, matching the icon-only filter treatment from the updated
-             Figma toolbar. `#usersFilterBtn` and Roles' `#rpFilterBtn`
-             share ONE sizing/appearance contract in styles.css (both ids
-             appear on the same rule) so the two tabs' Filter buttons can
-             never drift apart; only `aria-label` differs, since each names
-             the records it filters. `data-tooltip` reuses the same generic
-             hover/focus tooltip plumbing as the table's status icons (see
-             setupStatusTooltip() in app.js). -->
         <button class="btn-std" id="usersFilterBtn" type="button" aria-label="Filter users" data-tooltip="Filter"
-                data-ads-component="button" data-ads-variant="secondary" data-ads-size="md">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                data-ads-component="button" data-ads-variant="ghost" data-ads-size="md">
+          <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M230.6,49.53A15.81,15.81,0,0,0,216,40H40A16,16,0,0,0,28.19,66.76l.08.09L96,139.17V216a16,16,0,0,0,24.87,13.32l32-21.34A16,16,0,0,0,160,194.66V139.17l67.74-72.32.08-.09A15.8,15.8,0,0,0,230.6,49.53ZM146.86,132.12A16.08,16.08,0,0,0,144,139.17v55.49L112,216V139.17a16.08,16.08,0,0,0-2.86-7.05L40,56H216Z"/></svg>
         </button>
         <div class="seg-ctrl" id="userViewToggle" role="group" aria-label="User type">
           <button class="seg-btn on" data-view="internal">Internal</button>
           <button class="seg-btn" data-view="external">External</button>
         </div>
-        <!-- Users search (restored Round 38, 2026-08-12). Round 24 had
-             deleted this field outright; every consumer of it survived
-             that removal untouched — the query state (`searchTerm`),
-             filtering (getFilteredData), recent-search dropdown, clear
-             action and keyboard handling all still live in app.js behind
-             an `if (searchWrap)` guard, and the field's own appearance /
-             responsive width come from the shared `.ads-search` component
-             (also used by Roles + Teams). So restoring the original
-             markup and ids below — nothing more — restores the original
-             behavior rather than reimplementing a second, local filter. -->
         <div class="search ads-search" id="searchWrap" data-ads-component="search">
           <input type="text" id="searchInput" placeholder="Search by name, email, or role" aria-label="Search by name, email, or role" autocomplete="off">
-          <svg class="search-ico" id="searchIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <button type="button" class="search-clear hidden" id="searchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <svg class="search-ico" id="searchIco" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+          <button type="button" class="search-clear hidden" id="searchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
           <div class="search-dropdown" id="searchDropdown">
             <div id="searchDDContent"></div>
           </div>
         </div>
       </div>
-      <!-- Export + Add User — Figma 770:17428 "Frame 627874": a single
-           right-hand action group (measured gap between the two buttons
-           is a fixed 12px), with `.tbar`'s own `justify-content: space-
-           between` distributing the remaining space between this group
-           and `.tbar-l` — matching Figma's two-group toolbar structure
-           exactly instead of an auto-margin hack on one button. -->
       <div class="tbar-r">
         <!-- Export — ADS Button, `ghost` variant, `default` size
              (Figma node 1003:17838). Disabled until at least one
@@ -408,16 +396,13 @@
                above it (see .au-export-btn.is-loading in styles.css), so
                swapping icon↔spinner during the simulated "preparing
                export" beat never changes the button's width/position. -->
-          <svg class="au-export-spinner" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.75"/>
-            <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-          </svg>
+          <svg class="au-export-spinner" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,128a104,104,0,0,1-208,0,8,8,0,0,1,16,0,88,88,0,1,0,88-88,8,8,0,0,1,0-16A104.11,104.11,0,0,1,232,128Z"/></svg>
           <span class="toolbar-action-label">Export</span>
         </button>
         <button class="btn-ghost" id="usersAddBtn" type="button"
                 aria-label="Add user" data-tooltip="Add user"
                 data-ads-component="button" data-ads-variant="primary" data-ads-size="md">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
           <span class="toolbar-action-label">Add User</span>
         </button>
       </div>
@@ -474,7 +459,7 @@
           <div class="cr-dd pgn-dd" id="usersPageSizeDD">
             <button type="button" class="cr-dd-trigger" id="usersPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="usersPageSizeMenu">
               <span class="cr-dd-value" id="usersPageSizeValue">10</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
             </button>
             <div class="cr-dd-menu" id="usersPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
           </div>
@@ -482,8 +467,8 @@
         <span class="pgn-lbl">of 610 items</span>
       </div>
       <div class="pgn-pages">
-        <button class="pg-nav off" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
-        <button class="pg-nav off" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="pg-nav off" aria-label="First"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200.49,199.51a8,8,0,0,1-11.31,11.31l-80-80a8,8,0,0,1,0-11.31l80-80a8,8,0,0,1,11.31,11.31L139.31,128ZM64.49,128,133.66,58.83A8,8,0,0,0,122.34,47.51l-80,80a8,8,0,0,0,0,11.32l80,80a8,8,0,0,0,11.32-11.32Z"/></svg></button>
+        <button class="pg-nav off" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg></button>
         <div class="pg-nums">
           <button class="pg-n on">1</button>
           <button class="pg-n">2</button>
@@ -491,8 +476,8 @@
           <span class="pg-dots">…</span>
           <button class="pg-n">10</button>
         </div>
-        <button class="pg-nav" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-        <button class="pg-nav" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+        <button class="pg-nav" aria-label="Next"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+        <button class="pg-nav" aria-label="Last"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M147.66,197.17,216.83,128,147.66,58.83A8,8,0,0,1,158.83,47.51l80,80a8,8,0,0,1,0,11.32l-80,80a8,8,0,0,1-11.32-11.32ZM47.51,208.49a8,8,0,0,0,11.32,0l80-80a8,8,0,0,0,0-11.32l-80-80A8,8,0,0,0,47.51,47.51l68.68,68.69L47.51,184.83A8,8,0,0,0,47.51,208.49Z"/></svg></button>
       </div>
       <div class="pgn-jump">
         <span class="pgn-lbl" id="usersTotalLabel">Total users: 610</span>
@@ -503,38 +488,19 @@
     <div id="rolesPanel" style="display:none">
       <div class="tbar">
         <div class="tbar-l">
-          <!-- Icon-only Filter (Round 35, 2026-08-12): matches the Users
-               tab's `#usersFilterBtn` treatment exactly — same `.btn-std`
-               component, same dedicated-id sizing override (see
-               `#rpFilterBtn` alongside `#usersFilterBtn` in styles.css)
-               so this can never drift from Users' icon-only button, and
-               the same generic `data-tooltip` hover/focus tooltip
-               plumbing (setupStatusTooltip() in app.js) Users already
-               uses. Both tabs show the same "Filter" tooltip; only
-               `aria-label` differs ("Filter roles" vs "Filter users"),
-               naming the records each one filters. -->
           <button class="btn-std" id="rpFilterBtn" type="button" aria-label="Filter roles" data-tooltip="Filter"
-                  data-ads-component="button" data-ads-variant="secondary" data-ads-size="md">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                  data-ads-component="button" data-ads-variant="ghost" data-ads-size="md">
+            <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M230.6,49.53A15.81,15.81,0,0,0,216,40H40A16,16,0,0,0,28.19,66.76l.08.09L96,139.17V216a16,16,0,0,0,24.87,13.32l32-21.34A16,16,0,0,0,160,194.66V139.17l67.74-72.32.08-.09A15.8,15.8,0,0,0,230.6,49.53ZM146.86,132.12A16.08,16.08,0,0,0,144,139.17v55.49L112,216V139.17a16.08,16.08,0,0,0-2.86-7.05L40,56H216Z"/></svg>
           </button>
           <div class="search ads-search" id="rpSearchWrap" data-ads-component="search">
             <input type="text" id="rpSearchInput" placeholder="Search by role name or description" aria-label="Search by role name or description" autocomplete="off">
-            <svg class="search-ico" id="rpSearchIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <button type="button" class="search-clear hidden" id="rpSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <svg class="search-ico" id="rpSearchIco" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+            <button type="button" class="search-clear hidden" id="rpSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
           </div>
         </div>
-        <!-- Right-actions group — same shared `.tbar-r` slot Users uses for
-             Export + Add User (Roles has no secondary action today, but the
-             wrapper keeps Create Role's right-edge/vertical-center contract
-             identical to Add User instead of relying on it being the lone
-             bare child of `.tbar`). -->
+        <!-- Right-actions group kept for the same right-edge contract as Users.
+             Filter now sits at the left of the toolbar under the Roles tab. -->
         <div class="tbar-r">
-          <button class="btn-ghost" id="rolesCreateBtn" type="button"
-                  aria-label="Create role" data-tooltip="Create role"
-                  data-ads-component="button" data-ads-variant="primary" data-ads-size="md">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span class="toolbar-action-label">Create Role</span>
-          </button>
         </div>
       </div>
 
@@ -573,7 +539,7 @@
             <div class="cr-dd pgn-dd" id="rpPageSizeDD">
               <button type="button" class="cr-dd-trigger" id="rpPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="rpPageSizeMenu">
                 <span class="cr-dd-value" id="rpPageSizeValue">10</span>
-                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
               </button>
               <div class="cr-dd-menu" id="rpPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
             </div>
@@ -585,11 +551,11 @@
           <span class="pgn-lbl" id="rpItemCount">of 8 items</span>
         </div>
         <div class="pgn-pages" id="rpPgnPages">
-          <button class="pg-nav off" data-rp-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
-          <button class="pg-nav off" data-rp-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="pg-nav off" data-rp-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200.49,199.51a8,8,0,0,1-11.31,11.31l-80-80a8,8,0,0,1,0-11.31l80-80a8,8,0,0,1,11.31,11.31L139.31,128ZM64.49,128,133.66,58.83A8,8,0,0,0,122.34,47.51l-80,80a8,8,0,0,0,0,11.32l80,80a8,8,0,0,0,11.32-11.32Z"/></svg></button>
+          <button class="pg-nav off" data-rp-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg></button>
           <div class="pg-nums" id="rpPgNums"></div>
-          <button class="pg-nav" data-rp-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          <button class="pg-nav" data-rp-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+          <button class="pg-nav" data-rp-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+          <button class="pg-nav" data-rp-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M147.66,197.17,216.83,128,147.66,58.83A8,8,0,0,1,158.83,47.51l80,80a8,8,0,0,1,0,11.32l-80,80a8,8,0,0,1-11.32-11.32ZM47.51,208.49a8,8,0,0,0,11.32,0l80-80a8,8,0,0,0,0-11.32l-80-80A8,8,0,0,0,47.51,47.51l68.68,68.69L47.51,184.83A8,8,0,0,0,47.51,208.49Z"/></svg></button>
         </div>
         <div class="pgn-jump">
           <span class="pgn-lbl" id="rpTotalLabel">Total roles: 8</span>
@@ -631,8 +597,8 @@
         <div class="tbar-l">
           <div class="search ads-search" id="tmSearchWrap" data-ads-component="search">
             <input type="text" id="tmSearchInput" placeholder="Search teams…" aria-label="Search teams…" autocomplete="off">
-            <svg class="search-ico" id="tmSearchIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <button type="button" class="search-clear hidden" id="tmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <svg class="search-ico" id="tmSearchIco" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+            <button type="button" class="search-clear hidden" id="tmSearchClear" aria-label="Clear search"><svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
           </div>
         </div>
         <!-- No top-right actions. "+ Add Team" was intentionally NOT
@@ -678,7 +644,7 @@
             <div class="cr-dd pgn-dd" id="tmPageSizeDD">
               <button type="button" class="cr-dd-trigger" id="tmPageSizeTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="tmPageSizeMenu">
                 <span class="cr-dd-value" id="tmPageSizeValue">10</span>
-                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
               </button>
               <div class="cr-dd-menu" id="tmPageSizeMenu" role="listbox" aria-label="Rows per page"></div>
             </div>
@@ -686,11 +652,11 @@
           <span class="pgn-lbl" id="tmItemCount">of 0 items</span>
         </div>
         <div class="pgn-pages" id="tmPgnPages">
-          <button class="pg-nav off" data-tm-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
-          <button class="pg-nav off" data-tm-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="pg-nav off" data-tm-nav="first" aria-label="First"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200.49,199.51a8,8,0,0,1-11.31,11.31l-80-80a8,8,0,0,1,0-11.31l80-80a8,8,0,0,1,11.31,11.31L139.31,128ZM64.49,128,133.66,58.83A8,8,0,0,0,122.34,47.51l-80,80a8,8,0,0,0,0,11.32l80,80a8,8,0,0,0,11.32-11.32Z"/></svg></button>
+          <button class="pg-nav off" data-tm-nav="prev" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg></button>
           <div class="pg-nums" id="tmPgNums"></div>
-          <button class="pg-nav" data-tm-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          <button class="pg-nav" data-tm-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></button>
+          <button class="pg-nav" data-tm-nav="next" aria-label="Next"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></button>
+          <button class="pg-nav" data-tm-nav="last" aria-label="Last"><svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M147.66,197.17,216.83,128,147.66,58.83A8,8,0,0,1,158.83,47.51l80,80a8,8,0,0,1,0,11.32l-80,80a8,8,0,0,1-11.32-11.32ZM47.51,208.49a8,8,0,0,0,11.32,0l80-80a8,8,0,0,0,0-11.32l-80-80A8,8,0,0,0,47.51,47.51l68.68,68.69L47.51,184.83A8,8,0,0,0,47.51,208.49Z"/></svg></button>
         </div>
         <div class="pgn-jump">
           <span class="pgn-lbl" id="tmTotalLabel">Total teams: 0</span>
@@ -711,7 +677,7 @@
   <div class="au-page-header-surface">
     <div class="au-shell au-header-shell">
       <button class="au-back" id="auBack">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
         <span class="au-back-label" id="auBackLabel">Back to Users</span>
       </button>
 
@@ -745,7 +711,7 @@
        on one grid. -->
   <div class="au-page-main-surface">
     <div class="au-shell au-main-shell">
-    <section class="au-card cr-card" id="auBasicCard" aria-labelledby="auBasicTitle">
+    <section class="au-card cr-card" id="auBasicCard" data-ads-component="accordion" aria-labelledby="auBasicTitle">
       <!-- Header row (Figma node 1018:21931): the expand/collapse
            trigger (`.cr-section-header[data-au-toggle]`, unchanged —
            still owns its own click/keydown listeners in app.js).
@@ -764,14 +730,14 @@
            second child left, it now just passes the header straight
            through at 100% width in both modes. -->
       <div class="cr-section-header-row">
-        <div class="cr-section-header" data-au-toggle="basic" role="button" tabindex="0" aria-expanded="true">
-          <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        <div class="cr-section-header" data-ads-component="accordion-trigger" data-au-toggle="basic" role="button" tabindex="0" aria-expanded="true" aria-controls="auBasicPanel">
+          <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
           <span class="cr-section-title" id="auBasicTitle">Basic information</span>
           <span class="cr-section-summary" id="auBasicSummary" aria-hidden="true"></span>
         </div>
       </div>
 
-      <div class="au-section-body">
+      <div class="au-section-body" id="auBasicPanel" data-ads-component="accordion-content">
       <!-- ═ Basic Information identity row (Figma 1023:22053 / 847:16172) ═
            Shared by BOTH Add and Edit mode: single horizontal row
            containing the identity block (avatar + name + email +
@@ -799,7 +765,7 @@
            `auAddUserAppliedSelection` is set. -->
       <div class="au-id-empty au-add-only" id="auIdEmpty" hidden>
         <div class="au-id-empty-avatar" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/></svg>
+          <svg width="28" height="28" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></svg>
         </div>
         <div class="au-id-empty-meta">
           <span class="au-id-empty-title">No employee selected</span>
@@ -857,7 +823,7 @@
                    icon. JS keeps `aria-label` and `data-status-tooltip`
                    in sync per selected user (Active vs Inactive). -->
               <span class="au-id-status status-icon-wrap" id="auIdStatus" role="img" aria-label="Active" data-status-tooltip="Active" tabindex="0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#056C07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+                <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
               </span>
             </div>
             <div class="au-id-email-row">
@@ -882,20 +848,17 @@
         </div>
         <div class="au-field au-field-preferred">
           <label class="au-label" for="auPreferredName">Preferred name
-            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input class="au-input" id="auPreferredName" type="text" placeholder="Enter preferred name" autocomplete="off">
         </div>
 
         <div class="au-field au-field-email">
           <label class="au-label" for="auEmail">Email<span class="au-req">*</span>
-            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input class="au-input" id="auEmail" type="email" placeholder="example@disney.com" autocomplete="off">
         </div>
         <div class="au-field au-field-region">
           <label class="au-label" for="auRegionCombo-ctl">Region<span class="au-req">*</span>
-            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input type="hidden" id="auRegion" value="NA">
           <div class="edl-combo au-field-dd" id="auRegionCombo" aria-label="Region"></div>
@@ -930,7 +893,6 @@
         </div>
         <div class="au-field au-field-timezone">
           <label class="au-label" for="auTimezoneCombo-ctl">Timezone<span class="au-req">*</span>
-            <svg class="au-info" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </label>
           <input type="hidden" id="auTimezone" value="America/New_York">
           <div class="edl-combo au-field-dd" id="auTimezoneCombo" aria-label="Timezone"></div>
@@ -972,13 +934,13 @@
          application. There is no in-card future-state affordance — the
          custom-actions future phase is communicated only via the helper
          text above. -->
-    <section class="au-card cr-card au-access-card au-edit-only" id="auPermsCard" aria-labelledby="auPermsTitle" hidden>
-      <div class="cr-section-header" data-au-toggle="perms" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+    <section class="au-card cr-card au-access-card au-edit-only" id="auPermsCard" data-ads-component="accordion" aria-labelledby="auPermsTitle" hidden>
+      <div class="cr-section-header" data-ads-component="accordion-trigger" data-au-toggle="perms" role="button" tabindex="0" aria-expanded="true" aria-controls="auPermsPanel">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
         <span class="cr-section-title" id="auPermsTitle">Permission Options</span>
         <span class="cr-section-summary" id="auPermsSummary" aria-hidden="true"></span>
       </div>
-      <div class="au-section-body">
+      <div class="au-section-body" id="auPermsPanel" data-ads-component="accordion-content">
         <!-- Helper text trimmed to match Figma 847:16145 exactly. The
              future-state custom-actions phase is intentionally NOT
              described in the UI (PM will communicate it directly). -->
@@ -1013,14 +975,14 @@
          shell (Assign Roles + role-card stack) so the Add User flow is
          unchanged. The two modes are split via `.au-edit-only` /
          `.au-add-only` class toggles inside the section body. -->
-    <section class="au-card cr-card au-access-card" id="auRolesCard" aria-labelledby="auRolesPermissionsTitle">
-      <div class="cr-section-header" data-au-toggle="roles" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+    <section class="au-card cr-card au-access-card" id="auRolesCard" data-ads-component="accordion" aria-labelledby="auRolesPermissionsTitle">
+      <div class="cr-section-header" data-ads-component="accordion-trigger" data-au-toggle="roles" role="button" tabindex="0" aria-expanded="true" aria-controls="auRolesPanel">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
         <span class="cr-section-title" id="auRolesPermissionsTitle">Roles &amp; Permissions</span>
         <span class="cr-section-summary" id="auRolesSummary" aria-hidden="true"></span>
       </div>
 
-      <div class="au-section-body">
+      <div class="au-section-body" id="auRolesPanel" data-ads-component="accordion-content">
       <!-- Shared helper sentence (Figma 1023:22053 "Role and Permission") —
            exact approved copy, unchanged position/wording, directly under
            the section title, above "Assigned Role". Add-mode ("Role and
@@ -1061,7 +1023,7 @@
             <div class="au-role-multi au-edit-only" id="auRoleMultiCombo" aria-label="Assigned roles">
               <button type="button" class="au-role-multi-trigger" id="auRoleMultiTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="auRoleMultiMenu">
                 <span class="au-role-multi-value" id="auRoleMultiValue">Select roles</span>
-                <svg class="au-role-multi-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                <svg class="au-role-multi-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
               </button>
               <div class="au-role-multi-menu" id="auRoleMultiMenu" role="listbox" aria-multiselectable="true" hidden></div>
             </div>
@@ -1199,7 +1161,7 @@
   <div class="au-page-header-surface">
     <div class="au-shell au-header-shell">
     <button class="au-back" id="tmBack">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
       <span class="au-back-label">Back to Teams</span>
     </button>
 
@@ -1263,7 +1225,7 @@
              override so the Add control reads as a secondary
              affordance next to the destructive Delete Team. -->
         <button type="button" class="cr-btn-add tm-add-members-btn" id="tmAddMembersBtn">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
           Add members
         </button>
       </div>
@@ -1281,8 +1243,8 @@
             <thead>
               <tr>
                 <th><div class="th-inner"><span>Name</span></div></th>
-                <th><div class="th-inner"><span>Email</span></div></th>
-                <th><div class="th-inner"><span>Role</span></div></th>
+                <th class="tm-th-email"><div class="th-inner"><span>Email</span></div></th>
+                <th class="tm-th-role"><div class="th-inner"><span>Role</span></div></th>
                 <th class="tm-th-actions"><div class="th-inner"><span>Actions</span></div></th>
               </tr>
             </thead>
@@ -1305,7 +1267,7 @@
   <div class="cr-page-header-surface">
     <div class="cr-shell cr-header-shell">
       <button class="cr-back" id="crBack">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
         <span class="au-back-label">Back to Roles</span>
       </button>
 
@@ -1332,14 +1294,13 @@
   <div class="cr-page-main-surface">
     <div class="cr-shell cr-main-shell">
     <!-- Basic Information Card -->
-    <div class="cr-card" id="crBasicCard">
-      <div class="cr-section-header" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true" aria-label="Collapse Role Details">
-        <button type="button" class="cr-section-chev-btn" tabindex="-1" aria-hidden="true">
-          <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <span class="cr-section-title">Role Details</span>
+    <div class="cr-card" id="crBasicCard" data-ads-component="accordion">
+      <div class="cr-section-header" data-ads-component="accordion-trigger" data-cr-toggle="basic" role="button" tabindex="0" aria-expanded="true" aria-controls="crBasicPanel" aria-label="Collapse Role Details">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
+        <span class="cr-section-title" id="crBasicTitle">Role Details</span>
       </div>
 
+      <div id="crBasicPanel" data-ads-component="accordion-content">
       <div class="cr-field">
         <label class="cr-label" for="crRoleName">Role Name <span class="cr-req">*</span></label>
         <input type="text" class="cr-input cr-input-rolename" id="crRoleName" placeholder="Enter Role Name" autocomplete="off">
@@ -1349,16 +1310,16 @@
         <label class="cr-label" for="crDescription">Description</label>
         <textarea class="cr-textarea" id="crDescription" placeholder="A brief summary of the role and its primary audience"></textarea>
       </div>
+      </div>
     </div>
 
     <!-- Permissions Card -->
-    <div class="cr-card" id="crFuncsCard">
-      <div class="cr-section-header" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true" aria-label="Collapse Functions">
-        <button type="button" class="cr-section-chev-btn" tabindex="-1" aria-hidden="true">
-          <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
+    <div class="cr-card" id="crFuncsCard" data-ads-component="accordion">
+      <div class="cr-section-header" data-ads-component="accordion-trigger" data-cr-toggle="functions" role="button" tabindex="0" aria-expanded="true" aria-controls="crFuncsPanel" aria-label="Collapse Functions">
+        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
         <span class="cr-section-title" id="crFunctionsTitle">Functions</span>
       </div>
+      <div id="crFuncsPanel" data-ads-component="accordion-content">
       <p class="cr-section-help" id="crFunctionsHelp">Choose which applications this role can access and what actions are allowed.</p>
 
       <div class="cr-field cr-app-row">
@@ -1367,18 +1328,19 @@
           <div class="cr-dd" id="crAppDD">
             <button type="button" class="cr-dd-trigger" id="crAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="crAppMenu" aria-labelledby="crAppLabel">
               <span class="cr-dd-value is-placeholder" id="crAppValue">Select applications</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
             </button>
           </div>
         </div>
         <button type="button" class="cr-btn-add" id="crAddBtn" disabled>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
           Add
         </button>
       </div>
 
       <!-- Applications sections container (populated by JS) -->
       <div class="cr-perms-content" id="crPermsContent" style="display:none"></div>
+      </div>
     </div>
     </div>
   </div>
@@ -1409,7 +1371,7 @@
   <div class="cr-page-header-surface">
     <div class="cr-shell cr-header-shell">
     <button class="cr-back" id="pcBack">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></svg>
       <span class="au-back-label">Back to Permissions</span>
     </button>
 
@@ -1431,7 +1393,7 @@
     <!-- Basic Information -->
     <div class="cr-card" id="pcBasicCard">
       <div class="cr-section-header" data-pc-toggle="basic" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg class="cr-section-chev" width="12" height="12" viewBox="0 0 256 256" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
         <span class="cr-section-title">Basic Information</span>
       </div>
 
@@ -1445,7 +1407,7 @@
           <div class="cr-dd pc-dd" id="pcAppDD">
             <button type="button" class="cr-dd-trigger" id="pcAppTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAppMenu">
               <span class="cr-dd-value is-placeholder" id="pcAppValue">Select Application</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
             </button>
           </div>
         </div>
@@ -1462,10 +1424,7 @@
           <div class="pc-meta-cell">
             <label class="cr-label">Status</label>
             <div class="pc-status" id="pcStatus">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <circle cx="8" cy="8" r="7" stroke="#056C07" stroke-width="1.5" fill="none"/>
-                <path d="M5 8.5l2 2 4-4.5" stroke="#056C07" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-              </svg>
+              <svg width="14" height="14" viewBox="0 0 256 256" fill="#365944" aria-hidden="true"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg>
               <span class="pc-status-label">Active</span>
             </div>
           </div>
@@ -1480,7 +1439,7 @@
     <!-- Permission Options -->
     <div class="cr-card" id="pcOptionsCard">
       <div class="cr-section-header" data-pc-toggle="options" role="button" tabindex="0" aria-expanded="true">
-        <svg class="cr-section-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg class="cr-section-chev" width="12" height="12" viewBox="0 0 256 256" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg>
         <span class="cr-section-title">Permission Options</span>
       </div>
       <p class="pc-section-help">Configure the actions available in this permission capability.</p>
@@ -1491,7 +1450,7 @@
           <div class="cr-dd pc-dd" id="pcAccessLevelDD">
             <button type="button" class="cr-dd-trigger" id="pcAccessLevelTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAccessLevelMenu">
               <span class="cr-dd-value" id="pcAccessLevelValue">Full Access</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
             </button>
           </div>
         </div>
@@ -1500,12 +1459,12 @@
           <div class="cr-dd pc-dd" id="pcAddGroupDD">
             <button type="button" class="cr-dd-trigger" id="pcAddGroupTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="pcAddGroupMenu">
               <span class="cr-dd-value is-placeholder" id="pcAddGroupValue">Select a group</span>
-              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg class="cr-dd-chev" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></svg>
             </button>
           </div>
         </div>
         <button type="button" class="cr-btn-add" id="pcAddBtn" disabled>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
           Add
         </button>
       </div>
@@ -1523,7 +1482,7 @@
   <div class="flt-header">
     <h2 class="flt-title">Filters</h2>
     <button class="flt-close" id="fltClose" aria-label="Close filters">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
     </button>
   </div>
   <div class="flt-body">
@@ -1531,14 +1490,14 @@
       <label class="flt-label">Name</label>
       <div class="flt-input-wrap">
         <input type="text" class="flt-input" id="fltName" placeholder="Search name">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear name" data-for="fltName"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear name" data-for="fltName"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
       </div>
     </div>
     <div class="flt-field">
       <label class="flt-label">Email</label>
       <div class="flt-input-wrap">
         <input type="text" class="flt-input" id="fltEmail" placeholder="Search email">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear email" data-for="fltEmail"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear email" data-for="fltEmail"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
       </div>
     </div>
     <div class="flt-field">
@@ -1553,7 +1512,7 @@
       <label class="flt-label">Team</label>
       <div class="flt-input-wrap">
         <input type="text" class="flt-input" id="fltTeam" placeholder="Search team">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear team" data-for="fltTeam"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear team" data-for="fltTeam"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
       </div>
     </div>
     <div class="flt-field">
@@ -1579,7 +1538,7 @@
   <div class="flt-header">
     <h2 class="flt-title">Filters</h2>
     <button class="flt-close" id="rpFltClose" aria-label="Close filters">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
     </button>
   </div>
   <div class="flt-body">
@@ -1587,14 +1546,14 @@
       <label class="flt-label">Role</label>
       <div class="flt-input-wrap">
         <input type="text" class="flt-input" id="rpFltRole" placeholder="Search role name">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear role" data-for="rpFltRole"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear role" data-for="rpFltRole"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
       </div>
     </div>
     <div class="flt-field">
       <label class="flt-label">Description</label>
       <div class="flt-input-wrap">
         <input type="text" class="flt-input" id="rpFltDesc" placeholder="Search description">
-        <button type="button" class="flt-input-clear hidden" aria-label="Clear description" data-for="rpFltDesc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="button" class="flt-input-clear hidden" aria-label="Clear description" data-for="rpFltDesc"><svg width="12" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg></button>
       </div>
     </div>
     <div class="flt-field">
@@ -1670,9 +1629,7 @@
     <div class="cr-confirm-header">
       <h2 class="cr-confirm-title" id="crAppRemoveTitle">Remove application?</h2>
       <button type="button" class="cr-confirm-close" id="crAppRemoveClose" aria-label="Close remove application dialog">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
       </button>
     </div>
     <div class="cr-confirm-body-region">
@@ -1682,10 +1639,7 @@
     <div class="cr-confirm-actions">
       <button class="btn-std" id="crAppRemoveCancel" type="button">Cancel</button>
       <button class="cr-btn-danger-solid" id="crAppRemoveConfirm" type="button">
-        <svg class="au-revoke-confirm-spinner" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.75"/>
-          <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-        </svg>
+        <svg class="au-revoke-confirm-spinner" width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,128a104,104,0,0,1-208,0,8,8,0,0,1,16,0,88,88,0,1,0,88-88,8,8,0,0,1,0-16A104.11,104.11,0,0,1,232,128Z"/></svg>
         <span id="crAppRemoveConfirmLabel">Remove</span>
       </button>
     </div>
@@ -1759,9 +1713,7 @@
     <div class="cr-confirm-header">
       <h2 class="cr-confirm-title" id="auAddUserModalTitle">Add user</h2>
       <button type="button" class="cr-confirm-close" id="auAddUserModalClose" aria-label="Close">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
       </button>
     </div>
     <div class="cr-confirm-body-region au-adduser-body">
@@ -1774,19 +1726,16 @@
 
       <div class="au-adduser-search-wrap" id="auAddUserSearchWrap">
         <div class="ads-search au-adduser-search" data-ads-component="search">
-          <svg class="au-adduser-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg class="au-adduser-search-icon" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
           <input type="text" class="au-adduser-search-input" id="auAddUserSearchInput"
                  placeholder="Search by name, email, or team"
                  role="combobox" aria-expanded="false" aria-controls="auAddUserListbox"
                  aria-autocomplete="list" aria-haspopup="listbox" aria-activedescendant=""
                  autocomplete="off" autocapitalize="off" spellcheck="false">
           <button type="button" class="search-clear au-adduser-search-clear" id="auAddUserSearchClear" aria-label="Clear search" hidden>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
           </button>
-          <svg class="au-adduser-search-spinner" id="auAddUserSearchSpinner" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" hidden>
-            <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.75"/>
-            <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-          </svg>
+          <svg class="au-adduser-search-spinner" id="auAddUserSearchSpinner" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" hidden><path d="M232,128a104,104,0,0,1-208,0,8,8,0,0,1,16,0,88,88,0,1,0,88-88,8,8,0,0,1,0-16A104.11,104.11,0,0,1,232,128Z"/></svg>
         </div>
         <div class="au-adduser-dropdown" id="auAddUserDropdown" hidden>
           <ul class="au-adduser-listbox" id="auAddUserListbox" role="listbox" aria-label="Search results"></ul>
@@ -1830,9 +1779,7 @@
     <div class="cr-confirm-header">
       <h2 class="cr-confirm-title" id="auEffBreakdownTitle">Effective access breakdown</h2>
       <button type="button" class="cr-confirm-close" id="auEffBreakdownX" aria-label="Close effective access breakdown">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
       </button>
     </div>
     <div class="cr-confirm-body-region au-eff-breakdown-body">
@@ -1870,27 +1817,22 @@
     <div class="cr-confirm-header">
       <h2 class="cr-confirm-title" id="tmAddMembersTitle">Add members</h2>
       <button type="button" class="cr-confirm-close" id="tmAddMembersClose" aria-label="Close">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
       </button>
     </div>
     <div class="cr-confirm-body-region au-adduser-body tm-add-body">
       <p class="au-adduser-heading-sub tm-add-subtitle" id="tmAddMembersSubtitle">Search and select internal users to add to this team.</p>
       <div class="au-adduser-search-wrap tm-add-search-wrap">
         <div class="ads-search au-adduser-search tm-add-search" data-ads-component="search">
-          <svg class="au-adduser-search-icon tm-add-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg class="au-adduser-search-icon tm-add-search-icon" width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
           <input type="text" class="au-adduser-search-input tm-add-search-input" id="tmAddMembersSearch"
                  placeholder="Search by name, email, or team" aria-label="Search by name, email, or team"
                  aria-describedby="tmAddMembersHint" aria-controls="tmAddMembersList"
                  autocomplete="off" autocapitalize="off" spellcheck="false">
           <button type="button" class="search-clear au-adduser-search-clear tm-add-search-clear" id="tmAddMembersSearchClear" aria-label="Clear search" hidden>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
           </button>
-          <svg class="au-adduser-search-spinner tm-add-search-spinner" id="tmAddMembersSpinner" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" hidden>
-            <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.75"/>
-            <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-          </svg>
+          <svg class="au-adduser-search-spinner tm-add-search-spinner" id="tmAddMembersSpinner" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" hidden><path d="M232,128a104,104,0,0,1-208,0,8,8,0,0,1,16,0,88,88,0,1,0,88-88,8,8,0,0,1,0-16A104.11,104.11,0,0,1,232,128Z"/></svg>
         </div>
       </div>
       <p class="tm-add-hint" id="tmAddMembersHint">Enter at least 2 characters to search.</p>
@@ -1948,9 +1890,7 @@
     <div class="cr-confirm-header">
       <h2 class="cr-confirm-title" id="tmDeleteConfirmTitle">Delete team?</h2>
       <button type="button" class="cr-confirm-close" id="tmDeleteConfirmClose" aria-label="Close">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M12.5 3.5 3.5 12.5M3.5 3.5l9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
       </button>
     </div>
     <div class="cr-confirm-body-region">
@@ -1960,10 +1900,7 @@
     <div class="cr-confirm-actions">
       <button class="btn-std" id="tmDeleteConfirmCancel" type="button">Cancel</button>
       <button class="cr-btn-danger-solid" id="tmDeleteConfirmConfirm" type="button">
-        <svg class="au-revoke-confirm-spinner" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.75"/>
-          <path d="M14.25 8a6.25 6.25 0 0 0-6.25-6.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-        </svg>
+        <svg class="au-revoke-confirm-spinner" width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M232,128a104,104,0,0,1-208,0,8,8,0,0,1,16,0,88,88,0,1,0,88-88,8,8,0,0,1,0-16A104.11,104.11,0,0,1,232,128Z"/></svg>
         <span id="tmDeleteConfirmConfirmLabel">Delete Team</span>
       </button>
     </div>
@@ -1989,14 +1926,14 @@
     <span class="sim-menubar-app">Finder</span>
     <span class="sim-menubar-items"><span>File</span><span>Edit</span><span>View</span><span>Go</span><span>Window</span><span>Help</span></span>
     <span class="sim-menubar-status">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12" y2="20"/></svg>
-      <svg width="18" height="12" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="19" height="14" rx="2"/><rect x="22" y="6" width="1.5" height="4" fill="currentColor" stroke="none"/><rect x="3" y="3" width="13" height="10" fill="currentColor" stroke="none"/></svg>
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M140,204a12,12,0,1,1-12-12A12,12,0,0,1,140,204ZM237.05,87C187.64,41.19,68.27,41.24,18.91,87A15.93,15.93,0,0,0,16.31,109.5,16.2,16.2,0,0,0,32.41,116,15.92,15.92,0,0,0,43,111.67c38.69-35.8,132.3-35.77,171,.05A16,16,0,0,0,237,109.53,15.93,15.93,0,0,0,237.05,87Zm-31.4,38.69c-33.46-30-97.82-30.09-131.29,0A16,16,0,0,0,85.68,150,15.75,15.75,0,0,0,96.2,145.8c22.87-20.52,67.74-20.52,90.61,0a16,16,0,1,0,18.84-25.86Zm-34.17,38.55a56.26,56.26,0,0,0-62.94,0,16,16,0,0,0,17.91,26.49,24.29,24.29,0,0,1,27.12,0,16,16,0,0,0,17.91-26.49Z"/></svg>
+      <svg width="18" height="12" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,56H80A24,24,0,0,0,56,80v96a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V80A24,24,0,0,0,200,56Zm8,120a8,8,0,0,1-8,8H80a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H200a8,8,0,0,1,8,8ZM48,88a8,8,0,0,0-16,0v80a8,8,0,0,0,16,0Z"/></svg>
       <span class="sim-menubar-clock" id="simMenubarClock"></span>
     </span>
   </div>
   <div class="sim-desktop-surface">
     <button type="button" class="sim-desktop-return" id="simDesktopReturn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg>
       Back to Atlas
     </button>
     <div class="sim-desktop-icons">
@@ -2025,7 +1962,7 @@
       </span>
       <span class="sim-excel-titletext" id="simExcelTitleText">selected-users.xlsx — Excel</span>
       <button type="button" class="sim-excel-back-btn" id="simExcelBackBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg>
         Back to User List
       </button>
     </div>
@@ -2071,18 +2008,19 @@
   <span class="ads-tt__arrow" aria-hidden="true"></span>
 </div>
 
-<script src="../version-config.js?v=20260810versionmenu1"></script>
-<script src="app.js?v=20261005vnav1"></script>
+<script src="../version-config.js?v=20261005v42"></script>
+<script src="iam-even-columns.js?v=20261005v42mx"></script>
+<script src="app.js?v=20261005v42role"></script>
 <!-- Redline Mode (V4.1 only). Self-contained: wires its own profile-menu
      click handler (#userMenuRedline) and its own ⌘D/Ctrl+D shortcut, so
      app.js does not need to know about it beyond the roving-tabindex
      entry added for keyboard menu navigation. -->
-<script src="redline.js?v=20261005vnav1"></script>
+<script src="redline.js?v=20261005v42"></script>
 <!-- Redline overlay-gallery registry. Loads in this document and in the
      `?redlinePreview=1` iframe alike; only the iframe copy is ever driven,
      because that is where both galleries render. Registers nothing until
      Redline asks for it, and reaches every state by driving the real
      production UI — see REDLINE-OVERLAY-GALLERY.md. -->
-<script src="redline-gallery.js?v=20260812gallery4"></script>
+<script src="redline-gallery.js?v=20261005v42"></script>
 </body>
 </html>

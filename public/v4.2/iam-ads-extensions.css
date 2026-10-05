@@ -1,0 +1,2329 @@
+/* IAM v4.2 — HARPS / ADS shell + chrome extensions.
+   Linked last in public/v4.2/index.html. Scoped under the existing
+   `html[data-iam-version="v4"]` hook (CSS scope, not a version label).
+   Values copied from HARPS v2a/assets/v2-shell.css (and measured HARPS
+   computed styles). Does not edit ads-design-system/ or any ads-theme.css. */
+
+@font-face {
+  font-family: "MultiPlane Display";
+  src: url("../assets/fonts/MultiplaneTWDC-Display-Medium.woff2") format("woff2");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html[data-iam-version="v4"] {
+  --v2-topbar-h: 56px;
+  --v2-topbar-bg: #4045c2;
+  --v2-topbar-text: #ffffff;
+  --v2-topbar-pad-x: 24px;
+  --v2-brand-gap: 8px;
+  --v2-brand-mark-w: 32px;
+  --v2-utilities-gap: 16px;
+  --v2-rail-w-collapsed: 64px;
+  --v2-rail-w-expanded: 200px;
+  --v2-rail-pad-y: 20px;
+  --v2-rail-pad-x: 14px;
+  --v2-rail-gap: 4px;
+  --v2-rail-pad-y-collapsed: 17px;
+  --v2-rail-pad-x-collapsed: 9px;
+  --v2-rail-gap-collapsed: 8px;
+  --v2-navitem-size-collapsed: 44px;
+  --v2-rail-border: #e5e5eb;
+  --v2-navitem-size: 40px;
+  --v2-navitem-radius: 6px;
+  --v2-navitem-active-bg: #e2e3f2;
+  --v2-navitem-hover-bg: #f2f3f7;
+  --v2-icon-size: 20px;
+  --v2-focus-ring: #4045c2;
+  --v2-page-pad-top: 20px;
+  --v2-page-pad-right: 33px;
+  --v2-page-pad-bottom: 12px;
+  --v2-page-pad-left: 25px;
+  --v2-topbar-pad-left: 15px;
+  --v2-page-canvas: #f4f5f6;
+  --v2-card-radius: 12px;
+  --v2-card-border: #d4dee3;
+  --v2-card-shadow: 0 0 4px -1px rgba(15, 23, 42, 0.08);
+  --iam-ads-control-height: 36px;
+  --iam-ads-control-radius: 6px;
+  --iam-ads-toast-elevation: 0 4px 12px #0f12144d;
+  --iam-ads-toast-text-info: #143f90;
+  --page-header-surface-bg: transparent;
+  --page-main-surface-bg: transparent;
+
+  --vnav-width-collapsed: 64px;
+  --vnav-width-expanded: 200px;
+  --sidebar-collapsed-width: 64px;
+  --sidebar-expanded-width: 200px;
+  --sidebar-width: 64px;
+  overflow-x: clip;
+  scrollbar-gutter: auto;
+}
+
+html[data-iam-version="v4"][data-sidebar-collapsed="true"] {
+  --sidebar-width: 64px;
+}
+
+html[data-iam-version="v4"][data-sidebar-collapsed="false"] {
+  --sidebar-width: 200px;
+}
+
+html[data-iam-version="v4"] html,
+html[data-iam-version="v4"],
+html[data-iam-version="v4"] body {
+  margin: 0;
+  background: var(--v2-page-canvas);
+}
+
+html[data-iam-version="v4"] body {
+  overflow-x: clip;
+  background: var(--v2-page-canvas);
+}
+
+/* ═══ TOP BAR (HARPS .v2-topbar) ═══════════════════════════════════════ */
+html[data-iam-version="v4"] nav.nav {
+  position: sticky;
+  top: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+  height: 56px;
+  min-height: 56px;
+  box-sizing: border-box;
+  padding: 0 24px 0 15px;
+  background: #4045c2;
+  border: 0;
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] nav.nav .nav-mod,
+html[data-iam-version="v4"] nav.nav .nav-logo-group,
+html[data-iam-version="v4"] nav.nav .nav-logo-link.atlas-brand {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  gap: 8px;
+}
+
+html[data-iam-version="v4"] nav.nav .atlas-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+html[data-iam-version="v4"] nav.nav .atlas-brand-rail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+html[data-iam-version="v4"] nav.nav .atlas-brand-glyph,
+html[data-iam-version="v4"] nav.nav .atlas-brand .atlas-brand-glyph.nav-logo-img {
+  display: block;
+  width: 32px;
+  height: 28px;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+html[data-iam-version="v4"] nav.nav .atlas-brand .atlas-brand-text {
+  font-family: "MultiPlane Display", "MultiplaneTWDC Display", "Open Sans", sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+html[data-iam-version="v4"] nav.nav .nav-c {
+  display: none;
+}
+
+html[data-iam-version="v4"] nav.nav .nav-r {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+html[data-iam-version="v4"] nav.nav .nav-r .nav-r-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 4px;
+}
+
+html[data-iam-version="v4"] nav.nav .nav-r #userMenuTrigger.nav-r-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+html[data-iam-version="v4"] nav.nav .nav-avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/* ═══ LEFT RAIL (HARPS .v2-rail on IAM .vnav) ══════════════════════════ */
+html[data-iam-version="v4"] aside.vnav.sidebar {
+  --vnav-width-collapsed: 64px;
+  --vnav-width-expanded: 200px;
+  --vnav-cell-size: 40px;
+  top: 56px;
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+  padding: 17px 9px;
+  background: #ffffff;
+  border-right: 1px solid #e5e5eb;
+  box-sizing: border-box;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+html[data-iam-version="v4"][data-sidebar-collapsed="true"] aside.vnav.sidebar:not(.vnav--pinned):not(.vnav--hovered) {
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__items {
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__link {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 0;
+  border-radius: 6px;
+  color: #3b4347;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__link:hover {
+  background: #f2f3f7;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__item--active > .vnav__link,
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__item--active > .vnav__link:hover {
+  background: #e2e3f2;
+  color: #4045c2;
+  border-radius: 6px;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__link:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: 1px;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__item--active .vnav__icon {
+  color: #4045c2;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__active-bar {
+  display: none;
+}
+
+/* Expanded (pinned or temporary hover) — HARPS 200 / 172×40 / 20 14 / 4 gap */
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned,
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--hovered,
+html[data-iam-version="v4"][data-sidebar-collapsed="false"] aside.vnav.sidebar {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  padding: 20px 14px;
+  align-items: flex-start;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__items,
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--hovered .vnav__items {
+  gap: 4px;
+  align-items: stretch;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__link,
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--hovered .vnav__link {
+  width: 172px;
+  max-width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 10px 12px;
+  justify-content: flex-start;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__item--active > .vnav__link {
+  font-weight: 600;
+  color: #4045c2;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__item--active .vnav__active-bar {
+  display: block;
+  width: 3px;
+  height: 20px;
+  border-radius: 2px;
+  background: #4045c2;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--hovered:not(.vnav--pinned) .vnav__active-bar {
+  display: none;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: auto;
+  padding-bottom: 4px;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__toggle-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__close {
+  width: 28px;
+  height: 28px;
+  background: #f5f5f7;
+  border-radius: 6px;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__close:hover {
+  background: #e9e9ee;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar .vnav__close:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: 2px;
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar:not(.vnav--pinned) .vnav__close svg {
+  transform: rotate(180deg);
+}
+
+html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__expand-target {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Keep expand working at 1024 (HARPS does not force-collapse the rail). */
+@media (max-width: 1023.98px) {
+  html[data-iam-version="v4"][data-sidebar-collapsed="false"] {
+    --sidebar-width: 200px;
+  }
+  html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned {
+    width: 200px;
+    padding: 20px 14px;
+    align-items: flex-start;
+  }
+  html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__link {
+    width: 172px;
+    height: 40px;
+    min-height: 40px;
+    padding: 10px 12px;
+    justify-content: flex-start;
+  }
+  html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__label {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    clip: auto;
+    opacity: 1;
+  }
+  html[data-iam-version="v4"] aside.vnav.sidebar.vnav--pinned .vnav__item--active .vnav__active-bar {
+    display: block;
+  }
+}
+
+/* ═══ PAGE CANVAS + CARD (HARPS .page-content / .overview-card) ════════ */
+html[data-iam-version="v4"] main.page {
+  background: var(--v2-page-canvas);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 20px 33px 12px calc(var(--sidebar-width) + 25px);
+  box-sizing: border-box;
+  overflow-x: clip;
+  min-width: 0;
+  transition: padding-left 160ms ease;
+}
+
+html[data-iam-version="v4"] main.page > .hdr {
+  background: transparent;
+  box-shadow: none;
+  clip-path: none;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 16px;
+}
+
+html[data-iam-version="v4"] main.page > .card {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  overflow: visible;
+  max-width: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card {
+  background: #ffffff;
+  border: 1px solid #d4dee3;
+  border-radius: 12px;
+  box-shadow: 0 0 4px -1px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  margin: 0;
+}
+
+html[data-iam-version="v4"] main.page .tbl-wrap {
+  overflow-x: auto;
+}
+
+html[data-iam-version="v4"] .au-page,
+html[data-iam-version="v4"] .cr-page {
+  top: 56px;
+  left: var(--sidebar-width);
+  right: 0;
+  background: var(--v2-page-canvas);
+  padding: 20px 33px 12px 25px;
+  box-sizing: border-box;
+  overflow-x: clip;
+  transition: left 160ms ease;
+}
+
+/* Add User keeps the full content width. Edit User uses Edit Role's
+   content container (`.cr-shell`): 1144px max, centered, 48px
+   horizontal padding. Responsive max-widths follow the `.cr-shell`
+   breakpoints; the 48px gutter stays, matching `.cr-header-shell`
+   and `.cr-main-shell`. */
+html[data-iam-version="v4"] #addUsersPage .au-shell {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell {
+  width: 100%;
+  max-width: 1144px;
+  margin-left: auto;
+  margin-right: auto;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell.au-header-shell,
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell.au-main-shell {
+  padding-left: 48px;
+  padding-right: 48px;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell.au-main-shell {
+  padding-bottom: 64px;
+}
+@media (max-width: 1439px) {
+  html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell {
+    max-width: 1080px;
+  }
+}
+@media (max-width: 1199px) {
+  html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell {
+    max-width: 980px;
+  }
+}
+@media (max-width: 1023px) {
+  html[data-iam-version="v4"] #addUsersPage.is-edit-mode .au-shell {
+    max-width: 100%;
+  }
+}
+
+/* Access table stays inside the Edit User card. Long effective-access
+   text wraps onto extra lines instead of clipping or widening the page. */
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-wrap {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl thead th {
+  height: auto;
+  min-height: 32px;
+  white-space: normal;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-tbl tbody td {
+  height: auto;
+  max-height: none;
+  white-space: normal;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-cell {
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-summary,
+html[data-iam-version="v4"] #addUsersPage.is-edit-mode #auRolesCard .au-eff-summary-group {
+  display: inline;
+  max-width: 100%;
+  white-space: normal;
+}
+
+html[data-iam-version="v4"] .au-page-header-surface,
+html[data-iam-version="v4"] .cr-page-header-surface,
+html[data-iam-version="v4"] .au-page-main-surface,
+html[data-iam-version="v4"] .cr-page-main-surface {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-iam-version="v4"] main.page,
+  html[data-iam-version="v4"] .au-page,
+  html[data-iam-version="v4"] .cr-page,
+  html[data-iam-version="v4"] aside.vnav.sidebar {
+    transition: none;
+  }
+}
+
+/* ═══ PROMPT 3 — card header, tabs, toolbar (HARPS AR / Finance) ══════ */
+html[data-iam-version="v4"] main.page > .hdr {
+  display: none;
+}
+
+html[data-iam-version="v4"] .v4-card > .iam-card-header.hdr {
+  display: block;
+  padding: 15px 0 0;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
+  clip-path: none;
+}
+
+html[data-iam-version="v4"] .v4-card .iam-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 23px;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] .v4-card .iam-title-row .iam-page-title {
+  margin: 0;
+  font-family: "MultiPlane Display", "MultiplaneTWDC Display", "Open Sans", sans-serif;
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] .v4-card .iam-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+html[data-iam-version="v4"] .v4-card .iam-title-actions .btn-ghost {
+  display: none !important;
+  height: 36px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #4045c2;
+  color: #ffffff;
+  border: 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  gap: 4px;
+}
+
+html[data-iam-version="v4"] .v4-card .iam-title-actions .btn-ghost:hover:not(:disabled) {
+  background: #6567ce;
+}
+
+html[data-iam-version="v4"] .v4-card[data-iam-tab="users"] .iam-title-row {
+  height: auto;
+  padding-top: 12px;
+  padding-bottom: 0;
+}
+
+html[data-iam-version="v4"] .v4-card[data-iam-tab="users"] .iam-title-actions {
+  display: none;
+}
+
+html[data-iam-version="v4"] #usersPanel #usersAddBtn {
+  display: inline-flex !important;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+html[data-iam-version="v4"] .v4-card[data-iam-tab="roles"] #rolesCreateBtn {
+  display: inline-flex !important;
+  align-items: center;
+}
+
+html[data-iam-version="v4"] .v4-card .iam-page-subtitle {
+  margin: 4px 0 8px;
+  padding: 0 23px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #51585b;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs {
+  height: auto;
+  min-height: 0;
+  /* 16px row inset + 16px tab padding puts the label on the 32px card guide. */
+  padding: 0 0 0 16px;
+  margin: 0;
+  border-bottom: none;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs nav {
+  height: auto;
+  gap: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs .ads-tab {
+  height: auto !important;
+  min-height: 39px !important;
+  padding: 8px 16px 7px !important;
+  font: 600 18px/24px "Open Sans", sans-serif !important;
+  color: #51585b !important;
+  position: relative;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs .ads-tab:hover:not(:disabled):not(.on) {
+  color: #3b4347 !important;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs .ads-tab.on {
+  height: auto !important;
+  padding: 8px 16px 7px !important;
+  color: #4045c2 !important;
+  font-weight: 600 !important;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs .ads-tab.on::after {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+  background: #4045c2 !important;
+}
+
+html[data-iam-version="v4"] .v4-card .tabs-row.ads-tabs .ads-tab:focus-visible {
+  height: auto !important;
+  padding: 8px 16px 7px !important;
+  outline: 2px solid #4045c2 !important;
+  outline-offset: 1px !important;
+  border-radius: 3px !important;
+  box-shadow: none !important;
+}
+
+html[data-iam-version="v4"] .v4-card {
+  /* Tabs row inset (7px) + ADS tab padding (16px) = the "Users" label. */
+  --iam-label-rail: calc(7px + var(--iam-tab-inline-pad, 16px));
+  --iam-toolbar-control-h: 36px;
+  /* This bundle has no named ADS spacing custom property. 8px is the
+     ADS spacing step used for the list-toolbar rhythm. */
+  --iam-toolbar-gap: 8px;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: var(--iam-toolbar-control-h);
+  height: auto;
+  margin-top: var(--iam-toolbar-gap);
+  margin-bottom: 0;
+  /* 32px start / 16px end match the v4.1 card guide. The bottom padding
+     is the only space between the controls and the table header. */
+  padding: 0 16px var(--iam-toolbar-gap) 32px;
+  box-sizing: border-box;
+  gap: 16px;
+  row-gap: var(--iam-toolbar-gap);
+}
+
+html[data-iam-version="v4"] .v4-card #usersPanel .tbar,
+html[data-iam-version="v4"] .v4-card #rolesPanel .tbar,
+html[data-iam-version="v4"] .v4-card #teamsPanel .tbar {
+  padding-left: var(--iam-card-content-inset, 32px);
+  padding-inline-start: var(--iam-card-content-inset, 32px);
+  margin-top: var(--iam-toolbar-gap);
+  margin-bottom: 0;
+  height: auto;
+  min-height: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: var(--iam-toolbar-gap);
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .tbar-l {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  row-gap: var(--iam-toolbar-gap);
+  min-width: 0;
+}
+
+html[data-iam-version="v4"] .v4-card #usersPanel .tbar .tbar-l {
+  gap: 12px;
+  row-gap: var(--iam-toolbar-gap);
+}
+
+/* Users Search stays in flex order after Internal/External. The older
+   JS column-align wrote a negative margin so Search lined up with the
+   checkbox when it was first in the toolbar; that pull is no longer
+   wanted and would cover the segmented control. */
+html[data-iam-version="v4"] .v4-card #usersPanel #searchWrap {
+  margin-left: 0 !important;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .tbar-r {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  row-gap: var(--iam-toolbar-gap);
+  margin-left: auto;
+}
+
+/* Toolbar search uses the shared ADS Search component (.ads-search):
+   36px pill, 20px icon, token border, 14/20 type. The outer box,
+   including padding and border, stops at 500px and shrinks below that. */
+html[data-iam-version="v4"] .v4-card #usersPanel .tbar .ads-search,
+html[data-iam-version="v4"] .v4-card #rolesPanel .tbar .ads-search,
+html[data-iam-version="v4"] .v4-card #teamsPanel .tbar .ads-search {
+  align-self: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 500px;
+  min-width: 120px;
+  flex: 1 1 500px;
+}
+
+html[data-iam-version="v4"] .ads-search .search-ico,
+html[data-iam-version="v4"] .v4-card .tbar .ads-search .search-ico {
+  display: block;
+  order: 0;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  position: static;
+  color: var(--text-placeholder);
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .ads-search > input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 20px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  font: 400 14px/20px "Open Sans", sans-serif;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .ads-search > input::placeholder {
+  color: var(--text-placeholder);
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 1;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .seg-ctrl {
+  display: inline-flex;
+  align-items: stretch;
+  height: 38px;
+  min-height: 38px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .seg-ctrl .seg-btn {
+  height: 36px;
+  min-height: 36px;
+  padding: 8px 16px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #51585b;
+  font: 600 14px/20px "Open Sans", sans-serif;
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .seg-ctrl .seg-btn:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .seg-ctrl .seg-btn:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .seg-ctrl .seg-btn + .seg-btn {
+  border-left: 1px solid #e0e0e0;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .seg-ctrl .seg-btn.on {
+  background: #e2e3f2;
+  color: #4045c2;
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar #usersFilterBtn,
+html[data-iam-version="v4"] .v4-card .tbar #rpFilterBtn {
+  width: var(--iam-toolbar-control-h);
+  height: var(--iam-toolbar-control-h);
+  min-width: var(--iam-toolbar-control-h);
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar #usersFilterBtn:hover,
+html[data-iam-version="v4"] .v4-card .tbar #rpFilterBtn:hover {
+  background: #f2f3f7;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar .au-export-btn {
+  height: 36px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #3b4347;
+  font: 600 14px/20px "Open Sans", sans-serif;
+}
+
+html[data-iam-version="v4"] .v4-card .tbar #usersExportBtn.au-export-btn:disabled,
+html[data-iam-version="v4"] .v4-card .tbar #usersExportBtn.au-export-btn[aria-disabled="true"] {
+  color: #0f12144d;
+}
+
+html[data-iam-version="v4"] .au-title,
+html[data-iam-version="v4"] .cr-title,
+html[data-iam-version="v4"] .tm-title {
+  font-family: "MultiPlane Display", "MultiplaneTWDC Display", "Open Sans", sans-serif;
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] .au-back,
+html[data-iam-version="v4"] .cr-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #4045c2;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+html[data-iam-version="v4"] .au-back svg,
+html[data-iam-version="v4"] .cr-back svg {
+  width: 13px;
+  height: 13px;
+}
+
+html[data-iam-version="v4"] .au-header-actions,
+html[data-iam-version="v4"] .cr-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+/* ═══ PROMPT 4 — HARPS tables, chips, sort, footer ═══════════════════ */
+html[data-iam-version="v4"] {
+  --ads-sort-arrow: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path transform='translate(-2.5,0)' d='M8.5 1.875C8.66576 1.875 8.82473 1.94085 8.94194 2.05806L10.4419 3.55806C10.686 3.80214 10.686 4.19786 10.4419 4.44194C10.1979 4.68602 9.80214 4.68602 9.55806 4.44194L9.125 4.00888V9.5C9.125 9.84518 8.84518 10.125 8.5 10.125C8.15482 10.125 7.875 9.84518 7.875 9.5V4.00888L7.44194 4.44194C7.19786 4.68602 6.80214 4.68602 6.55806 4.44194C6.31398 4.19786 6.31398 3.80214 6.55806 3.55806L8.05806 2.05806C8.17527 1.94085 8.33424 1.875 8.5 1.875Z'/></svg>");
+}
+
+html[data-iam-version="v4"] main.page .v4-card .tbl-wrap,
+html[data-iam-version="v4"] .au-eff-wrap,
+html[data-iam-version="v4"] .tm-members-tbl-wrap {
+  overflow-x: auto;
+  position: relative;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .tbl-wrap[data-scroll-shadow="true"]::after {
+  content: "";
+  position: sticky;
+  right: 0;
+  top: 0;
+  display: block;
+  width: 24px;
+  margin-left: -24px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(to left, rgba(15, 18, 20, 0.12), transparent);
+  float: right;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .tbl-wrap,
+html[data-iam-version="v4"] main.page .v4-card table.tbl,
+html[data-iam-version="v4"] main.page .v4-card table.tbl col,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th,
+html[data-iam-version="v4"] main.page .v4-card table.tbl td,
+html[data-iam-version="v4"] table.au-eff-tbl,
+html[data-iam-version="v4"] table.tm-members-tbl,
+html[data-iam-version="v4"] table.cr-matrix {
+  transition: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+/* Edit User access, Edit Team members, and Edit Role matrices fill
+   their cards. Column tracks are set below; they are not content-sized. */
+html[data-iam-version="v4"] table.au-eff-tbl,
+html[data-iam-version="v4"] table.tm-members-tbl,
+html[data-iam-version="v4"] table.cr-matrix {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl thead tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl thead th,
+html[data-iam-version="v4"] table.au-eff-tbl thead th,
+html[data-iam-version="v4"] table.tm-members-tbl thead th,
+html[data-iam-version="v4"] table.cr-matrix thead th {
+  height: 32px;
+  min-height: 32px;
+  padding: 0 8px;
+  border-bottom: 1px solid #d4dee3;
+  background: #ffffff;
+  color: #666d70;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: left;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-rl,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* v4.1 shared insets — same value on the header and every body cell. */
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-tm,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-tm {
+  padding-left: 16px !important;
+  padding-right: 8px !important;
+}
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-ll,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-ll {
+  padding-left: 18px !important;
+  padding-right: 8px !important;
+}
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-rg,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rg {
+  padding-left: 22px !important;
+  padding-right: 8px !important;
+}
+
+/* Roles "Role" and Teams "Team" share the Users-label rail.
+   Header text stays fully visible (no left clip). */
+html[data-iam-version="v4"] main.page .v4-card .rp-tbl th.rp-role,
+html[data-iam-version="v4"] main.page .v4-card .rp-tbl td.rp-role,
+html[data-iam-version="v4"] main.page .v4-card #teamsPanel .tm-tbl th.tm-th-name,
+html[data-iam-version="v4"] main.page .v4-card #teamsPanel .tm-tbl td.tm-cell-name {
+  padding-left: var(--iam-card-content-inset, 32px) !important;
+  padding-right: 8px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody td,
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody .name-cell,
+html[data-iam-version="v4"] table.au-eff-tbl tbody td,
+html[data-iam-version="v4"] table.tm-members-tbl tbody td,
+html[data-iam-version="v4"] table.cr-matrix tbody td {
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody td,
+html[data-iam-version="v4"] table.au-eff-tbl tbody td,
+html[data-iam-version="v4"] table.tm-members-tbl tbody td,
+html[data-iam-version="v4"] table.cr-matrix tbody td {
+  padding: 0 8px;
+  border-bottom: 1px solid #d4dee3;
+  color: #1e2528;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  vertical-align: middle;
+  white-space: nowrap;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody tr {
+  background: #ffffff;
+  border-bottom: 0;
+  height: 56px;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody tr:hover td,
+html[data-iam-version="v4"] table.au-eff-tbl tbody tr:hover td,
+html[data-iam-version="v4"] table.tm-members-tbl tbody tr:hover td {
+  background: #0f12140d;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody tr.is-selected td,
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody tr[aria-selected="true"] td {
+  background: #e2e3f2;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-sel,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-sel {
+  padding-left: var(--iam-card-content-inset, 32px) !important;
+  padding-right: 0 !important;
+  text-align: left;
+  width: auto;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-nm,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.c-nm {
+  padding: 0 8px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl tbody .name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  padding: 0;
+  min-width: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .name-cell-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody .name-link,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .name-link,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .rp-role-link,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .tm-name-link {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #2d2f8c;
+  text-decoration: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .name-link:hover,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .rp-role-link:hover,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .tm-name-link:hover {
+  text-decoration: underline;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .name-cell-email {
+  font: 500 12px/18px "Open Sans", sans-serif;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .name-avatar,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .name-avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex: 0 0 32px;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .avatar-initials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font: 600 12px/18px "Open Sans", sans-serif;
+  background: #e2e3f2;
+  color: #2d2f8c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .th-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-sort],
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-rp-sort],
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-tm-sort] {
+  cursor: pointer;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th:not([data-sort]):not([data-rp-sort]):not([data-tm-sort]) {
+  cursor: default;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-sort]:focus-visible,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-rp-sort]:focus-visible,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-tm-sort]:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: -2px;
+  border-radius: 2px;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .sort-ico {
+  display: none;
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  color: #666d70;
+  background-color: currentColor;
+  -webkit-mask: var(--ads-sort-arrow) center / 12px 12px no-repeat;
+  mask: var(--ads-sort-arrow) center / 12px 12px no-repeat;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .sort-ico svg {
+  display: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="ascending"] .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="descending"] .sort-ico {
+  display: inline-block;
+  opacity: 1;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="descending"] .sort-ico {
+  transform: rotate(180deg);
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-sort]:hover .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-rp-sort]:hover .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-tm-sort]:hover .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-sort]:focus-visible .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-rp-sort]:focus-visible .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-tm-sort]:focus-visible .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-sort]:focus-within .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-rp-sort]:focus-within .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[data-tm-sort]:focus-within .sort-ico {
+  display: inline-block;
+  opacity: 0.45;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="ascending"]:hover .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="descending"]:hover .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="ascending"]:focus-visible .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="descending"]:focus-visible .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="ascending"]:focus-within .sort-ico,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th[aria-sort="descending"]:focus-within .sort-ico {
+  opacity: 1;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-st,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.c-st {
+  text-align: center !important;
+  padding: 0 !important;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.c-st .th-inner {
+  justify-content: center;
+}
+
+html[data-iam-version="v4"] .ads-chip,
+html[data-iam-version="v4"] main.page .v4-card table.tbl .role-extra {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  height: auto;
+  min-height: 26px;
+  padding: 3px 10px;
+  box-sizing: border-box;
+  border: 1px solid #0f12141a;
+  border-radius: 100px;
+  background: #eceeee;
+  color: #1e2528;
+  font: 600 12px/18px "Open Sans", sans-serif;
+  letter-spacing: 0;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .role-extra.ads-chip {
+  min-height: 24px;
+  padding: 3px 6px;
+}
+
+html[data-iam-version="v4"] .ads-chip[data-variant="success"] {
+  background: #e0ede5;
+  border-color: #6cb288;
+  color: #365944;
+}
+
+html[data-iam-version="v4"] .ads-chip[data-variant="default"] {
+  background: #eceeee;
+  border-color: #0f12141a;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] .ads-chip[data-variant="warning"] {
+  background: #fae2c8;
+  border-color: #f5bb7a;
+  color: #5c3711;
+}
+
+html[data-iam-version="v4"] .ads-chip[data-variant="error"] {
+  background: #f8e0e2;
+  border-color: #db5461;
+  color: #993b44;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .role-extra:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl .role-txt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl input[type="checkbox"].cr-perm-check,
+html[data-iam-version="v4"] main.page .v4-card table.tbl input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid #0f121433;
+  border-radius: 2px;
+  background: #ffffff;
+  accent-color: #4045c2;
+  vertical-align: middle;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl input[type="checkbox"]:checked {
+  background: #4045c2;
+  border-color: #4045c2;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23fff' stroke-width='2' d='M3.5 8.2l3 3 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl input[type="checkbox"]:indeterminate {
+  background: #4045c2;
+  border-color: #4045c2;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23fff' stroke-width='2' d='M3.5 8h9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl input[type="checkbox"]:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: 1px;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.tm-th-mem,
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.tm-cell-mem,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.tm-th-mem .th-inner {
+  text-align: left;
+  justify-content: flex-start;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-ll,
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-date,
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.tm-cell-created,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.c-ll,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.rp-date,
+html[data-iam-version="v4"] main.page .v4-card table.tbl th.tm-th-created {
+  text-align: left;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.empty-state,
+html[data-iam-version="v4"] main.page .v4-card table.tbl tr.tbl-empty td,
+html[data-iam-version="v4"] table.au-eff-tbl td.au-eff-empty {
+  height: auto;
+  min-height: 120px;
+  padding: 48px 16px;
+  text-align: center;
+  white-space: normal;
+  font: 600 14px/20px "Open Sans", sans-serif;
+  color: #1e2528;
+  border-bottom: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-func {
+  white-space: nowrap !important;
+  overflow: hidden;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-func .rp-func-text {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-func .rp-func-more {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #2d2f8c;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-func .rp-func-more:hover {
+  text-decoration: underline;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-func .rp-func-more:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  min-height: 52px;
+  padding: 0 16px 0 32px;
+  box-sizing: border-box;
+  border-top: 1px solid #d4dee3;
+  background: #fff;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .pgn-lbl {
+  font: 600 12px/18px "Open Sans", sans-serif;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .cr-dd-trigger {
+  height: 32px;
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 1px solid #b8c7d0;
+  border-radius: 6px;
+  background: #fff;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .pgn-pages,
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-nums {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-n,
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-nav {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #0f121433;
+  border-radius: 6px;
+  background: #fff;
+  color: #1e2528;
+  font: 400 14px/20px "Open Sans", sans-serif;
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-n.on::after {
+  display: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-n.on,
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-n[aria-current] {
+  background: #4045c2;
+  border-color: #0f121480;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-nav.off,
+html[data-iam-version="v4"] main.page .v4-card .pgn .pg-nav:disabled {
+  opacity: 0.4;
+}
+
+@media (max-width: 1280px) {
+  html[data-iam-version="v4"] main.page .v4-card #usersTable th.c-sel,
+  html[data-iam-version="v4"] main.page .v4-card #usersTable td.c-sel,
+  html[data-iam-version="v4"] main.page .v4-card #usersTable th.c-nm,
+  html[data-iam-version="v4"] main.page .v4-card #usersTable td.c-nm {
+    position: sticky;
+    z-index: 2;
+    background: #fff;
+  }
+  html[data-iam-version="v4"] main.page .v4-card #usersTable tbody tr:hover td.c-sel,
+  html[data-iam-version="v4"] main.page .v4-card #usersTable tbody tr:hover td.c-nm {
+    background: #0f12140d;
+  }
+  html[data-iam-version="v4"] main.page .v4-card #usersTable tbody tr.is-selected td.c-sel,
+  html[data-iam-version="v4"] main.page .v4-card #usersTable tbody tr.is-selected td.c-nm {
+    background: #e2e3f2;
+  }
+  html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-nm .name-link,
+  html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-nm .name-cell-email,
+  html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-rl .role-primary,
+  html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-tm,
+  html[data-iam-version="v4"] main.page .v4-card table.tbl td.c-rg,
+  html[data-iam-version="v4"] main.page .v4-card table.tbl td.rp-func,
+  html[data-iam-version="v4"] main.page .v4-card table.tbl .tm-cell-desc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+
+/* ═══ PROMPT 5 — cards, modals, drawers, forms, toasts, tooltips ═══════ */
+html[data-iam-version="v4"] .au-card,
+html[data-iam-version="v4"] .cr-card,
+html[data-iam-version="v4"] .tm-details-card,
+html[data-iam-version="v4"] .tm-members-card,
+html[data-iam-version="v4"] .cr-section {
+  background: #ffffff;
+  padding: 20px 28px 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(15, 18, 20, 0.1);
+  box-shadow: none;
+}
+
+html[data-iam-version="v4"] .cr-section-header,
+html[data-iam-version="v4"] .cr-section-header[role="button"] {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-height: 0;
+  padding: 0 0 24px;
+  color: #1e2528;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] .cr-section-header .cr-section-chev-btn {
+  order: -1;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #4045c2;
+}
+
+html[data-iam-version="v4"] .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] .cr-section-header[role="button"] .cr-section-chev {
+  order: -1;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  color: #4045c2;
+  transform: rotate(90deg);
+  transition: transform 120ms ease;
+}
+
+html[data-iam-version="v4"] .cr-card.collapsed .cr-section-chev,
+html[data-iam-version="v4"] .au-card.collapsed .cr-section-chev,
+html[data-iam-version="v4"] .cr-section.collapsed .cr-section-chev,
+html[data-iam-version="v4"] .cr-section-header[aria-expanded="false"] .cr-section-chev {
+  transform: rotate(0deg);
+}
+
+html[data-iam-version="v4"] .cr-section-title,
+html[data-iam-version="v4"] .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #createRolePage .cr-section-header[role="button"] .cr-section-title {
+  font-family: "MultiPlane Display", "MultiplaneTWDC Display", "Open Sans", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] .cr-section-summary,
+html[data-iam-version="v4"] .cr-section-help,
+html[data-iam-version="v4"] .tm-members-helper {
+  font: 400 14px/20px "Open Sans", sans-serif;
+  color: #51585b;
+}
+
+html[data-iam-version="v4"] .cr-confirm-backdrop,
+html[data-iam-version="v4"] .modal-backdrop,
+html[data-iam-version="v4"] .au-add-modal-backdrop,
+html[data-iam-version="v4"] .tm-add-backdrop,
+html[data-iam-version="v4"] .flt-scrim {
+  background: rgba(15, 18, 20, 0.5);
+  padding: 0;
+}
+
+html[data-iam-version="v4"] .cr-confirm-dialog,
+html[data-iam-version="v4"] .modal-panel,
+html[data-iam-version="v4"] .au-add-modal,
+html[data-iam-version="v4"] .tm-add-modal,
+html[data-iam-version="v4"] .au-eff-breakdown {
+  width: 480px;
+  max-width: calc(100vw - 48px);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 18, 20, 0.3);
+  border: 1px solid #0f12141a;
+}
+
+html[data-iam-version="v4"] .au-eff-breakdown {
+  width: 640px;
+}
+
+html[data-iam-version="v4"] .cr-confirm-dialog .cr-confirm-title,
+html[data-iam-version="v4"] .modal-panel h2,
+html[data-iam-version="v4"] .au-add-modal h2,
+html[data-iam-version="v4"] .tm-add-modal h2 {
+  font: 600 18px/24px "Open Sans", sans-serif;
+  color: #1e2528;
+  padding: 20px 24px;
+  margin: 0;
+  border-bottom: 1px solid #0f12141a;
+}
+
+html[data-iam-version="v4"] .cr-confirm-dialog .cr-confirm-body,
+html[data-iam-version="v4"] .cr-confirm-dialog .cr-confirm-text,
+html[data-iam-version="v4"] .modal-panel p,
+html[data-iam-version="v4"] .au-add-modal .au-add-body {
+  padding: 16px 24px;
+  font: 400 14px/20px "Open Sans", sans-serif;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] .cr-confirm-dialog .cr-confirm-actions,
+html[data-iam-version="v4"] .modal-panel .modal-footer,
+html[data-iam-version="v4"] .au-add-modal .au-add-footer,
+html[data-iam-version="v4"] .tm-add-modal .tm-add-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #0f12141a;
+}
+
+html[data-iam-version="v4"] .cr-btn-danger-solid {
+  background: #993b44;
+  border-color: #993b44;
+  color: #ffffff;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-btn-remove,
+html[data-iam-version="v4"] #editTeamPage .tm-delete-btn,
+html[data-iam-version="v4"] #editTeamPage button.tm-row-remove,
+html[data-iam-version="v4"] .au-remove-user-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #2d2f8c;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-btn-remove:hover,
+html[data-iam-version="v4"] #editTeamPage .tm-delete-btn:hover,
+html[data-iam-version="v4"] #editTeamPage button.tm-row-remove:hover,
+html[data-iam-version="v4"] .au-remove-user-link:hover {
+  background: transparent;
+  border-color: transparent;
+  color: #2d2f8c;
+  text-decoration: underline;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-btn-remove:focus-visible,
+html[data-iam-version="v4"] #editTeamPage .tm-delete-btn:focus-visible,
+html[data-iam-version="v4"] #editTeamPage button.tm-row-remove:focus-visible,
+html[data-iam-version="v4"] .au-remove-user-link:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: 2px;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-btn-remove:disabled,
+html[data-iam-version="v4"] #editTeamPage .tm-delete-btn:disabled,
+html[data-iam-version="v4"] #editTeamPage button.tm-row-remove:disabled,
+html[data-iam-version="v4"] .au-remove-user-link:disabled {
+  color: #0f12144d;
+  text-decoration: none;
+  cursor: not-allowed;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] .flt-overlay {
+  background: rgba(15, 18, 20, 0.5);
+}
+
+html[data-iam-version="v4"] .flt-drawer,
+html[data-iam-version="v4"] .tm-add-panel {
+  width: 360px;
+  top: 0;
+  z-index: 10000;
+  box-shadow: 0 24px 48px rgba(15, 18, 20, 0.25);
+}
+
+html[data-iam-version="v4"] .flt-overlay {
+  z-index: 9999;
+}
+
+html[data-iam-version="v4"] .flt-drawer h2,
+html[data-iam-version="v4"] .tm-add-panel h2 {
+  font: 600 18px/24px "Open Sans", sans-serif;
+  color: #1e2528;
+  padding: 20px 24px;
+  height: 64px;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] .flt-body,
+html[data-iam-version="v4"] .tm-add-panel .tm-add-body {
+  padding: 16px 24px;
+}
+
+html[data-iam-version="v4"] .au-label,
+html[data-iam-version="v4"] .cr-label,
+html[data-iam-version="v4"] .flt-label,
+html[data-iam-version="v4"] #addUsersPage .au-label {
+  font: 600 12px/18px "Open Sans", sans-serif;
+  color: #3b4347;
+}
+
+html[data-iam-version="v4"] .cr-input,
+html[data-iam-version="v4"] .au-input,
+html[data-iam-version="v4"] .cr-dd-trigger,
+html[data-iam-version="v4"] .au-role-multi-trigger,
+html[data-iam-version="v4"] input.cr-input,
+html[data-iam-version="v4"] textarea.cr-textarea {
+  height: 36px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #0f121433;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] .cr-input:hover,
+html[data-iam-version="v4"] .au-input:hover,
+html[data-iam-version="v4"] .cr-dd-trigger:hover {
+  border-color: #0f121480;
+}
+
+html[data-iam-version="v4"] .cr-input:focus,
+html[data-iam-version="v4"] .au-input:focus,
+html[data-iam-version="v4"] .cr-dd-trigger:focus,
+html[data-iam-version="v4"] .cr-input:focus-visible {
+  border-color: #4045c2;
+  outline: 0;
+}
+
+html[data-iam-version="v4"] .toast,
+html[data-iam-version="v4"] .iam-toast,
+html[data-iam-version="v4"] #toastStack .toast,
+html[data-iam-version="v4"] .v2-toast {
+  width: 400px;
+  border-radius: 6px;
+  padding: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px #0f12144d;
+  border-left: 5px solid #4045c2;
+}
+
+html[data-iam-version="v4"] .edl-status-tooltip,
+html[data-iam-version="v4"] [role="tooltip"].edl-status-tooltip,
+html[data-iam-version="v4"] #statusTooltip,
+html[data-iam-version="v4"] .ads-tt,
+html[data-iam-version="v4"] .ads-tt[data-ads-tooltip],
+html[data-iam-version="v4"] .ads-tt[data-ads-tt-visible],
+html[data-iam-version="v4"] .ads-tt__label,
+html[data-iam-version="v4"] .ads-tt[data-ads-tooltip] .ads-tt__label {
+  background: #21292d;
+  color: #ffffff;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 6px;
+}
+
+html[data-iam-version="v4"] .ads-tt__label,
+html[data-iam-version="v4"] .ads-tt[data-ads-tooltip] .ads-tt__label {
+  padding: 0;
+}
+
+html[data-iam-version="v4"] .au-id-empty-title,
+html[data-iam-version="v4"] .empty-state-title {
+  font: 600 14px/20px "Open Sans", sans-serif;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] .au-id-empty-help,
+html[data-iam-version="v4"] .empty-state-help {
+  font: 400 14px/20px "Open Sans", sans-serif;
+  color: #51585b;
+}
+
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"] {
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage .cr-section-header[role="button"] .cr-section-chev {
+  order: -1;
+  margin-left: 0;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  color: #4045c2;
+}
+
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #editTeamPage .cr-section-header .cr-section-title,
+html[data-iam-version="v4"] #createRolePage .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-title {
+  color: #1e2528;
+  font-family: "MultiPlane Display", "MultiplaneTWDC Display", "Open Sans", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+/* ADS Accordion trigger (ads-components.json "accordion"): caret sits
+   immediately left of the title on every top-level Edit User and
+   Edit Role section. Expanded points down; collapsed points right.
+   This outranks the older edit-mode rules that parked the caret on
+   the far right and flipped Functions the other way. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #createRolePage .cr-section-header[role="button"],
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] {
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard.cr-card:not(.collapsed) .cr-section-header .cr-section-chev {
+  order: 0;
+  margin-left: 0;
+  margin-right: 0;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: #4045c2;
+  transform: rotate(90deg);
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-chev-btn,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev-btn {
+  order: 0;
+  margin-left: 0;
+  width: 16px;
+  height: 16px;
+}
+html[data-iam-version="v4"] #addUsersPage #auBasicCard.collapsed .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard.collapsed .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard.collapsed .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage #crBasicCard.collapsed .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage #crFuncsCard.collapsed .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard.cr-card.collapsed .cr-section-header .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard.cr-card.collapsed .cr-section-header .cr-section-chev {
+  transform: rotate(0deg);
+}
+
+html[data-iam-version="v4"] #addUsersPage .au-card,
+html[data-iam-version="v4"] #addUsersPage .cr-card,
+html[data-iam-version="v4"] #createRolePage .cr-card,
+html[data-iam-version="v4"] #editTeamPage .tm-details-card,
+html[data-iam-version="v4"] #editTeamPage .tm-members-card {
+  padding: 20px 28px 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(15, 18, 20, 0.1);
+  box-shadow: none;
+}
+
+/* Edit Team rhythm: one vertical gap per marked interval, 8px tighter
+   than the previous stack. The section header no longer adds its own
+   bottom padding on top of the body padding. */
+html[data-iam-version="v4"] #editTeamPage .tm-details-card {
+  margin-top: 16px;
+}
+html[data-iam-version="v4"] #editTeamPage .cr-section-header {
+  padding-bottom: 0;
+}
+html[data-iam-version="v4"] #editTeamPage .au-section-body {
+  padding-top: 32px;
+}
+@media (max-width: 767px) {
+  html[data-iam-version="v4"] #editTeamPage .tm-details-card {
+    margin-top: 8px;
+  }
+}
+
+html[data-iam-version="v4"] .edl-toast-close,
+html[data-iam-version="v4"] .edl-toast--error .edl-toast-close,
+html[data-iam-version="v4"] .edl-toast--warning .edl-toast-close,
+html[data-iam-version="v4"] .edl-toast--success .edl-toast-close,
+html[data-iam-version="v4"] .edl-toast--informative .edl-toast-close {
+  color: #51585b;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+}
+
+html[data-iam-version="v4"] .edl-toast {
+  position: relative;
+  width: 400px;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px #0f12144d;
+}
+
+html[data-iam-version="v4"] .edl-toast-icon,
+html[data-iam-version="v4"] .edl-toast-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+html[data-iam-version="v4"] .edl-toast--informative .edl-toast-title {
+  color: #143f90;
+}
+
+html[data-iam-version="v4"] .au-back,
+html[data-iam-version="v4"] .cr-back {
+  color: #2d2f8c;
+}
+
+html[data-iam-version="v4"] #addUsersPage .au-input,
+html[data-iam-version="v4"] #addUsersPage .edl-combo-input,
+html[data-iam-version="v4"] #createRolePage .cr-input,
+html[data-iam-version="v4"] #editTeamPage .cr-input,
+html[data-iam-version="v4"] .flt-drawer .flt-input,
+html[data-iam-version="v4"] .flt-drawer .edl-combo-input {
+  height: 36px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #0f121433;
+}
+
+html[data-iam-version="v4"] .btn-pri,
+html[data-iam-version="v4"] #usersAddBtn,
+html[data-iam-version="v4"] #rolesCreateBtn,
+html[data-iam-version="v4"] #auSaveBtn {
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #4045c2;
+  color: #ffffff;
+  font: 600 14px/20px "Open Sans", sans-serif;
+}
+
+html[data-iam-version="v4"] .btn-pri:hover,
+html[data-iam-version="v4"] #usersAddBtn:hover,
+html[data-iam-version="v4"] #rolesCreateBtn:hover {
+  background: #6567ce;
+}
+
+html[data-iam-version="v4"] .cr-btn-danger-solid:hover {
+  background: #af434e;
+  border-color: #af434e;
+}
+
+html[data-iam-version="v4"] .cr-confirm-close,
+html[data-iam-version="v4"] .edl-modal-close,
+html[data-iam-version="v4"] .flt-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 3px;
+  color: #51585b;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#rpTable tbody tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#rpTable tbody td,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#tmTable tbody tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#tmTable tbody td {
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#rpTable tbody tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#tmTable tbody tr {
+  border-bottom: 0;
+}
+
+/* Prompt 9 H — Edit Role matrices: shared Read/Create/Update/Delete
+   tracks across every app block; pack left; blank on the right.
+   Fixed track widths match IAM.evenColumns packMatrixTracks. */
+html[data-iam-version="v4"] #createRolePage .cr-matrix-scroll {
+  overflow-x: auto;
+}
+
+html[data-iam-version="v4"] #createRolePage table.cr-matrix {
+  width: 100%;
+  max-width: none;
+  min-width: 100%;
+  table-layout: fixed;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-matrix .cr-mcol-act {
+  width: 88px;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-matrix .cr-mcol-spacer,
+html[data-iam-version="v4"] #createRolePage .cr-matrix .cr-matrix-th-spacer,
+html[data-iam-version="v4"] #createRolePage .cr-matrix .cr-matrix-cell-spacer {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-matrix thead th.cr-matrix-th-fn,
+html[data-iam-version="v4"] #createRolePage .cr-matrix tbody td.cr-matrix-fn {
+  white-space: normal;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  padding-left: 4px !important;
+  padding-right: 24px !important;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-matrix thead th.cr-matrix-th-act,
+html[data-iam-version="v4"] #createRolePage .cr-matrix tbody td.cr-matrix-cell:not(.cr-matrix-cell-spacer) {
+  white-space: nowrap;
+  padding-left: 8px !important;
+  padding-right: 12px !important;
+  text-align: left;
+}
+
+html[data-iam-version="v4"] #createRolePage .cr-matrix-check-wrap {
+  margin-left: 0 !important;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+}
+
+/* Ghost shared-track slots (missing Create/Delete etc.): keep width,
+   no chrome, so later columns stay on the shared x tracks. */
+html[data-iam-version="v4"] #createRolePage .cr-matrix .cr-matrix-th-ghost,
+html[data-iam-version="v4"] #createRolePage .cr-matrix .cr-matrix-cell-ghost {
+  padding: 0 !important;
+  border-bottom: 1px solid #d4dee3;
+  background: transparent;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* List tables fill the card. Column tracks come from v4.1 align()
+   (Users, Roles) and the Teams colgroup (20/80 + 100px/130px). */
+html[data-iam-version="v4"] main.page .v4-card #usersPanel .tbl-wrap,
+html[data-iam-version="v4"] main.page .v4-card #rolesPanel .tbl-wrap,
+html[data-iam-version="v4"] main.page .v4-card #teamsPanel .tbl-wrap {
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#rpTable,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#tmTable {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable col[data-u-col="em"],
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable col[data-u-col="ct"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-nm,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-nm {
+  min-width: 0;
+  overflow: hidden;
+}
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-tm,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-tm {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable thead tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable thead th {
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: #666d70;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody tr,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody td {
+  height: 60px;
+  min-height: 60px;
+  max-height: 60px;
+  box-sizing: border-box;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody tr {
+  border-bottom: 0;
+  background: #ffffff;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody td {
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  background: transparent;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody tr:hover td {
+  background: #0f12140a;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-sel,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-sel {
+  padding-left: var(--iam-card-content-inset, 32px) !important;
+  padding-right: 0 !important;
+  text-align: left;
+  overflow: visible;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody .name-cell {
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody .name-link {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable tbody .name-cell-email {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-rl,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl {
+  overflow: hidden;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl .role-txt {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl .role-line {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #1e2528;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl .role-line-clip {
+  flex: 1 1 auto;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl .role-more {
+  flex: 0 0 auto;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: #2d2f8c;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl .role-more:hover,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rl .role-more:focus-visible {
+  text-decoration: underline;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-st,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-st {
+  text-align: center !important;
+  padding: 0 !important;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-st .th-inner {
+  justify-content: center;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-st .ads-chip {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  border-radius: 100px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-ll {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable th.c-rg,
+html[data-iam-version="v4"] main.page .v4-card table.tbl#usersTable td.c-rg {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ═══ ADS Accordion — Edit User + Edit Role top-level sections ══════
+   Source: ads-design-system/ads-components.json "accordion"
+   (accordion-item / accordion-trigger / accordion-content),
+   card-wrapped, foreground-only hover, caret beside the title.
+   The caret glyph is the shared right-pointing path; 90° is open
+   (down) and 0° is closed (right). Nested application rows keep
+   their own .cr-app-head-chev rules. */
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"],
+html[data-iam-version="v4"] #createRolePage .cr-section-header[data-cr-toggle] {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 8px;
+  min-height: 0;
+  padding: 0 0 16px;
+  margin: 0;
+  box-sizing: border-box;
+  background: transparent;
+  cursor: pointer;
+}
+html[data-iam-version="v4"] #addUsersPage .cr-card.collapsed .cr-section-header[role="button"],
+html[data-iam-version="v4"] #createRolePage .cr-card.collapsed .cr-section-header[data-cr-toggle] {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-title,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-title {
+  order: 0;
+  margin: 0;
+  font-family: "MultiplaneTWDC Display", "MultiPlane Display", "Open Sans", sans-serif;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #2d2f8c;
+}
+html[data-iam-version="v4"] #addUsersPage #auBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard.cr-card:not(.collapsed) .cr-section-chev {
+  order: 0;
+  margin-left: 0;
+  margin-right: 0;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: var(--brand-text, #4045c2);
+  transform: rotate(90deg);
+}
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard .cr-section-header[role="button"] .cr-section-chev-btn,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard .cr-section-header[role="button"] .cr-section-chev-btn {
+  order: 0;
+  margin-left: 0;
+  width: 16px;
+  height: 16px;
+}
+html[data-iam-version="v4"] #addUsersPage #auBasicCard.cr-card.collapsed .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auRolesCard.cr-card.collapsed .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #addUsersPage #auPermsCard.cr-card.collapsed .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crBasicCard.cr-card.collapsed .cr-section-header[role="button"] .cr-section-chev,
+html[data-iam-version="v4"] #createRolePage.is-edit-mode #crFuncsCard.cr-card.collapsed .cr-section-header[role="button"] .cr-section-chev {
+  transform: rotate(0deg);
+}
+html[data-iam-version="v4"] #addUsersPage .cr-section-header[role="button"]:focus-visible,
+html[data-iam-version="v4"] #createRolePage .cr-section-header[data-cr-toggle]:focus-visible {
+  outline: 2px solid #4045c2;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+

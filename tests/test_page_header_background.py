@@ -254,7 +254,7 @@ def main():
     back = rect(c, "#auBack")
     title = rect(c, "#auPageTitle")
     actions = rect(c, "#addUsersPage .au-header-actions")
-    sidebar_right = js(c, "document.querySelector('.sidebar, .side-nav, .nav-rail') ? document.querySelector('.sidebar, .side-nav, .nav-rail').getBoundingClientRect().right : 64")
+    sidebar_right = js(c, "document.querySelector('.vnav, .sidebar, .side-nav, .nav-rail') ? document.querySelector('.vnav, .sidebar, .side-nav, .nav-rail').getBoundingClientRect().right : 68")
     # `.au-page`/`.cr-page` reserve their own `scrollbar-gutter: stable` (pre-existing,
     # unchanged by this pass) on top of the global `html { scrollbar-gutter: stable }`,
     # so their available width is 15px narrower than the (non-scrolling) top navbar's
