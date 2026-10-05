@@ -87,12 +87,14 @@ var DATA = [
    constant before first paint, since this <script> tag loads at the
    end of <body>, after that markup already exists in the DOM. */
 window.IAM_PRODUCT_NAME = "Ad Console";
+/* Header lockup only. Body copy keeps IAM_PRODUCT_NAME. */
+var IAM_HEADER_BRAND = "Ad Tool";
 (function initProductNameText() {
   var link = document.getElementById("navBrandLink");
   var text = document.getElementById("navBrandText");
   var idEmptySub = document.getElementById("auIdEmptySub");
-  if (text) text.textContent = window.IAM_PRODUCT_NAME;
-  if (link) link.setAttribute("aria-label", window.IAM_PRODUCT_NAME + " home");
+  if (text) text.textContent = IAM_HEADER_BRAND;
+  if (link) link.setAttribute("aria-label", IAM_HEADER_BRAND + " home");
   if (idEmptySub) {
     idEmptySub.textContent = "Search the roster to choose the person you're adding to " + window.IAM_PRODUCT_NAME + ".";
   }

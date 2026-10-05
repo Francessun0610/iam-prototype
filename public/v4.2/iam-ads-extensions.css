@@ -135,10 +135,13 @@ html[data-iam-version="v4"] nav.nav .atlas-brand .atlas-brand-glyph.nav-logo-img
 }
 
 html[data-iam-version="v4"] nav.nav .atlas-brand .atlas-brand-text {
-  font-family: "MultiPlane Display", "MultiplaneTWDC Display", "Open Sans", sans-serif;
+  /* MultiplaneTWDC Display is registered at 500 only, so 700 synthesizes
+     the same bold the Rate Card "Ad Tool" label uses. */
+  font-family: "MultiplaneTWDC Display", "Open Sans", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 700;
+  font-synthesis: weight;
   color: #ffffff;
   letter-spacing: 0;
   white-space: nowrap;
